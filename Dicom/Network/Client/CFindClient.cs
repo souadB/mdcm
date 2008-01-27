@@ -81,13 +81,13 @@ namespace Dicom.Network.Client {
 		#endregion
 
 		#region Public Properties
-		[DicomField(0x0010, 0x0020, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)] 
+		[DicomField(DcmConstTags.PatientID, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)] 
 		public string PatientID {
 			get { return _patientId; }
 			set { _patientId = value; }
 		}
 
-		[DicomField(0x0010, 0x0010, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
+		[DicomField(DcmConstTags.PatientsName, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
 		public string PatientsName {
 			get { return _patientName; }
 			set { _patientName = value; }
@@ -102,13 +102,13 @@ namespace Dicom.Network.Client {
 		#endregion
 
 		#region Public Properties
-		[DicomField(0x0010, 0x0020, DefaultValue = DicomFieldDefault.Default)]
+		[DicomField(DcmConstTags.PatientID, DefaultValue = DicomFieldDefault.Default)]
 		public string PatientID {
 			get { return _patientId; }
 			set { _patientId = value; }
 		}
 
-		[DicomField(0x0010, 0x0010, DefaultValue = DicomFieldDefault.Default)]
+		[DicomField(DcmConstTags.PatientsName, DefaultValue = DicomFieldDefault.Default)]
 		public string PatientsName {
 			get { return _patientName; }
 			set { _patientName = value; }
