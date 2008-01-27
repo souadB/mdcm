@@ -58,43 +58,43 @@ namespace Dicom.Network.Client {
 		#endregion
 
 		#region Public Members
-		[DicomField(0x0008, 0x0016, DefaultValue = DicomFieldDefault.Default)]
+		[DicomField(DcmConstTags.SOPClassUID, DefaultValue = DicomFieldDefault.Default)]
 		public readonly DcmUID SOPClassUID;
 
-		[DicomField(0x0008, 0x0018, DefaultValue = DicomFieldDefault.Default)]
+		[DicomField(DcmConstTags.SOPInstanceUID, DefaultValue = DicomFieldDefault.Default)]
 		public readonly DcmUID SOPInstanceUID;
 
-		[DicomField(0x0008, 0x0020, DefaultValue = DicomFieldDefault.Default)]
+		[DicomField(DcmConstTags.StudyDate, DefaultValue = DicomFieldDefault.Default)]
 		public readonly DateTime StudyDate;
 
-		[DicomField(0x0008, 0x0050, DefaultValue = DicomFieldDefault.Default)]
+		[DicomField(DcmConstTags.AccessionNumber, DefaultValue = DicomFieldDefault.Default)]
 		public readonly string AccessionNumber;
 
-		[DicomField(0x0008, 0x0060, DefaultValue = DicomFieldDefault.Default)]
+		[DicomField(DcmConstTags.Modality, DefaultValue = DicomFieldDefault.Default)]
 		public readonly string Modality;
 
-		[DicomField(0x0008, 0x1030, DefaultValue = DicomFieldDefault.Default)]
+		[DicomField(DcmConstTags.StudyDescription, DefaultValue = DicomFieldDefault.Default)]
 		public readonly string StudyDescription;
 
-		[DicomField(0x0020, 0x000D, DefaultValue = DicomFieldDefault.Default)]
+		[DicomField(DcmConstTags.StudyInstanceUID, DefaultValue = DicomFieldDefault.Default)]
 		public readonly DcmUID StudyInstanceUID;
 
-		[DicomField(0x0020, 0x000E, DefaultValue = DicomFieldDefault.Default)]
+		[DicomField(DcmConstTags.SeriesInstanceUID, DefaultValue = DicomFieldDefault.Default)]
 		public readonly DcmUID SeriesInstanceUID;
 
-		[DicomField(0x0020, 0x0010, DefaultValue = DicomFieldDefault.Default)]
+		[DicomField(DcmConstTags.StudyID, DefaultValue = DicomFieldDefault.Default)]
 		public readonly string StudyID;
 
-		[DicomField(0x0010, 0x0010, DefaultValue = DicomFieldDefault.Default)]
+		[DicomField(DcmConstTags.PatientsName, DefaultValue = DicomFieldDefault.Default)]
 		public readonly string PatientsName;
 		
-		[DicomField(0x0010, 0x0020, DefaultValue = DicomFieldDefault.Default)]
+		[DicomField(DcmConstTags.PatientID, DefaultValue = DicomFieldDefault.Default)]
 		public readonly string PatientID;
 
-		[DicomField(0x0010, 0x0030, DefaultValue = DicomFieldDefault.Default)]
+		[DicomField(DcmConstTags.PatientsBirthDate, DefaultValue = DicomFieldDefault.Default)]
 		public readonly DateTime PatientsBirthDate;
 
-		[DicomField(0x0010, 0x0040, DefaultValue = DicomFieldDefault.Default)]
+		[DicomField(DcmConstTags.PatientsSex, DefaultValue = DicomFieldDefault.Default)]
 		public readonly string PatientsSex;
 
 		public readonly string FileName;
