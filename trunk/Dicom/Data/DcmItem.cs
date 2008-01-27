@@ -1,0 +1,108 @@
+// mDCM: A C# DICOM library
+//
+// Copyright (c) 2006-2008  Colby Dillion
+//
+// This library is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 2.1 of the License, or (at your option) any later version.
+//
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+// Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public
+// License along with this library; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+//
+// Author:
+//    Colby Dillion (colby.dillion@gmail.com)
+
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+using Dicom.IO;
+
+namespace Dicom.Data {
+	public class DcmItem {
+		#region Protected Members
+		protected DcmTag _tag;
+		protected DcmVR _vr;
+		protected long _streamPosition;
+		protected Endian _endian;
+		#endregion
+
+		#region Public Constructors
+		public DcmItem(DcmTag tag, DcmVR vr) {
+			_tag = tag;
+			_vr = vr;
+			_streamPosition = 0;
+			_endian = ByteBuffer.LocalMachineEndian;
+		}
+
+		public DcmItem(DcmTag tag, DcmVR vr, long pos, Endian endian) {
+			_tag = tag;
+			_vr = vr;
+			_streamPosition = pos;
+			_endian = endian;
+		}
+		#endregion
+
+		#region Public Properties
+		public DcmTag Tag {
+			get { return _tag; }
+		}
+
+		public string Name {
+			get { return Tag.Entry.Name; }
+		}
+
+		public DcmVR VR {
+			get { return _vr; }
+		}
+
+		public long StreamPosition {
+			get { return _streamPosition; }
+			set { _streamPosition = value; }
+		}
+
+		public Endian Endian {
+			get { return _endian; }
+		}
+		#endregion
+
+		#region Public Methods
+		internal void SelectByteOrder(Endian endian) {
+			if (endian == _endian)
+				return;
+			_endian = endian;
+			ChangeEndianInternal();
+		}
+
+		public override string ToString() {
+			return _tag.Entry.ToString();
+		}
+		#endregion
+
+		#region Methods to Override
+		internal virtual uint CalculateWriteLength(DcmTS syntax, DicomWriteOptions options) {
+			return 0;
+		}
+
+		protected virtual void ChangeEndianInternal() {
+		}
+
+		internal virtual void Preload() {
+		}
+
+		internal virtual void Unload() {
+		}
+
+		public virtual void Dump(StringBuilder sb, String prefix,  DicomDumpOptions options) {
+			sb.Append(prefix).AppendLine(_tag.Entry.ToString());
+		}
+		#endregion
+	}
+}
