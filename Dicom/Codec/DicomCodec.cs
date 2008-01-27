@@ -1,0 +1,104 @@
+// mDCM: A C# DICOM library
+//
+// Copyright (c) 2006-2008  Colby Dillion
+//
+// This library is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 2.1 of the License, or (at your option) any later version.
+//
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+// Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public
+// License along with this library; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+//
+// Author:
+//    Colby Dillion (colby.dillion@gmail.com)
+
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+
+using Dicom.Data;
+
+namespace Dicom.Codec {
+	#region IDcmCodec
+	public interface IDcmCodec {
+		string GetName();
+		DcmTS GetTransferSyntax();
+		DcmCodecParameters GetDefaultParameters();
+		void Encode(DcmDataset dataset, DcmPixelData oldPixelData, DcmPixelData newPixelData, DcmCodecParameters parameters);
+		void Decode(DcmDataset dataset, DcmPixelData oldPixelData, DcmPixelData newPixelData, DcmCodecParameters parameters);
+	}
+	#endregion
+
+	#region DicomCodecAttribute
+	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+	public class DicomCodecAttribute : Attribute {
+		public DicomCodecAttribute() {
+		}
+	}
+	#endregion
+
+	#region DicomCodec
+	public static class DicomCodec {
+		private static Dictionary<DcmTS, Type> _codecs;
+
+		public static List<DcmTS> GetRegisteredCodecs() {
+			if (_codecs == null)
+				RegisterCodecs();
+			List<DcmTS> codecs = new List<DcmTS>();
+			codecs.AddRange(_codecs.Keys);
+			return codecs;
+		}
+
+		public static bool HasCodec(DcmTS ts) {
+			if (ts == DcmTS.ImplicitVRLittleEndian ||
+				ts == DcmTS.ExplicitVRLittleEndian ||
+				ts == DcmTS.ExplicitVRBigEndian)
+				return true;
+			if (_codecs == null)
+				RegisterCodecs();
+			return _codecs.ContainsKey(ts);
+		}
+
+		public static IDcmCodec GetCodec(DcmTS ts) {
+			if (_codecs == null)
+				RegisterCodecs();
+			Type cType;
+			if (_codecs.TryGetValue(ts, out cType)) {
+				return (IDcmCodec)Activator.CreateInstance(cType);
+			}
+			throw new DcmCodecException("No registered codec for transfer syntax!");
+		}
+
+		public static void RegisterCodecs() {
+			_codecs = new Dictionary<DcmTS, Type>();
+
+			Assembly main = Assembly.GetEntryAssembly();
+			AssemblyName[] referenced = main.GetReferencedAssemblies();
+
+			RegisterCodecs(main);
+
+			foreach (AssemblyName an in referenced) {
+				Assembly asm = Assembly.Load(an);
+				RegisterCodecs(asm);
+			}
+		}
+
+		private static void RegisterCodecs(Assembly asm) {
+			Type[] types = asm.GetExportedTypes();
+			for (int i = 0; i < types.Length; i++) {
+				if (types[i].IsDefined(typeof(DicomCodecAttribute), false)) {
+					IDcmCodec codec = (IDcmCodec)Activator.CreateInstance(types[i]);
+					_codecs.Add(codec.GetTransferSyntax(), types[i]);
+				}
+			}
+		}
+	}
+	#endregion
+}
