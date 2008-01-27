@@ -39,7 +39,7 @@ namespace Dicom.Data {
 			_tag = tag;
 			_vr = vr;
 			_streamPosition = 0;
-			_endian = ByteBuffer.LocalMachineEndian;
+			_endian = Endian.LocalMachine;
 		}
 
 		public DcmItem(DcmTag tag, DcmVR vr, long pos, Endian endian) {

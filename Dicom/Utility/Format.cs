@@ -36,7 +36,7 @@ namespace Dicom.Utility {
 			return String.Format("{0:0} B", (double)bytes);
 		}
 
-		public static string ByteCountToString(long bytes) {
+		public static string ByteCount(long bytes) {
 			if (bytes > 1099511627776L)
 				return String.Format("{0:0.00} TB", (double)bytes / 1099511627776.0);
 			if (bytes > 1073741824L)

@@ -25,10 +25,123 @@ using System.Net;
 using System.Text;
 
 namespace Dicom.IO {
-	public enum Endian {
-		Little,
-		Big
+	#region Endian
+	public class Endian {
+		public static readonly Endian Little = new Endian(false);
+		public static readonly Endian Big = new Endian(true);
+		public static readonly Endian LocalMachine = BitConverter.IsLittleEndian ? Little : Big;
+
+		private bool _isBigEndian;
+		private Endian(bool isBigEndian) {
+			_isBigEndian = isBigEndian;
+		}
+
+		public override bool Equals(object obj) {
+			if (obj is Endian)
+				return this == (Endian)obj;
+			return false;
+		}
+
+		public override int GetHashCode() {
+			return _isBigEndian.GetHashCode();
+		}
+
+		public override string ToString() {
+			if (_isBigEndian)
+				return "Big Endian";
+			return "Little Endian";
+		}
+
+		public static bool operator ==(Endian e1, Endian e2) {
+			return e1._isBigEndian == e2._isBigEndian;
+		}
+		public static bool operator !=(Endian e1, Endian e2) {
+			return e1._isBigEndian != e2._isBigEndian;
+		}
+
+
+		public static void SwapBytes(int bytesToSwap, byte[] bytes) {
+			if (bytesToSwap == 1)
+				return;
+			if (bytesToSwap == 2) { SwapBytes2(bytes); return; }
+			if (bytesToSwap == 4) { SwapBytes4(bytes); return; }
+			//if (bytesToSwap == 8) { Swap8(); return; }
+			int l = bytes.Length - (bytes.Length % bytesToSwap);
+			for (int i = 0; i < l; i += bytesToSwap) {
+				Array.Reverse(bytes, i, bytesToSwap);
+			}
+		}
+		public static void SwapBytes2(byte[] bytes) {
+			byte b;
+			int l = bytes.Length - (bytes.Length % 2);
+			for (int i = 0; i < l; i += 2) {
+				b = bytes[i + 1];
+				bytes[i + 1] = bytes[i];
+				bytes[i] = b;
+			}
+		}
+		public static void SwapBytes4(byte[] bytes) {
+			byte b;
+			int l = bytes.Length - (bytes.Length % 4);
+			for (int i = 0; i < l; i += 4) {
+				b = bytes[i + 3];
+				bytes[i + 3] = bytes[i];
+				bytes[i] = b;
+				b = bytes[i + 2];
+				bytes[i + 2] = bytes[i + 1];
+				bytes[i + 1] = b;
+			}
+		}
+		public static void SwapBytes8(byte[] bytes) {
+			SwapBytes(8, bytes);
+		}
+
+		public static short Swap(short value) {
+			return (short)Swap((ushort)value);
+		}
+		public static ushort Swap(ushort value) {
+			return unchecked((ushort)((value >> 8) | (value << 8)));
+		}
+
+		public static int Swap(int value) {
+			return (int)Swap((uint)value);
+		}
+		public static uint Swap(uint value) {
+			return unchecked(
+					((value & 0x000000ffU) << 24) |
+					((value & 0x0000ff00U) <<  8) |
+					((value & 0x00ff0000U) >>  8) |
+					((value & 0xff000000U) >> 24));
+		}
+
+		public static long Swap(long value) {
+			return (long)Swap((ulong)value);
+		}
+		public static ulong Swap(ulong value) {
+			return unchecked(
+					((value & 0x00000000000000ffU) << 56) |
+					((value & 0x000000000000ff00U) << 40) |
+					((value & 0x0000000000ff0000U) << 24) |
+					((value & 0x00000000ff000000U) <<  8) |
+					((value & 0x000000ff00000000U) >>  8) |
+					((value & 0x0000ff0000000000U) >> 24) |
+					((value & 0x00ff000000000000U) >> 40) |
+					((value & 0xff00000000000000U) >> 56));
+		}
+
+		public static float Swap(float value) {
+			byte[] b = BitConverter.GetBytes(value);
+			Array.Reverse(b);
+			return BitConverter.ToSingle(b, 0);
+		}
+
+		public static double Swap(double value) {
+			byte[] b = BitConverter.GetBytes(value);
+			Array.Reverse(b);
+			return BitConverter.ToDouble(b, 0);
+		}
 	}
+	#endregion
 
 	#region EndianBinaryReader
 	public class EndianBinaryReader : BinaryReader {
@@ -117,21 +230,21 @@ namespace Dicom.IO {
 		#region BinaryReader Overrides
 		public override short ReadInt16() {
 			if (SwapBytes) {
-				return IPAddress.NetworkToHostOrder(base.ReadInt16());
+				return Endian.Swap(base.ReadInt16());
 			}
 			return base.ReadInt16();
 		}
 
 		public override int ReadInt32() {
 			if (SwapBytes) {
-				return IPAddress.NetworkToHostOrder(base.ReadInt32());
+				return Endian.Swap(base.ReadInt32());
 			}
 			return base.ReadInt32();
 		}
 
 		public override long ReadInt64() {
 			if (SwapBytes) {
-				return IPAddress.NetworkToHostOrder(base.ReadInt64());
+				return Endian.Swap(base.ReadInt64());
 			}
 			return base.ReadInt64();
 		}
@@ -154,24 +267,21 @@ namespace Dicom.IO {
 
 		public override ushort ReadUInt16() {
 			if (SwapBytes) {
-				ushort u = base.ReadUInt16();
-				return unchecked((ushort)((u >> 8) | (u << 8)));
+				return Endian.Swap(base.ReadUInt16());
 			}
 			return base.ReadUInt16();
 		}
 
 		public override uint ReadUInt32() {
 			if (SwapBytes) {
-				uint u = base.ReadUInt32();
-				return unchecked((u >> 24) | ((u >> 8) & 0xFF00) | ((u << 8) & 0xFF0000) | (u << 24));
+				return Endian.Swap(base.ReadUInt32());
 			}
 			return base.ReadUInt32();
 		}
 
 		public override ulong ReadUInt64() {
 			if (SwapBytes) {
-				byte[] b = ReadBytesInternal(8);
-				return BitConverter.ToUInt64(b, 0);
+				return Endian.Swap(base.ReadUInt64());
 			}
 			return base.ReadUInt64();
 		}
