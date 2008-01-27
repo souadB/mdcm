@@ -37,7 +37,7 @@ namespace Dicom.Data {
 		}
 
 		public DcmItemSequenceItem(long pos, uint length)
-			: base(DcmTags.Item, DcmVR.NONE, pos, ByteBuffer.LocalMachineEndian) {
+			: base(DcmTags.Item, DcmVR.NONE, pos, Endian.LocalMachine) {
 		}
 		#endregion
 

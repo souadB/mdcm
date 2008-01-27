@@ -36,7 +36,7 @@ namespace Dicom.IO {
 		#endregion
 
 		#region Public Constructors
-		public ByteBuffer() : this(LocalMachineEndian) {
+		public ByteBuffer() : this(Endian.LocalMachine) {
 		}
 
 		public ByteBuffer(Endian endian) {
@@ -44,7 +44,7 @@ namespace Dicom.IO {
 			_encoding = Encoding.ASCII;
 		}
 
-		public ByteBuffer(byte[] data) : this(data, LocalMachineEndian) {
+		public ByteBuffer(byte[] data) : this(data, Endian.LocalMachine) {
 		}
 
 		public ByteBuffer(byte[] data, Endian endian) {
@@ -53,7 +53,7 @@ namespace Dicom.IO {
 			_encoding = Encoding.ASCII;
 		}
 
-		public ByteBuffer(FileSegment segment) : this(segment, LocalMachineEndian) {
+		public ByteBuffer(FileSegment segment) : this(segment, Endian.LocalMachine) {
 		}
 
 		public ByteBuffer(FileSegment segment, Endian endian) {
@@ -64,9 +64,6 @@ namespace Dicom.IO {
 		#endregion
 
 		#region Public Properties
-		public readonly static Endian LocalMachineEndian =
-			BitConverter.IsLittleEndian ? Endian.Little : Endian.Big;
-
 		public MemoryStream Stream {
 			get {
 				if (_ms == null) {
@@ -326,41 +323,17 @@ namespace Dicom.IO {
 		}
 
 		public void Swap(int bytesToSwap) {
-			if (bytesToSwap == 1)
-				return;
-			if (bytesToSwap == 2) { Swap2(); return; }
-			if (bytesToSwap == 4) { Swap4(); return; }
-			//if (bytesToSwap == 8) { Swap8(); return; }
-			ToBytes();
-			int l = Length - (Length % bytesToSwap);
-			for (int i = 0; i < l; i += bytesToSwap) {
-				Array.Reverse(_data, i, bytesToSwap);
-			}
+			Endian.SwapBytes(bytesToSwap, ToBytes());
 		}
 
 		public void Swap2() {
-			ToBytes();
-			int l = Length - (Length % 2);
-			for (int i = 0; i < l; i += 2) {
-				byte b = _data[i + 1];
-				_data[i + 1] = _data[i];
-				_data[i] = b;
-			}
+			Endian.SwapBytes2(ToBytes());
 		}
 		public void Swap4() {
-			ToBytes();
-			int l = Length - (Length % 4);
-			for (int i = 0; i < l; i += 4) {
-				byte b = _data[i + 3];
-				_data[i + 3] = _data[i];
-				_data[i] = b;
-				b = _data[i + 2];
-				_data[i + 2] = _data[i + 1];
-				_data[i + 1] = b;
-			}
+			Endian.SwapBytes4(ToBytes());
 		}
 		public void Swap8() {
-			Swap(8);
+			Endian.SwapBytes8(ToBytes());
 		}
 		#endregion
 	}

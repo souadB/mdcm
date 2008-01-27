@@ -44,7 +44,7 @@ namespace Dicom.Data {
 
 		public DcmElement(DcmTag tag, DcmVR vr, long pos, Endian endian, ByteBuffer buffer)
 			: base(tag, vr, pos, endian) {
-			if (buffer == null && _endian != ByteBuffer.LocalMachineEndian)
+			if (buffer == null && _endian != Endian.LocalMachine)
 				_bb = new ByteBuffer(_endian);
 			else
 				_bb = buffer;
@@ -184,7 +184,7 @@ namespace Dicom.Data {
 		}
 
 		public static DcmElement Create(DcmTag tag, DcmVR vr) {
-			return Create(tag, vr, 0, ByteBuffer.LocalMachineEndian);
+			return Create(tag, vr, 0, Endian.LocalMachine);
 		}
 
 		public static DcmElement Create(DcmTag tag, DcmVR vr, long pos, Endian endian) {
@@ -667,7 +667,7 @@ namespace Dicom.Data {
 		public T GetValue(int index) {
 			if (index >= GetVM())
 				throw new DcmDataException("Value index out of range");
-			SelectByteOrder(ByteBuffer.LocalMachineEndian);
+			SelectByteOrder(Endian.LocalMachine);
 			T[] vals = new T[1];
 			Buffer.BlockCopy(ByteBuffer.ToBytes(), index * VR.UnitSize,
 				vals, 0, VR.UnitSize);
@@ -675,7 +675,7 @@ namespace Dicom.Data {
 		}
 
 		public T[] GetValues() {
-			SelectByteOrder(ByteBuffer.LocalMachineEndian);
+			SelectByteOrder(Endian.LocalMachine);
 			T[] vals = new T[GetVM()];
 			Buffer.BlockCopy(ByteBuffer.ToBytes(), 0, vals, 0, vals.Length * VR.UnitSize);
 			return vals;
@@ -688,7 +688,7 @@ namespace Dicom.Data {
 		}
 
 		public void SetValues(T[] vals) {
-			SelectByteOrder(ByteBuffer.LocalMachineEndian);
+			SelectByteOrder(Endian.LocalMachine);
 			byte[] bytes = new byte[vals.Length * VR.UnitSize];
 			Buffer.BlockCopy(vals, 0, bytes, 0, bytes.Length);
 			ByteBuffer.FromBytes(bytes);
@@ -816,14 +816,14 @@ namespace Dicom.Data {
 		public DcmTag GetValue(int index) {
 			if (index >= GetVM())
 				throw new DcmDataException("Value index out of range");
-			SelectByteOrder(ByteBuffer.LocalMachineEndian);
+			SelectByteOrder(Endian.LocalMachine);
 			ushort[] u16s = new ushort[2];
 			Buffer.BlockCopy(ByteBuffer.ToBytes(), index * 4, u16s, 0, 4);
 			return new DcmTag(u16s[0], u16s[1]);
 		}
 
 		public DcmTag[] GetValues() {
-			SelectByteOrder(ByteBuffer.LocalMachineEndian);
+			SelectByteOrder(Endian.LocalMachine);
 			ushort[] u16s = new ushort[GetVM() * 2];
 			Buffer.BlockCopy(ByteBuffer.ToBytes(), 0, u16s, 0, u16s.Length * 2);
 			DcmTag[] tags = new DcmTag[GetVM()];
@@ -834,14 +834,14 @@ namespace Dicom.Data {
 		}
 
 		public void SetValue(DcmTag val) {
-			SelectByteOrder(ByteBuffer.LocalMachineEndian);
+			SelectByteOrder(Endian.LocalMachine);
 			ByteBuffer.Clear();
 			ByteBuffer.Writer.Write(val.Group);
 			ByteBuffer.Writer.Write(val.Element);
 		}
 
 		public void SetValues(DcmTag[] vals) {
-			SelectByteOrder(ByteBuffer.LocalMachineEndian);
+			SelectByteOrder(Endian.LocalMachine);
 			ByteBuffer.Clear();
 			foreach (DcmTag val in vals) {
 				ByteBuffer.Writer.Write(val.Group);
