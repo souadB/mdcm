@@ -29,6 +29,7 @@ using System.Text;
 using System.Xml.Linq;
 
 using Dicom.IO;
+using Dicom.Utility;
 
 namespace Dicom.Data {
 	public static class XDicom {

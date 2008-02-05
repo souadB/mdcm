@@ -107,5 +107,15 @@ namespace Dicom.Utility {
 
 			return j >= pattern.Length;
 		}
+
+#if DOTNET35
+		public static bool Matches(this string str, string pattern) {
+			return Match(pattern, str);
+		}
+
+		public static bool Matches(this string str, string pattern, bool caseSensitive) {
+			return Match(pattern, str, caseSensitive);
+		}
+#endif
 	}
 }
