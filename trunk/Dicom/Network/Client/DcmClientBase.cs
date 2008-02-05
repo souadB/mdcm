@@ -89,7 +89,13 @@ namespace Dicom.Network.Client {
 
 		public int Timeout {
 			get { return _timeout; }
-			set { _timeout = value; }
+			set {
+				_timeout = value;
+				if (Socket != null) {
+					Socket.SendTimeout = _timeout * 1000;
+					Socket.ReceiveTimeout = _timeout * 1000;
+				}
+			}
 		}
 
 		public int ThrottleSpeed {
@@ -117,7 +123,7 @@ namespace Dicom.Network.Client {
 		}
 		#endregion
 
-		#region Public Members
+		#region Public Methods
 		public void Connect(string host, int port, DcmSocketType type) {
 			_host = host; _port = port;
 
@@ -141,6 +147,11 @@ namespace Dicom.Network.Client {
 		protected void Reconnect() {
 			Socket.Reconnect();
 			InitializeNetwork(Socket);
+		}
+
+		public void Abort() {
+			SendAbort(DcmAbortSource.ServiceUser, DcmAbortReason.NotSpecified);
+			InternalClose(true);
 		}
 
 		public void Close() {
