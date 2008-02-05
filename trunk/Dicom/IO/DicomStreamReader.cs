@@ -196,7 +196,9 @@ namespace Dicom.IO {
 								}
 							}
 						} else {
-							if (Flags.IsSet(options, DicomReadOptions.ForcePrivateCreatorToLO) &&
+							if (_tag.Element == 0x0000)
+								_vr = DcmVR.UL;
+							else if (Flags.IsSet(options, DicomReadOptions.ForcePrivateCreatorToLO) &&
 								_tag.IsPrivate && _tag.Element <= 0x00ff)
 								_vr = DcmVR.UN;
 							else
@@ -204,7 +206,9 @@ namespace Dicom.IO {
 						}
 
 						if (_vr == DcmVR.UN) {
-							if (_tag.IsPrivate) {
+							if (_tag.Element == 0x0000)
+								_vr = DcmVR.UL; // is this needed?
+							else if (_tag.IsPrivate) {
 								if (_tag.Element <= 0x00ff) {
 									// private creator id
 								} else if (_stream.CanSeek && Flags.IsSet(options, DicomReadOptions.AllowSeekingForContext)) {
