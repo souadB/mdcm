@@ -196,7 +196,11 @@ namespace Dicom.IO {
 								}
 							}
 						} else {
-							_vr = _tag.Entry.DefaultVR;
+							if (Flags.IsSet(options, DicomReadOptions.ForcePrivateCreatorToLO) &&
+								_tag.IsPrivate && _tag.Element <= 0x00ff)
+								_vr = DcmVR.UN;
+							else
+								_vr = _tag.Entry.DefaultVR;
 						}
 
 						if (_vr == DcmVR.UN) {
