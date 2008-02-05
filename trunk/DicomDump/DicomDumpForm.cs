@@ -32,7 +32,7 @@ namespace Dicom.Forms {
 		public void AddFile(string file) {
 			_files.Add(file);
 			if (IsHandleCreated) {
-				if (_selected == -1 || _files.Count == 1)
+				if (_selected == -1 || _files.Count > 0)
 					Invoke(new SelectFileDelegate(SelectFile), 0);
 				else {
 					tsbPrev.Enabled = (_selected > 0);
@@ -67,7 +67,6 @@ namespace Dicom.Forms {
 			tsbPrev.Enabled = (selection > 0);
 			tsbNext.Enabled = (selection < (_files.Count - 1));
 			lblCount.Text = String.Format("{0}/{1}", selection + 1, _files.Count);
-
 			Text = "DICOM Dump [" + _files[selection] + "]";
 
 			if (tag != null && treeDump.Model != null) {
@@ -83,34 +82,35 @@ namespace Dicom.Forms {
 			}
 		}
 
-		private void LoadFile(string file) {
+		private bool LoadFile(string file) {
+			bool success = false;
+			DicomFileFormat ff = new DicomFileFormat();
 			try {
 				ClearDump();
 
-				DicomFileFormat ff = new DicomFileFormat();
 				ff.Load(file, DicomReadOptions.Default |
 					DicomReadOptions.KeepGroupLengths |
 					DicomReadOptions.DeferLoadingLargeElements |
 					DicomReadOptions.DeferLoadingPixelData);
-				treeDump.Model = LoadFileFormat(ff);
-				treeDump.ExpandAll();
 
-				if (ff.Dataset.Contains(DcmTags.PixelData)) {
-					tsbViewImage.Enabled = false;
-					tsbExtractPixels.Enabled = true;
-				} else {
-					tsbViewImage.Enabled = false;
-					tsbExtractPixels.Enabled = false;
-				}
+				success = true;
 			}
 			catch (Exception e) {
-				MessageBox.Show(e.Message + "\n\n" + file, "Unable to open file!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				_files.RemoveAt(_selected);
+				MessageBox.Show(e.Message + "\n\n" + file, "Error parsing file!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			}
+
+			treeDump.Model = LoadFileFormat(ff);
+			treeDump.ExpandAll();
+
+			if (success && ff.Dataset.Contains(DcmTags.PixelData)) {
+				tsbViewImage.Enabled = false;
+				tsbExtractPixels.Enabled = true;
+			} else {
 				tsbViewImage.Enabled = false;
 				tsbExtractPixels.Enabled = false;
-				if (_files.Count > 0)
-					SelectFile(Math.Max(_selected - 1, 0));
 			}
+
+			return success;
 		}
 
 		private void ClearDump() {
@@ -295,6 +295,9 @@ namespace Dicom.Forms {
 		}
 
 		private void LoadDataset(DcmDataset ds, Collection<Node> parent) {
+			if (ds == null)
+				return;
+
 			foreach (DcmItem di in ds.Elements) {
 				Image icon = LoadTreeViewAdvResourceImage("Leaf", di.VR.VR, Color.Blue);
 
@@ -429,17 +432,28 @@ namespace Dicom.Forms {
 		}
 
 		private void OnClickClose(object sender, EventArgs e) {
-			if (_files.Count == 0 || _selected < 0 || _selected >= _files.Count) {
+			if (_files.Count == 0) {
 				Close();
 				return;
 			}
 
-			_files.RemoveAt(_selected);
+			try {
+				_files.RemoveAt(_selected);
 
-			if (_selected >= _files.Count)
-				_selected = _files.Count - 1;
-
-			SelectFile(_selected);
+				if (_files.Count == 0) {
+					_selected = -1;
+					tsbNext.Enabled = false;
+					tsbPrev.Enabled = false;
+					lblCount.Text = "0/0";
+				} else {
+					if (_selected >= _files.Count)
+						_selected = _files.Count - 1;
+					SelectFile(_selected);
+				}
+			}
+			catch {
+				Close();
+			}
 		}
 	}
 }
