@@ -59,10 +59,12 @@ namespace Dicom {
 		AllowSeekingForContext,
 		DeferLoadingLargeElements,
 		DeferLoadingPixelData,
+		ForcePrivateCreatorToLO,
 		Default = DicomReadOptions.UseDictionaryForExplicitUN | 
 				  DicomReadOptions.AllowSeekingForContext | 
 				  DicomReadOptions.DeferLoadingLargeElements | 
-				  DicomReadOptions.DeferLoadingPixelData
+				  DicomReadOptions.DeferLoadingPixelData |
+				  DicomReadOptions.ForcePrivateCreatorToLO
 	}
 
 	[Flags]

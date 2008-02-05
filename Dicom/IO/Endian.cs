@@ -53,9 +53,13 @@ namespace Dicom.IO {
 		}
 
 		public static bool operator ==(Endian e1, Endian e2) {
+			if ((object)e1 == null) e1 = Endian.LocalMachine;
+			if ((object)e2 == null) e2 = Endian.LocalMachine;
 			return e1._isBigEndian == e2._isBigEndian;
 		}
 		public static bool operator !=(Endian e1, Endian e2) {
+			if ((object)e1 == null) e1 = Endian.LocalMachine;
+			if ((object)e2 == null) e2 = Endian.LocalMachine;
 			return e1._isBigEndian != e2._isBigEndian;
 		}
 

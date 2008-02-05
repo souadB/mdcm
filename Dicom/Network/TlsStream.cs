@@ -26,10 +26,6 @@ using System.Net.Security;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 
-#if OPENSSL
-using OpenSsl;
-#endif
-
 namespace Dicom.Network {
 	public class TlsClientStream : Stream {
 		public static bool UseOpenSSL = false;
