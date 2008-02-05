@@ -50,7 +50,13 @@ namespace Dicom.Network.Server {
 		private int _timeout = 30;
 		public int Timeout {
 			get { return _timeout; }
-			set { _timeout = value; }
+			set {
+				_timeout = value;
+				if (Socket != null) {
+					Socket.SendTimeout = _timeout * 1000;
+					Socket.ReceiveTimeout = _timeout * 1000;
+				}
+			}
 		}
 
 		private string _logid = "SCP";
