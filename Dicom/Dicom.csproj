@@ -84,6 +84,7 @@
     <Compile Include="Data\DcmDateRange.cs" />
     <Compile Include="Data\DcmDictionary.cs" />
     <Compile Include="Data\DcmElement.cs" />
+    <Compile Include="Data\DcmFileMetaInfo.cs" />
     <Compile Include="Data\DcmFragmentSequence.cs" />
     <Compile Include="Data\DcmItem.cs" />
     <Compile Include="Data\DcmItemSequence.cs" />
@@ -140,6 +141,7 @@
     <Compile Include="Utility\PinnedArray.cs" />
     <Compile Include="Utility\SerializableDictionary.cs" />
     <Compile Include="Utility\Format.cs" />
+    <Compile Include="Utility\Utility.cs" />
     <Compile Include="Utility\Wildcard.cs" />
     <Compile Include="Utility\XmlSerializable.cs" />
   </ItemGroup>
