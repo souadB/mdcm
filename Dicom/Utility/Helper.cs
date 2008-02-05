@@ -28,59 +28,39 @@ using System.Text;
 using System.Security.Cryptography;
 using System.Xml.Linq;
 
-using Dicom.Utility;
-
-public static class ArrayHelper {
-	public static Array Shuffle(this Array array) {
-		Random rand = new Random();
-		int n = array.Length;
-		while (--n > 0) {
-			int k = rand.Next(n + 1);
-			array.Swap(n, k);
+namespace Dicom.Utility {
+	public static class ArrayHelper {
+		public static Array Shuffle(this Array array) {
+			ArrayUtility.Shuffle(array);
+			return array;
 		}
-		return array;
+
+		public static Array Swap(this Array array, int source, int destination) {
+			ArrayUtility.Swap(array, source, destination);
+			return array;
+		}
 	}
 
-	public static void Swap(this Array array, int source, int destination) {
-		object obj = array.GetValue(source);
-		array.SetValue(array.GetValue(destination), source);
-		array.SetValue(obj, destination);
-	}
-}
+	public static class StringHelper {
+		public static string MD5(this string str) {
+			return StringUtility.MD5(str);
+		}
 
-public static class StringHelper {
-	public static bool Match(this string str, string pattern) {
-		return Wildcard.Match(pattern, str);
+		public static string SHA1(this string str) {
+			return StringUtility.SHA1(str);
+		}
 	}
 
-	public static bool Match(this string str, string pattern, bool caseSensitive) {
-		return Wildcard.Match(pattern, str, caseSensitive);
-	}
-
-	public static string MD5(this string str) {
-		MD5 md5 = new MD5CryptoServiceProvider();
-		byte[] bytes = ASCIIEncoding.Default.GetBytes(str);
-		bytes = md5.ComputeHash(bytes);
-		return BitConverter.ToString(bytes);
-	}
-
-	public static string SHA1(this string str) {
-		SHA1 sha1 = new SHA1CryptoServiceProvider();
-		byte[] bytes = ASCIIEncoding.Default.GetBytes(str);
-		bytes = sha1.ComputeHash(bytes);
-		return BitConverter.ToString(bytes);
-	}
-}
-
-public static class XmlHelper {
-	public static string FirstText(this XElement element) {
-		foreach (XNode node in element.Nodes()) {
-			if (node is XText) {
-				XText text = (XText)node;
-				return text.Value;
+	public static class XmlHelper {
+		public static string FirstText(this XElement element) {
+			foreach (XNode node in element.Nodes()) {
+				if (node is XText) {
+					XText text = (XText)node;
+					return text.Value;
+				}
 			}
+			return String.Empty;
 		}
-		return String.Empty;
 	}
 }
 
