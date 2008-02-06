@@ -57,7 +57,7 @@ namespace Dicom.Network.Client {
 			Log.Info("{0} <- Association accept:\n{1}", LogID, association.ToString());
 			byte pcid = association.FindAbstractSyntax(DcmUIDs.Verification);
 			Log.Info("{0} -> C-Echo request", LogID);
-			SendCEchoRequest(pcid, 1);
+			SendCEchoRequest(pcid, NextMessageID(), Priority);
 		}
 
 		protected override void OnReceiveCEchoResponse(byte presentationID, ushort messageID, DcmStatus status) {

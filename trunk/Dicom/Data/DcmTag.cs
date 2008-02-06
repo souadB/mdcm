@@ -255,8 +255,8 @@ namespace Dicom.Data {
 		/// <summary>(0000,1023) VR=US Warning Suboperations</summary>
 		public static DcmTag WarningSuboperations = new DcmTag(0x0000, 0x1023);
 
-		/// <summary>(0000,1030) VR=AE AE Title</summary>
-		public static DcmTag AETitle = new DcmTag(0x0000, 0x1030);
+		/// <summary>(0000,1030) VR=AE Move Originator AE Title</summary>
+		public static DcmTag MoveOriginator = new DcmTag(0x0000, 0x1030);
 
 		/// <summary>(0000,1031) VR=US Message ID (second)</summary>
 		public static DcmTag MoveOriginatorMessageID = new DcmTag(0x0000, 0x1031);
@@ -5437,7 +5437,7 @@ namespace Dicom.Data {
 		public static DcmTag CreationTime = new DcmTag(0x2100, 0x0050);
 
 		/// <summary>(2100,0070) VR=AE Originator</summary>
-		public static DcmTag MoveOriginatorAE = new DcmTag(0x2100, 0x0070);
+		public static DcmTag OriginatorAE = new DcmTag(0x2100, 0x0070);
 
 		/// <summary>(2100,0140) VR=AE Destination AE</summary>
 		public static DcmTag DestinationAE = new DcmTag(0x2100, 0x0140);

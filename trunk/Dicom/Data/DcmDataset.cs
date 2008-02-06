@@ -212,6 +212,17 @@ namespace Dicom.Data {
 			return false;
 		}
 
+		public bool AddElementWithValue(DcmTag tag, DcmTag value) {
+			DcmVR vr = tag.Entry.DefaultVR;
+			if (vr != DcmVR.AT)
+				throw new DcmDataException("Tried to create element with incorrect VR");
+			if (AddElement(tag, vr)) {
+				GetAT(tag).SetValue(value);
+				return true;
+			}
+			return false;
+		}
+
 		public bool AddElementWithValue(DcmTag tag, DcmUID value) {
 			return AddElementWithValue(tag, value.UID);
 		}
@@ -604,6 +615,13 @@ namespace Dicom.Data {
 			}
 			catch { }
 			return dt;
+		}
+
+		public DcmTag GetDcmTag(DcmTag tag) {
+			DcmAttributeTag at = GetAT(tag);
+			if (at != null)
+				return at.GetValue();
+			return null;
 		}
 
 		public DcmUID GetUID(DcmTag tag) {

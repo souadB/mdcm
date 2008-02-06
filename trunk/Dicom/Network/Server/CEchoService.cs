@@ -53,7 +53,7 @@ namespace Dicom.Network.Server {
 			SendAssociateAccept(association);
 		}
 
-		protected override void OnReceiveCEchoRequest(byte presentationID, ushort messageID) {
+		protected override void OnReceiveCEchoRequest(byte presentationID, ushort messageID, DcmPriority priority) {
 			Log.Info("{0} <- C-Echo request [pc: {1}; id: {2}]", LogID, presentationID, messageID);
 			Log.Info("{0} -> C-Echo response [{1}]: {2}", LogID, messageID, DcmStatus.Success);
 			SendCEchoResponse(presentationID, messageID, DcmStatus.Success);

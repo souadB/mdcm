@@ -155,7 +155,7 @@ namespace Dicom.Network.Client {
 						break;
 					}
 					_current = query;
-					SendCMoveRequest(pcid, 1, DestinationAE, dataset);
+					SendCMoveRequest(pcid, 1, DestinationAE, Priority, dataset);
 				}
 				else {
 					Log.Info("{0} -> Presentation context rejected: {1}", LogID, Associate.GetPresentationContextResult(pcid));

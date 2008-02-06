@@ -27,8 +27,7 @@ using System.Text;
 namespace Dicom.Data {
 	public class DcmFileMetaInfo : DcmDataset {
 		#region Public Constructors
-		public DcmFileMetaInfo()
-			: base(DcmTS.ExplicitVRLittleEndian) {
+		public DcmFileMetaInfo() : base(DcmTS.ExplicitVRLittleEndian) {
 		}
 		#endregion
 
