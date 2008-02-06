@@ -306,6 +306,15 @@ namespace Dicom.Network {
 			pdu.Write("Implementation Class UID", Implementation.ClassUID.UID);
 			pdu.WriteLength16();
 
+			// Asynchronous Operations Negotiation
+			if (_assoc.NegotiateAsyncOps) {
+				pdu.Write("Item-Type", (byte)0x53);
+				pdu.Write("Reserved", (byte)0x00);
+				pdu.Write("Item-Length", (ushort)0x0004);
+				pdu.Write("Asynchronous Operations Invoked", (ushort)_assoc.AsyncOpsInvoked);
+				pdu.Write("Asynchronous Operations Performed", (ushort)_assoc.AsyncOpsPerformed);
+			}
+
 			// Implementation Version
 			pdu.Write("Item-Type", (byte)0x55);
 			pdu.Write("Reserved", (byte)0x00); 
@@ -376,8 +385,8 @@ namespace Dicom.Network {
 						} else if (ut == 0x55) {
 							_assoc.ImplementationVersion = raw.ReadString("Implementation Version", ul);
 						} else if (ut == 0x53) {
-							raw.ReadUInt16("Asynchronous Operations Invoked");
-							raw.ReadUInt16("Asynchronous Operations Performed");
+							_assoc.AsyncOpsInvoked = raw.ReadUInt16("Asynchronous Operations Invoked");
+							_assoc.AsyncOpsPerformed = raw.ReadUInt16("Asynchronous Operations Performed");
 						} else if (ut == 0x54) {
 							raw.SkipBytes("SCU/SCP Role Selection", ul);
 							/*
@@ -464,6 +473,15 @@ namespace Dicom.Network {
 			pdu.Write("Implementation Class UID", Implementation.ClassUID.UID);
 			pdu.WriteLength16();
 
+			// Asynchronous Operations Negotiation
+			if (_assoc.NegotiateAsyncOps) {
+				pdu.Write("Item-Type", (byte)0x53);
+				pdu.Write("Reserved", (byte)0x00);
+				pdu.Write("Item-Length", (ushort)0x0004);
+				pdu.Write("Asynchronous Sub-Operations Invoked", (ushort)_assoc.AsyncSubOpsInvoked);
+				pdu.Write("Asynchronous Sub-Operations Performed", (ushort)_assoc.AsyncSubOpsPerformed);
+			}
+
 			// Implementation Version
 			pdu.Write("Item-Type", (byte)0x55);
 			pdu.Write("Reserved", (byte)0x00);
@@ -537,6 +555,9 @@ namespace Dicom.Network {
 							_assoc.MaximumPduLength = raw.ReadUInt32("Max PDU Length");
 						} else if (ut == 0x52) {
 							_assoc.ImplementationClass = DcmUIDs.Lookup(raw.ReadString("Implementation Class UID", ul));
+						} else if (ut == 0x53) {
+							_assoc.AsyncSubOpsInvoked = raw.ReadUInt16("Asynchronous Sub-Operations Invoked");
+							_assoc.AsyncSubOpsPerformed = raw.ReadUInt16("Asynchronous Sub-Operations Performed");
 						} else if (ut == 0x55) {
 							_assoc.ImplementationVersion = raw.ReadString("Implementation Version", ul);
 						} else {
