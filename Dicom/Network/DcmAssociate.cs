@@ -152,6 +152,11 @@ namespace Dicom.Network {
 		private uint _maxPdu;
 		private string _calledAe;
 		private string _callingAe;
+		private bool _negotiateAsync;
+		private int _opsInvoked;
+		private int _opsPerformed;
+		private int _subopsInvoked;
+		private int _subopsPerformed;
 		private SortedList<byte, DcmPresContext> _presContexts;
 		#endregion
 
@@ -162,6 +167,11 @@ namespace Dicom.Network {
 			_implClass = Implementation.ClassUID;
 			_implVersion = Implementation.Version;
 			_presContexts = new SortedList<byte, DcmPresContext>();
+			_negotiateAsync = false;
+			_opsInvoked = 1;
+			_opsPerformed = 1;
+			_subopsInvoked = 1;
+			_subopsPerformed = 1;
 		}
 		#endregion
 
@@ -212,6 +222,37 @@ namespace Dicom.Network {
 		public string CallingAE {
 			get { return _callingAe; }
 			set { _callingAe = value; }
+		}
+
+		public bool NegotiateAsyncOps {
+			get { return _negotiateAsync; }
+			set { _negotiateAsync = value; }
+		}
+
+		public int AsyncOpsInvoked {
+			get { return _opsInvoked; }
+			set {
+				_opsInvoked = value;
+				_negotiateAsync = true;
+			}
+		}
+
+		public int AsyncOpsPerformed {
+			get { return _opsPerformed; }
+			set {
+				_opsPerformed = value;
+				_negotiateAsync = true;
+			}
+		}
+
+		public int AsyncSubOpsInvoked {
+			get { return _subopsInvoked; }
+			set { _subopsInvoked = value; }
+		}
+
+		public int AsyncSubOpsPerformed {
+			get { return _subopsPerformed; }
+			set { _subopsPerformed = value; }
 		}
 		#endregion
 
@@ -405,6 +446,10 @@ namespace Dicom.Network {
 			sb.AppendFormat("Maximum PDU Size:        {0}\n", _maxPdu);
 			sb.AppendFormat("Called AE Title:         {0}\n", _calledAe);
 			sb.AppendFormat("Calling AE Title:        {0}\n", _callingAe);
+			if (NegotiateAsyncOps) {
+				sb.AppendFormat("Asynchronous Operations: {0}:{1}\n", _opsInvoked, _opsPerformed);
+				sb.AppendFormat("         Sub-Operations: {0}:{1}\n", _subopsInvoked, _subopsPerformed);
+			}
 			sb.AppendFormat("Presentation Contexts:   {0}\n", _presContexts.Count);
 			foreach (DcmPresContext pctx in _presContexts.Values) {
 				sb.AppendFormat("  Presentation Context:  {0} [{1}]\n", pctx.ID, pctx.GetResultDescription());

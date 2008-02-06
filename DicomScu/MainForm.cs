@@ -223,7 +223,7 @@ namespace DicomScu {
 			scu.CallingAE = Config.LocalAE;
 			scu.CalledAE = Config.RemoteAE;
 			scu.MaxPduSize = Config.MaxPdu;
-			scu.Timeout = Config.Timeout;
+			scu.Timeout = 5;
 			scu.DimseTimeout = Config.Timeout;
 			scu.SerializedPresentationContexts = true;
 			scu.PreferredTransferSyntax = TransferSyntaxes[Config.TransferSyntax];
@@ -246,6 +246,7 @@ namespace DicomScu {
 			try {
 				CStoreClient scu = (CStoreClient)state;
 				scu.Connect(Config.RemoteHost, Config.RemotePort, Config.UseTls ? DcmSocketType.TLS : DcmSocketType.TCP);
+				scu.Timeout = Config.Timeout;
 				scu.Wait();
 			}
 			catch (Exception e) {
