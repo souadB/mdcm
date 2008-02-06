@@ -32,6 +32,7 @@ namespace Dicom.Network.Server {
 		}
 
 		protected override void OnReceiveAssociateRequest(DcmAssociate association) {
+			association.NegotiateAsyncOps = false;
 			LogID = association.CallingAE;
 			Log.Info("{0} <- Association request:\n{1}", LogID, association.ToString());
 			foreach (DcmPresContext pc in association.GetPresentationContexts()) {
