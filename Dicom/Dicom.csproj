@@ -79,6 +79,7 @@
     <Compile Include="Codec\DcmCodecParameters.cs" />
     <Compile Include="Codec\DicomCodec.cs" />
     <Compile Include="Codec\DcmRleCodec.cs" />
+    <Compile Include="Network\DcmCommand.cs" />
     <Compile Include="Data\DcmDataException.cs" />
     <Compile Include="Data\DcmDataset.cs" />
     <Compile Include="Data\DcmDateRange.cs" />

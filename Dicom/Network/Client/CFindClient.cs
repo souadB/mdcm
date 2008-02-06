@@ -554,7 +554,7 @@ namespace Dicom.Network.Client {
 				if (Associate.GetPresentationContextResult(pcid) == DcmPresContextResult.Accept) {
 					Log.Info("{0} -> C-Find request", LogID);
 					DcmDataset dataset = query.ToDataset(Associate.GetAcceptedTransferSyntax(pcid));
-					SendCFindRequest(pcid, NextMessageID(), dataset);
+					SendCFindRequest(pcid, NextMessageID(), Priority, dataset);
 				}
 				else {
 					Log.Info("{0} <- Presentation context rejected: {1}", LogID, Associate.GetPresentationContextResult(pcid));
