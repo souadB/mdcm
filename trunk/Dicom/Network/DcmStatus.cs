@@ -24,20 +24,43 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace Dicom.Network {
+	/// <summary>State of a DICOM status code</summary>
 	public enum DcmState {
+		/// <summary>Success.</summary>
 		Success,
+
+		/// <summary>Cancel.</summary>
 		Cancel,
+
+		/// <summary>Pending.</summary>
 		Pending,
+
+		/// <summary>Warning.</summary>
 		Warning,
+
+		/// <summary>Failure.</summary>
 		Failure
 	}
 
+	/// <summary>DICOM Status</summary>
 	public class DcmStatus {
+		/// <summary>DICOM status code.</summary>
 		public readonly ushort Code;
-		public readonly ushort Mask;
-		public readonly DcmState Status;
-		public readonly string Description;
 
+		/// <summary>State of this DICOM status code.</summary>
+		public readonly DcmState State;
+
+		/// <summary>Description.</summary>
+		public readonly string Description;
+		
+		private readonly ushort Mask;
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DcmStatus"/> class.
+		/// </summary>
+		/// <param name="code">The code.</param>
+		/// <param name="status">The status.</param>
+		/// <param name="desc">The desc.</param>
 		public DcmStatus(string code, DcmState status, string desc) {
 			Code = ushort.Parse(code.Replace('x', '0'), System.Globalization.NumberStyles.HexNumber);
 
@@ -51,36 +74,73 @@ namespace Dicom.Network {
 				.Replace('x', '0');
 			Mask = ushort.Parse(msb.ToString(), System.Globalization.NumberStyles.HexNumber);
 
-			Status = status;
+			State = status;
 			Description = desc;
 		}
 
+		/// <summary>
+		/// Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+		/// </summary>
+		/// <returns>
+		/// A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+		/// </returns>
 		public override string ToString() {
-			if (Status == DcmState.Warning || Status == DcmState.Failure) {
-				return String.Format("{0}: {1}", Status, Description);
+			if (State == DcmState.Warning || State == DcmState.Failure) {
+				return String.Format("{0}: {1}", State, Description);
 			}
 			return Description;
 		}
 
+		/// <summary>
+		/// Implements the operator ==.
+		/// </summary>
+		/// <param name="s1">DICOM Status</param>
+		/// <param name="s2">DICOM Status</param>
+		/// <returns>The result of the operator.</returns>
 		public static bool operator ==(DcmStatus s1, DcmStatus s2) {
 			if ((object)s1 == null || (object)s2 == null)
 				return false;
 			return (s1.Code & s2.Mask) == (s2.Code & s1.Mask);
 		}
+
+		/// <summary>
+		/// Implements the operator !=.
+		/// </summary>
+		/// <param name="s1">DICOM Status</param>
+		/// <param name="s2">DICOM Status</param>
+		/// <returns>The result of the operator.</returns>
 		public static bool operator !=(DcmStatus s1, DcmStatus s2) {
 			if ((object)s1 == null || (object)s2 == null)
 				return false;
 			return !(s1 == s2);
 		}
+
+
+		/// <summary>
+		/// Determines whether the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>.
+		/// </summary>
+		/// <param name="obj">The <see cref="T:System.Object"/> to compare with the current <see cref="T:System.Object"/>.</param>
+		/// <returns>
+		/// true if the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>; otherwise, false.
+		/// </returns>
+		/// <exception cref="T:System.NullReferenceException">The <paramref name="obj"/> parameter is null.</exception>
 		public override bool Equals(object obj) {
 			return (DcmStatus)obj == this;
 		}
+
+
+		/// <summary>
+		/// Serves as a hash function for a particular type.
+		/// </summary>
+		/// <returns>
+		/// A hash code for the current <see cref="T:System.Object"/>.
+		/// </returns>
 		public override int GetHashCode() {
 			return base.GetHashCode();
 		}
 
 		#region Static
-		public static List<DcmStatus> Entries = new List<DcmStatus>();
+		private static List<DcmStatus> Entries = new List<DcmStatus>();
 
 		static DcmStatus() {
 			#region Load Dicom Status List
@@ -142,6 +202,11 @@ namespace Dicom.Network {
 			#endregion
 		}
 
+		/// <summary>
+		/// Looks up the specified code.
+		/// </summary>
+		/// <param name="code">The code.</param>
+		/// <returns></returns>
 		public static DcmStatus Lookup(ushort code) {
 			foreach (DcmStatus status in Entries) {
 				if (status.Code == (code & status.Mask))

@@ -24,6 +24,9 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace Dicom.Data {
+	/// <summary>
+	/// DICOM date range
+	/// </summary>
 	public class DcmDateRange {
 		#region Private Members
 		private DateTime _dtBegin;
@@ -31,20 +34,36 @@ namespace Dicom.Data {
 		#endregion
 
 		#region Public Constructors
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DcmDateRange"/> class.
+		/// </summary>
 		public DcmDateRange() {
 			_dtBegin = DateTime.MinValue;
 			_dtEnd = DateTime.MinValue;
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DcmDateRange"/> class.
+		/// </summary>
+		/// <param name="dt">Start and end date</param>
 		public DcmDateRange(DateTime dt) {
 			_dtBegin = _dtEnd = dt;
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DcmDateRange"/> class.
+		/// </summary>
+		/// <param name="begin">Start date</param>
+		/// <param name="end">End date</param>
 		public DcmDateRange(DateTime begin, DateTime end) {
 			_dtBegin = begin;
 			_dtEnd = end;
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DcmDateRange"/> class.
+		/// </summary>
+		/// <param name="range">Date range</param>
 		public DcmDateRange(DateTime[] range) {
 			if (range.Length == 1) {
 				DateTime = range[0];
@@ -59,6 +78,10 @@ namespace Dicom.Data {
 		#endregion
 
 		#region Public Properties
+		/// <summary>
+		/// Gets or sets the date time.
+		/// </summary>
+		/// <value>The date time.</value>
 		public DateTime DateTime {
 			get {
 				_dtEnd = _dtBegin;
@@ -69,11 +92,19 @@ namespace Dicom.Data {
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the start date.
+		/// </summary>
+		/// <value>Start date</value>
 		public DateTime Begin {
 			get { return _dtBegin; }
 			set { _dtBegin = value; }
 		}
 
+		/// <summary>
+		/// Gets or sets the end date.
+		/// </summary>
+		/// <value>End date</value>
 		public DateTime End {
 			get { return _dtEnd; }
 			set { _dtEnd = value; }
@@ -81,6 +112,11 @@ namespace Dicom.Data {
 		#endregion
 
 		#region Public Members
+		/// <summary>
+		/// Gets date range as formatted string.
+		/// </summary>
+		/// <param name="format">DateTime format</param>
+		/// <returns></returns>
 		public string ToString(string format) {
 			if ((Begin == DateTime.MinValue || Begin == DateTime.MaxValue) &&
 				(End == DateTime.MinValue || End == DateTime.MaxValue)) {

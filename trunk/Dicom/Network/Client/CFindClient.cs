@@ -575,7 +575,7 @@ namespace Dicom.Network.Client {
 
 		protected override void OnReceiveCFindResponse(byte presentationID, ushort messageID, DcmDataset dataset, DcmStatus status) {
 			Log.Info("{0} <- C-Find response: {1}", LogID, status);
-			if (status.Status != DcmState.Pending) {
+			if (status.State != DcmState.Pending) {
 				if (OnCFindComplete != null) {
 					OnCFindComplete(_current);
 				}

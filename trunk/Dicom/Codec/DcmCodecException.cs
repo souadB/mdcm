@@ -24,8 +24,15 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace Dicom.Codec {
+	/// <summary>
+	/// DICOM Codec Exception
+	/// </summary>
 	public class DcmCodecException : Exception {
-		public DcmCodecException(String s) : base(s) {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DcmCodecException"/> class.
+		/// </summary>
+		/// <param name="msg">Exception message</param>
+		public DcmCodecException(String msg) : base(msg) {
 		}
 	}
 }
