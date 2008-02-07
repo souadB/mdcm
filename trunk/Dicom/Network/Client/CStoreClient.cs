@@ -312,7 +312,6 @@ namespace Dicom.Network.Client {
 				associate.CallingAE = CallingAE;
 				associate.MaximumPduLength = MaxPduSize;
 
-				Log.Info("{0} -> Association request:\n{1}", LogID, associate.ToString());
 				SendAssociateRequest(associate);
 			} else {
 				Close();
@@ -327,17 +326,14 @@ namespace Dicom.Network.Client {
 		}
 
 		protected override void OnReceiveAssociateAccept(DcmAssociate association) {
-			Log.Info("{0} <- Association accept:\n{1}", LogID, association.ToString());
 			SendNextCStoreRequest();
 		}
 
 		protected override void OnReceiveReleaseResponse() {
-			Log.Info("{0} <- Association release response", LogID);
 			InternalClose(_images.Count == 0);
 		}
 
 		protected override void OnReceiveCStoreResponse(byte presentationID, ushort messageIdRespondedTo, DcmUID affectedInstance, DcmStatus status) {
-			Log.Info("{0} <- C-Store response [{1}]: {2}", LogID, messageIdRespondedTo, status);
 			_images[0].Status = status;
 			if (OnCStoreResponse != null)
 				OnCStoreResponse(this, _images[0], status);
@@ -369,14 +365,12 @@ namespace Dicom.Network.Client {
 								PreloadNextCStoreRequest();
 								ushort messageID = NextMessageID();
 								if (info.CanStream(tx)) {
-									Log.Info("{0} -> C-Store request [pc: {1}; id: {2}] (stream)", LogID, pcid, messageID);
 									Stream stream = info.GetStream(tx);
 									SendCStoreRequest(pcid, messageID, info.SOPInstanceUID, Priority, stream);
 									return;
 								} else {
 									DcmDataset ds = info.GetDataset(tx);
 									if (ds != null) {
-										Log.Info("{0} -> C-Store request [pc: {1}; id: {2}]", LogID, pcid, messageID);
 										SendCStoreRequest(pcid, messageID, info.SOPInstanceUID, Priority, ds);
 										return;
 									} else {
@@ -402,7 +396,6 @@ namespace Dicom.Network.Client {
 				}
 				Thread.Sleep(500);
 			}
-			Log.Info("{0} -> Association release request", LogID);
 			SendReleaseRequest();
 		}
 

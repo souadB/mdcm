@@ -49,22 +49,17 @@ namespace Dicom.Network.Client {
 			associate.CallingAE = CallingAE;
 			associate.MaximumPduLength = MaxPduSize;
 
-			Log.Info("{0} -> Association request:\n{1}", LogID, associate.ToString());
 			SendAssociateRequest(associate);
 		}
 
 		protected override void OnReceiveAssociateAccept(DcmAssociate association) {
-			Log.Info("{0} <- Association accept:\n{1}", LogID, association.ToString());
 			byte pcid = association.FindAbstractSyntax(DcmUIDs.Verification);
-			Log.Info("{0} -> C-Echo request", LogID);
 			SendCEchoRequest(pcid, NextMessageID(), Priority);
 		}
 
 		protected override void OnReceiveCEchoResponse(byte presentationID, ushort messageID, DcmStatus status) {
-			Log.Info("{0} <- C-Echo response: {1}", LogID, status);
 			if (OnCEchoResponse != null)
 				OnCEchoResponse(presentationID, messageID, status);
-			Log.Info("{0} -> Association release request", LogID);
 			SendReleaseRequest();
 		}
 		#endregion

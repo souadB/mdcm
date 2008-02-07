@@ -36,39 +36,24 @@ namespace Dicom.Network.Client {
 
 	public class DcmClientBase : DcmNetworkBase {
 		#region Private Members
-		private string _host;
-		private int _port;
 		private string _callingAe;
 		private string _calledAe;
 		private uint _maxPdu;
-		private int _timeout;
-		private int _throttle;
 		private DcmPriority _priority;
 		private ManualResetEvent _closedEvent;
-		private string _logid = "SCU";
-		private Logger _log;
 		private bool _closedOnError;
 		#endregion
 
 		#region Public Constructors
 		public DcmClientBase() : base() {
-			_closedEvent = null;
 			_maxPdu = 32768;
-			_timeout = 10;
-			_log = Dicom.Debug.Log;
 			_priority = DcmPriority.High;
+			_closedOnError = false;
+			_closedEvent = new ManualResetEvent(false);
 		}
 		#endregion
 
 		#region Public Properties
-		public string Host {
-			get { return _host; }
-		}
-
-		public int Port {
-			get { return _port; }
-		}
-
 		public string CallingAE {
 			get { return _callingAe; }
 			set { _callingAe = value; }
@@ -87,32 +72,6 @@ namespace Dicom.Network.Client {
 			set { _maxPdu = value; }
 		}
 
-		public int Timeout {
-			get { return _timeout; }
-			set {
-				_timeout = value;
-				if (Socket != null) {
-					Socket.SendTimeout = _timeout * 1000;
-					Socket.ReceiveTimeout = _timeout * 1000;
-				}
-			}
-		}
-
-		public int ThrottleSpeed {
-			get { return _throttle; }
-			set { _throttle = value; }
-		}
-
-		public string LogID {
-			get { return _logid; }
-			set { _logid = value; }
-		}
-
-		public Logger Log {
-			get { return _log; }
-			set { _log = value; }
-		}
-
 		public bool ClosedOnError {
 			get { return _closedOnError; }
 		}
@@ -124,31 +83,6 @@ namespace Dicom.Network.Client {
 		#endregion
 
 		#region Public Methods
-		public void Connect(string host, int port, DcmSocketType type) {
-			_host = host; _port = port;
-
-			_closedOnError = false;
-			_closedEvent = new ManualResetEvent(false);
-
-			DcmSocket socket = DcmSocket.Create(type);
-			socket.SendTimeout = _timeout * 1000;
-			socket.ReceiveTimeout = _timeout * 1000;
-			socket.ThrottleSpeed = _throttle;
-
-			Log.Info("{0} -> Connecting to server at {1}:{2}", LogID, host, port);
-			socket.Connect(host, port);
-
-			if (type == DcmSocketType.TLS)
-				Log.Info("{0} -> Authenticating SSL/TLS for server: {1}", LogID, socket.RemoteEndPoint);
-
-			InitializeNetwork(socket);
-		}
-
-		protected void Reconnect() {
-			Socket.Reconnect();
-			InitializeNetwork(Socket);
-		}
-
 		public void Abort() {
 			SendAbort(DcmAbortSource.ServiceUser, DcmAbortReason.NotSpecified);
 			InternalClose(true);
@@ -164,17 +98,11 @@ namespace Dicom.Network.Client {
 				_closedEvent.Set();
 				_closedEvent = null;
 			}
-			Log.Info("{0} -> Connection closed", LogID);
 		}
 
 		public bool Wait() {
 			_closedEvent.WaitOne();
 			return !_closedOnError;
-		}
-		#endregion
-
-		#region DcmClientBase Virtual Methods
-		protected virtual void OnClientConnected() {
 		}
 		#endregion
 
@@ -184,38 +112,31 @@ namespace Dicom.Network.Client {
 		}
 
 		protected override void OnNetworkError(Exception e) {
-			Log.Info("{0} -> Network error: {1}", LogID, e.ToString());
 			_closedOnError = true;
 			Close();
 		}
 
 		protected override void OnDimseTimeout() {
-			Log.Info("{0} -> DIMSE timeout", LogID);
 			_closedOnError = true;
 			Close();
 		}
 
 		protected override void OnReceiveAssociateReject(DcmRejectResult result, DcmRejectSource source, DcmRejectReason reason) {
-			Log.Info("{0} <- Association reject: {1} - {2} - {3}", LogID, result, source, reason);
 			_closedOnError = true;
 			Close();
 		}
 
 		protected override void OnReceiveAbort(DcmAbortSource source, DcmAbortReason reason) {
-			Log.Info("{0} <- Association abort: {1} - {2}", LogID, source, reason);
 			_closedOnError = true;
 			Close();
 		}
 
 		protected override void OnReceiveReleaseResponse() {
-			Log.Info("{0} <- Association release response", LogID);
 			_closedOnError = false;
 			Close();
 		}
 
 		protected override void OnReceiveReleaseRequest() {
-			Log.Info("{0} <- Association release request", LogID);
-			Log.Info("{0} -> Association release response", LogID);
 			SendReleaseResponse();
 			Close();
 		}

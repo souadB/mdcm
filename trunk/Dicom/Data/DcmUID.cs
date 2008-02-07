@@ -72,8 +72,6 @@ namespace Dicom.Data {
 
 		static DcmUIDs() {
 			#region Load Internal UIDs
-			Entries.Add(DcmUIDs.JPEGXRPrivate.UID, DcmUIDs.JPEGXRPrivate);
-			Entries.Add(DcmUIDs.PNGPrivate.UID, DcmUIDs.PNGPrivate);
 			Entries.Add(DcmUIDs.ImplicitVRLittleEndian.UID, DcmUIDs.ImplicitVRLittleEndian);
 			Entries.Add(DcmUIDs.ExplicitVRLittleEndian.UID, DcmUIDs.ExplicitVRLittleEndian);
 			Entries.Add(DcmUIDs.DeflatedExplicitVRLittleEndian.UID, DcmUIDs.DeflatedExplicitVRLittleEndian);
