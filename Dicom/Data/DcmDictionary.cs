@@ -202,7 +202,7 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0000", "1021", "Completed Suboperations", String.Empty, USa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0000", "1022", "Failed Suboperations", String.Empty, USa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0000", "1023", "Warning Suboperations", String.Empty, USa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0000", "1030", "AE Title", String.Empty, AEa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0000", "1030", "Move Originator", String.Empty, AEa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0000", "1031", "Message ID (second)", String.Empty, USa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0002", "0001", "File Meta Information Version", String.Empty, OBa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0002", "0002", "Media Storage SOP Class UID", String.Empty, UIa, "1", false));

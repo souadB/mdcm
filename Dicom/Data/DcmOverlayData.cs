@@ -25,6 +25,9 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace Dicom.Data {
+	/// <summary>
+	/// DICOM Overlay
+	/// </summary>
 	public class DcmOverlayData {
 		#region Private Members
 		private ushort _group;
@@ -47,6 +50,11 @@ namespace Dicom.Data {
 		#endregion
 
 		#region Public Constructors
+		/// <summary>
+		/// Initializes overlay from DICOM dataset and overlay group.
+		/// </summary>
+		/// <param name="ds">Dataset</param>
+		/// <param name="group">Overlay group</param>
 		public DcmOverlayData(DcmDataset ds, ushort group) {
 			_group = group;
 			Load(ds);
@@ -54,64 +62,112 @@ namespace Dicom.Data {
 		#endregion
 
 		#region Public Properties
+		/// <summary>
+		/// Overlay group
+		/// </summary>
 		public ushort Group {
 			get { return _group; }
 		}
 
+		/// <summary>
+		/// Number of rows in overlay
+		/// </summary>
 		public int Rows {
 			get { return _rows; }
 		}
 
+		/// <summary>
+		/// Number of columns in overlay
+		/// </summary>
 		public int Columns {
 			get { return _columns; }
 		}
 
+		/// <summary>
+		/// Overlay type
+		/// </summary>
 		public string Type {
 			get { return _type; }
 		}
 
+		/// <summary>
+		/// Position of the first column of an overlay
+		/// </summary>
 		public int OriginX {
 			get { return _originX; }
 		}
 
+		/// <summary>
+		/// Position of the first row of an overlay
+		/// </summary>
 		public int OriginY {
 			get { return _originY; }
 		}
 
+		/// <summary>
+		/// Number of bits allocated in overlay data
+		/// </summary>
 		public int BitsAllocated {
 			get { return _bitsAllocated; }
 		}
 
+		/// <summary>
+		/// Bit position of embedded overlay
+		/// </summary>
 		public int BitPosition {
 			get { return _bitPosition; }
 		}
 
+		/// <summary>
+		/// Overlay data
+		/// </summary>
 		public byte[] Data {
 			get { return _data; }
 		}
 
+		/// <summary>
+		/// Description of overlay
+		/// </summary>
 		public string Description {
 			get { return _description; }
 		}
 
+		/// <summary>
+		/// Subtype
+		/// </summary>
 		public string Subtype {
 			get { return _subtype; }
 		}
 
+		/// <summary>
+		/// Overlay label
+		/// </summary>
 		public string Label {
 			get { return _label; }
 		}
 
+		/// <summary>
+		/// Number of frames
+		/// </summary>
 		public int NumberOfFrames {
 			get { return _frames; }
 		}
 
+		/// <summary>
+		/// First frame of overlay
+		/// </summary>
 		public int OriginFrame {
 			get { return _frameOrigin; }
 		}
 		#endregion
 
 		#region Public Members
+		/// <summary>
+		/// Gets the overlay data.
+		/// </summary>
+		/// <param name="bg">Background color</param>
+		/// <param name="fg">Foreground color</param>
+		/// <returns>Overlay data</returns>
 		public int[] GetOverlayDataS32(int bg, int fg) {
 			int[] overlay = new int[Rows * Columns];
 			BitArray bits = new BitArray(_data);
@@ -126,6 +182,11 @@ namespace Dicom.Data {
 			return overlay;
 		}
 
+		/// <summary>
+		/// Gets all overlays in a DICOM dataset.
+		/// </summary>
+		/// <param name="ds">Dataset</param>
+		/// <returns>Array of overlays</returns>
 		public static DcmOverlayData[] GetOverlays(DcmDataset ds) {
 			List<ushort> groups = new List<ushort>();
 			foreach (DcmItem elem in ds.Elements) {

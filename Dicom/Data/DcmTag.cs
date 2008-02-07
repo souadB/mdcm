@@ -184,6 +184,7 @@ namespace Dicom.Data {
 		}
 	}
 
+	/// <summary>DICOM Tags</summary>
 	public static class DcmTags {
 		#region Internal Dictionary Quick Tags
 		/// <summary>(0000,0001) VR=UL Command Length to End (Retired)</summary>
@@ -7502,2392 +7503,7155 @@ namespace Dicom.Data {
 		#endregion
 	}
 
+	/// <summary>Const DICOM Tag cards for use with DicomFieldAttribute</summary>
 	public static class DcmConstTags {
 		#region Const Tags
+		/// <summary>(0000,0001) VR=UL Command Length to End (Retired)</summary>
 		public const uint CommandLengthToEndRETIRED = 0x00000001;
+
+		/// <summary>(0000,0002) VR=UI Affected SOP Class UID</summary>
 		public const uint AffectedSOPClassUID = 0x00000002;
+
+		/// <summary>(0000,0003) VR=UI Requested SOP Class UID</summary>
 		public const uint RequestedSOPClassUID = 0x00000003;
+
+		/// <summary>(0000,0010) VR=SH Command Recognition Code (Retired)</summary>
 		public const uint CommandRecognitionCodeRETIRED = 0x00000010;
+
+		/// <summary>(0000,0100) VR=US Command Field</summary>
 		public const uint CommandField = 0x00000100;
+
+		/// <summary>(0000,0110) VR=US Message ID (first)</summary>
 		public const uint MessageIDFirst = 0x00000110;
+
+		/// <summary>(0000,0120) VR=US Message ID Responded to</summary>
 		public const uint MessageIDRespondedTo = 0x00000120;
+
+		/// <summary>(0000,0600) VR=AE Move Destination</summary>
 		public const uint MoveDestination = 0x00000600;
+
+		/// <summary>(0000,0700) VR=US Priority</summary>
 		public const uint Priority = 0x00000700;
+
+		/// <summary>(0000,0800) VR=US Data Set Type</summary>
 		public const uint DataSetType = 0x00000800;
+
+		/// <summary>(0000,0900) VR=US Status</summary>
 		public const uint Status = 0x00000900;
+
+		/// <summary>(0000,0901) VR=AT Offending Element</summary>
 		public const uint OffendingElement = 0x00000901;
+
+		/// <summary>(0000,0902) VR=LO Error Comment</summary>
 		public const uint ErrorComment = 0x00000902;
+
+		/// <summary>(0000,0903) VR=US Error ID</summary>
 		public const uint ErrorID = 0x00000903;
+
+		/// <summary>(0000,1000) VR=UI SOP Affected Instance UID</summary>
 		public const uint SOPAffectedInstanceUID = 0x00001000;
+
+		/// <summary>(0000,1001) VR=UI SOP Requested Instance UID</summary>
 		public const uint SOPRequestedInstanceUID = 0x00001001;
+
+		/// <summary>(0000,1002) VR=US Event Type ID</summary>
 		public const uint EventTypeID = 0x00001002;
+
+		/// <summary>(0000,1005) VR=AT Attribute Identifier List</summary>
 		public const uint AttributeIdentifierList = 0x00001005;
+
+		/// <summary>(0000,1008) VR=US Action Type ID</summary>
 		public const uint ActionTypeID = 0x00001008;
+
+		/// <summary>(0000,1020) VR=US Remaining Suboperations</summary>
 		public const uint RemainingSuboperations = 0x00001020;
+
+		/// <summary>(0000,1021) VR=US Completed Suboperations</summary>
 		public const uint CompletedSuboperations = 0x00001021;
+
+		/// <summary>(0000,1022) VR=US Failed Suboperations</summary>
 		public const uint FailedSuboperations = 0x00001022;
+
+		/// <summary>(0000,1023) VR=US Warning Suboperations</summary>
 		public const uint WarningSuboperations = 0x00001023;
-		public const uint AETitle = 0x00001030;
+
+		/// <summary>(0000,1030) VR=AE Move Originator</summary>
+		public const uint MoveOriginator = 0x00001030;
+
+		/// <summary>(0000,1031) VR=US Message ID (second)</summary>
 		public const uint MessageIDSecond = 0x00001031;
+
+		/// <summary>(0002,0001) VR=OB File Meta Information Version</summary>
 		public const uint FileMetaInformationVersion = 0x00020001;
+
+		/// <summary>(0002,0002) VR=UI Media Storage SOP Class UID</summary>
 		public const uint MediaStorageSOPClassUID = 0x00020002;
+
+		/// <summary>(0002,0003) VR=UI Media Storage SOP Instance UID</summary>
 		public const uint MediaStorageSOPInstanceUID = 0x00020003;
+
+		/// <summary>(0002,0010) VR=UI Transfer Syntax UID</summary>
 		public const uint TransferSyntaxUID = 0x00020010;
+
+		/// <summary>(0002,0012) VR=UI Implementation Class UID</summary>
 		public const uint ImplementationClassUID = 0x00020012;
+
+		/// <summary>(0002,0013) VR=SH Implementation Version Name</summary>
 		public const uint ImplementationVersionName = 0x00020013;
+
+		/// <summary>(0002,0016) VR=AE Source Application Entity Title</summary>
 		public const uint SourceApplicationEntityTitle = 0x00020016;
+
+		/// <summary>(0002,0100) VR=UI Private Information Creator UID</summary>
 		public const uint PrivateInformationCreatorUID = 0x00020100;
+
+		/// <summary>(0002,0102) VR=OB Private Information</summary>
 		public const uint PrivateInformation = 0x00020102;
+
+		/// <summary>(0004,1130) VR=CS File-set ID</summary>
 		public const uint FilesetID = 0x00041130;
+
+		/// <summary>(0004,1141) VR=CS File-set Descriptor File ID</summary>
 		public const uint FilesetDescriptorFileID = 0x00041141;
+
+		/// <summary>(0004,1142) VR=CS Specific Character Set of File-set Descriptor File</summary>
 		public const uint SpecificCharacterSetOfFilesetDescriptorFile = 0x00041142;
+
+		/// <summary>(0004,1200) VR=UL Offset of the First Directory Record of the Root Directory Entity</summary>
 		public const uint OffsetOfTheFirstDirectoryRecordOfTheRootDirectoryEntity = 0x00041200;
+
+		/// <summary>(0004,1202) VR=UL Offset of the Last Directory Record of the Root Directory Entity</summary>
 		public const uint OffsetOfTheLastDirectoryRecordOfTheRootDirectoryEntity = 0x00041202;
+
+		/// <summary>(0004,1212) VR=US File-set Consistency Flag</summary>
 		public const uint FilesetConsistencyFlag = 0x00041212;
+
+		/// <summary>(0004,1220) VR=SQ Directory Record Sequence</summary>
 		public const uint DirectoryRecordSequence = 0x00041220;
+
+		/// <summary>(0004,1400) VR=UL Offset of the Next Directory Record</summary>
 		public const uint OffsetOfTheNextDirectoryRecord = 0x00041400;
+
+		/// <summary>(0004,1410) VR=US Record In-use Flag</summary>
 		public const uint RecordInuseFlag = 0x00041410;
+
+		/// <summary>(0004,1420) VR=UL Offset of Referenced Lower-Level Directory Entity</summary>
 		public const uint OffsetOfReferencedLowerLevelDirectoryEntity = 0x00041420;
+
+		/// <summary>(0004,1430) VR=CS Directory Record Type</summary>
 		public const uint DirectoryRecordType = 0x00041430;
+
+		/// <summary>(0004,1432) VR=UI Private Record UID</summary>
 		public const uint PrivateRecordUID = 0x00041432;
+
+		/// <summary>(0004,1500) VR=CS Referenced File ID</summary>
 		public const uint ReferencedFileID = 0x00041500;
+
+		/// <summary>(0004,1504) VR=UL MRDR Directory Record Offset (Retired)</summary>
 		public const uint MRDRDirectoryRecordOffsetRETIRED = 0x00041504;
+
+		/// <summary>(0004,1510) VR=UI Referenced SOP Class UID in File</summary>
 		public const uint ReferencedSOPClassUIDInFile = 0x00041510;
+
+		/// <summary>(0004,1511) VR=UI Referenced SOP Instance UID in File</summary>
 		public const uint ReferencedSOPInstanceUIDInFile = 0x00041511;
+
+		/// <summary>(0004,1512) VR=UI Referenced Transfer Syntax UID in File</summary>
 		public const uint ReferencedTransferSyntaxUIDInFile = 0x00041512;
+
+		/// <summary>(0004,151A) VR=UI Referenced Related General SOP Class UID in File</summary>
 		public const uint ReferencedRelatedGeneralSOPClassUIDInFile = 0x0004151a;
+
+		/// <summary>(0004,1600) VR=UL Number of References (Retired)</summary>
 		public const uint NumberOfReferencesRETIRED = 0x00041600;
+
+		/// <summary>(0008,0001) VR=UL Length to End (Retired)</summary>
 		public const uint LengthToEndRETIRED = 0x00080001;
+
+		/// <summary>(0008,0005) VR=CS Specific Character Set</summary>
 		public const uint SpecificCharacterSet = 0x00080005;
+
+		/// <summary>(0008,0008) VR=CS Image Type</summary>
 		public const uint ImageType = 0x00080008;
+
+		/// <summary>(0008,0010) VR=CS Recognition Code (Retired)</summary>
 		public const uint RecognitionCodeRETIRED = 0x00080010;
+
+		/// <summary>(0008,0012) VR=DA Instance Creation Date</summary>
 		public const uint InstanceCreationDate = 0x00080012;
+
+		/// <summary>(0008,0013) VR=TM Instance Creation Time</summary>
 		public const uint InstanceCreationTime = 0x00080013;
+
+		/// <summary>(0008,0014) VR=UI Instance Creator UID</summary>
 		public const uint InstanceCreatorUID = 0x00080014;
+
+		/// <summary>(0008,0016) VR=UI SOP Class UID</summary>
 		public const uint SOPClassUID = 0x00080016;
+
+		/// <summary>(0008,0018) VR=UI SOP Instance UID</summary>
 		public const uint SOPInstanceUID = 0x00080018;
+
+		/// <summary>(0008,001A) VR=UI Related General SOP Class UID</summary>
 		public const uint RelatedGeneralSOPClassUID = 0x0008001a;
+
+		/// <summary>(0008,001B) VR=UI Original Specialized SOP Class UID</summary>
 		public const uint OriginalSpecializedSOPClassUID = 0x0008001b;
+
+		/// <summary>(0008,0020) VR=DA Study Date</summary>
 		public const uint StudyDate = 0x00080020;
+
+		/// <summary>(0008,0021) VR=DA Series Date</summary>
 		public const uint SeriesDate = 0x00080021;
+
+		/// <summary>(0008,0022) VR=DA Acquisition Date</summary>
 		public const uint AcquisitionDate = 0x00080022;
+
+		/// <summary>(0008,0023) VR=DA Content Date</summary>
 		public const uint ContentDate = 0x00080023;
+
+		/// <summary>(0008,0024) VR=DA Overlay Date (Retired)</summary>
 		public const uint OverlayDateRETIRED = 0x00080024;
+
+		/// <summary>(0008,0025) VR=DA Curve Date (Retired)</summary>
 		public const uint CurveDateRETIRED = 0x00080025;
+
+		/// <summary>(0008,002A) VR=DT Acquisition Datetime</summary>
 		public const uint AcquisitionDatetime = 0x0008002a;
+
+		/// <summary>(0008,0030) VR=TM Study Time</summary>
 		public const uint StudyTime = 0x00080030;
+
+		/// <summary>(0008,0031) VR=TM Series Time</summary>
 		public const uint SeriesTime = 0x00080031;
+
+		/// <summary>(0008,0032) VR=TM Acquisition Time</summary>
 		public const uint AcquisitionTime = 0x00080032;
+
+		/// <summary>(0008,0033) VR=TM Content Time</summary>
 		public const uint ContentTime = 0x00080033;
+
+		/// <summary>(0008,0034) VR=TM Overlay Time (Retired)</summary>
 		public const uint OverlayTimeRETIRED = 0x00080034;
+
+		/// <summary>(0008,0035) VR=TM Curve Time (Retired)</summary>
 		public const uint CurveTimeRETIRED = 0x00080035;
+
+		/// <summary>(0008,0040) VR=US Data Set Type (Retired)</summary>
 		public const uint DataSetTypeRETIRED = 0x00080040;
+
+		/// <summary>(0008,0041) VR=LO Data Set Subtype (Retired)</summary>
 		public const uint DataSetSubtypeRETIRED = 0x00080041;
+
+		/// <summary>(0008,0042) VR=CS Nuclear Medicine Series Type (Retired)</summary>
 		public const uint NuclearMedicineSeriesTypeRETIRED = 0x00080042;
+
+		/// <summary>(0008,0050) VR=SH Accession Number</summary>
 		public const uint AccessionNumber = 0x00080050;
+
+		/// <summary>(0008,0052) VR=CS Query/Retrieve Level</summary>
 		public const uint QueryRetrieveLevel = 0x00080052;
+
+		/// <summary>(0008,0054) VR=AE Retrieve AE Title</summary>
 		public const uint RetrieveAETitle = 0x00080054;
+
+		/// <summary>(0008,0056) VR=CS Instance Availability</summary>
 		public const uint InstanceAvailability = 0x00080056;
+
+		/// <summary>(0008,0058) VR=UI Failed SOP Instance UID List</summary>
 		public const uint FailedSOPInstanceUIDList = 0x00080058;
+
+		/// <summary>(0008,0060) VR=CS Modality</summary>
 		public const uint Modality = 0x00080060;
+
+		/// <summary>(0008,0061) VR=CS Modalities in Study</summary>
 		public const uint ModalitiesInStudy = 0x00080061;
+
+		/// <summary>(0008,0062) VR=UI SOP Classes in Study</summary>
 		public const uint SOPClassesInStudy = 0x00080062;
+
+		/// <summary>(0008,0064) VR=CS Conversion Type</summary>
 		public const uint ConversionType = 0x00080064;
+
+		/// <summary>(0008,0068) VR=CS Presentation Intent Type</summary>
 		public const uint PresentationIntentType = 0x00080068;
+
+		/// <summary>(0008,0070) VR=LO Manufacturer</summary>
 		public const uint Manufacturer = 0x00080070;
+
+		/// <summary>(0008,0080) VR=LO Institution Name</summary>
 		public const uint InstitutionName = 0x00080080;
+
+		/// <summary>(0008,0081) VR=ST Institution Address</summary>
 		public const uint InstitutionAddress = 0x00080081;
+
+		/// <summary>(0008,0082) VR=SQ Institution Code Sequence</summary>
 		public const uint InstitutionCodeSequence = 0x00080082;
+
+		/// <summary>(0008,0090) VR=PN Referring Physician's Name</summary>
 		public const uint ReferringPhysiciansName = 0x00080090;
+
+		/// <summary>(0008,0092) VR=ST Referring Physician's Address</summary>
 		public const uint ReferringPhysiciansAddress = 0x00080092;
+
+		/// <summary>(0008,0094) VR=SH Referring Physician's Telephone Numbers</summary>
 		public const uint ReferringPhysiciansTelephoneNumbers = 0x00080094;
+
+		/// <summary>(0008,0096) VR=SQ Referring Physician Identification Sequence</summary>
 		public const uint ReferringPhysicianIdentificationSequence = 0x00080096;
+
+		/// <summary>(0008,0100) VR=SH Code Value</summary>
 		public const uint CodeValue = 0x00080100;
+
+		/// <summary>(0008,0102) VR=SH Coding Scheme Designator</summary>
 		public const uint CodingSchemeDesignator = 0x00080102;
+
+		/// <summary>(0008,0103) VR=SH Coding Scheme Version</summary>
 		public const uint CodingSchemeVersion = 0x00080103;
+
+		/// <summary>(0008,0104) VR=LO Code Meaning</summary>
 		public const uint CodeMeaning = 0x00080104;
+
+		/// <summary>(0008,0105) VR=CS Mapping Resource</summary>
 		public const uint MappingResource = 0x00080105;
+
+		/// <summary>(0008,0106) VR=DT Context Group Version</summary>
 		public const uint ContextGroupVersion = 0x00080106;
+
+		/// <summary>(0008,0107) VR=DT Context Group Local Version</summary>
 		public const uint ContextGroupLocalVersion = 0x00080107;
+
+		/// <summary>(0008,010B) VR=CS Context Group Extension Flag</summary>
 		public const uint ContextGroupExtensionFlag = 0x0008010b;
+
+		/// <summary>(0008,010C) VR=UI Coding Scheme UID</summary>
 		public const uint CodingSchemeUID = 0x0008010c;
+
+		/// <summary>(0008,010D) VR=UI Context Group Extension Creator UID</summary>
 		public const uint ContextGroupExtensionCreatorUID = 0x0008010d;
+
+		/// <summary>(0008,010F) VR=CS Context Identifier</summary>
 		public const uint ContextIdentifier = 0x0008010f;
+
+		/// <summary>(0008,0110) VR=SQ Coding Scheme Identification Sequence</summary>
 		public const uint CodingSchemeIdentificationSequence = 0x00080110;
+
+		/// <summary>(0008,0112) VR=LO Coding Scheme Registry</summary>
 		public const uint CodingSchemeRegistry = 0x00080112;
+
+		/// <summary>(0008,0114) VR=ST Coding Scheme External ID</summary>
 		public const uint CodingSchemeExternalID = 0x00080114;
+
+		/// <summary>(0008,0115) VR=ST Coding Scheme Name</summary>
 		public const uint CodingSchemeName = 0x00080115;
+
+		/// <summary>(0008,0116) VR=ST Responsible Organization</summary>
 		public const uint ResponsibleOrganization = 0x00080116;
+
+		/// <summary>(0008,0201) VR=SH Timezone Offset From UTC</summary>
 		public const uint TimezoneOffsetFromUTC = 0x00080201;
+
+		/// <summary>(0008,1000) VR=AE Network ID (Retired)</summary>
 		public const uint NetworkIDRETIRED = 0x00081000;
+
+		/// <summary>(0008,1010) VR=SH Station Name</summary>
 		public const uint StationName = 0x00081010;
+
+		/// <summary>(0008,1030) VR=LO Study Description</summary>
 		public const uint StudyDescription = 0x00081030;
+
+		/// <summary>(0008,1032) VR=SQ Procedure Code Sequence</summary>
 		public const uint ProcedureCodeSequence = 0x00081032;
+
+		/// <summary>(0008,103E) VR=LO Series Description</summary>
 		public const uint SeriesDescription = 0x0008103e;
+
+		/// <summary>(0008,1040) VR=LO Institutional Department Name</summary>
 		public const uint InstitutionalDepartmentName = 0x00081040;
+
+		/// <summary>(0008,1048) VR=PN Physician(s) of Record</summary>
 		public const uint PhysiciansOfRecord = 0x00081048;
+
+		/// <summary>(0008,1049) VR=SQ Physician(s) of Record Identification Sequence</summary>
 		public const uint PhysiciansOfRecordIdentificationSequence = 0x00081049;
+
+		/// <summary>(0008,1050) VR=PN Performing Physician's Name</summary>
 		public const uint PerformingPhysiciansName = 0x00081050;
+
+		/// <summary>(0008,1052) VR=SQ Performing Physician Identification Sequence</summary>
 		public const uint PerformingPhysicianIdentificationSequence = 0x00081052;
+
+		/// <summary>(0008,1060) VR=PN Name of Physician(s) Reading Study</summary>
 		public const uint NameOfPhysiciansReadingStudy = 0x00081060;
+
+		/// <summary>(0008,1062) VR=SQ Physician(s) Reading Study Identification Sequence</summary>
 		public const uint PhysiciansReadingStudyIdentificationSequence = 0x00081062;
+
+		/// <summary>(0008,1070) VR=PN Operators' Name</summary>
 		public const uint OperatorsName = 0x00081070;
+
+		/// <summary>(0008,1072) VR=SQ Operator Identification Sequence</summary>
 		public const uint OperatorIdentificationSequence = 0x00081072;
+
+		/// <summary>(0008,1080) VR=LO Admitting Diagnoses Description</summary>
 		public const uint AdmittingDiagnosesDescription = 0x00081080;
+
+		/// <summary>(0008,1084) VR=SQ Admitting Diagnoses Code Sequence</summary>
 		public const uint AdmittingDiagnosesCodeSequence = 0x00081084;
+
+		/// <summary>(0008,1090) VR=LO Manufacturer's Model Name</summary>
 		public const uint ManufacturersModelName = 0x00081090;
+
+		/// <summary>(0008,1100) VR=SQ Referenced Results Sequence (Retired)</summary>
 		public const uint ReferencedResultsSequenceRETIRED = 0x00081100;
+
+		/// <summary>(0008,1110) VR=SQ Referenced Study Sequence</summary>
 		public const uint ReferencedStudySequence = 0x00081110;
+
+		/// <summary>(0008,1111) VR=SQ Referenced Performed Procedure Step Sequence</summary>
 		public const uint ReferencedPerformedProcedureStepSequence = 0x00081111;
+
+		/// <summary>(0008,1115) VR=SQ Referenced Series Sequence</summary>
 		public const uint ReferencedSeriesSequence = 0x00081115;
+
+		/// <summary>(0008,1120) VR=SQ Referenced Patient Sequence</summary>
 		public const uint ReferencedPatientSequence = 0x00081120;
+
+		/// <summary>(0008,1125) VR=SQ Referenced Visit Sequence</summary>
 		public const uint ReferencedVisitSequence = 0x00081125;
+
+		/// <summary>(0008,1130) VR=SQ Referenced Overlay Sequence (Retired)</summary>
 		public const uint ReferencedOverlaySequenceRETIRED = 0x00081130;
+
+		/// <summary>(0008,113A) VR=SQ Referenced Waveform Sequence</summary>
 		public const uint ReferencedWaveformSequence = 0x0008113a;
+
+		/// <summary>(0008,1140) VR=SQ Referenced Image Sequence</summary>
 		public const uint ReferencedImageSequence = 0x00081140;
+
+		/// <summary>(0008,1145) VR=SQ Referenced Curve Sequence (Retired)</summary>
 		public const uint ReferencedCurveSequenceRETIRED = 0x00081145;
+
+		/// <summary>(0008,114A) VR=SQ Referenced Instance Sequence</summary>
 		public const uint ReferencedInstanceSequence = 0x0008114a;
+
+		/// <summary>(0008,114B) VR=SQ Referenced Real World Value Mapping Instance Sequence</summary>
 		public const uint ReferencedRealWorldValueMappingInstanceSequence = 0x0008114b;
+
+		/// <summary>(0008,1150) VR=UI Referenced SOP Class UID</summary>
 		public const uint ReferencedSOPClassUID = 0x00081150;
+
+		/// <summary>(0008,1155) VR=UI Referenced SOP Instance UID</summary>
 		public const uint ReferencedSOPInstanceUID = 0x00081155;
+
+		/// <summary>(0008,115A) VR=UI SOP Classes Supported</summary>
 		public const uint SOPClassesSupported = 0x0008115a;
+
+		/// <summary>(0008,1160) VR=IS Referenced Frame Number</summary>
 		public const uint ReferencedFrameNumber = 0x00081160;
+
+		/// <summary>(0008,1195) VR=UI Transaction UID</summary>
 		public const uint TransactionUID = 0x00081195;
+
+		/// <summary>(0008,1197) VR=US Failure Reason</summary>
 		public const uint FailureReason = 0x00081197;
+
+		/// <summary>(0008,1198) VR=SQ Failed SOP Sequence</summary>
 		public const uint FailedSOPSequence = 0x00081198;
+
+		/// <summary>(0008,1199) VR=SQ Referenced SOP Sequence</summary>
 		public const uint ReferencedSOPSequence = 0x00081199;
+
+		/// <summary>(0008,1200) VR=SQ Studies Containing Other Referenced Instances Sequence</summary>
 		public const uint StudiesContainingOtherReferencedInstancesSequence = 0x00081200;
+
+		/// <summary>(0008,1250) VR=SQ Related Series Sequence</summary>
 		public const uint RelatedSeriesSequence = 0x00081250;
+
+		/// <summary>(0008,2110) VR=CS Lossy Image Compression (Retired)</summary>
 		public const uint LossyImageCompressionRETIRED = 0x00082110;
+
+		/// <summary>(0008,2111) VR=ST Derivation Description</summary>
 		public const uint DerivationDescription = 0x00082111;
+
+		/// <summary>(0008,2112) VR=SQ Source Image Sequence</summary>
 		public const uint SourceImageSequence = 0x00082112;
+
+		/// <summary>(0008,2120) VR=SH Stage Name</summary>
 		public const uint StageName = 0x00082120;
+
+		/// <summary>(0008,2122) VR=IS Stage Number</summary>
 		public const uint StageNumber = 0x00082122;
+
+		/// <summary>(0008,2124) VR=IS Number of Stages</summary>
 		public const uint NumberOfStages = 0x00082124;
+
+		/// <summary>(0008,2127) VR=SH View Name</summary>
 		public const uint ViewName = 0x00082127;
+
+		/// <summary>(0008,2128) VR=IS View Number</summary>
 		public const uint ViewNumber = 0x00082128;
+
+		/// <summary>(0008,2129) VR=IS Number of Event Timers</summary>
 		public const uint NumberOfEventTimers = 0x00082129;
+
+		/// <summary>(0008,212A) VR=IS Number of Views in Stage</summary>
 		public const uint NumberOfViewsInStage = 0x0008212a;
+
+		/// <summary>(0008,2130) VR=DS Event Elapsed Time(s)</summary>
 		public const uint EventElapsedTimes = 0x00082130;
+
+		/// <summary>(0008,2132) VR=LO Event Timer Name(s)</summary>
 		public const uint EventTimerNames = 0x00082132;
+
+		/// <summary>(0008,2142) VR=IS Start Trim</summary>
 		public const uint StartTrim = 0x00082142;
+
+		/// <summary>(0008,2143) VR=IS Stop Trim</summary>
 		public const uint StopTrim = 0x00082143;
+
+		/// <summary>(0008,2144) VR=IS Recommended Display Frame Rate</summary>
 		public const uint RecommendedDisplayFrameRate = 0x00082144;
+
+		/// <summary>(0008,2200) VR=CS Transducer Position (Retired)</summary>
 		public const uint TransducerPositionRETIRED = 0x00082200;
+
+		/// <summary>(0008,2204) VR=CS Transducer Orientation (Retired)</summary>
 		public const uint TransducerOrientationRETIRED = 0x00082204;
+
+		/// <summary>(0008,2208) VR=CS Anatomic Structure (Retired)</summary>
 		public const uint AnatomicStructureRETIRED = 0x00082208;
+
+		/// <summary>(0008,2218) VR=SQ Anatomic Region Sequence</summary>
 		public const uint AnatomicRegionSequence = 0x00082218;
+
+		/// <summary>(0008,2220) VR=SQ Anatomic Region Modifier Sequence</summary>
 		public const uint AnatomicRegionModifierSequence = 0x00082220;
+
+		/// <summary>(0008,2228) VR=SQ Primary Anatomic Structure Sequence</summary>
 		public const uint PrimaryAnatomicStructureSequence = 0x00082228;
+
+		/// <summary>(0008,2229) VR=SQ Anatomic Structure, Space or Region Sequence</summary>
 		public const uint AnatomicStructureSpaceOrRegionSequence = 0x00082229;
+
+		/// <summary>(0008,2230) VR=SQ Primary Anatomic Structure Modifier Sequence</summary>
 		public const uint PrimaryAnatomicStructureModifierSequence = 0x00082230;
+
+		/// <summary>(0008,2240) VR=SQ Transducer Position Sequence (Retired)</summary>
 		public const uint TransducerPositionSequenceRETIRED = 0x00082240;
+
+		/// <summary>(0008,2242) VR=SQ Transducer Position Modifier Sequence (Retired)</summary>
 		public const uint TransducerPositionModifierSequenceRETIRED = 0x00082242;
+
+		/// <summary>(0008,2244) VR=SQ Transducer Orientation Sequence (Retired)</summary>
 		public const uint TransducerOrientationSequenceRETIRED = 0x00082244;
+
+		/// <summary>(0008,2246) VR=SQ Transducer Orientation Modifier Sequence (Retired)</summary>
 		public const uint TransducerOrientationModifierSequenceRETIRED = 0x00082246;
+
+		/// <summary>(0008,3001) VR=SQ Alternate Representation Sequence</summary>
 		public const uint AlternateRepresentationSequence = 0x00083001;
+
+		/// <summary>(0008,3010) VR=UI Irradiation Event UID</summary>
 		public const uint IrradiationEventUID = 0x00083010;
+
+		/// <summary>(0008,4000) VR=LT Identifying Comments (Retired)</summary>
 		public const uint IdentifyingCommentsRETIRED = 0x00084000;
+
+		/// <summary>(0008,9007) VR=CS Frame Type</summary>
 		public const uint FrameType = 0x00089007;
+
+		/// <summary>(0008,9092) VR=SQ Referenced Image Evidence Sequence</summary>
 		public const uint ReferencedImageEvidenceSequence = 0x00089092;
+
+		/// <summary>(0008,9121) VR=SQ Referenced Raw Data Sequence</summary>
 		public const uint ReferencedRawDataSequence = 0x00089121;
+
+		/// <summary>(0008,9123) VR=UI Creator-Version UID</summary>
 		public const uint CreatorVersionUID = 0x00089123;
+
+		/// <summary>(0008,9124) VR=SQ Derivation Image Sequence</summary>
 		public const uint DerivationImageSequence = 0x00089124;
+
+		/// <summary>(0008,9154) VR=SQ Source Image Evidence Sequence</summary>
 		public const uint SourceImageEvidenceSequence = 0x00089154;
+
+		/// <summary>(0008,9205) VR=CS Pixel Presentation</summary>
 		public const uint PixelPresentation = 0x00089205;
+
+		/// <summary>(0008,9206) VR=CS Volumetric Properties</summary>
 		public const uint VolumetricProperties = 0x00089206;
+
+		/// <summary>(0008,9207) VR=CS Volume Based Calculation Technique</summary>
 		public const uint VolumeBasedCalculationTechnique = 0x00089207;
+
+		/// <summary>(0008,9208) VR=CS Complex Image Component</summary>
 		public const uint ComplexImageComponent = 0x00089208;
+
+		/// <summary>(0008,9209) VR=CS Acquisition Contrast</summary>
 		public const uint AcquisitionContrast = 0x00089209;
+
+		/// <summary>(0008,9215) VR=SQ Derivation Code Sequence</summary>
 		public const uint DerivationCodeSequence = 0x00089215;
+
+		/// <summary>(0008,9237) VR=SQ Referenced Grayscale Presentation State Sequence</summary>
 		public const uint ReferencedGrayscalePresentationStateSequence = 0x00089237;
+
+		/// <summary>(0008,9410) VR=SQ Referenced Other Plane Sequence</summary>
 		public const uint ReferencedOtherPlaneSequence = 0x00089410;
+
+		/// <summary>(0008,9458) VR=SQ Frame Display Sequence</summary>
 		public const uint FrameDisplaySequence = 0x00089458;
+
+		/// <summary>(0008,9459) VR=FL Recommended Display Frame Rate in Float</summary>
 		public const uint RecommendedDisplayFrameRateInFloat = 0x00089459;
+
+		/// <summary>(0008,9460) VR=CS Skip Frame Range Flag</summary>
 		public const uint SkipFrameRangeFlag = 0x00089460;
+
+		/// <summary>(0010,0010) VR=PN Patient's Name</summary>
 		public const uint PatientsName = 0x00100010;
+
+		/// <summary>(0010,0020) VR=LO Patient ID</summary>
 		public const uint PatientID = 0x00100020;
+
+		/// <summary>(0010,0021) VR=LO Issuer of Patient ID</summary>
 		public const uint IssuerOfPatientID = 0x00100021;
+
+		/// <summary>(0010,0022) VR=CS Type of Patient ID</summary>
 		public const uint TypeOfPatientID = 0x00100022;
+
+		/// <summary>(0010,0030) VR=DA Patient's Birth Date</summary>
 		public const uint PatientsBirthDate = 0x00100030;
+
+		/// <summary>(0010,0032) VR=TM Patient's Birth Time</summary>
 		public const uint PatientsBirthTime = 0x00100032;
+
+		/// <summary>(0010,0040) VR=CS Patient's Sex</summary>
 		public const uint PatientsSex = 0x00100040;
+
+		/// <summary>(0010,0050) VR=SQ Patient's Insurance Plan Code Sequence</summary>
 		public const uint PatientsInsurancePlanCodeSequence = 0x00100050;
+
+		/// <summary>(0010,0101) VR=SQ Patient's Primary Language Code Sequence</summary>
 		public const uint PatientsPrimaryLanguageCodeSequence = 0x00100101;
+
+		/// <summary>(0010,0102) VR=SQ Patient's Primary Language Code Modifier Sequence</summary>
 		public const uint PatientsPrimaryLanguageCodeModifierSequence = 0x00100102;
+
+		/// <summary>(0010,1000) VR=LO Other Patient IDs</summary>
 		public const uint OtherPatientIDs = 0x00101000;
+
+		/// <summary>(0010,1001) VR=PN Other Patient Names</summary>
 		public const uint OtherPatientNames = 0x00101001;
+
+		/// <summary>(0010,1002) VR=SQ Other Patient IDs Sequence</summary>
 		public const uint OtherPatientIDsSequence = 0x00101002;
+
+		/// <summary>(0010,1005) VR=PN Patient's Birth Name</summary>
 		public const uint PatientsBirthName = 0x00101005;
+
+		/// <summary>(0010,1010) VR=AS Patient's Age</summary>
 		public const uint PatientsAge = 0x00101010;
+
+		/// <summary>(0010,1020) VR=DS Patient's Size</summary>
 		public const uint PatientsSize = 0x00101020;
+
+		/// <summary>(0010,1030) VR=DS Patient's Weight</summary>
 		public const uint PatientsWeight = 0x00101030;
+
+		/// <summary>(0010,1040) VR=LO Patient's Address</summary>
 		public const uint PatientsAddress = 0x00101040;
+
+		/// <summary>(0010,1050) VR=LO Insurance Plan Identification (Retired)</summary>
 		public const uint InsurancePlanIdentificationRETIRED = 0x00101050;
+
+		/// <summary>(0010,1060) VR=PN Patient's Mother's Birth Name</summary>
 		public const uint PatientsMothersBirthName = 0x00101060;
+
+		/// <summary>(0010,1080) VR=LO Military Rank</summary>
 		public const uint MilitaryRank = 0x00101080;
+
+		/// <summary>(0010,1081) VR=LO Branch of Service</summary>
 		public const uint BranchOfService = 0x00101081;
+
+		/// <summary>(0010,1090) VR=LO Medical Record Locator</summary>
 		public const uint MedicalRecordLocator = 0x00101090;
+
+		/// <summary>(0010,2000) VR=LO Medical Alerts</summary>
 		public const uint MedicalAlerts = 0x00102000;
+
+		/// <summary>(0010,2110) VR=LO Contrast Allergies</summary>
 		public const uint ContrastAllergies = 0x00102110;
+
+		/// <summary>(0010,2150) VR=LO Country of Residence</summary>
 		public const uint CountryOfResidence = 0x00102150;
+
+		/// <summary>(0010,2152) VR=LO Region of Residence</summary>
 		public const uint RegionOfResidence = 0x00102152;
+
+		/// <summary>(0010,2154) VR=SH Patient's Telephone Numbers</summary>
 		public const uint PatientsTelephoneNumbers = 0x00102154;
+
+		/// <summary>(0010,2160) VR=SH Ethnic Group</summary>
 		public const uint EthnicGroup = 0x00102160;
+
+		/// <summary>(0010,2180) VR=SH Occupation</summary>
 		public const uint Occupation = 0x00102180;
+
+		/// <summary>(0010,21A0) VR=CS Smoking Status</summary>
 		public const uint SmokingStatus = 0x001021a0;
+
+		/// <summary>(0010,21B0) VR=LT Additional Patient History</summary>
 		public const uint AdditionalPatientHistory = 0x001021b0;
+
+		/// <summary>(0010,21C0) VR=US Pregnancy Status</summary>
 		public const uint PregnancyStatus = 0x001021c0;
+
+		/// <summary>(0010,21D0) VR=DA Last Menstrual Date</summary>
 		public const uint LastMenstrualDate = 0x001021d0;
+
+		/// <summary>(0010,21F0) VR=LO Patient's Religious Preference</summary>
 		public const uint PatientsReligiousPreference = 0x001021f0;
+
+		/// <summary>(0010,2201) VR=LO Patient Species Description</summary>
 		public const uint PatientSpeciesDescription = 0x00102201;
+
+		/// <summary>(0010,2202) VR=SQ Patient Species Code Sequence</summary>
 		public const uint PatientSpeciesCodeSequence = 0x00102202;
+
+		/// <summary>(0010,2203) VR=CS Patient's Sex Neutered</summary>
 		public const uint PatientsSexNeutered = 0x00102203;
+
+		/// <summary>(0010,2292) VR=LO Patient Breed Description</summary>
 		public const uint PatientBreedDescription = 0x00102292;
+
+		/// <summary>(0010,2293) VR=SQ Patient Breed Code Sequence</summary>
 		public const uint PatientBreedCodeSequence = 0x00102293;
+
+		/// <summary>(0010,2294) VR=SQ Breed Registration Sequence</summary>
 		public const uint BreedRegistrationSequence = 0x00102294;
+
+		/// <summary>(0010,2295) VR=LO Breed Registration Number</summary>
 		public const uint BreedRegistrationNumber = 0x00102295;
+
+		/// <summary>(0010,2296) VR=SQ Breed Registry Code Sequence</summary>
 		public const uint BreedRegistryCodeSequence = 0x00102296;
+
+		/// <summary>(0010,2297) VR=PN Responsible Person</summary>
 		public const uint ResponsiblePerson = 0x00102297;
+
+		/// <summary>(0010,2298) VR=CS Responsible Person Role</summary>
 		public const uint ResponsiblePersonRole = 0x00102298;
-		public const uint ResponsibleOrganization2 = 0x00102299;
+
+		/// <summary>(0010,2299) VR=LO Responsible Organization</summary>
+		public const uint ResponsibleOrganization0010 = 0x00102299;
+
+		/// <summary>(0010,4000) VR=LT Patient Comments</summary>
 		public const uint PatientComments = 0x00104000;
+
+		/// <summary>(0010,9431) VR=FL Examined Body Thickness</summary>
 		public const uint ExaminedBodyThickness = 0x00109431;
+
+		/// <summary>(0012,0010) VR=LO Clinical Trial Sponsor Name</summary>
 		public const uint ClinicalTrialSponsorName = 0x00120010;
+
+		/// <summary>(0012,0020) VR=LO Clinical Trial Protocol ID</summary>
 		public const uint ClinicalTrialProtocolID = 0x00120020;
+
+		/// <summary>(0012,0021) VR=LO Clinical Trial Protocol Name</summary>
 		public const uint ClinicalTrialProtocolName = 0x00120021;
+
+		/// <summary>(0012,0030) VR=LO Clinical Trial Site ID</summary>
 		public const uint ClinicalTrialSiteID = 0x00120030;
+
+		/// <summary>(0012,0031) VR=LO Clinical Trial Site Name</summary>
 		public const uint ClinicalTrialSiteName = 0x00120031;
+
+		/// <summary>(0012,0040) VR=LO Clinical Trial Subject ID</summary>
 		public const uint ClinicalTrialSubjectID = 0x00120040;
+
+		/// <summary>(0012,0042) VR=LO Clinical Trial Subject Reading ID</summary>
 		public const uint ClinicalTrialSubjectReadingID = 0x00120042;
+
+		/// <summary>(0012,0050) VR=LO Clinical Trial Time Point ID</summary>
 		public const uint ClinicalTrialTimePointID = 0x00120050;
+
+		/// <summary>(0012,0051) VR=ST Clinical Trial Time Point Description</summary>
 		public const uint ClinicalTrialTimePointDescription = 0x00120051;
+
+		/// <summary>(0012,0060) VR=LO Clinical Trial Coordinating Center Name</summary>
 		public const uint ClinicalTrialCoordinatingCenterName = 0x00120060;
+
+		/// <summary>(0012,0062) VR=CS Patient Identity Removed</summary>
 		public const uint PatientIdentityRemoved = 0x00120062;
+
+		/// <summary>(0012,0063) VR=LO De-identification Method</summary>
 		public const uint DeidentificationMethod = 0x00120063;
+
+		/// <summary>(0012,0064) VR=SQ De-identification Method Code Sequence</summary>
 		public const uint DeidentificationMethodCodeSequence = 0x00120064;
+
+		/// <summary>(0018,0010) VR=LO Contrast/Bolus Agent</summary>
 		public const uint ContrastBolusAgent = 0x00180010;
+
+		/// <summary>(0018,0012) VR=SQ Contrast/Bolus Agent Sequence</summary>
 		public const uint ContrastBolusAgentSequence = 0x00180012;
+
+		/// <summary>(0018,0014) VR=SQ Contrast/Bolus Administration Route Sequence</summary>
 		public const uint ContrastBolusAdministrationRouteSequence = 0x00180014;
+
+		/// <summary>(0018,0015) VR=CS Body Part Examined</summary>
 		public const uint BodyPartExamined = 0x00180015;
+
+		/// <summary>(0018,0020) VR=CS Scanning Sequence</summary>
 		public const uint ScanningSequence = 0x00180020;
+
+		/// <summary>(0018,0021) VR=CS Sequence Variant</summary>
 		public const uint SequenceVariant = 0x00180021;
+
+		/// <summary>(0018,0022) VR=CS Scan Options</summary>
 		public const uint ScanOptions = 0x00180022;
+
+		/// <summary>(0018,0023) VR=CS MR Acquisition Type</summary>
 		public const uint MRAcquisitionType = 0x00180023;
+
+		/// <summary>(0018,0024) VR=SH Sequence Name</summary>
 		public const uint SequenceName = 0x00180024;
+
+		/// <summary>(0018,0025) VR=CS Angio Flag</summary>
 		public const uint AngioFlag = 0x00180025;
+
+		/// <summary>(0018,0026) VR=SQ Intervention Drug Information Sequence</summary>
 		public const uint InterventionDrugInformationSequence = 0x00180026;
+
+		/// <summary>(0018,0027) VR=TM Intervention Drug Stop Time</summary>
 		public const uint InterventionDrugStopTime = 0x00180027;
+
+		/// <summary>(0018,0028) VR=DS Intervention Drug Dose</summary>
 		public const uint InterventionDrugDose = 0x00180028;
+
+		/// <summary>(0018,0029) VR=SQ Intervention Drug Sequence</summary>
 		public const uint InterventionDrugSequence = 0x00180029;
+
+		/// <summary>(0018,002A) VR=SQ Additional Drug Sequence</summary>
 		public const uint AdditionalDrugSequence = 0x0018002a;
+
+		/// <summary>(0018,0030) VR=LO Radionuclide (Retired)</summary>
 		public const uint RadionuclideRETIRED = 0x00180030;
+
+		/// <summary>(0018,0031) VR=LO Radiopharmaceutical</summary>
 		public const uint Radiopharmaceutical = 0x00180031;
+
+		/// <summary>(0018,0032) VR=DS Energy Window Centerline (Retired)</summary>
 		public const uint EnergyWindowCenterlineRETIRED = 0x00180032;
+
+		/// <summary>(0018,0033) VR=DS Energy Window Total Width (Retired)</summary>
 		public const uint EnergyWindowTotalWidthRETIRED = 0x00180033;
+
+		/// <summary>(0018,0034) VR=LO Intervention Drug Name</summary>
 		public const uint InterventionDrugName = 0x00180034;
+
+		/// <summary>(0018,0035) VR=TM Intervention Drug Start Time</summary>
 		public const uint InterventionDrugStartTime = 0x00180035;
+
+		/// <summary>(0018,0036) VR=SQ Intervention Sequence</summary>
 		public const uint InterventionSequence = 0x00180036;
+
+		/// <summary>(0018,0037) VR=CS Therapy Type (Retired)</summary>
 		public const uint TherapyTypeRETIRED = 0x00180037;
+
+		/// <summary>(0018,0038) VR=CS Intervention Status</summary>
 		public const uint InterventionStatus = 0x00180038;
+
+		/// <summary>(0018,0039) VR=CS Therapy Description (Retired)</summary>
 		public const uint TherapyDescriptionRETIRED = 0x00180039;
+
+		/// <summary>(0018,003A) VR=ST Intervention Description</summary>
 		public const uint InterventionDescription = 0x0018003a;
+
+		/// <summary>(0018,0040) VR=IS Cine Rate</summary>
 		public const uint CineRate = 0x00180040;
+
+		/// <summary>(0018,0050) VR=DS Slice Thickness</summary>
 		public const uint SliceThickness = 0x00180050;
+
+		/// <summary>(0018,0060) VR=DS kVp</summary>
 		public const uint KVp = 0x00180060;
+
+		/// <summary>(0018,0070) VR=IS Counts Accumulated</summary>
 		public const uint CountsAccumulated = 0x00180070;
+
+		/// <summary>(0018,0071) VR=CS Acquisition Termination Condition</summary>
 		public const uint AcquisitionTerminationCondition = 0x00180071;
+
+		/// <summary>(0018,0072) VR=DS Effective Duration</summary>
 		public const uint EffectiveDuration = 0x00180072;
+
+		/// <summary>(0018,0073) VR=CS Acquisition Start Condition</summary>
 		public const uint AcquisitionStartCondition = 0x00180073;
+
+		/// <summary>(0018,0074) VR=IS Acquisition Start Condition Data</summary>
 		public const uint AcquisitionStartConditionData = 0x00180074;
+
+		/// <summary>(0018,0075) VR=IS Acquisition Termination Condition Data</summary>
 		public const uint AcquisitionTerminationConditionData = 0x00180075;
+
+		/// <summary>(0018,0080) VR=DS Repetition Time</summary>
 		public const uint RepetitionTime = 0x00180080;
+
+		/// <summary>(0018,0081) VR=DS Echo Time</summary>
 		public const uint EchoTime = 0x00180081;
+
+		/// <summary>(0018,0082) VR=DS Inversion Time</summary>
 		public const uint InversionTime = 0x00180082;
+
+		/// <summary>(0018,0083) VR=DS Number of Averages</summary>
 		public const uint NumberOfAverages = 0x00180083;
+
+		/// <summary>(0018,0084) VR=DS Imaging Frequency</summary>
 		public const uint ImagingFrequency = 0x00180084;
+
+		/// <summary>(0018,0085) VR=SH Imaged Nucleus</summary>
 		public const uint ImagedNucleus = 0x00180085;
+
+		/// <summary>(0018,0086) VR=IS Echo Number(s)</summary>
 		public const uint EchoNumbers = 0x00180086;
+
+		/// <summary>(0018,0087) VR=DS Magnetic Field Strength</summary>
 		public const uint MagneticFieldStrength = 0x00180087;
+
+		/// <summary>(0018,0088) VR=DS Spacing Between Slices</summary>
 		public const uint SpacingBetweenSlices = 0x00180088;
+
+		/// <summary>(0018,0089) VR=IS Number of Phase Encoding Steps</summary>
 		public const uint NumberOfPhaseEncodingSteps = 0x00180089;
+
+		/// <summary>(0018,0090) VR=DS Data Collection Diameter</summary>
 		public const uint DataCollectionDiameter = 0x00180090;
+
+		/// <summary>(0018,0091) VR=IS Echo Train Length</summary>
 		public const uint EchoTrainLength = 0x00180091;
+
+		/// <summary>(0018,0093) VR=DS Percent Sampling</summary>
 		public const uint PercentSampling = 0x00180093;
+
+		/// <summary>(0018,0094) VR=DS Percent Phase Field of View</summary>
 		public const uint PercentPhaseFieldOfView = 0x00180094;
+
+		/// <summary>(0018,0095) VR=DS Pixel Bandwidth</summary>
 		public const uint PixelBandwidth = 0x00180095;
+
+		/// <summary>(0018,1000) VR=LO Device Serial Number</summary>
 		public const uint DeviceSerialNumber = 0x00181000;
+
+		/// <summary>(0018,1002) VR=UI Device UID</summary>
 		public const uint DeviceUID = 0x00181002;
+
+		/// <summary>(0018,1003) VR=LO Device ID</summary>
 		public const uint DeviceID = 0x00181003;
+
+		/// <summary>(0018,1004) VR=LO Plate ID</summary>
 		public const uint PlateID = 0x00181004;
+
+		/// <summary>(0018,1005) VR=LO Generator ID</summary>
 		public const uint GeneratorID = 0x00181005;
+
+		/// <summary>(0018,1006) VR=LO Grid ID</summary>
 		public const uint GridID = 0x00181006;
+
+		/// <summary>(0018,1007) VR=LO Cassette ID</summary>
 		public const uint CassetteID = 0x00181007;
+
+		/// <summary>(0018,1008) VR=LO Gantry ID</summary>
 		public const uint GantryID = 0x00181008;
+
+		/// <summary>(0018,1010) VR=LO Secondary Capture Device ID</summary>
 		public const uint SecondaryCaptureDeviceID = 0x00181010;
+
+		/// <summary>(0018,1011) VR=LO Hardcopy Creation Device ID</summary>
 		public const uint HardcopyCreationDeviceID = 0x00181011;
+
+		/// <summary>(0018,1012) VR=DA Date of Secondary Capture</summary>
 		public const uint DateOfSecondaryCapture = 0x00181012;
+
+		/// <summary>(0018,1014) VR=TM Time of Secondary Capture</summary>
 		public const uint TimeOfSecondaryCapture = 0x00181014;
+
+		/// <summary>(0018,1016) VR=LO Secondary Capture Device Manufacturer</summary>
 		public const uint SecondaryCaptureDeviceManufacturer = 0x00181016;
+
+		/// <summary>(0018,1017) VR=LO Hardcopy Device Manufacturer</summary>
 		public const uint HardcopyDeviceManufacturer = 0x00181017;
+
+		/// <summary>(0018,1018) VR=LO Secondary Capture Device Manufacturer's Model Name</summary>
 		public const uint SecondaryCaptureDeviceManufacturersModelName = 0x00181018;
+
+		/// <summary>(0018,1019) VR=LO Secondary Capture Device Software Version(s)</summary>
 		public const uint SecondaryCaptureDeviceSoftwareVersions = 0x00181019;
+
+		/// <summary>(0018,101A) VR=LO Hardcopy Device Software Version</summary>
 		public const uint HardcopyDeviceSoftwareVersion = 0x0018101a;
+
+		/// <summary>(0018,101B) VR=LO Hardcopy Device Manufacturer's Model Name</summary>
 		public const uint HardcopyDeviceManufacturersModelName = 0x0018101b;
+
+		/// <summary>(0018,1020) VR=LO Software Version(s)</summary>
 		public const uint SoftwareVersions = 0x00181020;
+
+		/// <summary>(0018,1022) VR=SH Video Image Format Acquired</summary>
 		public const uint VideoImageFormatAcquired = 0x00181022;
+
+		/// <summary>(0018,1023) VR=LO Digital Image Format Acquired</summary>
 		public const uint DigitalImageFormatAcquired = 0x00181023;
+
+		/// <summary>(0018,1030) VR=LO Protocol Name</summary>
 		public const uint ProtocolName = 0x00181030;
+
+		/// <summary>(0018,1040) VR=LO Contrast/Bolus Route</summary>
 		public const uint ContrastBolusRoute = 0x00181040;
+
+		/// <summary>(0018,1041) VR=DS Contrast/Bolus Volume</summary>
 		public const uint ContrastBolusVolume = 0x00181041;
+
+		/// <summary>(0018,1042) VR=TM Contrast/Bolus Start Time</summary>
 		public const uint ContrastBolusStartTime = 0x00181042;
+
+		/// <summary>(0018,1043) VR=TM Contrast/Bolus Stop Time</summary>
 		public const uint ContrastBolusStopTime = 0x00181043;
+
+		/// <summary>(0018,1044) VR=DS Contrast/Bolus Total Dose</summary>
 		public const uint ContrastBolusTotalDose = 0x00181044;
+
+		/// <summary>(0018,1045) VR=IS Syringe Counts</summary>
 		public const uint SyringeCounts = 0x00181045;
+
+		/// <summary>(0018,1046) VR=DS Contrast Flow Rate</summary>
 		public const uint ContrastFlowRate = 0x00181046;
+
+		/// <summary>(0018,1047) VR=DS Contrast Flow Duration</summary>
 		public const uint ContrastFlowDuration = 0x00181047;
+
+		/// <summary>(0018,1048) VR=CS Contrast/Bolus Ingredient</summary>
 		public const uint ContrastBolusIngredient = 0x00181048;
+
+		/// <summary>(0018,1049) VR=DS Contrast/Bolus Ingredient Concentration</summary>
 		public const uint ContrastBolusIngredientConcentration = 0x00181049;
+
+		/// <summary>(0018,1050) VR=DS Spatial Resolution</summary>
 		public const uint SpatialResolution = 0x00181050;
+
+		/// <summary>(0018,1060) VR=DS Trigger Time</summary>
 		public const uint TriggerTime = 0x00181060;
+
+		/// <summary>(0018,1061) VR=LO Trigger Source or Type</summary>
 		public const uint TriggerSourceOrType = 0x00181061;
+
+		/// <summary>(0018,1062) VR=IS Nominal Interval</summary>
 		public const uint NominalInterval = 0x00181062;
+
+		/// <summary>(0018,1063) VR=DS Frame Time</summary>
 		public const uint FrameTime = 0x00181063;
+
+		/// <summary>(0018,1064) VR=LO Framing Type</summary>
 		public const uint FramingType = 0x00181064;
+
+		/// <summary>(0018,1065) VR=DS Frame Time Vector</summary>
 		public const uint FrameTimeVector = 0x00181065;
+
+		/// <summary>(0018,1066) VR=DS Frame Delay</summary>
 		public const uint FrameDelay = 0x00181066;
+
+		/// <summary>(0018,1067) VR=DS Image Trigger Delay</summary>
 		public const uint ImageTriggerDelay = 0x00181067;
+
+		/// <summary>(0018,1068) VR=DS Multiplex Group Time Offset</summary>
 		public const uint MultiplexGroupTimeOffset = 0x00181068;
+
+		/// <summary>(0018,1069) VR=DS Trigger Time Offset</summary>
 		public const uint TriggerTimeOffset = 0x00181069;
+
+		/// <summary>(0018,106A) VR=CS Synchronization Trigger</summary>
 		public const uint SynchronizationTrigger = 0x0018106a;
+
+		/// <summary>(0018,106C) VR=US Synchronization Channel</summary>
 		public const uint SynchronizationChannel = 0x0018106c;
+
+		/// <summary>(0018,106E) VR=UL Trigger Sample Position</summary>
 		public const uint TriggerSamplePosition = 0x0018106e;
+
+		/// <summary>(0018,1070) VR=LO Radiopharmaceutical Route</summary>
 		public const uint RadiopharmaceuticalRoute = 0x00181070;
+
+		/// <summary>(0018,1071) VR=DS Radiopharmaceutical Volume</summary>
 		public const uint RadiopharmaceuticalVolume = 0x00181071;
+
+		/// <summary>(0018,1072) VR=TM Radiopharmaceutical Start Time</summary>
 		public const uint RadiopharmaceuticalStartTime = 0x00181072;
+
+		/// <summary>(0018,1073) VR=TM Radiopharmaceutical Stop Time</summary>
 		public const uint RadiopharmaceuticalStopTime = 0x00181073;
+
+		/// <summary>(0018,1074) VR=DS Radionuclide Total Dose</summary>
 		public const uint RadionuclideTotalDose = 0x00181074;
+
+		/// <summary>(0018,1075) VR=DS Radionuclide Half Life</summary>
 		public const uint RadionuclideHalfLife = 0x00181075;
+
+		/// <summary>(0018,1076) VR=DS Radionuclide Positron Fraction</summary>
 		public const uint RadionuclidePositronFraction = 0x00181076;
+
+		/// <summary>(0018,1077) VR=DS Radiopharmaceutical Specific Activity</summary>
 		public const uint RadiopharmaceuticalSpecificActivity = 0x00181077;
+
+		/// <summary>(0018,1078) VR=DT Radiopharmaceutical Start Datetime</summary>
 		public const uint RadiopharmaceuticalStartDatetime = 0x00181078;
+
+		/// <summary>(0018,1079) VR=DT Radiopharmaceutical Stop Datetime</summary>
 		public const uint RadiopharmaceuticalStopDatetime = 0x00181079;
+
+		/// <summary>(0018,1080) VR=CS Beat Rejection Flag</summary>
 		public const uint BeatRejectionFlag = 0x00181080;
+
+		/// <summary>(0018,1081) VR=IS Low R-R Value</summary>
 		public const uint LowRRValue = 0x00181081;
+
+		/// <summary>(0018,1082) VR=IS High R-R Value</summary>
 		public const uint HighRRValue = 0x00181082;
+
+		/// <summary>(0018,1083) VR=IS Intervals Acquired</summary>
 		public const uint IntervalsAcquired = 0x00181083;
+
+		/// <summary>(0018,1084) VR=IS Intervals Rejected</summary>
 		public const uint IntervalsRejected = 0x00181084;
+
+		/// <summary>(0018,1085) VR=LO PVC Rejection</summary>
 		public const uint PVCRejection = 0x00181085;
+
+		/// <summary>(0018,1086) VR=IS Skip Beats</summary>
 		public const uint SkipBeats = 0x00181086;
+
+		/// <summary>(0018,1088) VR=IS Heart Rate</summary>
 		public const uint HeartRate = 0x00181088;
+
+		/// <summary>(0018,1090) VR=IS Cardiac Number of Images</summary>
 		public const uint CardiacNumberOfImages = 0x00181090;
+
+		/// <summary>(0018,1094) VR=IS Trigger Window</summary>
 		public const uint TriggerWindow = 0x00181094;
+
+		/// <summary>(0018,1100) VR=DS Reconstruction Diameter</summary>
 		public const uint ReconstructionDiameter = 0x00181100;
+
+		/// <summary>(0018,1110) VR=DS Distance Source to Detector</summary>
 		public const uint DistanceSourceToDetector = 0x00181110;
+
+		/// <summary>(0018,1111) VR=DS Distance Source to Patient</summary>
 		public const uint DistanceSourceToPatient = 0x00181111;
+
+		/// <summary>(0018,1114) VR=DS Estimated Radiographic Magnification Factor</summary>
 		public const uint EstimatedRadiographicMagnificationFactor = 0x00181114;
+
+		/// <summary>(0018,1120) VR=DS Gantry/Detector Tilt</summary>
 		public const uint GantryDetectorTilt = 0x00181120;
+
+		/// <summary>(0018,1121) VR=DS Gantry/Detector Slew</summary>
 		public const uint GantryDetectorSlew = 0x00181121;
+
+		/// <summary>(0018,1130) VR=DS Table Height</summary>
 		public const uint TableHeight = 0x00181130;
+
+		/// <summary>(0018,1131) VR=DS Table Traverse</summary>
 		public const uint TableTraverse = 0x00181131;
+
+		/// <summary>(0018,1134) VR=CS Table Motion</summary>
 		public const uint TableMotion = 0x00181134;
+
+		/// <summary>(0018,1135) VR=DS Table Vertical Increment</summary>
 		public const uint TableVerticalIncrement = 0x00181135;
+
+		/// <summary>(0018,1136) VR=DS Table Lateral Increment</summary>
 		public const uint TableLateralIncrement = 0x00181136;
+
+		/// <summary>(0018,1137) VR=DS Table Longitudinal Increment</summary>
 		public const uint TableLongitudinalIncrement = 0x00181137;
+
+		/// <summary>(0018,1138) VR=DS Table Angle</summary>
 		public const uint TableAngle = 0x00181138;
+
+		/// <summary>(0018,113A) VR=CS Table Type</summary>
 		public const uint TableType = 0x0018113a;
+
+		/// <summary>(0018,1140) VR=CS Rotation Direction</summary>
 		public const uint RotationDirection = 0x00181140;
+
+		/// <summary>(0018,1141) VR=DS Angular Position</summary>
 		public const uint AngularPosition = 0x00181141;
+
+		/// <summary>(0018,1142) VR=DS Radial Position</summary>
 		public const uint RadialPosition = 0x00181142;
+
+		/// <summary>(0018,1143) VR=DS Scan Arc</summary>
 		public const uint ScanArc = 0x00181143;
+
+		/// <summary>(0018,1144) VR=DS Angular Step</summary>
 		public const uint AngularStep = 0x00181144;
+
+		/// <summary>(0018,1145) VR=DS Center of Rotation Offset</summary>
 		public const uint CenterOfRotationOffset = 0x00181145;
+
+		/// <summary>(0018,1146) VR=DS Rotation Offset (Retired)</summary>
 		public const uint RotationOffsetRETIRED = 0x00181146;
+
+		/// <summary>(0018,1147) VR=CS Field of View Shape</summary>
 		public const uint FieldOfViewShape = 0x00181147;
+
+		/// <summary>(0018,1149) VR=IS Field of View Dimension(s)</summary>
 		public const uint FieldOfViewDimensions = 0x00181149;
+
+		/// <summary>(0018,1150) VR=IS Exposure Time</summary>
 		public const uint ExposureTime = 0x00181150;
+
+		/// <summary>(0018,1151) VR=IS X-ray Tube Current</summary>
 		public const uint XrayTubeCurrent = 0x00181151;
+
+		/// <summary>(0018,1152) VR=IS Exposure</summary>
 		public const uint Exposure = 0x00181152;
+
+		/// <summary>(0018,1153) VR=IS Exposure in µAs</summary>
 		public const uint ExposureInµAs = 0x00181153;
+
+		/// <summary>(0018,1154) VR=DS Average Pulse Width</summary>
 		public const uint AveragePulseWidth = 0x00181154;
+
+		/// <summary>(0018,1155) VR=CS Radiation Setting</summary>
 		public const uint RadiationSetting = 0x00181155;
+
+		/// <summary>(0018,1156) VR=CS Rectification Type</summary>
 		public const uint RectificationType = 0x00181156;
+
+		/// <summary>(0018,115A) VR=CS Radiation Mode</summary>
 		public const uint RadiationMode = 0x0018115a;
+
+		/// <summary>(0018,115E) VR=DS Image and Fluoroscopy Area Dose Product</summary>
 		public const uint ImageAndFluoroscopyAreaDoseProduct = 0x0018115e;
+
+		/// <summary>(0018,1160) VR=SH Filter Type</summary>
 		public const uint FilterType = 0x00181160;
+
+		/// <summary>(0018,1161) VR=LO Type of Filters</summary>
 		public const uint TypeOfFilters = 0x00181161;
+
+		/// <summary>(0018,1162) VR=DS Intensifier Size</summary>
 		public const uint IntensifierSize = 0x00181162;
+
+		/// <summary>(0018,1164) VR=DS Imager Pixel Spacing</summary>
 		public const uint ImagerPixelSpacing = 0x00181164;
+
+		/// <summary>(0018,1166) VR=CS Grid</summary>
 		public const uint Grid = 0x00181166;
+
+		/// <summary>(0018,1170) VR=IS Generator Power</summary>
 		public const uint GeneratorPower = 0x00181170;
+
+		/// <summary>(0018,1180) VR=SH Collimator/grid Name</summary>
 		public const uint CollimatorgridName = 0x00181180;
+
+		/// <summary>(0018,1181) VR=CS Collimator Type</summary>
 		public const uint CollimatorType = 0x00181181;
+
+		/// <summary>(0018,1182) VR=IS Focal Distance</summary>
 		public const uint FocalDistance = 0x00181182;
+
+		/// <summary>(0018,1183) VR=DS X Focus Center</summary>
 		public const uint XFocusCenter = 0x00181183;
+
+		/// <summary>(0018,1184) VR=DS Y Focus Center</summary>
 		public const uint YFocusCenter = 0x00181184;
+
+		/// <summary>(0018,1190) VR=DS Focal Spot(s)</summary>
 		public const uint FocalSpots = 0x00181190;
+
+		/// <summary>(0018,1191) VR=CS Anode Target Material</summary>
 		public const uint AnodeTargetMaterial = 0x00181191;
+
+		/// <summary>(0018,11A0) VR=DS Body Part Thickness</summary>
 		public const uint BodyPartThickness = 0x001811a0;
+
+		/// <summary>(0018,11A2) VR=DS Compression Force</summary>
 		public const uint CompressionForce = 0x001811a2;
+
+		/// <summary>(0018,1200) VR=DA Date of Last Calibration</summary>
 		public const uint DateOfLastCalibration = 0x00181200;
+
+		/// <summary>(0018,1201) VR=TM Time of Last Calibration</summary>
 		public const uint TimeOfLastCalibration = 0x00181201;
+
+		/// <summary>(0018,1210) VR=SH Convolution Kernel</summary>
 		public const uint ConvolutionKernel = 0x00181210;
+
+		/// <summary>(0018,1240) VR=IS Upper/Lower Pixel Values (Retired)</summary>
 		public const uint UpperLowerPixelValuesRETIRED = 0x00181240;
+
+		/// <summary>(0018,1242) VR=IS Actual Frame Duration</summary>
 		public const uint ActualFrameDuration = 0x00181242;
+
+		/// <summary>(0018,1243) VR=IS Count Rate</summary>
 		public const uint CountRate = 0x00181243;
+
+		/// <summary>(0018,1244) VR=US Preferred Playback Sequencing</summary>
 		public const uint PreferredPlaybackSequencing = 0x00181244;
+
+		/// <summary>(0018,1250) VR=SH Receive Coil Name</summary>
 		public const uint ReceiveCoilName = 0x00181250;
+
+		/// <summary>(0018,1251) VR=SH Transmit Coil Name</summary>
 		public const uint TransmitCoilName = 0x00181251;
+
+		/// <summary>(0018,1260) VR=SH Plate Type</summary>
 		public const uint PlateType = 0x00181260;
+
+		/// <summary>(0018,1261) VR=LO Phosphor Type</summary>
 		public const uint PhosphorType = 0x00181261;
+
+		/// <summary>(0018,1300) VR=DS Scan Velocity</summary>
 		public const uint ScanVelocity = 0x00181300;
+
+		/// <summary>(0018,1301) VR=CS Whole Body Technique</summary>
 		public const uint WholeBodyTechnique = 0x00181301;
+
+		/// <summary>(0018,1302) VR=IS Scan Length</summary>
 		public const uint ScanLength = 0x00181302;
+
+		/// <summary>(0018,1310) VR=US Acquisition Matrix</summary>
 		public const uint AcquisitionMatrix = 0x00181310;
+
+		/// <summary>(0018,1312) VR=CS In-plane Phase Encoding Direction</summary>
 		public const uint InplanePhaseEncodingDirection = 0x00181312;
+
+		/// <summary>(0018,1314) VR=DS Flip Angle</summary>
 		public const uint FlipAngle = 0x00181314;
+
+		/// <summary>(0018,1315) VR=CS Variable Flip Angle Flag</summary>
 		public const uint VariableFlipAngleFlag = 0x00181315;
+
+		/// <summary>(0018,1316) VR=DS SAR</summary>
 		public const uint SAR = 0x00181316;
+
+		/// <summary>(0018,1318) VR=DS dB/dt</summary>
 		public const uint DBdt = 0x00181318;
+
+		/// <summary>(0018,1400) VR=LO Acquisition Device Processing Description</summary>
 		public const uint AcquisitionDeviceProcessingDescription = 0x00181400;
+
+		/// <summary>(0018,1401) VR=LO Acquisition Device Processing Code</summary>
 		public const uint AcquisitionDeviceProcessingCode = 0x00181401;
+
+		/// <summary>(0018,1402) VR=CS Cassette Orientation</summary>
 		public const uint CassetteOrientation = 0x00181402;
+
+		/// <summary>(0018,1403) VR=CS Cassette Size</summary>
 		public const uint CassetteSize = 0x00181403;
+
+		/// <summary>(0018,1404) VR=US Exposures on Plate</summary>
 		public const uint ExposuresOnPlate = 0x00181404;
+
+		/// <summary>(0018,1405) VR=IS Relative X-ray Exposure</summary>
 		public const uint RelativeXrayExposure = 0x00181405;
+
+		/// <summary>(0018,1450) VR=DS Column Angulation</summary>
 		public const uint ColumnAngulation = 0x00181450;
+
+		/// <summary>(0018,1460) VR=DS Tomo Layer Height</summary>
 		public const uint TomoLayerHeight = 0x00181460;
+
+		/// <summary>(0018,1470) VR=DS Tomo Angle</summary>
 		public const uint TomoAngle = 0x00181470;
+
+		/// <summary>(0018,1480) VR=DS Tomo Time</summary>
 		public const uint TomoTime = 0x00181480;
+
+		/// <summary>(0018,1490) VR=CS Tomo Type</summary>
 		public const uint TomoType = 0x00181490;
+
+		/// <summary>(0018,1491) VR=CS Tomo Class</summary>
 		public const uint TomoClass = 0x00181491;
+
+		/// <summary>(0018,1495) VR=IS Number of Tomosynthesis Source Images</summary>
 		public const uint NumberOfTomosynthesisSourceImages = 0x00181495;
+
+		/// <summary>(0018,1500) VR=CS Positioner Motion</summary>
 		public const uint PositionerMotion = 0x00181500;
+
+		/// <summary>(0018,1508) VR=CS Positioner Type</summary>
 		public const uint PositionerType = 0x00181508;
+
+		/// <summary>(0018,1510) VR=DS Positioner Primary Angle</summary>
 		public const uint PositionerPrimaryAngle = 0x00181510;
+
+		/// <summary>(0018,1511) VR=DS Positioner Secondary Angle</summary>
 		public const uint PositionerSecondaryAngle = 0x00181511;
+
+		/// <summary>(0018,1520) VR=DS Positioner Primary Angle Increment</summary>
 		public const uint PositionerPrimaryAngleIncrement = 0x00181520;
+
+		/// <summary>(0018,1521) VR=DS Positioner Secondary Angle Increment</summary>
 		public const uint PositionerSecondaryAngleIncrement = 0x00181521;
+
+		/// <summary>(0018,1530) VR=DS Detector Primary Angle</summary>
 		public const uint DetectorPrimaryAngle = 0x00181530;
+
+		/// <summary>(0018,1531) VR=DS Detector Secondary Angle</summary>
 		public const uint DetectorSecondaryAngle = 0x00181531;
+
+		/// <summary>(0018,1600) VR=CS Shutter Shape</summary>
 		public const uint ShutterShape = 0x00181600;
+
+		/// <summary>(0018,1602) VR=IS Shutter Left Vertical Edge</summary>
 		public const uint ShutterLeftVerticalEdge = 0x00181602;
+
+		/// <summary>(0018,1604) VR=IS Shutter Right Vertical Edge</summary>
 		public const uint ShutterRightVerticalEdge = 0x00181604;
+
+		/// <summary>(0018,1606) VR=IS Shutter Upper Horizontal Edge</summary>
 		public const uint ShutterUpperHorizontalEdge = 0x00181606;
+
+		/// <summary>(0018,1608) VR=IS Shutter Lower Horizontal Edge</summary>
 		public const uint ShutterLowerHorizontalEdge = 0x00181608;
+
+		/// <summary>(0018,1610) VR=IS Center of Circular Shutter</summary>
 		public const uint CenterOfCircularShutter = 0x00181610;
+
+		/// <summary>(0018,1612) VR=IS Radius of Circular Shutter</summary>
 		public const uint RadiusOfCircularShutter = 0x00181612;
+
+		/// <summary>(0018,1620) VR=IS Vertices of the Polygonal Shutter</summary>
 		public const uint VerticesOfThePolygonalShutter = 0x00181620;
+
+		/// <summary>(0018,1622) VR=US Shutter Presentation Value</summary>
 		public const uint ShutterPresentationValue = 0x00181622;
+
+		/// <summary>(0018,1623) VR=US Shutter Overlay Group</summary>
 		public const uint ShutterOverlayGroup = 0x00181623;
+
+		/// <summary>(0018,1624) VR=US Shutter Presentation Color CIELab Value</summary>
 		public const uint ShutterPresentationColorCIELabValue = 0x00181624;
+
+		/// <summary>(0018,1700) VR=CS Collimator Shape</summary>
 		public const uint CollimatorShape = 0x00181700;
+
+		/// <summary>(0018,1702) VR=IS Collimator Left Vertical Edge</summary>
 		public const uint CollimatorLeftVerticalEdge = 0x00181702;
+
+		/// <summary>(0018,1704) VR=IS Collimator Right Vertical Edge</summary>
 		public const uint CollimatorRightVerticalEdge = 0x00181704;
+
+		/// <summary>(0018,1706) VR=IS Collimator Upper Horizontal Edge</summary>
 		public const uint CollimatorUpperHorizontalEdge = 0x00181706;
+
+		/// <summary>(0018,1708) VR=IS Collimator Lower Horizontal Edge</summary>
 		public const uint CollimatorLowerHorizontalEdge = 0x00181708;
+
+		/// <summary>(0018,1710) VR=IS Center of Circular Collimator</summary>
 		public const uint CenterOfCircularCollimator = 0x00181710;
+
+		/// <summary>(0018,1712) VR=IS Radius of Circular Collimator</summary>
 		public const uint RadiusOfCircularCollimator = 0x00181712;
+
+		/// <summary>(0018,1720) VR=IS Vertices of the Polygonal Collimator</summary>
 		public const uint VerticesOfThePolygonalCollimator = 0x00181720;
+
+		/// <summary>(0018,1800) VR=CS Acquisition Time Synchronized</summary>
 		public const uint AcquisitionTimeSynchronized = 0x00181800;
+
+		/// <summary>(0018,1801) VR=SH Time Source</summary>
 		public const uint TimeSource = 0x00181801;
+
+		/// <summary>(0018,1802) VR=CS Time Distribution Protocol</summary>
 		public const uint TimeDistributionProtocol = 0x00181802;
+
+		/// <summary>(0018,1803) VR=LO NTP Source Address</summary>
 		public const uint NTPSourceAddress = 0x00181803;
+
+		/// <summary>(0018,2001) VR=IS Page Number Vector</summary>
 		public const uint PageNumberVector = 0x00182001;
+
+		/// <summary>(0018,2002) VR=SH Frame Label Vector</summary>
 		public const uint FrameLabelVector = 0x00182002;
+
+		/// <summary>(0018,2003) VR=DS Frame Primary Angle Vector</summary>
 		public const uint FramePrimaryAngleVector = 0x00182003;
+
+		/// <summary>(0018,2004) VR=DS Frame Secondary Angle Vector</summary>
 		public const uint FrameSecondaryAngleVector = 0x00182004;
+
+		/// <summary>(0018,2005) VR=DS Slice Location Vector</summary>
 		public const uint SliceLocationVector = 0x00182005;
+
+		/// <summary>(0018,2006) VR=SH Display Window Label Vector</summary>
 		public const uint DisplayWindowLabelVector = 0x00182006;
+
+		/// <summary>(0018,2010) VR=DS Nominal Scanned Pixel Spacing</summary>
 		public const uint NominalScannedPixelSpacing = 0x00182010;
+
+		/// <summary>(0018,2020) VR=CS Digitizing Device Transport Direction</summary>
 		public const uint DigitizingDeviceTransportDirection = 0x00182020;
+
+		/// <summary>(0018,2030) VR=DS Rotation of Scanned Film</summary>
 		public const uint RotationOfScannedFilm = 0x00182030;
+
+		/// <summary>(0018,3100) VR=CS IVUS Acquisition</summary>
 		public const uint IVUSAcquisition = 0x00183100;
+
+		/// <summary>(0018,3101) VR=DS IVUS Pullback Rate</summary>
 		public const uint IVUSPullbackRate = 0x00183101;
+
+		/// <summary>(0018,3102) VR=DS IVUS Gated Rate</summary>
 		public const uint IVUSGatedRate = 0x00183102;
+
+		/// <summary>(0018,3103) VR=IS IVUS Pullback Start Frame Number</summary>
 		public const uint IVUSPullbackStartFrameNumber = 0x00183103;
+
+		/// <summary>(0018,3104) VR=IS IVUS Pullback Stop Frame Number</summary>
 		public const uint IVUSPullbackStopFrameNumber = 0x00183104;
+
+		/// <summary>(0018,3105) VR=IS Lesion Number</summary>
 		public const uint LesionNumber = 0x00183105;
+
+		/// <summary>(0018,4000) VR=LT Acquisition Comments (Retired)</summary>
 		public const uint AcquisitionCommentsRETIRED = 0x00184000;
+
+		/// <summary>(0018,5000) VR=SH Output Power</summary>
 		public const uint OutputPower = 0x00185000;
+
+		/// <summary>(0018,5010) VR=LO Transducer Data</summary>
 		public const uint TransducerData = 0x00185010;
+
+		/// <summary>(0018,5012) VR=DS Focus Depth</summary>
 		public const uint FocusDepth = 0x00185012;
+
+		/// <summary>(0018,5020) VR=LO Processing Function</summary>
 		public const uint ProcessingFunction = 0x00185020;
+
+		/// <summary>(0018,5021) VR=LO Postprocessing Function</summary>
 		public const uint PostprocessingFunction = 0x00185021;
+
+		/// <summary>(0018,5022) VR=DS Mechanical Index</summary>
 		public const uint MechanicalIndex = 0x00185022;
+
+		/// <summary>(0018,5024) VR=DS Bone Thermal Index</summary>
 		public const uint BoneThermalIndex = 0x00185024;
+
+		/// <summary>(0018,5026) VR=DS Cranial Thermal Index</summary>
 		public const uint CranialThermalIndex = 0x00185026;
+
+		/// <summary>(0018,5027) VR=DS Soft Tissue Thermal Index</summary>
 		public const uint SoftTissueThermalIndex = 0x00185027;
+
+		/// <summary>(0018,5028) VR=DS Soft Tissue-focus Thermal Index</summary>
 		public const uint SoftTissuefocusThermalIndex = 0x00185028;
+
+		/// <summary>(0018,5029) VR=DS Soft Tissue-surface Thermal Index</summary>
 		public const uint SoftTissuesurfaceThermalIndex = 0x00185029;
+
+		/// <summary>(0018,5030) VR=DS Dynamic Range (Retired)</summary>
 		public const uint DynamicRangeRETIRED = 0x00185030;
+
+		/// <summary>(0018,5040) VR=DS Total Gain (Retired)</summary>
 		public const uint TotalGainRETIRED = 0x00185040;
+
+		/// <summary>(0018,5050) VR=IS Depth of Scan Field</summary>
 		public const uint DepthOfScanField = 0x00185050;
+
+		/// <summary>(0018,5100) VR=CS Patient Position</summary>
 		public const uint PatientPosition = 0x00185100;
+
+		/// <summary>(0018,5101) VR=CS View Position</summary>
 		public const uint ViewPosition = 0x00185101;
+
+		/// <summary>(0018,5104) VR=SQ Projection Eponymous Name Code Sequence</summary>
 		public const uint ProjectionEponymousNameCodeSequence = 0x00185104;
+
+		/// <summary>(0018,5210) VR=DS Image Transformation Matrix (Retired)</summary>
 		public const uint ImageTransformationMatrixRETIRED = 0x00185210;
+
+		/// <summary>(0018,5212) VR=DS Image Translation Vector (Retired)</summary>
 		public const uint ImageTranslationVectorRETIRED = 0x00185212;
+
+		/// <summary>(0018,6000) VR=DS Sensitivity</summary>
 		public const uint Sensitivity = 0x00186000;
+
+		/// <summary>(0018,6011) VR=SQ Sequence of Ultrasound Regions</summary>
 		public const uint SequenceOfUltrasoundRegions = 0x00186011;
+
+		/// <summary>(0018,6012) VR=US Region Spatial Format</summary>
 		public const uint RegionSpatialFormat = 0x00186012;
+
+		/// <summary>(0018,6014) VR=US Region Data Type</summary>
 		public const uint RegionDataType = 0x00186014;
+
+		/// <summary>(0018,6016) VR=UL Region Flags</summary>
 		public const uint RegionFlags = 0x00186016;
+
+		/// <summary>(0018,6018) VR=UL Region Location Min X0</summary>
 		public const uint RegionLocationMinX0 = 0x00186018;
+
+		/// <summary>(0018,601A) VR=UL Region Location Min Y0</summary>
 		public const uint RegionLocationMinY0 = 0x0018601a;
+
+		/// <summary>(0018,601C) VR=UL Region Location Max X1</summary>
 		public const uint RegionLocationMaxX1 = 0x0018601c;
+
+		/// <summary>(0018,601E) VR=UL Region Location Max Y1</summary>
 		public const uint RegionLocationMaxY1 = 0x0018601e;
+
+		/// <summary>(0018,6020) VR=SL Reference Pixel X0</summary>
 		public const uint ReferencePixelX0 = 0x00186020;
+
+		/// <summary>(0018,6022) VR=SL Reference Pixel Y0</summary>
 		public const uint ReferencePixelY0 = 0x00186022;
+
+		/// <summary>(0018,6024) VR=US Physical Units X Direction</summary>
 		public const uint PhysicalUnitsXDirection = 0x00186024;
+
+		/// <summary>(0018,6026) VR=US Physical Units Y Direction</summary>
 		public const uint PhysicalUnitsYDirection = 0x00186026;
+
+		/// <summary>(0018,6028) VR=FD Reference Pixel Physical Value X</summary>
 		public const uint ReferencePixelPhysicalValueX = 0x00186028;
+
+		/// <summary>(0018,602A) VR=FD Reference Pixel Physical Value Y</summary>
 		public const uint ReferencePixelPhysicalValueY = 0x0018602a;
+
+		/// <summary>(0018,602C) VR=FD Physical Delta X</summary>
 		public const uint PhysicalDeltaX = 0x0018602c;
+
+		/// <summary>(0018,602E) VR=FD Physical Delta Y</summary>
 		public const uint PhysicalDeltaY = 0x0018602e;
+
+		/// <summary>(0018,6030) VR=UL Transducer Frequency</summary>
 		public const uint TransducerFrequency = 0x00186030;
+
+		/// <summary>(0018,6031) VR=CS Transducer Type</summary>
 		public const uint TransducerType = 0x00186031;
+
+		/// <summary>(0018,6032) VR=UL Pulse Repetition Frequency</summary>
 		public const uint PulseRepetitionFrequency = 0x00186032;
+
+		/// <summary>(0018,6034) VR=FD Doppler Correction Angle</summary>
 		public const uint DopplerCorrectionAngle = 0x00186034;
+
+		/// <summary>(0018,6036) VR=FD Steering Angle</summary>
 		public const uint SteeringAngle = 0x00186036;
+
+		/// <summary>(0018,6038) VR=UL Doppler Sample Volume X Position (Retired)</summary>
 		public const uint DopplerSampleVolumeXPositionRETIRED = 0x00186038;
+
+		/// <summary>(0018,6039) VR=SL Doppler Sample Volume X Position</summary>
 		public const uint DopplerSampleVolumeXPosition = 0x00186039;
+
+		/// <summary>(0018,603A) VR=UL Doppler Sample Volume Y Position (Retired)</summary>
 		public const uint DopplerSampleVolumeYPositionRETIRED = 0x0018603a;
+
+		/// <summary>(0018,603B) VR=SL Doppler Sample Volume Y Position</summary>
 		public const uint DopplerSampleVolumeYPosition = 0x0018603b;
+
+		/// <summary>(0018,603C) VR=UL TM-Line Position X0 (Retired)</summary>
 		public const uint TMLinePositionX0RETIRED = 0x0018603c;
+
+		/// <summary>(0018,603D) VR=SL TM-Line Position X0</summary>
 		public const uint TMLinePositionX0 = 0x0018603d;
+
+		/// <summary>(0018,603E) VR=UL TM-Line Position Y0 (Retired)</summary>
 		public const uint TMLinePositionY0RETIRED = 0x0018603e;
+
+		/// <summary>(0018,603F) VR=SL TM-Line Position Y0</summary>
 		public const uint TMLinePositionY0 = 0x0018603f;
+
+		/// <summary>(0018,6040) VR=UL TM-Line Position X1 (Retired)</summary>
 		public const uint TMLinePositionX1RETIRED = 0x00186040;
+
+		/// <summary>(0018,6041) VR=SL TM-Line Position X1</summary>
 		public const uint TMLinePositionX1 = 0x00186041;
+
+		/// <summary>(0018,6042) VR=UL TM-Line Position Y1 (Retired)</summary>
 		public const uint TMLinePositionY1RETIRED = 0x00186042;
+
+		/// <summary>(0018,6043) VR=SL TM-Line Position Y1</summary>
 		public const uint TMLinePositionY1 = 0x00186043;
+
+		/// <summary>(0018,6044) VR=US Pixel Component Organization</summary>
 		public const uint PixelComponentOrganization = 0x00186044;
+
+		/// <summary>(0018,6046) VR=UL Pixel Component Mask</summary>
 		public const uint PixelComponentMask = 0x00186046;
+
+		/// <summary>(0018,6048) VR=UL Pixel Component Range Start</summary>
 		public const uint PixelComponentRangeStart = 0x00186048;
+
+		/// <summary>(0018,604A) VR=UL Pixel Component Range Stop</summary>
 		public const uint PixelComponentRangeStop = 0x0018604a;
+
+		/// <summary>(0018,604C) VR=US Pixel Component Physical Units</summary>
 		public const uint PixelComponentPhysicalUnits = 0x0018604c;
+
+		/// <summary>(0018,604E) VR=US Pixel Component Data Type</summary>
 		public const uint PixelComponentDataType = 0x0018604e;
+
+		/// <summary>(0018,6050) VR=UL Number of Table Break Points</summary>
 		public const uint NumberOfTableBreakPoints = 0x00186050;
+
+		/// <summary>(0018,6052) VR=UL Table of X Break Points</summary>
 		public const uint TableOfXBreakPoints = 0x00186052;
+
+		/// <summary>(0018,6054) VR=FD Table of Y Break Points</summary>
 		public const uint TableOfYBreakPoints = 0x00186054;
+
+		/// <summary>(0018,6056) VR=UL Number of Table Entries</summary>
 		public const uint NumberOfTableEntries = 0x00186056;
+
+		/// <summary>(0018,6058) VR=UL Table of Pixel Values</summary>
 		public const uint TableOfPixelValues = 0x00186058;
+
+		/// <summary>(0018,605A) VR=FL Table of Parameter Values</summary>
 		public const uint TableOfParameterValues = 0x0018605a;
+
+		/// <summary>(0018,6060) VR=FL R Wave Time Vector</summary>
 		public const uint RWaveTimeVector = 0x00186060;
+
+		/// <summary>(0018,7000) VR=CS Detector Conditions Nominal Flag</summary>
 		public const uint DetectorConditionsNominalFlag = 0x00187000;
+
+		/// <summary>(0018,7001) VR=DS Detector Temperature</summary>
 		public const uint DetectorTemperature = 0x00187001;
+
+		/// <summary>(0018,7004) VR=CS Detector Type</summary>
 		public const uint DetectorType = 0x00187004;
+
+		/// <summary>(0018,7005) VR=CS Detector Configuration</summary>
 		public const uint DetectorConfiguration = 0x00187005;
+
+		/// <summary>(0018,7006) VR=LT Detector Description</summary>
 		public const uint DetectorDescription = 0x00187006;
+
+		/// <summary>(0018,7008) VR=LT Detector Mode</summary>
 		public const uint DetectorMode = 0x00187008;
+
+		/// <summary>(0018,700A) VR=SH Detector ID</summary>
 		public const uint DetectorID = 0x0018700a;
+
+		/// <summary>(0018,700C) VR=DA Date of Last Detector Calibration</summary>
 		public const uint DateOfLastDetectorCalibration = 0x0018700c;
+
+		/// <summary>(0018,700E) VR=TM Time of Last Detector Calibration</summary>
 		public const uint TimeOfLastDetectorCalibration = 0x0018700e;
+
+		/// <summary>(0018,7010) VR=IS Exposures on Detector Since Last Calibration</summary>
 		public const uint ExposuresOnDetectorSinceLastCalibration = 0x00187010;
+
+		/// <summary>(0018,7011) VR=IS Exposures on Detector Since Manufactured</summary>
 		public const uint ExposuresOnDetectorSinceManufactured = 0x00187011;
+
+		/// <summary>(0018,7012) VR=DS Detector Time Since Last Exposure</summary>
 		public const uint DetectorTimeSinceLastExposure = 0x00187012;
+
+		/// <summary>(0018,7014) VR=DS Detector Active Time</summary>
 		public const uint DetectorActiveTime = 0x00187014;
+
+		/// <summary>(0018,7016) VR=DS Detector Activation Offset From Exposure</summary>
 		public const uint DetectorActivationOffsetFromExposure = 0x00187016;
+
+		/// <summary>(0018,701A) VR=DS Detector Binning</summary>
 		public const uint DetectorBinning = 0x0018701a;
+
+		/// <summary>(0018,7020) VR=DS Detector Element Physical Size</summary>
 		public const uint DetectorElementPhysicalSize = 0x00187020;
+
+		/// <summary>(0018,7022) VR=DS Detector Element Spacing</summary>
 		public const uint DetectorElementSpacing = 0x00187022;
+
+		/// <summary>(0018,7024) VR=CS Detector Active Shape</summary>
 		public const uint DetectorActiveShape = 0x00187024;
+
+		/// <summary>(0018,7026) VR=DS Detector Active Dimension(s)</summary>
 		public const uint DetectorActiveDimensions = 0x00187026;
+
+		/// <summary>(0018,7028) VR=DS Detector Active Origin</summary>
 		public const uint DetectorActiveOrigin = 0x00187028;
+
+		/// <summary>(0018,702A) VR=LO Detector Manufacturer Name</summary>
 		public const uint DetectorManufacturerName = 0x0018702a;
+
+		/// <summary>(0018,702B) VR=LO Detector Manufacturer's Model Name</summary>
 		public const uint DetectorManufacturersModelName = 0x0018702b;
+
+		/// <summary>(0018,7030) VR=DS Field of View Origin</summary>
 		public const uint FieldOfViewOrigin = 0x00187030;
+
+		/// <summary>(0018,7032) VR=DS Field of View Rotation</summary>
 		public const uint FieldOfViewRotation = 0x00187032;
+
+		/// <summary>(0018,7034) VR=CS Field of View Horizontal Flip</summary>
 		public const uint FieldOfViewHorizontalFlip = 0x00187034;
+
+		/// <summary>(0018,7040) VR=LT Grid Absorbing Material</summary>
 		public const uint GridAbsorbingMaterial = 0x00187040;
+
+		/// <summary>(0018,7041) VR=LT Grid Spacing Material</summary>
 		public const uint GridSpacingMaterial = 0x00187041;
+
+		/// <summary>(0018,7042) VR=DS Grid Thickness</summary>
 		public const uint GridThickness = 0x00187042;
+
+		/// <summary>(0018,7044) VR=DS Grid Pitch</summary>
 		public const uint GridPitch = 0x00187044;
+
+		/// <summary>(0018,7046) VR=IS Grid Aspect Ratio</summary>
 		public const uint GridAspectRatio = 0x00187046;
+
+		/// <summary>(0018,7048) VR=DS Grid Period</summary>
 		public const uint GridPeriod = 0x00187048;
+
+		/// <summary>(0018,704C) VR=DS Grid Focal Distance</summary>
 		public const uint GridFocalDistance = 0x0018704c;
+
+		/// <summary>(0018,7050) VR=CS Filter Material</summary>
 		public const uint FilterMaterial = 0x00187050;
+
+		/// <summary>(0018,7052) VR=DS Filter Thickness Minimum</summary>
 		public const uint FilterThicknessMinimum = 0x00187052;
+
+		/// <summary>(0018,7054) VR=DS Filter Thickness Maximum</summary>
 		public const uint FilterThicknessMaximum = 0x00187054;
+
+		/// <summary>(0018,7060) VR=CS Exposure Control Mode</summary>
 		public const uint ExposureControlMode = 0x00187060;
+
+		/// <summary>(0018,7062) VR=LT Exposure Control Mode Description</summary>
 		public const uint ExposureControlModeDescription = 0x00187062;
+
+		/// <summary>(0018,7064) VR=CS Exposure Status</summary>
 		public const uint ExposureStatus = 0x00187064;
+
+		/// <summary>(0018,7065) VR=DS Phototimer Setting</summary>
 		public const uint PhototimerSetting = 0x00187065;
+
+		/// <summary>(0018,8150) VR=DS Exposure Time in µS</summary>
 		public const uint ExposureTimeInµS = 0x00188150;
+
+		/// <summary>(0018,8151) VR=DS X-Ray Tube Current in µA</summary>
 		public const uint XRayTubeCurrentInµA = 0x00188151;
+
+		/// <summary>(0018,9004) VR=CS Content Qualification</summary>
 		public const uint ContentQualification = 0x00189004;
+
+		/// <summary>(0018,9005) VR=SH Pulse Sequence Name</summary>
 		public const uint PulseSequenceName = 0x00189005;
+
+		/// <summary>(0018,9006) VR=SQ MR Imaging Modifier Sequence</summary>
 		public const uint MRImagingModifierSequence = 0x00189006;
+
+		/// <summary>(0018,9008) VR=CS Echo Pulse Sequence</summary>
 		public const uint EchoPulseSequence = 0x00189008;
+
+		/// <summary>(0018,9009) VR=CS Inversion Recovery</summary>
 		public const uint InversionRecovery = 0x00189009;
+
+		/// <summary>(0018,9010) VR=CS Flow Compensation</summary>
 		public const uint FlowCompensation = 0x00189010;
+
+		/// <summary>(0018,9011) VR=CS Multiple Spin Echo</summary>
 		public const uint MultipleSpinEcho = 0x00189011;
+
+		/// <summary>(0018,9012) VR=CS Multi-planar Excitation</summary>
 		public const uint MultiplanarExcitation = 0x00189012;
+
+		/// <summary>(0018,9014) VR=CS Phase Contrast</summary>
 		public const uint PhaseContrast = 0x00189014;
+
+		/// <summary>(0018,9015) VR=CS Time of Flight Contrast</summary>
 		public const uint TimeOfFlightContrast = 0x00189015;
+
+		/// <summary>(0018,9016) VR=CS Spoiling</summary>
 		public const uint Spoiling = 0x00189016;
+
+		/// <summary>(0018,9017) VR=CS Steady State Pulse Sequence</summary>
 		public const uint SteadyStatePulseSequence = 0x00189017;
+
+		/// <summary>(0018,9018) VR=CS Echo Planar Pulse Sequence</summary>
 		public const uint EchoPlanarPulseSequence = 0x00189018;
+
+		/// <summary>(0018,9019) VR=FD Tag Angle First Axis</summary>
 		public const uint TagAngleFirstAxis = 0x00189019;
+
+		/// <summary>(0018,9020) VR=CS Magnetization Transfer</summary>
 		public const uint MagnetizationTransfer = 0x00189020;
+
+		/// <summary>(0018,9021) VR=CS T2 Preparation</summary>
 		public const uint T2Preparation = 0x00189021;
+
+		/// <summary>(0018,9022) VR=CS Blood Signal Nulling</summary>
 		public const uint BloodSignalNulling = 0x00189022;
+
+		/// <summary>(0018,9024) VR=CS Saturation Recovery</summary>
 		public const uint SaturationRecovery = 0x00189024;
+
+		/// <summary>(0018,9025) VR=CS Spectrally Selected Suppression</summary>
 		public const uint SpectrallySelectedSuppression = 0x00189025;
+
+		/// <summary>(0018,9026) VR=CS Spectrally Selected Excitation</summary>
 		public const uint SpectrallySelectedExcitation = 0x00189026;
+
+		/// <summary>(0018,9027) VR=CS Spatial Pre-saturation</summary>
 		public const uint SpatialPresaturation = 0x00189027;
+
+		/// <summary>(0018,9028) VR=CS Tagging</summary>
 		public const uint Tagging = 0x00189028;
+
+		/// <summary>(0018,9029) VR=CS Oversampling Phase</summary>
 		public const uint OversamplingPhase = 0x00189029;
+
+		/// <summary>(0018,9030) VR=FD Tag Spacing First Dimension</summary>
 		public const uint TagSpacingFirstDimension = 0x00189030;
+
+		/// <summary>(0018,9032) VR=CS Geometry of k-Space Traversal</summary>
 		public const uint GeometryOfKSpaceTraversal = 0x00189032;
+
+		/// <summary>(0018,9033) VR=CS Segmented k-Space Traversal</summary>
 		public const uint SegmentedKSpaceTraversal = 0x00189033;
+
+		/// <summary>(0018,9034) VR=CS Rectilinear Phase Encode Reordering</summary>
 		public const uint RectilinearPhaseEncodeReordering = 0x00189034;
+
+		/// <summary>(0018,9035) VR=FD Tag Thickness</summary>
 		public const uint TagThickness = 0x00189035;
+
+		/// <summary>(0018,9036) VR=CS Partial Fourier Direction</summary>
 		public const uint PartialFourierDirection = 0x00189036;
+
+		/// <summary>(0018,9037) VR=CS Cardiac Synchronization Technique</summary>
 		public const uint CardiacSynchronizationTechnique = 0x00189037;
+
+		/// <summary>(0018,9041) VR=LO Receive Coil Manufacturer Name</summary>
 		public const uint ReceiveCoilManufacturerName = 0x00189041;
+
+		/// <summary>(0018,9042) VR=SQ MR Receive Coil Sequence</summary>
 		public const uint MRReceiveCoilSequence = 0x00189042;
+
+		/// <summary>(0018,9043) VR=CS Receive Coil Type</summary>
 		public const uint ReceiveCoilType = 0x00189043;
+
+		/// <summary>(0018,9044) VR=CS Quadrature Receive Coil</summary>
 		public const uint QuadratureReceiveCoil = 0x00189044;
+
+		/// <summary>(0018,9045) VR=SQ Multi-Coil Definition Sequence</summary>
 		public const uint MultiCoilDefinitionSequence = 0x00189045;
+
+		/// <summary>(0018,9046) VR=LO Multi-Coil Configuration</summary>
 		public const uint MultiCoilConfiguration = 0x00189046;
+
+		/// <summary>(0018,9047) VR=SH Multi-Coil Element Name</summary>
 		public const uint MultiCoilElementName = 0x00189047;
+
+		/// <summary>(0018,9048) VR=CS Multi-Coil Element Used</summary>
 		public const uint MultiCoilElementUsed = 0x00189048;
+
+		/// <summary>(0018,9049) VR=SQ MR Transmit Coil Sequence</summary>
 		public const uint MRTransmitCoilSequence = 0x00189049;
+
+		/// <summary>(0018,9050) VR=LO Transmit Coil Manufacturer Name</summary>
 		public const uint TransmitCoilManufacturerName = 0x00189050;
+
+		/// <summary>(0018,9051) VR=CS Transmit Coil Type</summary>
 		public const uint TransmitCoilType = 0x00189051;
+
+		/// <summary>(0018,9052) VR=FD Spectral Width</summary>
 		public const uint SpectralWidth = 0x00189052;
+
+		/// <summary>(0018,9053) VR=FD Chemical Shift Reference</summary>
 		public const uint ChemicalShiftReference = 0x00189053;
+
+		/// <summary>(0018,9054) VR=CS Volume Localization Technique</summary>
 		public const uint VolumeLocalizationTechnique = 0x00189054;
+
+		/// <summary>(0018,9058) VR=US MR Acquisition Frequency Encoding Steps</summary>
 		public const uint MRAcquisitionFrequencyEncodingSteps = 0x00189058;
+
+		/// <summary>(0018,9059) VR=CS De-coupling</summary>
 		public const uint Decoupling = 0x00189059;
+
+		/// <summary>(0018,9060) VR=CS De-coupled Nucleus</summary>
 		public const uint DecoupledNucleus = 0x00189060;
+
+		/// <summary>(0018,9061) VR=FD De-coupling Frequency</summary>
 		public const uint DecouplingFrequency = 0x00189061;
+
+		/// <summary>(0018,9062) VR=CS De-coupling Method</summary>
 		public const uint DecouplingMethod = 0x00189062;
+
+		/// <summary>(0018,9063) VR=FD De-coupling Chemical Shift Reference</summary>
 		public const uint DecouplingChemicalShiftReference = 0x00189063;
+
+		/// <summary>(0018,9064) VR=CS k-space Filtering</summary>
 		public const uint KspaceFiltering = 0x00189064;
+
+		/// <summary>(0018,9065) VR=CS Time Domain Filtering</summary>
 		public const uint TimeDomainFiltering = 0x00189065;
+
+		/// <summary>(0018,9066) VR=US Number of Zero fills</summary>
 		public const uint NumberOfZeroFills = 0x00189066;
+
+		/// <summary>(0018,9067) VR=CS Baseline Correction</summary>
 		public const uint BaselineCorrection = 0x00189067;
+
+		/// <summary>(0018,9069) VR=FD Parallel Reduction Factor In-plane</summary>
 		public const uint ParallelReductionFactorInplane = 0x00189069;
+
+		/// <summary>(0018,9070) VR=FD Cardiac R-R Interval Specified</summary>
 		public const uint CardiacRRIntervalSpecified = 0x00189070;
+
+		/// <summary>(0018,9073) VR=FD Acquisition Duration</summary>
 		public const uint AcquisitionDuration = 0x00189073;
+
+		/// <summary>(0018,9074) VR=DT Frame Acquisition Datetime</summary>
 		public const uint FrameAcquisitionDatetime = 0x00189074;
+
+		/// <summary>(0018,9075) VR=CS Diffusion Directionality</summary>
 		public const uint DiffusionDirectionality = 0x00189075;
+
+		/// <summary>(0018,9076) VR=SQ Diffusion Gradient Direction Sequence</summary>
 		public const uint DiffusionGradientDirectionSequence = 0x00189076;
+
+		/// <summary>(0018,9077) VR=CS Parallel Acquisition</summary>
 		public const uint ParallelAcquisition = 0x00189077;
+
+		/// <summary>(0018,9078) VR=CS Parallel Acquisition Technique</summary>
 		public const uint ParallelAcquisitionTechnique = 0x00189078;
+
+		/// <summary>(0018,9079) VR=FD Inversion Times</summary>
 		public const uint InversionTimes = 0x00189079;
+
+		/// <summary>(0018,9080) VR=ST Metabolite Map Description</summary>
 		public const uint MetaboliteMapDescription = 0x00189080;
+
+		/// <summary>(0018,9081) VR=CS Partial Fourier</summary>
 		public const uint PartialFourier = 0x00189081;
+
+		/// <summary>(0018,9082) VR=FD Effective Echo Time</summary>
 		public const uint EffectiveEchoTime = 0x00189082;
+
+		/// <summary>(0018,9083) VR=SQ Metabolite Map Code Sequence</summary>
 		public const uint MetaboliteMapCodeSequence = 0x00189083;
+
+		/// <summary>(0018,9084) VR=SQ Chemical Shift Sequence</summary>
 		public const uint ChemicalShiftSequence = 0x00189084;
+
+		/// <summary>(0018,9085) VR=CS Cardiac Signal Source</summary>
 		public const uint CardiacSignalSource = 0x00189085;
+
+		/// <summary>(0018,9087) VR=FD Diffusion b-value</summary>
 		public const uint DiffusionBvalue = 0x00189087;
+
+		/// <summary>(0018,9089) VR=FD Diffusion Gradient Orientation</summary>
 		public const uint DiffusionGradientOrientation = 0x00189089;
+
+		/// <summary>(0018,9090) VR=FD Velocity Encoding Direction</summary>
 		public const uint VelocityEncodingDirection = 0x00189090;
+
+		/// <summary>(0018,9091) VR=FD Velocity Encoding Minimum Value</summary>
 		public const uint VelocityEncodingMinimumValue = 0x00189091;
+
+		/// <summary>(0018,9093) VR=US Number of k-Space Trajectories</summary>
 		public const uint NumberOfKSpaceTrajectories = 0x00189093;
+
+		/// <summary>(0018,9094) VR=CS Coverage of k-Space</summary>
 		public const uint CoverageOfKSpace = 0x00189094;
+
+		/// <summary>(0018,9095) VR=UL Spectroscopy Acquisition Phase Rows</summary>
 		public const uint SpectroscopyAcquisitionPhaseRows = 0x00189095;
+
+		/// <summary>(0018,9098) VR=FD Transmitter Frequency</summary>
 		public const uint TransmitterFrequency = 0x00189098;
+
+		/// <summary>(0018,9100) VR=CS Resonant Nucleus</summary>
 		public const uint ResonantNucleus = 0x00189100;
+
+		/// <summary>(0018,9101) VR=CS Frequency Correction</summary>
 		public const uint FrequencyCorrection = 0x00189101;
+
+		/// <summary>(0018,9103) VR=SQ MR Spectroscopy FOV/Geometry Sequence</summary>
 		public const uint MRSpectroscopyFOVGeometrySequence = 0x00189103;
+
+		/// <summary>(0018,9104) VR=FD Slab Thickness</summary>
 		public const uint SlabThickness = 0x00189104;
+
+		/// <summary>(0018,9105) VR=FD Slab Orientation</summary>
 		public const uint SlabOrientation = 0x00189105;
+
+		/// <summary>(0018,9106) VR=FD Mid Slab Position</summary>
 		public const uint MidSlabPosition = 0x00189106;
+
+		/// <summary>(0018,9107) VR=SQ MR Spatial Saturation Sequence</summary>
 		public const uint MRSpatialSaturationSequence = 0x00189107;
+
+		/// <summary>(0018,9112) VR=SQ MR Timing and Related Parameters Sequence</summary>
 		public const uint MRTimingAndRelatedParametersSequence = 0x00189112;
+
+		/// <summary>(0018,9114) VR=SQ MR Echo Sequence</summary>
 		public const uint MREchoSequence = 0x00189114;
+
+		/// <summary>(0018,9115) VR=SQ MR Modifier Sequence</summary>
 		public const uint MRModifierSequence = 0x00189115;
+
+		/// <summary>(0018,9117) VR=SQ MR Diffusion Sequence</summary>
 		public const uint MRDiffusionSequence = 0x00189117;
+
+		/// <summary>(0018,9118) VR=SQ Cardiac Trigger Sequence</summary>
 		public const uint CardiacTriggerSequence = 0x00189118;
+
+		/// <summary>(0018,9119) VR=SQ MR Averages Sequence</summary>
 		public const uint MRAveragesSequence = 0x00189119;
+
+		/// <summary>(0018,9125) VR=SQ MR FOV/Geometry Sequence</summary>
 		public const uint MRFOVGeometrySequence = 0x00189125;
+
+		/// <summary>(0018,9126) VR=SQ Volume Localization Sequence</summary>
 		public const uint VolumeLocalizationSequence = 0x00189126;
+
+		/// <summary>(0018,9127) VR=UL Spectroscopy Acquisition Data Columns</summary>
 		public const uint SpectroscopyAcquisitionDataColumns = 0x00189127;
+
+		/// <summary>(0018,9147) VR=CS Diffusion Anisotropy Type</summary>
 		public const uint DiffusionAnisotropyType = 0x00189147;
+
+		/// <summary>(0018,9151) VR=DT Frame Reference Datetime</summary>
 		public const uint FrameReferenceDatetime = 0x00189151;
+
+		/// <summary>(0018,9152) VR=SQ MR Metabolite Map Sequence</summary>
 		public const uint MRMetaboliteMapSequence = 0x00189152;
+
+		/// <summary>(0018,9155) VR=FD Parallel Reduction Factor out-of-plane</summary>
 		public const uint ParallelReductionFactorOutofplane = 0x00189155;
+
+		/// <summary>(0018,9159) VR=UL Spectroscopy Acquisition Out-of-plane Phase Steps</summary>
 		public const uint SpectroscopyAcquisitionOutofplanePhaseSteps = 0x00189159;
+
+		/// <summary>(0018,9166) VR=CS Bulk Motion Status</summary>
 		public const uint BulkMotionStatus = 0x00189166;
+
+		/// <summary>(0018,9168) VR=FD Parallel Reduction Factor Second In-plane</summary>
 		public const uint ParallelReductionFactorSecondInplane = 0x00189168;
+
+		/// <summary>(0018,9169) VR=CS Cardiac Beat Rejection Technique</summary>
 		public const uint CardiacBeatRejectionTechnique = 0x00189169;
+
+		/// <summary>(0018,9170) VR=CS Respiratory Motion Compensation Technique</summary>
 		public const uint RespiratoryMotionCompensationTechnique = 0x00189170;
+
+		/// <summary>(0018,9171) VR=CS Respiratory Signal Source</summary>
 		public const uint RespiratorySignalSource = 0x00189171;
+
+		/// <summary>(0018,9172) VR=CS Bulk Motion Compensation Technique</summary>
 		public const uint BulkMotionCompensationTechnique = 0x00189172;
+
+		/// <summary>(0018,9173) VR=CS Bulk Motion Signal Source</summary>
 		public const uint BulkMotionSignalSource = 0x00189173;
+
+		/// <summary>(0018,9174) VR=CS Applicable Safety Standard Agency</summary>
 		public const uint ApplicableSafetyStandardAgency = 0x00189174;
+
+		/// <summary>(0018,9175) VR=LO Applicable Safety Standard Description</summary>
 		public const uint ApplicableSafetyStandardDescription = 0x00189175;
+
+		/// <summary>(0018,9176) VR=SQ Operating Mode Sequence</summary>
 		public const uint OperatingModeSequence = 0x00189176;
+
+		/// <summary>(0018,9177) VR=CS Operating Mode Type</summary>
 		public const uint OperatingModeType = 0x00189177;
+
+		/// <summary>(0018,9178) VR=CS Operating Mode</summary>
 		public const uint OperatingMode = 0x00189178;
+
+		/// <summary>(0018,9179) VR=CS Specific Absorption Rate Definition</summary>
 		public const uint SpecificAbsorptionRateDefinition = 0x00189179;
+
+		/// <summary>(0018,9180) VR=CS Gradient Output Type</summary>
 		public const uint GradientOutputType = 0x00189180;
+
+		/// <summary>(0018,9181) VR=FD Specific Absorption Rate Value</summary>
 		public const uint SpecificAbsorptionRateValue = 0x00189181;
+
+		/// <summary>(0018,9182) VR=FD Gradient Output</summary>
 		public const uint GradientOutput = 0x00189182;
+
+		/// <summary>(0018,9183) VR=CS Flow Compensation Direction</summary>
 		public const uint FlowCompensationDirection = 0x00189183;
+
+		/// <summary>(0018,9184) VR=FD Tagging Delay</summary>
 		public const uint TaggingDelay = 0x00189184;
+
+		/// <summary>(0018,9185) VR=ST Respiratory Motion Compensation Technique Description</summary>
 		public const uint RespiratoryMotionCompensationTechniqueDescription = 0x00189185;
+
+		/// <summary>(0018,9186) VR=SH Respiratory Signal Source ID</summary>
 		public const uint RespiratorySignalSourceID = 0x00189186;
+
+		/// <summary>(0018,9195) VR=FD Chemical Shifts Minimum Integration Limit in Hz (Retired)</summary>
 		public const uint ChemicalShiftsMinimumIntegrationLimitInHzRETIRED = 0x00189195;
+
+		/// <summary>(0018,9196) VR=FD Chemical Shifts Maximum Integration Limit in Hz (Retired)</summary>
 		public const uint ChemicalShiftsMaximumIntegrationLimitInHzRETIRED = 0x00189196;
+
+		/// <summary>(0018,9197) VR=SQ MR Velocity Encoding Sequence</summary>
 		public const uint MRVelocityEncodingSequence = 0x00189197;
+
+		/// <summary>(0018,9198) VR=CS First Order Phase Correction</summary>
 		public const uint FirstOrderPhaseCorrection = 0x00189198;
+
+		/// <summary>(0018,9199) VR=CS Water Referenced Phase Correction</summary>
 		public const uint WaterReferencedPhaseCorrection = 0x00189199;
+
+		/// <summary>(0018,9200) VR=CS MR Spectroscopy Acquisition Type</summary>
 		public const uint MRSpectroscopyAcquisitionType = 0x00189200;
+
+		/// <summary>(0018,9214) VR=CS Respiratory Cycle Position</summary>
 		public const uint RespiratoryCyclePosition = 0x00189214;
+
+		/// <summary>(0018,9217) VR=FD Velocity Encoding Maximum Value</summary>
 		public const uint VelocityEncodingMaximumValue = 0x00189217;
+
+		/// <summary>(0018,9218) VR=FD Tag Spacing Second Dimension</summary>
 		public const uint TagSpacingSecondDimension = 0x00189218;
+
+		/// <summary>(0018,9219) VR=SS Tag Angle Second Axis</summary>
 		public const uint TagAngleSecondAxis = 0x00189219;
+
+		/// <summary>(0018,9220) VR=FD Frame Acquisition Duration</summary>
 		public const uint FrameAcquisitionDuration = 0x00189220;
+
+		/// <summary>(0018,9226) VR=SQ MR Image Frame Type Sequence</summary>
 		public const uint MRImageFrameTypeSequence = 0x00189226;
+
+		/// <summary>(0018,9227) VR=SQ MR Spectroscopy Frame Type Sequence</summary>
 		public const uint MRSpectroscopyFrameTypeSequence = 0x00189227;
+
+		/// <summary>(0018,9231) VR=US MR Acquisition Phase Encoding Steps in-plane</summary>
 		public const uint MRAcquisitionPhaseEncodingStepsInplane = 0x00189231;
+
+		/// <summary>(0018,9232) VR=US MR Acquisition Phase Encoding Steps out-of-plane</summary>
 		public const uint MRAcquisitionPhaseEncodingStepsOutofplane = 0x00189232;
+
+		/// <summary>(0018,9234) VR=UL Spectroscopy Acquisition Phase Columns</summary>
 		public const uint SpectroscopyAcquisitionPhaseColumns = 0x00189234;
+
+		/// <summary>(0018,9236) VR=CS Cardiac Cycle Position</summary>
 		public const uint CardiacCyclePosition = 0x00189236;
+
+		/// <summary>(0018,9239) VR=SQ Specific Absorption Rate Sequence</summary>
 		public const uint SpecificAbsorptionRateSequence = 0x00189239;
+
+		/// <summary>(0018,9240) VR=US RF Echo Train Length</summary>
 		public const uint RFEchoTrainLength = 0x00189240;
+
+		/// <summary>(0018,9241) VR=US Gradient Echo Train Length</summary>
 		public const uint GradientEchoTrainLength = 0x00189241;
+
+		/// <summary>(0018,9295) VR=FD Chemical Shifts Minimum Integration Limit in ppm</summary>
 		public const uint ChemicalShiftsMinimumIntegrationLimitInPpm = 0x00189295;
+
+		/// <summary>(0018,9296) VR=FD Chemical Shifts Maximum Integration Limit in ppm</summary>
 		public const uint ChemicalShiftsMaximumIntegrationLimitInPpm = 0x00189296;
+
+		/// <summary>(0018,9301) VR=SQ CT Acquisition Type Sequence</summary>
 		public const uint CTAcquisitionTypeSequence = 0x00189301;
+
+		/// <summary>(0018,9302) VR=CS Acquisition Type</summary>
 		public const uint AcquisitionType = 0x00189302;
+
+		/// <summary>(0018,9303) VR=FD Tube Angle</summary>
 		public const uint TubeAngle = 0x00189303;
+
+		/// <summary>(0018,9304) VR=SQ CT Acquisition Details Sequence</summary>
 		public const uint CTAcquisitionDetailsSequence = 0x00189304;
+
+		/// <summary>(0018,9305) VR=FD Revolution Time</summary>
 		public const uint RevolutionTime = 0x00189305;
+
+		/// <summary>(0018,9306) VR=FD Single Collimation Width</summary>
 		public const uint SingleCollimationWidth = 0x00189306;
+
+		/// <summary>(0018,9307) VR=FD Total Collimation Width</summary>
 		public const uint TotalCollimationWidth = 0x00189307;
+
+		/// <summary>(0018,9308) VR=SQ CT Table Dynamics Sequence</summary>
 		public const uint CTTableDynamicsSequence = 0x00189308;
+
+		/// <summary>(0018,9309) VR=FD Table Speed</summary>
 		public const uint TableSpeed = 0x00189309;
+
+		/// <summary>(0018,9310) VR=FD Table Feed per Rotation</summary>
 		public const uint TableFeedPerRotation = 0x00189310;
+
+		/// <summary>(0018,9311) VR=FD Spiral Pitch Factor</summary>
 		public const uint SpiralPitchFactor = 0x00189311;
+
+		/// <summary>(0018,9312) VR=SQ CT Geometry Sequence</summary>
 		public const uint CTGeometrySequence = 0x00189312;
+
+		/// <summary>(0018,9313) VR=FD Data Collection Center (Patient)</summary>
 		public const uint DataCollectionCenterPatient = 0x00189313;
+
+		/// <summary>(0018,9314) VR=SQ CT Reconstruction Sequence</summary>
 		public const uint CTReconstructionSequence = 0x00189314;
+
+		/// <summary>(0018,9315) VR=CS Reconstruction Algorithm</summary>
 		public const uint ReconstructionAlgorithm = 0x00189315;
+
+		/// <summary>(0018,9316) VR=CS Convolution Kernel Group</summary>
 		public const uint ConvolutionKernelGroup = 0x00189316;
+
+		/// <summary>(0018,9317) VR=FD Reconstruction Field of View</summary>
 		public const uint ReconstructionFieldOfView = 0x00189317;
+
+		/// <summary>(0018,9318) VR=FD Reconstruction Target Center (Patient)</summary>
 		public const uint ReconstructionTargetCenterPatient = 0x00189318;
+
+		/// <summary>(0018,9319) VR=FD Reconstruction Angle</summary>
 		public const uint ReconstructionAngle = 0x00189319;
+
+		/// <summary>(0018,9320) VR=SH Image Filter</summary>
 		public const uint ImageFilter = 0x00189320;
+
+		/// <summary>(0018,9321) VR=SQ CT Exposure Sequence</summary>
 		public const uint CTExposureSequence = 0x00189321;
+
+		/// <summary>(0018,9322) VR=FD Reconstruction Pixel Spacing</summary>
 		public const uint ReconstructionPixelSpacing = 0x00189322;
+
+		/// <summary>(0018,9323) VR=CS Exposure Modulation Type</summary>
 		public const uint ExposureModulationType = 0x00189323;
+
+		/// <summary>(0018,9324) VR=FD Estimated Dose Saving</summary>
 		public const uint EstimatedDoseSaving = 0x00189324;
+
+		/// <summary>(0018,9325) VR=SQ CT X-ray Details Sequence</summary>
 		public const uint CTXrayDetailsSequence = 0x00189325;
+
+		/// <summary>(0018,9326) VR=SQ CT Position Sequence</summary>
 		public const uint CTPositionSequence = 0x00189326;
+
+		/// <summary>(0018,9327) VR=FD Table Position</summary>
 		public const uint TablePosition = 0x00189327;
+
+		/// <summary>(0018,9328) VR=FD Exposure Time in ms</summary>
 		public const uint ExposureTimeInMs = 0x00189328;
+
+		/// <summary>(0018,9329) VR=SQ CT Image Frame Type Sequence</summary>
 		public const uint CTImageFrameTypeSequence = 0x00189329;
+
+		/// <summary>(0018,9330) VR=FD X-Ray Tube Current in mA</summary>
 		public const uint XRayTubeCurrentInMA = 0x00189330;
+
+		/// <summary>(0018,9332) VR=FD Exposure in mAs</summary>
 		public const uint ExposureInMAs = 0x00189332;
+
+		/// <summary>(0018,9333) VR=CS Constant Volume Flag</summary>
 		public const uint ConstantVolumeFlag = 0x00189333;
+
+		/// <summary>(0018,9334) VR=CS Fluoroscopy Flag</summary>
 		public const uint FluoroscopyFlag = 0x00189334;
+
+		/// <summary>(0018,9335) VR=FD Distance Source to Data Collection Center</summary>
 		public const uint DistanceSourceToDataCollectionCenter = 0x00189335;
+
+		/// <summary>(0018,9337) VR=US Contrast/Bolus Agent Number</summary>
 		public const uint ContrastBolusAgentNumber = 0x00189337;
+
+		/// <summary>(0018,9338) VR=SQ Contrast/Bolus Ingredient Code Sequence</summary>
 		public const uint ContrastBolusIngredientCodeSequence = 0x00189338;
+
+		/// <summary>(0018,9340) VR=SQ Contrast Administration Profile Sequence</summary>
 		public const uint ContrastAdministrationProfileSequence = 0x00189340;
+
+		/// <summary>(0018,9341) VR=SQ Contrast/Bolus Usage Sequence</summary>
 		public const uint ContrastBolusUsageSequence = 0x00189341;
+
+		/// <summary>(0018,9342) VR=CS Contrast/Bolus Agent Administered</summary>
 		public const uint ContrastBolusAgentAdministered = 0x00189342;
+
+		/// <summary>(0018,9343) VR=CS Contrast/Bolus Agent Detected</summary>
 		public const uint ContrastBolusAgentDetected = 0x00189343;
+
+		/// <summary>(0018,9344) VR=CS Contrast/Bolus Agent Phase</summary>
 		public const uint ContrastBolusAgentPhase = 0x00189344;
+
+		/// <summary>(0018,9345) VR=FD CTDIvol</summary>
 		public const uint CTDIvol = 0x00189345;
+
+		/// <summary>(0018,9401) VR=SQ Projection Pixel Calibration Sequence</summary>
 		public const uint ProjectionPixelCalibrationSequence = 0x00189401;
+
+		/// <summary>(0018,9402) VR=FL Distance Source to Isocenter</summary>
 		public const uint DistanceSourceToIsocenter = 0x00189402;
+
+		/// <summary>(0018,9403) VR=FL Distance Object to Table Top</summary>
 		public const uint DistanceObjectToTableTop = 0x00189403;
+
+		/// <summary>(0018,9404) VR=FL Object Pixel Spacing in Center of Beam</summary>
 		public const uint ObjectPixelSpacingInCenterOfBeam = 0x00189404;
+
+		/// <summary>(0018,9405) VR=SQ Positioner Position Sequence</summary>
 		public const uint PositionerPositionSequence = 0x00189405;
+
+		/// <summary>(0018,9406) VR=SQ Table Position Sequence</summary>
 		public const uint TablePositionSequence = 0x00189406;
+
+		/// <summary>(0018,9407) VR=SQ Collimator Shape Sequence</summary>
 		public const uint CollimatorShapeSequence = 0x00189407;
+
+		/// <summary>(0018,9412) VR=SQ XA/XRF Frame Characteristics Sequence</summary>
 		public const uint XAXRFFrameCharacteristicsSequence = 0x00189412;
+
+		/// <summary>(0018,9417) VR=SQ Frame Acquisition Sequence</summary>
 		public const uint FrameAcquisitionSequence = 0x00189417;
+
+		/// <summary>(0018,9420) VR=CS X-Ray Receptor Type</summary>
 		public const uint XRayReceptorType = 0x00189420;
+
+		/// <summary>(0018,9423) VR=LO Acquisition Protocol Name</summary>
 		public const uint AcquisitionProtocolName = 0x00189423;
+
+		/// <summary>(0018,9424) VR=LT Acquisition Protocol Description</summary>
 		public const uint AcquisitionProtocolDescription = 0x00189424;
+
+		/// <summary>(0018,9425) VR=CS Contrast/Bolus Ingredient Opaque</summary>
 		public const uint ContrastBolusIngredientOpaque = 0x00189425;
+
+		/// <summary>(0018,9426) VR=FL Distance Receptor Plane to Detector Housing</summary>
 		public const uint DistanceReceptorPlaneToDetectorHousing = 0x00189426;
+
+		/// <summary>(0018,9427) VR=CS Intensifier Active Shape</summary>
 		public const uint IntensifierActiveShape = 0x00189427;
+
+		/// <summary>(0018,9428) VR=FL Intensifier Active Dimension(s)</summary>
 		public const uint IntensifierActiveDimensions = 0x00189428;
+
+		/// <summary>(0018,9429) VR=FL Physical Detector Size</summary>
 		public const uint PhysicalDetectorSize = 0x00189429;
+
+		/// <summary>(0018,9430) VR=US Position of Isocenter Projection</summary>
 		public const uint PositionOfIsocenterProjection = 0x00189430;
+
+		/// <summary>(0018,9432) VR=SQ Field of View Sequence</summary>
 		public const uint FieldOfViewSequence = 0x00189432;
+
+		/// <summary>(0018,9433) VR=LO Field of View Description</summary>
 		public const uint FieldOfViewDescription = 0x00189433;
+
+		/// <summary>(0018,9434) VR=SQ Exposure Control Sensing Regions Sequence</summary>
 		public const uint ExposureControlSensingRegionsSequence = 0x00189434;
+
+		/// <summary>(0018,9435) VR=CS Exposure Control Sensing Region Shape</summary>
 		public const uint ExposureControlSensingRegionShape = 0x00189435;
+
+		/// <summary>(0018,9436) VR=SS Exposure Control Sensing Region Left Vertical Edge</summary>
 		public const uint ExposureControlSensingRegionLeftVerticalEdge = 0x00189436;
+
+		/// <summary>(0018,9437) VR=SS Exposure Control Sensing Region Right Vertical Edge</summary>
 		public const uint ExposureControlSensingRegionRightVerticalEdge = 0x00189437;
+
+		/// <summary>(0018,9438) VR=SS Exposure Control Sensing Region Upper Horizontal Edge</summary>
 		public const uint ExposureControlSensingRegionUpperHorizontalEdge = 0x00189438;
+
+		/// <summary>(0018,9439) VR=SS Exposure Control Sensing Region Lower Horizontal Edge</summary>
 		public const uint ExposureControlSensingRegionLowerHorizontalEdge = 0x00189439;
+
+		/// <summary>(0018,9440) VR=SS Center of Circular Exposure Control Sensing Region</summary>
 		public const uint CenterOfCircularExposureControlSensingRegion = 0x00189440;
+
+		/// <summary>(0018,9441) VR=US Radius of Circular Exposure Control Sensing Region</summary>
 		public const uint RadiusOfCircularExposureControlSensingRegion = 0x00189441;
+
+		/// <summary>(0018,9442) VR=SS Vertices of the Polygonal Exposure Control Sensing Region</summary>
 		public const uint VerticesOfThePolygonalExposureControlSensingRegion = 0x00189442;
+
+		/// <summary>(0018,9445) VR=NONE SHALL NOT BE USED (Retired)</summary>
 		public const uint SHALLNOTBEUSEDRETIRED = 0x00189445;
+
+		/// <summary>(0018,9447) VR=FL Column Angulation (Patient)</summary>
 		public const uint ColumnAngulationPatient = 0x00189447;
+
+		/// <summary>(0018,9449) VR=FL Beam Angle</summary>
 		public const uint BeamAngle = 0x00189449;
+
+		/// <summary>(0018,9451) VR=SQ Frame Detector Parameters Sequence</summary>
 		public const uint FrameDetectorParametersSequence = 0x00189451;
+
+		/// <summary>(0018,9452) VR=FL Calculated Anatomy Thickness</summary>
 		public const uint CalculatedAnatomyThickness = 0x00189452;
+
+		/// <summary>(0018,9455) VR=SQ Calibration Sequence</summary>
 		public const uint CalibrationSequence = 0x00189455;
+
+		/// <summary>(0018,9456) VR=SQ Object Thickness Sequence</summary>
 		public const uint ObjectThicknessSequence = 0x00189456;
+
+		/// <summary>(0018,9457) VR=CS Plane Identification</summary>
 		public const uint PlaneIdentification = 0x00189457;
+
+		/// <summary>(0018,9461) VR=FL Field of View Dimension(s) in Float</summary>
 		public const uint FieldOfViewDimensionsInFloat = 0x00189461;
+
+		/// <summary>(0018,9462) VR=SQ Isocenter Reference System Sequence</summary>
 		public const uint IsocenterReferenceSystemSequence = 0x00189462;
+
+		/// <summary>(0018,9463) VR=FL Positioner Isocenter Primary Angle</summary>
 		public const uint PositionerIsocenterPrimaryAngle = 0x00189463;
+
+		/// <summary>(0018,9464) VR=FL Positioner Isocenter Secondary Angle</summary>
 		public const uint PositionerIsocenterSecondaryAngle = 0x00189464;
+
+		/// <summary>(0018,9465) VR=FL Positioner Isocenter Detector Rotation Angle</summary>
 		public const uint PositionerIsocenterDetectorRotationAngle = 0x00189465;
+
+		/// <summary>(0018,9466) VR=FL Table X Position to Isocenter</summary>
 		public const uint TableXPositionToIsocenter = 0x00189466;
+
+		/// <summary>(0018,9467) VR=FL Table Y Position to Isocenter</summary>
 		public const uint TableYPositionToIsocenter = 0x00189467;
+
+		/// <summary>(0018,9468) VR=FL Table Z Position to Isocenter</summary>
 		public const uint TableZPositionToIsocenter = 0x00189468;
+
+		/// <summary>(0018,9469) VR=FL Table Horizontal Rotation Angle</summary>
 		public const uint TableHorizontalRotationAngle = 0x00189469;
+
+		/// <summary>(0018,9470) VR=FL Table Head Tilt Angle</summary>
 		public const uint TableHeadTiltAngle = 0x00189470;
+
+		/// <summary>(0018,9471) VR=FL Table Cradle Tilt Angle</summary>
 		public const uint TableCradleTiltAngle = 0x00189471;
+
+		/// <summary>(0018,9472) VR=SQ Frame Display Shutter Sequence</summary>
 		public const uint FrameDisplayShutterSequence = 0x00189472;
+
+		/// <summary>(0018,9473) VR=FL Acquired Image Area Dose Product</summary>
 		public const uint AcquiredImageAreaDoseProduct = 0x00189473;
+
+		/// <summary>(0018,9474) VR=CS C-arm Positioner Tabletop Relationship</summary>
 		public const uint CarmPositionerTabletopRelationship = 0x00189474;
+
+		/// <summary>(0018,9476) VR=SQ X-Ray Geometry Sequence</summary>
 		public const uint XRayGeometrySequence = 0x00189476;
+
+		/// <summary>(0018,9477) VR=SQ Irradiation Event Identification Sequence</summary>
 		public const uint IrradiationEventIdentificationSequence = 0x00189477;
+
+		/// <summary>(0018,A001) VR=SQ Contributing Equipment Sequence</summary>
 		public const uint ContributingEquipmentSequence = 0x0018a001;
+
+		/// <summary>(0018,A002) VR=DT Contribution Date Time</summary>
 		public const uint ContributionDateTime = 0x0018a002;
+
+		/// <summary>(0018,A003) VR=ST Contribution Description</summary>
 		public const uint ContributionDescription = 0x0018a003;
+
+		/// <summary>(0020,000D) VR=UI Study Instance UID</summary>
 		public const uint StudyInstanceUID = 0x0020000d;
+
+		/// <summary>(0020,000E) VR=UI Series Instance UID</summary>
 		public const uint SeriesInstanceUID = 0x0020000e;
+
+		/// <summary>(0020,0010) VR=SH Study ID</summary>
 		public const uint StudyID = 0x00200010;
+
+		/// <summary>(0020,0011) VR=IS Series Number</summary>
 		public const uint SeriesNumber = 0x00200011;
+
+		/// <summary>(0020,0012) VR=IS Acquisition Number</summary>
 		public const uint AcquisitionNumber = 0x00200012;
+
+		/// <summary>(0020,0013) VR=IS Instance Number</summary>
 		public const uint InstanceNumber = 0x00200013;
+
+		/// <summary>(0020,0014) VR=IS Isotope Number (Retired)</summary>
 		public const uint IsotopeNumberRETIRED = 0x00200014;
+
+		/// <summary>(0020,0015) VR=IS Phase Number (Retired)</summary>
 		public const uint PhaseNumberRETIRED = 0x00200015;
+
+		/// <summary>(0020,0016) VR=IS Interval Number (Retired)</summary>
 		public const uint IntervalNumberRETIRED = 0x00200016;
+
+		/// <summary>(0020,0017) VR=IS Time Slot Number (Retired)</summary>
 		public const uint TimeSlotNumberRETIRED = 0x00200017;
+
+		/// <summary>(0020,0018) VR=IS Angle Number (Retired)</summary>
 		public const uint AngleNumberRETIRED = 0x00200018;
+
+		/// <summary>(0020,0019) VR=IS Item Number</summary>
 		public const uint ItemNumber = 0x00200019;
+
+		/// <summary>(0020,0020) VR=CS Patient Orientation</summary>
 		public const uint PatientOrientation = 0x00200020;
+
+		/// <summary>(0020,0022) VR=IS Overlay Number (Retired)</summary>
 		public const uint OverlayNumberRETIRED = 0x00200022;
+
+		/// <summary>(0020,0024) VR=IS Curve Number (Retired)</summary>
 		public const uint CurveNumberRETIRED = 0x00200024;
+
+		/// <summary>(0020,0026) VR=IS Lookup Table Number (Retired)</summary>
 		public const uint LookupTableNumberRETIRED = 0x00200026;
+
+		/// <summary>(0020,0030) VR=DS Image Position (Retired)</summary>
 		public const uint ImagePositionRETIRED = 0x00200030;
+
+		/// <summary>(0020,0032) VR=DS Image Position (Patient)</summary>
 		public const uint ImagePositionPatient = 0x00200032;
+
+		/// <summary>(0020,0035) VR=DS Image Orientation (Retired)</summary>
 		public const uint ImageOrientationRETIRED = 0x00200035;
+
+		/// <summary>(0020,0037) VR=DS Image Orientation (Patient)</summary>
 		public const uint ImageOrientationPatient = 0x00200037;
+
+		/// <summary>(0020,0050) VR=DS Location (Retired)</summary>
 		public const uint LocationRETIRED = 0x00200050;
+
+		/// <summary>(0020,0052) VR=UI Frame of Reference UID</summary>
 		public const uint FrameOfReferenceUID = 0x00200052;
+
+		/// <summary>(0020,0060) VR=CS Laterality</summary>
 		public const uint Laterality = 0x00200060;
+
+		/// <summary>(0020,0062) VR=CS Image Laterality</summary>
 		public const uint ImageLaterality = 0x00200062;
+
+		/// <summary>(0020,0070) VR=LO Image Geometry Type (Retired)</summary>
 		public const uint ImageGeometryTypeRETIRED = 0x00200070;
+
+		/// <summary>(0020,0080) VR=CS Masking Image (Retired)</summary>
 		public const uint MaskingImageRETIRED = 0x00200080;
+
+		/// <summary>(0020,0100) VR=IS Temporal Position Identifier</summary>
 		public const uint TemporalPositionIdentifier = 0x00200100;
+
+		/// <summary>(0020,0105) VR=IS Number of Temporal Positions</summary>
 		public const uint NumberOfTemporalPositions = 0x00200105;
+
+		/// <summary>(0020,0110) VR=DS Temporal Resolution</summary>
 		public const uint TemporalResolution = 0x00200110;
+
+		/// <summary>(0020,0200) VR=UI Synchronization Frame of Reference UID</summary>
 		public const uint SynchronizationFrameOfReferenceUID = 0x00200200;
+
+		/// <summary>(0020,1000) VR=IS Series in Study (Retired)</summary>
 		public const uint SeriesInStudyRETIRED = 0x00201000;
+
+		/// <summary>(0020,1001) VR=IS Acquisitions in Series (Retired)</summary>
 		public const uint AcquisitionsInSeriesRETIRED = 0x00201001;
+
+		/// <summary>(0020,1002) VR=IS Images in Acquisition</summary>
 		public const uint ImagesInAcquisition = 0x00201002;
+
+		/// <summary>(0020,1003) VR=IS Images in Series (Retired)</summary>
 		public const uint ImagesInSeriesRETIRED = 0x00201003;
+
+		/// <summary>(0020,1004) VR=IS Acquisitions in Study (Retired)</summary>
 		public const uint AcquisitionsInStudyRETIRED = 0x00201004;
+
+		/// <summary>(0020,1005) VR=IS Images in Study (Retired)</summary>
 		public const uint ImagesInStudyRETIRED = 0x00201005;
+
+		/// <summary>(0020,1020) VR=CS Reference (Retired)</summary>
 		public const uint ReferenceRETIRED = 0x00201020;
+
+		/// <summary>(0020,1040) VR=LO Position Reference Indicator</summary>
 		public const uint PositionReferenceIndicator = 0x00201040;
+
+		/// <summary>(0020,1041) VR=DS Slice Location</summary>
 		public const uint SliceLocation = 0x00201041;
+
+		/// <summary>(0020,1070) VR=IS Other Study Numbers (Retired)</summary>
 		public const uint OtherStudyNumbersRETIRED = 0x00201070;
+
+		/// <summary>(0020,1200) VR=IS Number of Patient Related Studies</summary>
 		public const uint NumberOfPatientRelatedStudies = 0x00201200;
+
+		/// <summary>(0020,1202) VR=IS Number of Patient Related Series</summary>
 		public const uint NumberOfPatientRelatedSeries = 0x00201202;
+
+		/// <summary>(0020,1204) VR=IS Number of Patient Related Instances</summary>
 		public const uint NumberOfPatientRelatedInstances = 0x00201204;
+
+		/// <summary>(0020,1206) VR=IS Number of Study Related Series</summary>
 		public const uint NumberOfStudyRelatedSeries = 0x00201206;
+
+		/// <summary>(0020,1208) VR=IS Number of Study Related Instances</summary>
 		public const uint NumberOfStudyRelatedInstances = 0x00201208;
+
+		/// <summary>(0020,1209) VR=IS Number of Series Related Instances</summary>
 		public const uint NumberOfSeriesRelatedInstances = 0x00201209;
+
+		/// <summary>(0020,3401) VR=CS Modifying Device ID (Retired)</summary>
 		public const uint ModifyingDeviceIDRETIRED = 0x00203401;
+
+		/// <summary>(0020,3402) VR=CS Modified Image ID (Retired)</summary>
 		public const uint ModifiedImageIDRETIRED = 0x00203402;
+
+		/// <summary>(0020,3403) VR=DA Modified Image Date (Retired)</summary>
 		public const uint ModifiedImageDateRETIRED = 0x00203403;
+
+		/// <summary>(0020,3404) VR=LO Modifying Device Manufacturer (Retired)</summary>
 		public const uint ModifyingDeviceManufacturerRETIRED = 0x00203404;
+
+		/// <summary>(0020,3405) VR=TM Modified Image Time (Retired)</summary>
 		public const uint ModifiedImageTimeRETIRED = 0x00203405;
+
+		/// <summary>(0020,3406) VR=LO Modified Image Description (Retired)</summary>
 		public const uint ModifiedImageDescriptionRETIRED = 0x00203406;
+
+		/// <summary>(0020,4000) VR=LT Image Comments</summary>
 		public const uint ImageComments = 0x00204000;
+
+		/// <summary>(0020,5000) VR=AT Original Image Identification (Retired)</summary>
 		public const uint OriginalImageIdentificationRETIRED = 0x00205000;
+
+		/// <summary>(0020,5002) VR=CS Original Image Identification Nomenclature (Retired)</summary>
 		public const uint OriginalImageIdentificationNomenclatureRETIRED = 0x00205002;
+
+		/// <summary>(0020,9056) VR=SH Stack ID</summary>
 		public const uint StackID = 0x00209056;
+
+		/// <summary>(0020,9057) VR=UL In-Stack Position Number</summary>
 		public const uint InStackPositionNumber = 0x00209057;
+
+		/// <summary>(0020,9071) VR=SQ Frame Anatomy Sequence</summary>
 		public const uint FrameAnatomySequence = 0x00209071;
+
+		/// <summary>(0020,9072) VR=CS Frame Laterality</summary>
 		public const uint FrameLaterality = 0x00209072;
+
+		/// <summary>(0020,9111) VR=SQ Frame Content Sequence</summary>
 		public const uint FrameContentSequence = 0x00209111;
+
+		/// <summary>(0020,9113) VR=SQ Plane Position Sequence</summary>
 		public const uint PlanePositionSequence = 0x00209113;
+
+		/// <summary>(0020,9116) VR=SQ Plane Orientation Sequence</summary>
 		public const uint PlaneOrientationSequence = 0x00209116;
+
+		/// <summary>(0020,9128) VR=UL Temporal Position Index</summary>
 		public const uint TemporalPositionIndex = 0x00209128;
+
+		/// <summary>(0020,9153) VR=FD Cardiac Trigger Delay Time</summary>
 		public const uint CardiacTriggerDelayTime = 0x00209153;
+
+		/// <summary>(0020,9156) VR=US Frame Acquisition Number</summary>
 		public const uint FrameAcquisitionNumber = 0x00209156;
+
+		/// <summary>(0020,9157) VR=UL Dimension Index Values</summary>
 		public const uint DimensionIndexValues = 0x00209157;
+
+		/// <summary>(0020,9158) VR=LT Frame Comments</summary>
 		public const uint FrameComments = 0x00209158;
+
+		/// <summary>(0020,9161) VR=UI Concatenation UID</summary>
 		public const uint ConcatenationUID = 0x00209161;
+
+		/// <summary>(0020,9162) VR=US In-concatenation Number</summary>
 		public const uint InconcatenationNumber = 0x00209162;
+
+		/// <summary>(0020,9163) VR=US In-concatenation Total Number</summary>
 		public const uint InconcatenationTotalNumber = 0x00209163;
+
+		/// <summary>(0020,9164) VR=UI Dimension Organization UID</summary>
 		public const uint DimensionOrganizationUID = 0x00209164;
+
+		/// <summary>(0020,9165) VR=AT Dimension Index Pointer</summary>
 		public const uint DimensionIndexPointer = 0x00209165;
+
+		/// <summary>(0020,9167) VR=AT Functional Group Pointer</summary>
 		public const uint FunctionalGroupPointer = 0x00209167;
+
+		/// <summary>(0020,9213) VR=LO Dimension Index Private Creator</summary>
 		public const uint DimensionIndexPrivateCreator = 0x00209213;
+
+		/// <summary>(0020,9221) VR=SQ Dimension Organization Sequence</summary>
 		public const uint DimensionOrganizationSequence = 0x00209221;
+
+		/// <summary>(0020,9222) VR=SQ Dimension Index Sequence</summary>
 		public const uint DimensionIndexSequence = 0x00209222;
+
+		/// <summary>(0020,9228) VR=UL Concatenation Frame Offset Number</summary>
 		public const uint ConcatenationFrameOffsetNumber = 0x00209228;
+
+		/// <summary>(0020,9238) VR=LO Functional Group Private Creator</summary>
 		public const uint FunctionalGroupPrivateCreator = 0x00209238;
+
+		/// <summary>(0020,9251) VR=FD R-R Interval Time Measured</summary>
 		public const uint RRIntervalTimeMeasured = 0x00209251;
+
+		/// <summary>(0020,9253) VR=SQ Respiratory Trigger Sequence</summary>
 		public const uint RespiratoryTriggerSequence = 0x00209253;
+
+		/// <summary>(0020,9254) VR=FD Respiratory Interval Time</summary>
 		public const uint RespiratoryIntervalTime = 0x00209254;
+
+		/// <summary>(0020,9255) VR=FD Respiratory Trigger Delay Time</summary>
 		public const uint RespiratoryTriggerDelayTime = 0x00209255;
+
+		/// <summary>(0020,9256) VR=FD Respiratory Trigger Delay Threshold</summary>
 		public const uint RespiratoryTriggerDelayThreshold = 0x00209256;
+
+		/// <summary>(0020,9421) VR=LO Dimension Description Label</summary>
 		public const uint DimensionDescriptionLabel = 0x00209421;
+
+		/// <summary>(0020,9450) VR=SQ Patient Orientation in Frame Sequence</summary>
 		public const uint PatientOrientationInFrameSequence = 0x00209450;
+
+		/// <summary>(0020,9453) VR=LO Frame Label</summary>
 		public const uint FrameLabel = 0x00209453;
+
+		/// <summary>(0022,0001) VR=US Light Path Filter Pass-Through Wavelength</summary>
 		public const uint LightPathFilterPassThroughWavelength = 0x00220001;
+
+		/// <summary>(0022,0002) VR=US Light Path Filter Pass Band</summary>
 		public const uint LightPathFilterPassBand = 0x00220002;
+
+		/// <summary>(0022,0003) VR=US Image Path Filter Pass-Through Wavelength</summary>
 		public const uint ImagePathFilterPassThroughWavelength = 0x00220003;
+
+		/// <summary>(0022,0004) VR=US Image Path Filter Pass Band</summary>
 		public const uint ImagePathFilterPassBand = 0x00220004;
+
+		/// <summary>(0022,0005) VR=CS Patient Eye Movement Commanded</summary>
 		public const uint PatientEyeMovementCommanded = 0x00220005;
+
+		/// <summary>(0022,0006) VR=SQ Patient Eye Movement Command Code Sequence</summary>
 		public const uint PatientEyeMovementCommandCodeSequence = 0x00220006;
+
+		/// <summary>(0022,0007) VR=FL Spherical Lens Power</summary>
 		public const uint SphericalLensPower = 0x00220007;
+
+		/// <summary>(0022,0008) VR=FL Cylinder Lens Power</summary>
 		public const uint CylinderLensPower = 0x00220008;
+
+		/// <summary>(0022,0009) VR=FL Cylinder Axis</summary>
 		public const uint CylinderAxis = 0x00220009;
+
+		/// <summary>(0022,000A) VR=FL Emmetropic Magnification</summary>
 		public const uint EmmetropicMagnification = 0x0022000a;
+
+		/// <summary>(0022,000B) VR=FL Intra Ocular Pressure</summary>
 		public const uint IntraOcularPressure = 0x0022000b;
+
+		/// <summary>(0022,000C) VR=FL Horizontal Field of View</summary>
 		public const uint HorizontalFieldOfView = 0x0022000c;
+
+		/// <summary>(0022,000D) VR=CS Pupil Dilated</summary>
 		public const uint PupilDilated = 0x0022000d;
+
+		/// <summary>(0022,000E) VR=FL Degree of Dilation</summary>
 		public const uint DegreeOfDilation = 0x0022000e;
+
+		/// <summary>(0022,0010) VR=FL Stereo Baseline Angle</summary>
 		public const uint StereoBaselineAngle = 0x00220010;
+
+		/// <summary>(0022,0011) VR=FL Stereo Baseline Displacement</summary>
 		public const uint StereoBaselineDisplacement = 0x00220011;
+
+		/// <summary>(0022,0012) VR=FL Stereo Horizontal Pixel Offset</summary>
 		public const uint StereoHorizontalPixelOffset = 0x00220012;
+
+		/// <summary>(0022,0013) VR=FL Stereo Vertical Pixel Offset</summary>
 		public const uint StereoVerticalPixelOffset = 0x00220013;
+
+		/// <summary>(0022,0014) VR=FL Stereo Rotation</summary>
 		public const uint StereoRotation = 0x00220014;
+
+		/// <summary>(0022,0015) VR=SQ Acquisition Device Type Code Sequence</summary>
 		public const uint AcquisitionDeviceTypeCodeSequence = 0x00220015;
+
+		/// <summary>(0022,0016) VR=SQ Illumination Type Code Sequence</summary>
 		public const uint IlluminationTypeCodeSequence = 0x00220016;
+
+		/// <summary>(0022,0017) VR=SQ Light Path Filter Type Stack Code Sequence</summary>
 		public const uint LightPathFilterTypeStackCodeSequence = 0x00220017;
+
+		/// <summary>(0022,0018) VR=SQ Image Path Filter Type Stack Code Sequence</summary>
 		public const uint ImagePathFilterTypeStackCodeSequence = 0x00220018;
+
+		/// <summary>(0022,0019) VR=SQ Lenses Code Sequence</summary>
 		public const uint LensesCodeSequence = 0x00220019;
+
+		/// <summary>(0022,001A) VR=SQ Channel Description Code Sequence</summary>
 		public const uint ChannelDescriptionCodeSequence = 0x0022001a;
+
+		/// <summary>(0022,001B) VR=SQ Refractive State Sequence</summary>
 		public const uint RefractiveStateSequence = 0x0022001b;
+
+		/// <summary>(0022,001C) VR=SQ Mydriatic Agent Code Sequence</summary>
 		public const uint MydriaticAgentCodeSequence = 0x0022001c;
+
+		/// <summary>(0022,001D) VR=SQ Relative Image Position Code Sequence</summary>
 		public const uint RelativeImagePositionCodeSequence = 0x0022001d;
+
+		/// <summary>(0022,0020) VR=SQ Stereo Pairs Sequence</summary>
 		public const uint StereoPairsSequence = 0x00220020;
+
+		/// <summary>(0022,0021) VR=SQ Left Image Sequence</summary>
 		public const uint LeftImageSequence = 0x00220021;
+
+		/// <summary>(0022,0022) VR=SQ Right Image Sequence</summary>
 		public const uint RightImageSequence = 0x00220022;
+
+		/// <summary>(0028,0002) VR=US Samples per Pixel</summary>
 		public const uint SamplesPerPixel = 0x00280002;
+
+		/// <summary>(0028,0003) VR=US Samples per Pixel Used</summary>
 		public const uint SamplesPerPixelUsed = 0x00280003;
+
+		/// <summary>(0028,0004) VR=CS Photometric Interpretation</summary>
 		public const uint PhotometricInterpretation = 0x00280004;
+
+		/// <summary>(0028,0005) VR=US Image Dimensions (Retired)</summary>
 		public const uint ImageDimensionsRETIRED = 0x00280005;
+
+		/// <summary>(0028,0006) VR=US Planar Configuration</summary>
 		public const uint PlanarConfiguration = 0x00280006;
+
+		/// <summary>(0028,0008) VR=IS Number of Frames</summary>
 		public const uint NumberOfFrames = 0x00280008;
+
+		/// <summary>(0028,0009) VR=AT Frame Increment Pointer</summary>
 		public const uint FrameIncrementPointer = 0x00280009;
+
+		/// <summary>(0028,000A) VR=AT Frame Dimension Pointer</summary>
 		public const uint FrameDimensionPointer = 0x0028000a;
+
+		/// <summary>(0028,0010) VR=US Rows</summary>
 		public const uint Rows = 0x00280010;
+
+		/// <summary>(0028,0011) VR=US Columns</summary>
 		public const uint Columns = 0x00280011;
+
+		/// <summary>(0028,0012) VR=US Planes</summary>
 		public const uint Planes = 0x00280012;
+
+		/// <summary>(0028,0014) VR=US Ultrasound Color Data Present</summary>
 		public const uint UltrasoundColorDataPresent = 0x00280014;
+
+		/// <summary>(0028,0030) VR=DS Pixel Spacing</summary>
 		public const uint PixelSpacing = 0x00280030;
+
+		/// <summary>(0028,0031) VR=DS Zoom Factor</summary>
 		public const uint ZoomFactor = 0x00280031;
+
+		/// <summary>(0028,0032) VR=DS Zoom Center</summary>
 		public const uint ZoomCenter = 0x00280032;
+
+		/// <summary>(0028,0034) VR=IS Pixel Aspect Ratio</summary>
 		public const uint PixelAspectRatio = 0x00280034;
+
+		/// <summary>(0028,0040) VR=CS Image Format (Retired)</summary>
 		public const uint ImageFormatRETIRED = 0x00280040;
+
+		/// <summary>(0028,0050) VR=LO Manipulated Image (Retired)</summary>
 		public const uint ManipulatedImageRETIRED = 0x00280050;
+
+		/// <summary>(0028,0051) VR=CS Corrected Image</summary>
 		public const uint CorrectedImage = 0x00280051;
+
+		/// <summary>(0028,0060) VR=CS Compression Code (Retired)</summary>
 		public const uint CompressionCodeRETIRED = 0x00280060;
+
+		/// <summary>(0028,0100) VR=US Bits Allocated</summary>
 		public const uint BitsAllocated = 0x00280100;
+
+		/// <summary>(0028,0101) VR=US Bits Stored</summary>
 		public const uint BitsStored = 0x00280101;
+
+		/// <summary>(0028,0102) VR=US High Bit</summary>
 		public const uint HighBit = 0x00280102;
+
+		/// <summary>(0028,0103) VR=US Pixel Representation</summary>
 		public const uint PixelRepresentation = 0x00280103;
+
+		/// <summary>(0028,0104) VR=US Smallest Valid Pixel Value (Retired)</summary>
 		public const uint SmallestValidPixelValueRETIRED = 0x00280104;
+
+		/// <summary>(0028,0105) VR=US Largest Valid Pixel Value (Retired)</summary>
 		public const uint LargestValidPixelValueRETIRED = 0x00280105;
+
+		/// <summary>(0028,0106) VR=US Smallest Image Pixel Value</summary>
 		public const uint SmallestImagePixelValue = 0x00280106;
+
+		/// <summary>(0028,0107) VR=US Largest Image Pixel Value</summary>
 		public const uint LargestImagePixelValue = 0x00280107;
+
+		/// <summary>(0028,0108) VR=US Smallest Pixel Value in Series</summary>
 		public const uint SmallestPixelValueInSeries = 0x00280108;
+
+		/// <summary>(0028,0109) VR=US Largest Pixel Value in Series</summary>
 		public const uint LargestPixelValueInSeries = 0x00280109;
+
+		/// <summary>(0028,0110) VR=US Smallest Image Pixel Value in Plane</summary>
 		public const uint SmallestImagePixelValueInPlane = 0x00280110;
+
+		/// <summary>(0028,0111) VR=US Largest Image Pixel Value in Plane</summary>
 		public const uint LargestImagePixelValueInPlane = 0x00280111;
+
+		/// <summary>(0028,0120) VR=US Pixel Padding Value</summary>
 		public const uint PixelPaddingValue = 0x00280120;
+
+		/// <summary>(0028,0200) VR=US Image Location (Retired)</summary>
 		public const uint ImageLocationRETIRED = 0x00280200;
+
+		/// <summary>(0028,0300) VR=CS Quality Control Image</summary>
 		public const uint QualityControlImage = 0x00280300;
+
+		/// <summary>(0028,0301) VR=CS Burned In Annotation</summary>
 		public const uint BurnedInAnnotation = 0x00280301;
+
+		/// <summary>(0028,0402) VR=CS Pixel Spacing Calibration Type</summary>
 		public const uint PixelSpacingCalibrationType = 0x00280402;
+
+		/// <summary>(0028,0404) VR=LO Pixel Spacing Calibration Description</summary>
 		public const uint PixelSpacingCalibrationDescription = 0x00280404;
+
+		/// <summary>(0028,1040) VR=CS Pixel Intensity Relationship</summary>
 		public const uint PixelIntensityRelationship = 0x00281040;
+
+		/// <summary>(0028,1041) VR=SS Pixel Intensity Relationship Sign</summary>
 		public const uint PixelIntensityRelationshipSign = 0x00281041;
+
+		/// <summary>(0028,1050) VR=DS Window Center</summary>
 		public const uint WindowCenter = 0x00281050;
+
+		/// <summary>(0028,1051) VR=DS Window Width</summary>
 		public const uint WindowWidth = 0x00281051;
+
+		/// <summary>(0028,1052) VR=DS Rescale Intercept</summary>
 		public const uint RescaleIntercept = 0x00281052;
+
+		/// <summary>(0028,1053) VR=DS Rescale Slope</summary>
 		public const uint RescaleSlope = 0x00281053;
+
+		/// <summary>(0028,1054) VR=LO Rescale Type</summary>
 		public const uint RescaleType = 0x00281054;
+
+		/// <summary>(0028,1055) VR=LO Window Center & Width Explanation</summary>
 		public const uint WindowCenterWidthExplanation = 0x00281055;
+
+		/// <summary>(0028,1056) VR=CS VOI LUT Function</summary>
 		public const uint VOILUTFunction = 0x00281056;
+
+		/// <summary>(0028,1080) VR=CS Gray Scale (Retired)</summary>
 		public const uint GrayScaleRETIRED = 0x00281080;
+
+		/// <summary>(0028,1090) VR=CS Recommended Viewing Mode</summary>
 		public const uint RecommendedViewingMode = 0x00281090;
+
+		/// <summary>(0028,1100) VR=US Gray Lookup Table Descriptor (Retired)</summary>
 		public const uint GrayLookupTableDescriptorRETIRED = 0x00281100;
+
+		/// <summary>(0028,1101) VR=US Red Palette Color Lookup Table Descriptor</summary>
 		public const uint RedPaletteColorLookupTableDescriptor = 0x00281101;
+
+		/// <summary>(0028,1102) VR=US Green Palette Color Lookup Table Descriptor</summary>
 		public const uint GreenPaletteColorLookupTableDescriptor = 0x00281102;
+
+		/// <summary>(0028,1103) VR=US Blue Palette Color Lookup Table Descriptor</summary>
 		public const uint BluePaletteColorLookupTableDescriptor = 0x00281103;
+
+		/// <summary>(0028,1199) VR=UI Palette Color Lookup Table UID</summary>
 		public const uint PaletteColorLookupTableUID = 0x00281199;
+
+		/// <summary>(0028,1200) VR=US Gray Lookup Table Data (Retired)</summary>
 		public const uint GrayLookupTableDataRETIRED = 0x00281200;
+
+		/// <summary>(0028,1201) VR=OW Red Palette Color Lookup Table Data</summary>
 		public const uint RedPaletteColorLookupTableData = 0x00281201;
+
+		/// <summary>(0028,1202) VR=OW Green Palette Color Lookup Table Data</summary>
 		public const uint GreenPaletteColorLookupTableData = 0x00281202;
+
+		/// <summary>(0028,1203) VR=OW Blue Palette Color Lookup Table Data</summary>
 		public const uint BluePaletteColorLookupTableData = 0x00281203;
+
+		/// <summary>(0028,1221) VR=OW Segmented Red Palette Color Lookup Table Data</summary>
 		public const uint SegmentedRedPaletteColorLookupTableData = 0x00281221;
+
+		/// <summary>(0028,1222) VR=OW Segmented Green Palette Color Lookup Table Data</summary>
 		public const uint SegmentedGreenPaletteColorLookupTableData = 0x00281222;
+
+		/// <summary>(0028,1223) VR=OW Segmented Blue Palette Color Lookup Table Data</summary>
 		public const uint SegmentedBluePaletteColorLookupTableData = 0x00281223;
+
+		/// <summary>(0028,1300) VR=CS Implant Present</summary>
 		public const uint ImplantPresent = 0x00281300;
+
+		/// <summary>(0028,1350) VR=CS Partial View</summary>
 		public const uint PartialView = 0x00281350;
+
+		/// <summary>(0028,1351) VR=ST Partial View Description</summary>
 		public const uint PartialViewDescription = 0x00281351;
+
+		/// <summary>(0028,1352) VR=SQ Partial View Code Sequence</summary>
 		public const uint PartialViewCodeSequence = 0x00281352;
+
+		/// <summary>(0028,135A) VR=CS Spatial Locations Preserved</summary>
 		public const uint SpatialLocationsPreserved = 0x0028135a;
+
+		/// <summary>(0028,2000) VR=OB ICC Profile</summary>
 		public const uint ICCProfile = 0x00282000;
+
+		/// <summary>(0028,2110) VR=CS Lossy Image Compression</summary>
 		public const uint LossyImageCompression = 0x00282110;
+
+		/// <summary>(0028,2112) VR=DS Lossy Image Compression Ratio</summary>
 		public const uint LossyImageCompressionRatio = 0x00282112;
+
+		/// <summary>(0028,2114) VR=CS Lossy Image Compression Method</summary>
 		public const uint LossyImageCompressionMethod = 0x00282114;
+
+		/// <summary>(0028,3000) VR=SQ Modality LUT Sequence</summary>
 		public const uint ModalityLUTSequence = 0x00283000;
+
+		/// <summary>(0028,3002) VR=US LUT Descriptor</summary>
 		public const uint LUTDescriptor = 0x00283002;
+
+		/// <summary>(0028,3003) VR=LO LUT Explanation</summary>
 		public const uint LUTExplanation = 0x00283003;
+
+		/// <summary>(0028,3004) VR=LO Modality LUT Type</summary>
 		public const uint ModalityLUTType = 0x00283004;
+
+		/// <summary>(0028,3006) VR=US LUT Data</summary>
 		public const uint LUTData = 0x00283006;
+
+		/// <summary>(0028,3010) VR=SQ VOI LUT Sequence</summary>
 		public const uint VOILUTSequence = 0x00283010;
+
+		/// <summary>(0028,3110) VR=SQ Softcopy VOI LUT Sequence</summary>
 		public const uint SoftcopyVOILUTSequence = 0x00283110;
+
+		/// <summary>(0028,4000) VR=LT Image Presentation Comments (Retired)</summary>
 		public const uint ImagePresentationCommentsRETIRED = 0x00284000;
+
+		/// <summary>(0028,5000) VR=SQ Bi-Plane Acquisition Sequence</summary>
 		public const uint BiPlaneAcquisitionSequence = 0x00285000;
+
+		/// <summary>(0028,6010) VR=US Representative Frame Number</summary>
 		public const uint RepresentativeFrameNumber = 0x00286010;
+
+		/// <summary>(0028,6020) VR=US Frame Numbers of Interest (FOI)</summary>
 		public const uint FrameNumbersOfInterestFOI = 0x00286020;
+
+		/// <summary>(0028,6022) VR=LO Frame(s) of Interest Description</summary>
 		public const uint FramesOfInterestDescription = 0x00286022;
+
+		/// <summary>(0028,6023) VR=CS Frame of Interest Type</summary>
 		public const uint FrameOfInterestType = 0x00286023;
+
+		/// <summary>(0028,6030) VR=US Mask Pointer(s) (Retired)</summary>
 		public const uint MaskPointersRETIRED = 0x00286030;
+
+		/// <summary>(0028,6040) VR=US R Wave Pointer</summary>
 		public const uint RWavePointer = 0x00286040;
+
+		/// <summary>(0028,6100) VR=SQ Mask Subtraction Sequence</summary>
 		public const uint MaskSubtractionSequence = 0x00286100;
+
+		/// <summary>(0028,6101) VR=CS Mask Operation</summary>
 		public const uint MaskOperation = 0x00286101;
+
+		/// <summary>(0028,6102) VR=US Applicable Frame Range</summary>
 		public const uint ApplicableFrameRange = 0x00286102;
+
+		/// <summary>(0028,6110) VR=US Mask Frame Numbers</summary>
 		public const uint MaskFrameNumbers = 0x00286110;
+
+		/// <summary>(0028,6112) VR=US Contrast Frame Averaging</summary>
 		public const uint ContrastFrameAveraging = 0x00286112;
+
+		/// <summary>(0028,6114) VR=FL Mask Sub-pixel Shift</summary>
 		public const uint MaskSubpixelShift = 0x00286114;
+
+		/// <summary>(0028,6120) VR=SS TID Offset</summary>
 		public const uint TIDOffset = 0x00286120;
+
+		/// <summary>(0028,6190) VR=ST Mask Operation Explanation</summary>
 		public const uint MaskOperationExplanation = 0x00286190;
+
+		/// <summary>(0028,7FE0) VR=UT Pixel Data Provider URL</summary>
 		public const uint PixelDataProviderURL = 0x00287fe0;
+
+		/// <summary>(0028,9001) VR=UL Data Point Rows</summary>
 		public const uint DataPointRows = 0x00289001;
+
+		/// <summary>(0028,9002) VR=UL Data Point Columns</summary>
 		public const uint DataPointColumns = 0x00289002;
+
+		/// <summary>(0028,9003) VR=CS Signal Domain Columns</summary>
 		public const uint SignalDomainColumns = 0x00289003;
+
+		/// <summary>(0028,9099) VR=US Largest Monochrome Pixel Value (Retired)</summary>
 		public const uint LargestMonochromePixelValueRETIRED = 0x00289099;
+
+		/// <summary>(0028,9108) VR=CS Data Representation</summary>
 		public const uint DataRepresentation = 0x00289108;
+
+		/// <summary>(0028,9110) VR=SQ Pixel Measures Sequence</summary>
 		public const uint PixelMeasuresSequence = 0x00289110;
+
+		/// <summary>(0028,9132) VR=SQ Frame VOI LUT Sequence</summary>
 		public const uint FrameVOILUTSequence = 0x00289132;
+
+		/// <summary>(0028,9145) VR=SQ Pixel Value Transformation Sequence</summary>
 		public const uint PixelValueTransformationSequence = 0x00289145;
+
+		/// <summary>(0028,9235) VR=CS Signal Domain Rows</summary>
 		public const uint SignalDomainRows = 0x00289235;
+
+		/// <summary>(0028,9411) VR=FL Display Filter Percentage</summary>
 		public const uint DisplayFilterPercentage = 0x00289411;
+
+		/// <summary>(0028,9415) VR=SQ Frame Pixel Shift Sequence</summary>
 		public const uint FramePixelShiftSequence = 0x00289415;
+
+		/// <summary>(0028,9416) VR=US Subtraction Item ID</summary>
 		public const uint SubtractionItemID = 0x00289416;
+
+		/// <summary>(0028,9422) VR=SQ Pixel Intensity Relationship LUT Sequence</summary>
 		public const uint PixelIntensityRelationshipLUTSequence = 0x00289422;
+
+		/// <summary>(0028,9443) VR=SQ Frame Pixel Data Properties Sequence</summary>
 		public const uint FramePixelDataPropertiesSequence = 0x00289443;
+
+		/// <summary>(0028,9444) VR=CS Geometrical Properties</summary>
 		public const uint GeometricalProperties = 0x00289444;
+
+		/// <summary>(0028,9445) VR=FL Geometric Maximum Distortion</summary>
 		public const uint GeometricMaximumDistortion = 0x00289445;
+
+		/// <summary>(0028,9446) VR=CS Image Processing Applied</summary>
 		public const uint ImageProcessingApplied = 0x00289446;
+
+		/// <summary>(0028,9454) VR=CS Mask Selection Mode</summary>
 		public const uint MaskSelectionMode = 0x00289454;
+
+		/// <summary>(0028,9474) VR=CS LUT Function</summary>
 		public const uint LUTFunction = 0x00289474;
+
+		/// <summary>(0032,000A) VR=CS Study Status ID (Retired)</summary>
 		public const uint StudyStatusIDRETIRED = 0x0032000a;
+
+		/// <summary>(0032,000C) VR=CS Study Priority ID (Retired)</summary>
 		public const uint StudyPriorityIDRETIRED = 0x0032000c;
+
+		/// <summary>(0032,0012) VR=LO Study ID Issuer (Retired)</summary>
 		public const uint StudyIDIssuerRETIRED = 0x00320012;
+
+		/// <summary>(0032,0032) VR=DA Study Verified Date (Retired)</summary>
 		public const uint StudyVerifiedDateRETIRED = 0x00320032;
+
+		/// <summary>(0032,0033) VR=TM Study Verified Time (Retired)</summary>
 		public const uint StudyVerifiedTimeRETIRED = 0x00320033;
+
+		/// <summary>(0032,0034) VR=DA Study Read Date (Retired)</summary>
 		public const uint StudyReadDateRETIRED = 0x00320034;
+
+		/// <summary>(0032,0035) VR=TM Study Read Time (Retired)</summary>
 		public const uint StudyReadTimeRETIRED = 0x00320035;
+
+		/// <summary>(0032,1000) VR=DA Scheduled Study Start Date (Retired)</summary>
 		public const uint ScheduledStudyStartDateRETIRED = 0x00321000;
+
+		/// <summary>(0032,1001) VR=TM Scheduled Study Start Time (Retired)</summary>
 		public const uint ScheduledStudyStartTimeRETIRED = 0x00321001;
+
+		/// <summary>(0032,1010) VR=DA Scheduled Study Stop Date (Retired)</summary>
 		public const uint ScheduledStudyStopDateRETIRED = 0x00321010;
+
+		/// <summary>(0032,1011) VR=TM Scheduled Study Stop Time (Retired)</summary>
 		public const uint ScheduledStudyStopTimeRETIRED = 0x00321011;
+
+		/// <summary>(0032,1020) VR=LO Scheduled Study Location (Retired)</summary>
 		public const uint ScheduledStudyLocationRETIRED = 0x00321020;
+
+		/// <summary>(0032,1021) VR=AE Scheduled Study Location AE Title (Retired)</summary>
 		public const uint ScheduledStudyLocationAETitleRETIRED = 0x00321021;
+
+		/// <summary>(0032,1030) VR=LO Reason for Study (Retired)</summary>
 		public const uint ReasonForStudyRETIRED = 0x00321030;
+
+		/// <summary>(0032,1031) VR=SQ Requesting Physician Identification Sequence</summary>
 		public const uint RequestingPhysicianIdentificationSequence = 0x00321031;
+
+		/// <summary>(0032,1032) VR=PN Requesting Physician</summary>
 		public const uint RequestingPhysician = 0x00321032;
+
+		/// <summary>(0032,1033) VR=LO Requesting Service</summary>
 		public const uint RequestingService = 0x00321033;
+
+		/// <summary>(0032,1040) VR=DA Study Arrival Date (Retired)</summary>
 		public const uint StudyArrivalDateRETIRED = 0x00321040;
+
+		/// <summary>(0032,1041) VR=TM Study Arrival Time (Retired)</summary>
 		public const uint StudyArrivalTimeRETIRED = 0x00321041;
+
+		/// <summary>(0032,1050) VR=DA Study Completion Date (Retired)</summary>
 		public const uint StudyCompletionDateRETIRED = 0x00321050;
+
+		/// <summary>(0032,1051) VR=TM Study Completion Time (Retired)</summary>
 		public const uint StudyCompletionTimeRETIRED = 0x00321051;
+
+		/// <summary>(0032,1055) VR=CS Study Component Status ID (Retired)</summary>
 		public const uint StudyComponentStatusIDRETIRED = 0x00321055;
+
+		/// <summary>(0032,1060) VR=LO Requested Procedure Description</summary>
 		public const uint RequestedProcedureDescription = 0x00321060;
+
+		/// <summary>(0032,1064) VR=SQ Requested Procedure Code Sequence</summary>
 		public const uint RequestedProcedureCodeSequence = 0x00321064;
+
+		/// <summary>(0032,1070) VR=LO Requested Contrast Agent</summary>
 		public const uint RequestedContrastAgent = 0x00321070;
+
+		/// <summary>(0032,4000) VR=LT Study Comments</summary>
 		public const uint StudyComments = 0x00324000;
+
+		/// <summary>(0038,0004) VR=SQ Referenced Patient Alias Sequence</summary>
 		public const uint ReferencedPatientAliasSequence = 0x00380004;
+
+		/// <summary>(0038,0008) VR=CS Visit Status ID</summary>
 		public const uint VisitStatusID = 0x00380008;
+
+		/// <summary>(0038,0010) VR=LO Admission ID</summary>
 		public const uint AdmissionID = 0x00380010;
+
+		/// <summary>(0038,0011) VR=LO Issuer of Admission ID</summary>
 		public const uint IssuerOfAdmissionID = 0x00380011;
+
+		/// <summary>(0038,0016) VR=LO Route of Admissions</summary>
 		public const uint RouteOfAdmissions = 0x00380016;
+
+		/// <summary>(0038,001A) VR=DA Scheduled Admission Date (Retired)</summary>
 		public const uint ScheduledAdmissionDateRETIRED = 0x0038001a;
+
+		/// <summary>(0038,001B) VR=TM Scheduled Admission Time (Retired)</summary>
 		public const uint ScheduledAdmissionTimeRETIRED = 0x0038001b;
+
+		/// <summary>(0038,001C) VR=DA Scheduled Discharge Date (Retired)</summary>
 		public const uint ScheduledDischargeDateRETIRED = 0x0038001c;
+
+		/// <summary>(0038,001D) VR=TM Scheduled Discharge Time (Retired)</summary>
 		public const uint ScheduledDischargeTimeRETIRED = 0x0038001d;
+
+		/// <summary>(0038,001E) VR=LO Scheduled Patient Institution Residence (Retired)</summary>
 		public const uint ScheduledPatientInstitutionResidenceRETIRED = 0x0038001e;
+
+		/// <summary>(0038,0020) VR=DA Admitting Date</summary>
 		public const uint AdmittingDate = 0x00380020;
+
+		/// <summary>(0038,0021) VR=TM Admitting Time</summary>
 		public const uint AdmittingTime = 0x00380021;
+
+		/// <summary>(0038,0030) VR=DA Discharge Date (Retired)</summary>
 		public const uint DischargeDateRETIRED = 0x00380030;
+
+		/// <summary>(0038,0032) VR=TM Discharge Time (Retired)</summary>
 		public const uint DischargeTimeRETIRED = 0x00380032;
+
+		/// <summary>(0038,0040) VR=LO Discharge Diagnosis Description (Retired)</summary>
 		public const uint DischargeDiagnosisDescriptionRETIRED = 0x00380040;
+
+		/// <summary>(0038,0044) VR=SQ Discharge Diagnosis Code Sequence (Retired)</summary>
 		public const uint DischargeDiagnosisCodeSequenceRETIRED = 0x00380044;
+
+		/// <summary>(0038,0050) VR=LO Special Needs</summary>
 		public const uint SpecialNeeds = 0x00380050;
+
+		/// <summary>(0038,0100) VR=SQ Pertinent Documents Sequence</summary>
 		public const uint PertinentDocumentsSequence = 0x00380100;
+
+		/// <summary>(0038,0300) VR=LO Current Patient Location</summary>
 		public const uint CurrentPatientLocation = 0x00380300;
+
+		/// <summary>(0038,0400) VR=LO Patient's Institution Residence</summary>
 		public const uint PatientsInstitutionResidence = 0x00380400;
+
+		/// <summary>(0038,0500) VR=LO Patient State</summary>
 		public const uint PatientState = 0x00380500;
+
+		/// <summary>(0038,0502) VR=SQ Patient Clinical Trial Participation Sequence</summary>
 		public const uint PatientClinicalTrialParticipationSequence = 0x00380502;
+
+		/// <summary>(0038,4000) VR=LT Visit Comments</summary>
 		public const uint VisitComments = 0x00384000;
+
+		/// <summary>(003A,0004) VR=CS Waveform Originality</summary>
 		public const uint WaveformOriginality = 0x003a0004;
+
+		/// <summary>(003A,0005) VR=US Number of Waveform Channels</summary>
 		public const uint NumberOfWaveformChannels = 0x003a0005;
+
+		/// <summary>(003A,0010) VR=UL Number of Waveform Samples</summary>
 		public const uint NumberOfWaveformSamples = 0x003a0010;
+
+		/// <summary>(003A,001A) VR=DS Sampling Frequency</summary>
 		public const uint SamplingFrequency = 0x003a001a;
+
+		/// <summary>(003A,0020) VR=SH Multiplex Group Label</summary>
 		public const uint MultiplexGroupLabel = 0x003a0020;
+
+		/// <summary>(003A,0200) VR=SQ Channel Definition Sequence</summary>
 		public const uint ChannelDefinitionSequence = 0x003a0200;
+
+		/// <summary>(003A,0202) VR=IS Waveform Channel Number</summary>
 		public const uint WaveformChannelNumber = 0x003a0202;
+
+		/// <summary>(003A,0203) VR=SH Channel Label</summary>
 		public const uint ChannelLabel = 0x003a0203;
+
+		/// <summary>(003A,0205) VR=CS Channel Status</summary>
 		public const uint ChannelStatus = 0x003a0205;
+
+		/// <summary>(003A,0208) VR=SQ Channel Source Sequence</summary>
 		public const uint ChannelSourceSequence = 0x003a0208;
+
+		/// <summary>(003A,0209) VR=SQ Channel Source Modifiers Sequence</summary>
 		public const uint ChannelSourceModifiersSequence = 0x003a0209;
+
+		/// <summary>(003A,020A) VR=SQ Source Waveform Sequence</summary>
 		public const uint SourceWaveformSequence = 0x003a020a;
+
+		/// <summary>(003A,020C) VR=LO Channel Derivation Description</summary>
 		public const uint ChannelDerivationDescription = 0x003a020c;
+
+		/// <summary>(003A,0210) VR=DS Channel Sensitivity</summary>
 		public const uint ChannelSensitivity = 0x003a0210;
+
+		/// <summary>(003A,0211) VR=SQ Channel Sensitivity Units Sequence</summary>
 		public const uint ChannelSensitivityUnitsSequence = 0x003a0211;
+
+		/// <summary>(003A,0212) VR=DS Channel Sensitivity Correction Factor</summary>
 		public const uint ChannelSensitivityCorrectionFactor = 0x003a0212;
+
+		/// <summary>(003A,0213) VR=DS Channel Baseline</summary>
 		public const uint ChannelBaseline = 0x003a0213;
+
+		/// <summary>(003A,0214) VR=DS Channel Time Skew</summary>
 		public const uint ChannelTimeSkew = 0x003a0214;
+
+		/// <summary>(003A,0215) VR=DS Channel Sample Skew</summary>
 		public const uint ChannelSampleSkew = 0x003a0215;
+
+		/// <summary>(003A,0218) VR=DS Channel Offset</summary>
 		public const uint ChannelOffset = 0x003a0218;
+
+		/// <summary>(003A,021A) VR=US Waveform Bits Stored</summary>
 		public const uint WaveformBitsStored = 0x003a021a;
+
+		/// <summary>(003A,0220) VR=DS Filter Low Frequency</summary>
 		public const uint FilterLowFrequency = 0x003a0220;
+
+		/// <summary>(003A,0221) VR=DS Filter High Frequency</summary>
 		public const uint FilterHighFrequency = 0x003a0221;
+
+		/// <summary>(003A,0222) VR=DS Notch Filter Frequency</summary>
 		public const uint NotchFilterFrequency = 0x003a0222;
+
+		/// <summary>(003A,0223) VR=DS Notch Filter Bandwidth</summary>
 		public const uint NotchFilterBandwidth = 0x003a0223;
+
+		/// <summary>(003A,0300) VR=SQ Multiplexed Audio Channels Description Code Sequence</summary>
 		public const uint MultiplexedAudioChannelsDescriptionCodeSequence = 0x003a0300;
+
+		/// <summary>(003A,0301) VR=IS Channel Identification Code</summary>
 		public const uint ChannelIdentificationCode = 0x003a0301;
+
+		/// <summary>(003A,0302) VR=CS Channel Mode</summary>
 		public const uint ChannelMode = 0x003a0302;
+
+		/// <summary>(0040,0001) VR=AE Scheduled Station AE Title</summary>
 		public const uint ScheduledStationAETitle = 0x00400001;
+
+		/// <summary>(0040,0002) VR=DA Scheduled Procedure Step Start Date</summary>
 		public const uint ScheduledProcedureStepStartDate = 0x00400002;
+
+		/// <summary>(0040,0003) VR=TM Scheduled Procedure Step Start Time</summary>
 		public const uint ScheduledProcedureStepStartTime = 0x00400003;
+
+		/// <summary>(0040,0004) VR=DA Scheduled Procedure Step End Date</summary>
 		public const uint ScheduledProcedureStepEndDate = 0x00400004;
+
+		/// <summary>(0040,0005) VR=TM Scheduled Procedure Step End Time</summary>
 		public const uint ScheduledProcedureStepEndTime = 0x00400005;
+
+		/// <summary>(0040,0006) VR=PN Scheduled Performing Physician's Name</summary>
 		public const uint ScheduledPerformingPhysiciansName = 0x00400006;
+
+		/// <summary>(0040,0007) VR=LO Scheduled Procedure Step Description</summary>
 		public const uint ScheduledProcedureStepDescription = 0x00400007;
+
+		/// <summary>(0040,0008) VR=SQ Scheduled Protocol Code Sequence</summary>
 		public const uint ScheduledProtocolCodeSequence = 0x00400008;
+
+		/// <summary>(0040,0009) VR=SH Scheduled Procedure Step ID</summary>
 		public const uint ScheduledProcedureStepID = 0x00400009;
+
+		/// <summary>(0040,000A) VR=SQ Stage Code Sequence</summary>
 		public const uint StageCodeSequence = 0x0040000a;
+
+		/// <summary>(0040,000B) VR=SQ Scheduled Performing Physician Identification Sequence</summary>
 		public const uint ScheduledPerformingPhysicianIdentificationSequence = 0x0040000b;
+
+		/// <summary>(0040,0010) VR=SH Scheduled Station Name</summary>
 		public const uint ScheduledStationName = 0x00400010;
+
+		/// <summary>(0040,0011) VR=SH Scheduled Procedure Step Location</summary>
 		public const uint ScheduledProcedureStepLocation = 0x00400011;
+
+		/// <summary>(0040,0012) VR=LO Pre-Medication</summary>
 		public const uint PreMedication = 0x00400012;
+
+		/// <summary>(0040,0020) VR=CS Scheduled Procedure Step Status</summary>
 		public const uint ScheduledProcedureStepStatus = 0x00400020;
+
+		/// <summary>(0040,0100) VR=SQ Scheduled Procedure Step Sequence</summary>
 		public const uint ScheduledProcedureStepSequence = 0x00400100;
+
+		/// <summary>(0040,0220) VR=SQ Referenced Non-Image Composite SOP Instance Sequence</summary>
 		public const uint ReferencedNonImageCompositeSOPInstanceSequence = 0x00400220;
+
+		/// <summary>(0040,0241) VR=AE Performed Station AE Title</summary>
 		public const uint PerformedStationAETitle = 0x00400241;
+
+		/// <summary>(0040,0242) VR=SH Performed Station Name</summary>
 		public const uint PerformedStationName = 0x00400242;
+
+		/// <summary>(0040,0243) VR=SH Performed Location</summary>
 		public const uint PerformedLocation = 0x00400243;
+
+		/// <summary>(0040,0244) VR=DA Performed Procedure Step Start Date</summary>
 		public const uint PerformedProcedureStepStartDate = 0x00400244;
+
+		/// <summary>(0040,0245) VR=TM Performed Procedure Step Start Time</summary>
 		public const uint PerformedProcedureStepStartTime = 0x00400245;
+
+		/// <summary>(0040,0250) VR=DA Performed Procedure Step End Date</summary>
 		public const uint PerformedProcedureStepEndDate = 0x00400250;
+
+		/// <summary>(0040,0251) VR=TM Performed Procedure Step End Time</summary>
 		public const uint PerformedProcedureStepEndTime = 0x00400251;
+
+		/// <summary>(0040,0252) VR=CS Performed Procedure Step Status</summary>
 		public const uint PerformedProcedureStepStatus = 0x00400252;
+
+		/// <summary>(0040,0253) VR=SH Performed Procedure Step ID</summary>
 		public const uint PerformedProcedureStepID = 0x00400253;
+
+		/// <summary>(0040,0254) VR=LO Performed Procedure Step Description</summary>
 		public const uint PerformedProcedureStepDescription = 0x00400254;
+
+		/// <summary>(0040,0255) VR=LO Performed Procedure Type Description</summary>
 		public const uint PerformedProcedureTypeDescription = 0x00400255;
+
+		/// <summary>(0040,0260) VR=SQ Performed Protocol Code Sequence</summary>
 		public const uint PerformedProtocolCodeSequence = 0x00400260;
+
+		/// <summary>(0040,0270) VR=SQ Scheduled Step Attributes Sequence</summary>
 		public const uint ScheduledStepAttributesSequence = 0x00400270;
+
+		/// <summary>(0040,0275) VR=SQ Request Attributes Sequence</summary>
 		public const uint RequestAttributesSequence = 0x00400275;
+
+		/// <summary>(0040,0280) VR=ST Comments on the Performed Procedure Step</summary>
 		public const uint CommentsOnThePerformedProcedureStep = 0x00400280;
+
+		/// <summary>(0040,0281) VR=SQ Performed Procedure Step Discontinuation Reason Code Sequence</summary>
 		public const uint PerformedProcedureStepDiscontinuationReasonCodeSequence = 0x00400281;
+
+		/// <summary>(0040,0293) VR=SQ Quantity Sequence</summary>
 		public const uint QuantitySequence = 0x00400293;
+
+		/// <summary>(0040,0294) VR=DS Quantity</summary>
 		public const uint Quantity = 0x00400294;
+
+		/// <summary>(0040,0295) VR=SQ Measuring Units Sequence</summary>
 		public const uint MeasuringUnitsSequence = 0x00400295;
+
+		/// <summary>(0040,0296) VR=SQ Billing Item Sequence</summary>
 		public const uint BillingItemSequence = 0x00400296;
+
+		/// <summary>(0040,0300) VR=US Total Time of Fluoroscopy</summary>
 		public const uint TotalTimeOfFluoroscopy = 0x00400300;
+
+		/// <summary>(0040,0301) VR=US Total Number of Exposures</summary>
 		public const uint TotalNumberOfExposures = 0x00400301;
+
+		/// <summary>(0040,0302) VR=US Entrance Dose</summary>
 		public const uint EntranceDose = 0x00400302;
+
+		/// <summary>(0040,0303) VR=US Exposed Area</summary>
 		public const uint ExposedArea = 0x00400303;
+
+		/// <summary>(0040,0306) VR=DS Distance Source to Entrance</summary>
 		public const uint DistanceSourceToEntrance = 0x00400306;
+
+		/// <summary>(0040,0307) VR=DS Distance Source to Support (Retired)</summary>
 		public const uint DistanceSourceToSupportRETIRED = 0x00400307;
+
+		/// <summary>(0040,030E) VR=SQ Exposure Dose Sequence</summary>
 		public const uint ExposureDoseSequence = 0x0040030e;
+
+		/// <summary>(0040,0310) VR=ST Comments on Radiation Dose</summary>
 		public const uint CommentsOnRadiationDose = 0x00400310;
+
+		/// <summary>(0040,0312) VR=DS X-Ray Output</summary>
 		public const uint XRayOutput = 0x00400312;
+
+		/// <summary>(0040,0314) VR=DS Half Value Layer</summary>
 		public const uint HalfValueLayer = 0x00400314;
+
+		/// <summary>(0040,0316) VR=DS Organ Dose</summary>
 		public const uint OrganDose = 0x00400316;
+
+		/// <summary>(0040,0318) VR=CS Organ Exposed</summary>
 		public const uint OrganExposed = 0x00400318;
+
+		/// <summary>(0040,0320) VR=SQ Billing Procedure Step Sequence</summary>
 		public const uint BillingProcedureStepSequence = 0x00400320;
+
+		/// <summary>(0040,0321) VR=SQ Film Consumption Sequence</summary>
 		public const uint FilmConsumptionSequence = 0x00400321;
+
+		/// <summary>(0040,0324) VR=SQ Billing Supplies and Devices Sequence</summary>
 		public const uint BillingSuppliesAndDevicesSequence = 0x00400324;
+
+		/// <summary>(0040,0330) VR=SQ Referenced Procedure Step Sequence (Retired)</summary>
 		public const uint ReferencedProcedureStepSequenceRETIRED = 0x00400330;
+
+		/// <summary>(0040,0340) VR=SQ Performed Series Sequence</summary>
 		public const uint PerformedSeriesSequence = 0x00400340;
+
+		/// <summary>(0040,0400) VR=LT Comments on the Scheduled Procedure Step</summary>
 		public const uint CommentsOnTheScheduledProcedureStep = 0x00400400;
+
+		/// <summary>(0040,0440) VR=SQ Protocol Context Sequence</summary>
 		public const uint ProtocolContextSequence = 0x00400440;
+
+		/// <summary>(0040,0441) VR=SQ Content Item Modifier Sequence</summary>
 		public const uint ContentItemModifierSequence = 0x00400441;
+
+		/// <summary>(0040,050A) VR=LO Specimen Accession Number</summary>
 		public const uint SpecimenAccessionNumber = 0x0040050a;
+
+		/// <summary>(0040,0550) VR=SQ Specimen Sequence</summary>
 		public const uint SpecimenSequence = 0x00400550;
+
+		/// <summary>(0040,0551) VR=LO Specimen Identifier</summary>
 		public const uint SpecimenIdentifier = 0x00400551;
+
+		/// <summary>(0040,0555) VR=SQ Acquisition Context Sequence</summary>
 		public const uint AcquisitionContextSequence = 0x00400555;
+
+		/// <summary>(0040,0556) VR=ST Acquisition Context Description</summary>
 		public const uint AcquisitionContextDescription = 0x00400556;
+
+		/// <summary>(0040,059A) VR=SQ Specimen Type Code Sequence</summary>
 		public const uint SpecimenTypeCodeSequence = 0x0040059a;
+
+		/// <summary>(0040,06FA) VR=LO Slide Identifier</summary>
 		public const uint SlideIdentifier = 0x004006fa;
+
+		/// <summary>(0040,071A) VR=SQ Image Center Point Coordinates Sequence</summary>
 		public const uint ImageCenterPointCoordinatesSequence = 0x0040071a;
+
+		/// <summary>(0040,072A) VR=DS X offset in Slide Coordinate System</summary>
 		public const uint XOffsetInSlideCoordinateSystem = 0x0040072a;
+
+		/// <summary>(0040,073A) VR=DS Y offset in Slide Coordinate System</summary>
 		public const uint YOffsetInSlideCoordinateSystem = 0x0040073a;
+
+		/// <summary>(0040,074A) VR=DS Z offset in Slide Coordinate System</summary>
 		public const uint ZOffsetInSlideCoordinateSystem = 0x0040074a;
+
+		/// <summary>(0040,08D8) VR=SQ Pixel Spacing Sequence</summary>
 		public const uint PixelSpacingSequence = 0x004008d8;
+
+		/// <summary>(0040,08DA) VR=SQ Coordinate System Axis Code Sequence</summary>
 		public const uint CoordinateSystemAxisCodeSequence = 0x004008da;
+
+		/// <summary>(0040,08EA) VR=SQ Measurement Units Code Sequence</summary>
 		public const uint MeasurementUnitsCodeSequence = 0x004008ea;
+
+		/// <summary>(0040,1001) VR=SH Requested Procedure ID</summary>
 		public const uint RequestedProcedureID = 0x00401001;
+
+		/// <summary>(0040,1002) VR=LO Reason for the Requested Procedure</summary>
 		public const uint ReasonForTheRequestedProcedure = 0x00401002;
+
+		/// <summary>(0040,1003) VR=SH Requested Procedure Priority</summary>
 		public const uint RequestedProcedurePriority = 0x00401003;
+
+		/// <summary>(0040,1004) VR=LO Patient Transport Arrangements</summary>
 		public const uint PatientTransportArrangements = 0x00401004;
+
+		/// <summary>(0040,1005) VR=LO Requested Procedure Location</summary>
 		public const uint RequestedProcedureLocation = 0x00401005;
+
+		/// <summary>(0040,1006) VR=SH Placer Order Number / Procedure (Retired)</summary>
 		public const uint PlacerOrderNumberProcedureRETIRED = 0x00401006;
+
+		/// <summary>(0040,1007) VR=SH Filler Order Number / Procedure (Retired)</summary>
 		public const uint FillerOrderNumberProcedureRETIRED = 0x00401007;
+
+		/// <summary>(0040,1008) VR=LO Confidentiality Code</summary>
 		public const uint ConfidentialityCode = 0x00401008;
+
+		/// <summary>(0040,1009) VR=SH Reporting Priority</summary>
 		public const uint ReportingPriority = 0x00401009;
+
+		/// <summary>(0040,100A) VR=SQ Reason for Requested Procedure Code Sequence</summary>
 		public const uint ReasonForRequestedProcedureCodeSequence = 0x0040100a;
+
+		/// <summary>(0040,1010) VR=PN Names of Intended Recipients of Results</summary>
 		public const uint NamesOfIntendedRecipientsOfResults = 0x00401010;
+
+		/// <summary>(0040,1011) VR=SQ Intended Recipients of Results Identification Sequence</summary>
 		public const uint IntendedRecipientsOfResultsIdentificationSequence = 0x00401011;
+
+		/// <summary>(0040,1101) VR=SQ Person Identification Code Sequence</summary>
 		public const uint PersonIdentificationCodeSequence = 0x00401101;
+
+		/// <summary>(0040,1102) VR=ST Person's Address</summary>
 		public const uint PersonsAddress = 0x00401102;
+
+		/// <summary>(0040,1103) VR=LO Person's Telephone Numbers</summary>
 		public const uint PersonsTelephoneNumbers = 0x00401103;
+
+		/// <summary>(0040,1400) VR=LT Requested Procedure Comments</summary>
 		public const uint RequestedProcedureComments = 0x00401400;
+
+		/// <summary>(0040,2001) VR=LO Reason for the Imaging Service Request (Retired)</summary>
 		public const uint ReasonForTheImagingServiceRequestRETIRED = 0x00402001;
+
+		/// <summary>(0040,2004) VR=DA Issue Date of Imaging Service Request</summary>
 		public const uint IssueDateOfImagingServiceRequest = 0x00402004;
+
+		/// <summary>(0040,2005) VR=TM Issue Time of Imaging Service Request</summary>
 		public const uint IssueTimeOfImagingServiceRequest = 0x00402005;
+
+		/// <summary>(0040,2006) VR=SH Placer Order Number / Imaging Service Request (Retired)</summary>
 		public const uint PlacerOrderNumberImagingServiceRequestRETIRED = 0x00402006;
+
+		/// <summary>(0040,2007) VR=SH Filler Order Number / Imaging Service Request (Retired)</summary>
 		public const uint FillerOrderNumberImagingServiceRequestRETIRED = 0x00402007;
+
+		/// <summary>(0040,2008) VR=PN Order Entered By</summary>
 		public const uint OrderEnteredBy = 0x00402008;
+
+		/// <summary>(0040,2009) VR=SH Order Enterer's Location</summary>
 		public const uint OrderEnterersLocation = 0x00402009;
+
+		/// <summary>(0040,2010) VR=SH Order Callback Phone Number</summary>
 		public const uint OrderCallbackPhoneNumber = 0x00402010;
+
+		/// <summary>(0040,2016) VR=LO Placer Order Number / Imaging Service Request</summary>
 		public const uint PlacerOrderNumberImagingServiceRequest = 0x00402016;
+
+		/// <summary>(0040,2017) VR=LO Filler Order Number / Imaging Service Request</summary>
 		public const uint FillerOrderNumberImagingServiceRequest = 0x00402017;
+
+		/// <summary>(0040,2400) VR=LT Imaging Service Request Comments</summary>
 		public const uint ImagingServiceRequestComments = 0x00402400;
+
+		/// <summary>(0040,3001) VR=LO Confidentiality Constraint on Patient Data Description</summary>
 		public const uint ConfidentialityConstraintOnPatientDataDescription = 0x00403001;
+
+		/// <summary>(0040,4001) VR=CS General Purpose Scheduled Procedure Step Status</summary>
 		public const uint GeneralPurposeScheduledProcedureStepStatus = 0x00404001;
+
+		/// <summary>(0040,4002) VR=CS General Purpose Performed Procedure Step Status</summary>
 		public const uint GeneralPurposePerformedProcedureStepStatus = 0x00404002;
+
+		/// <summary>(0040,4003) VR=CS General Purpose Scheduled Procedure Step Priority</summary>
 		public const uint GeneralPurposeScheduledProcedureStepPriority = 0x00404003;
+
+		/// <summary>(0040,4004) VR=SQ Scheduled Processing Applications Code Sequence</summary>
 		public const uint ScheduledProcessingApplicationsCodeSequence = 0x00404004;
+
+		/// <summary>(0040,4005) VR=DT Scheduled Procedure Step Start Date and Time</summary>
 		public const uint ScheduledProcedureStepStartDateAndTime = 0x00404005;
+
+		/// <summary>(0040,4006) VR=CS Multiple Copies Flag</summary>
 		public const uint MultipleCopiesFlag = 0x00404006;
+
+		/// <summary>(0040,4007) VR=SQ Performed Processing Applications Code Sequence</summary>
 		public const uint PerformedProcessingApplicationsCodeSequence = 0x00404007;
+
+		/// <summary>(0040,4009) VR=SQ Human Performer Code Sequence</summary>
 		public const uint HumanPerformerCodeSequence = 0x00404009;
+
+		/// <summary>(0040,4010) VR=DT Scheduled Procedure Step Modification Date and Time</summary>
 		public const uint ScheduledProcedureStepModificationDateAndTime = 0x00404010;
+
+		/// <summary>(0040,4011) VR=DT Expected Completion Date and Time</summary>
 		public const uint ExpectedCompletionDateAndTime = 0x00404011;
+
+		/// <summary>(0040,4015) VR=SQ Resulting General Purpose Performed Procedure Steps Sequence</summary>
 		public const uint ResultingGeneralPurposePerformedProcedureStepsSequence = 0x00404015;
+
+		/// <summary>(0040,4016) VR=SQ Referenced General Purpose Scheduled Procedure Step Sequence</summary>
 		public const uint ReferencedGeneralPurposeScheduledProcedureStepSequence = 0x00404016;
+
+		/// <summary>(0040,4018) VR=SQ Scheduled Workitem Code Sequence</summary>
 		public const uint ScheduledWorkitemCodeSequence = 0x00404018;
+
+		/// <summary>(0040,4019) VR=SQ Performed Workitem Code Sequence</summary>
 		public const uint PerformedWorkitemCodeSequence = 0x00404019;
+
+		/// <summary>(0040,4020) VR=CS Input Availability Flag</summary>
 		public const uint InputAvailabilityFlag = 0x00404020;
+
+		/// <summary>(0040,4021) VR=SQ Input Information Sequence</summary>
 		public const uint InputInformationSequence = 0x00404021;
+
+		/// <summary>(0040,4022) VR=SQ Relevant Information Sequence</summary>
 		public const uint RelevantInformationSequence = 0x00404022;
+
+		/// <summary>(0040,4023) VR=UI Referenced General Purpose Scheduled Procedure Step Transaction UID</summary>
 		public const uint ReferencedGeneralPurposeScheduledProcedureStepTransactionUID = 0x00404023;
+
+		/// <summary>(0040,4025) VR=SQ Scheduled Station Name Code Sequence</summary>
 		public const uint ScheduledStationNameCodeSequence = 0x00404025;
+
+		/// <summary>(0040,4026) VR=SQ Scheduled Station Class Code Sequence</summary>
 		public const uint ScheduledStationClassCodeSequence = 0x00404026;
+
+		/// <summary>(0040,4027) VR=SQ Scheduled Station Geographic Location Code Sequence</summary>
 		public const uint ScheduledStationGeographicLocationCodeSequence = 0x00404027;
+
+		/// <summary>(0040,4028) VR=SQ Performed Station Name Code Sequence</summary>
 		public const uint PerformedStationNameCodeSequence = 0x00404028;
+
+		/// <summary>(0040,4029) VR=SQ Performed Station Class Code Sequence</summary>
 		public const uint PerformedStationClassCodeSequence = 0x00404029;
+
+		/// <summary>(0040,4030) VR=SQ Performed Station Geographic Location Code Sequence</summary>
 		public const uint PerformedStationGeographicLocationCodeSequence = 0x00404030;
+
+		/// <summary>(0040,4031) VR=SQ Requested Subsequent Workitem Code Sequence</summary>
 		public const uint RequestedSubsequentWorkitemCodeSequence = 0x00404031;
+
+		/// <summary>(0040,4032) VR=SQ Non-DICOM Output Code Sequence</summary>
 		public const uint NonDICOMOutputCodeSequence = 0x00404032;
+
+		/// <summary>(0040,4033) VR=SQ Output Information Sequence</summary>
 		public const uint OutputInformationSequence = 0x00404033;
+
+		/// <summary>(0040,4034) VR=SQ Scheduled Human Performers Sequence</summary>
 		public const uint ScheduledHumanPerformersSequence = 0x00404034;
+
+		/// <summary>(0040,4035) VR=SQ Actual Human Performers Sequence</summary>
 		public const uint ActualHumanPerformersSequence = 0x00404035;
+
+		/// <summary>(0040,4036) VR=LO Human Performer's Organization</summary>
 		public const uint HumanPerformersOrganization = 0x00404036;
+
+		/// <summary>(0040,4037) VR=PN Human Performer's Name</summary>
 		public const uint HumanPerformersName = 0x00404037;
+
+		/// <summary>(0040,8302) VR=DS Entrance Dose in mGy</summary>
 		public const uint EntranceDoseInMGy = 0x00408302;
+
+		/// <summary>(0040,9094) VR=SQ Referenced Image Real World Value Mapping Sequence</summary>
 		public const uint ReferencedImageRealWorldValueMappingSequence = 0x00409094;
+
+		/// <summary>(0040,9096) VR=SQ Real World Value Mapping Sequence</summary>
 		public const uint RealWorldValueMappingSequence = 0x00409096;
+
+		/// <summary>(0040,9098) VR=SQ Pixel Value Mapping Code Sequence</summary>
 		public const uint PixelValueMappingCodeSequence = 0x00409098;
+
+		/// <summary>(0040,9210) VR=SH LUT Label</summary>
 		public const uint LUTLabel = 0x00409210;
+
+		/// <summary>(0040,9211) VR=US Real World Value Last Value Mapped</summary>
 		public const uint RealWorldValueLastValueMapped = 0x00409211;
+
+		/// <summary>(0040,9212) VR=FD Real World Value LUT Data</summary>
 		public const uint RealWorldValueLUTData = 0x00409212;
+
+		/// <summary>(0040,9216) VR=US Real World Value First Value Mapped</summary>
 		public const uint RealWorldValueFirstValueMapped = 0x00409216;
+
+		/// <summary>(0040,9224) VR=FD Real World Value Intercept</summary>
 		public const uint RealWorldValueIntercept = 0x00409224;
+
+		/// <summary>(0040,9225) VR=FD Real World Value Slope</summary>
 		public const uint RealWorldValueSlope = 0x00409225;
+
+		/// <summary>(0040,A010) VR=CS Relationship Type</summary>
 		public const uint RelationshipType = 0x0040a010;
+
+		/// <summary>(0040,A027) VR=LO Verifying Organization</summary>
 		public const uint VerifyingOrganization = 0x0040a027;
+
+		/// <summary>(0040,A030) VR=DT Verification Date Time</summary>
 		public const uint VerificationDateTime = 0x0040a030;
+
+		/// <summary>(0040,A032) VR=DT Observation Date Time</summary>
 		public const uint ObservationDateTime = 0x0040a032;
+
+		/// <summary>(0040,A040) VR=CS Value Type</summary>
 		public const uint ValueType = 0x0040a040;
+
+		/// <summary>(0040,A043) VR=SQ Concept Name Code Sequence</summary>
 		public const uint ConceptNameCodeSequence = 0x0040a043;
+
+		/// <summary>(0040,A050) VR=CS Continuity Of Content</summary>
 		public const uint ContinuityOfContent = 0x0040a050;
+
+		/// <summary>(0040,A073) VR=SQ Verifying Observer Sequence</summary>
 		public const uint VerifyingObserverSequence = 0x0040a073;
+
+		/// <summary>(0040,A075) VR=PN Verifying Observer Name</summary>
 		public const uint VerifyingObserverName = 0x0040a075;
+
+		/// <summary>(0040,A078) VR=SQ Author Observer Sequence</summary>
 		public const uint AuthorObserverSequence = 0x0040a078;
+
+		/// <summary>(0040,A07A) VR=SQ Participant Sequence</summary>
 		public const uint ParticipantSequence = 0x0040a07a;
+
+		/// <summary>(0040,A07C) VR=SQ Custodial Organization Sequence</summary>
 		public const uint CustodialOrganizationSequence = 0x0040a07c;
+
+		/// <summary>(0040,A080) VR=CS Participation Type</summary>
 		public const uint ParticipationType = 0x0040a080;
+
+		/// <summary>(0040,A082) VR=DT Participation Datetime</summary>
 		public const uint ParticipationDatetime = 0x0040a082;
+
+		/// <summary>(0040,A084) VR=CS Observer Type</summary>
 		public const uint ObserverType = 0x0040a084;
+
+		/// <summary>(0040,A088) VR=SQ Verifying Observer Identification Code Sequence</summary>
 		public const uint VerifyingObserverIdentificationCodeSequence = 0x0040a088;
+
+		/// <summary>(0040,A090) VR=SQ Equivalent CDA Document Sequence (Retired)</summary>
 		public const uint EquivalentCDADocumentSequenceRETIRED = 0x0040a090;
+
+		/// <summary>(0040,A0B0) VR=US Referenced Waveform Channels</summary>
 		public const uint ReferencedWaveformChannels = 0x0040a0b0;
+
+		/// <summary>(0040,A120) VR=DT DateTime</summary>
 		public const uint DateTime = 0x0040a120;
+
+		/// <summary>(0040,A121) VR=DA Date</summary>
 		public const uint Date = 0x0040a121;
+
+		/// <summary>(0040,A122) VR=TM Time</summary>
 		public const uint Time = 0x0040a122;
+
+		/// <summary>(0040,A123) VR=PN Person Name</summary>
 		public const uint PersonName = 0x0040a123;
+
+		/// <summary>(0040,A124) VR=UI UID</summary>
 		public const uint UID = 0x0040a124;
+
+		/// <summary>(0040,A130) VR=CS Temporal Range Type</summary>
 		public const uint TemporalRangeType = 0x0040a130;
+
+		/// <summary>(0040,A132) VR=UL Referenced Sample Positions</summary>
 		public const uint ReferencedSamplePositions = 0x0040a132;
+
+		/// <summary>(0040,A136) VR=US Referenced Frame Numbers</summary>
 		public const uint ReferencedFrameNumbers = 0x0040a136;
+
+		/// <summary>(0040,A138) VR=DS Referenced Time Offsets</summary>
 		public const uint ReferencedTimeOffsets = 0x0040a138;
+
+		/// <summary>(0040,A13A) VR=DT Referenced Datetime</summary>
 		public const uint ReferencedDatetime = 0x0040a13a;
+
+		/// <summary>(0040,A160) VR=UT Text Value</summary>
 		public const uint TextValue = 0x0040a160;
+
+		/// <summary>(0040,A168) VR=SQ Concept Code Sequence</summary>
 		public const uint ConceptCodeSequence = 0x0040a168;
+
+		/// <summary>(0040,A170) VR=SQ Purpose of Reference Code Sequence</summary>
 		public const uint PurposeOfReferenceCodeSequence = 0x0040a170;
+
+		/// <summary>(0040,A180) VR=US Annotation Group Number</summary>
 		public const uint AnnotationGroupNumber = 0x0040a180;
+
+		/// <summary>(0040,A195) VR=SQ Modifier Code Sequence</summary>
 		public const uint ModifierCodeSequence = 0x0040a195;
+
+		/// <summary>(0040,A300) VR=SQ Measured Value Sequence</summary>
 		public const uint MeasuredValueSequence = 0x0040a300;
+
+		/// <summary>(0040,A301) VR=SQ Numeric Value Qualifier Code Sequence</summary>
 		public const uint NumericValueQualifierCodeSequence = 0x0040a301;
+
+		/// <summary>(0040,A30A) VR=DS Numeric Value</summary>
 		public const uint NumericValue = 0x0040a30a;
+
+		/// <summary>(0040,A360) VR=SQ Predecessor Documents Sequence</summary>
 		public const uint PredecessorDocumentsSequence = 0x0040a360;
+
+		/// <summary>(0040,A370) VR=SQ Referenced Request Sequence</summary>
 		public const uint ReferencedRequestSequence = 0x0040a370;
+
+		/// <summary>(0040,A372) VR=SQ Performed Procedure Code Sequence</summary>
 		public const uint PerformedProcedureCodeSequence = 0x0040a372;
+
+		/// <summary>(0040,A375) VR=SQ Current Requested Procedure Evidence Sequence</summary>
 		public const uint CurrentRequestedProcedureEvidenceSequence = 0x0040a375;
+
+		/// <summary>(0040,A385) VR=SQ Pertinent Other Evidence Sequence</summary>
 		public const uint PertinentOtherEvidenceSequence = 0x0040a385;
+
+		/// <summary>(0040,A390) VR=SQ HL7 Structured Document Reference Sequence</summary>
 		public const uint HL7StructuredDocumentReferenceSequence = 0x0040a390;
+
+		/// <summary>(0040,A491) VR=CS Completion Flag</summary>
 		public const uint CompletionFlag = 0x0040a491;
+
+		/// <summary>(0040,A492) VR=LO Completion Flag Description</summary>
 		public const uint CompletionFlagDescription = 0x0040a492;
+
+		/// <summary>(0040,A493) VR=CS Verification Flag</summary>
 		public const uint VerificationFlag = 0x0040a493;
+
+		/// <summary>(0040,A504) VR=SQ Content Template Sequence</summary>
 		public const uint ContentTemplateSequence = 0x0040a504;
+
+		/// <summary>(0040,A525) VR=SQ Identical Documents Sequence</summary>
 		public const uint IdenticalDocumentsSequence = 0x0040a525;
+
+		/// <summary>(0040,A730) VR=SQ Content Sequence</summary>
 		public const uint ContentSequence = 0x0040a730;
+
+		/// <summary>(0040,B020) VR=SQ Annotation Sequence</summary>
 		public const uint AnnotationSequence = 0x0040b020;
+
+		/// <summary>(0040,DB00) VR=CS Template Identifier</summary>
 		public const uint TemplateIdentifier = 0x0040db00;
+
+		/// <summary>(0040,DB06) VR=DT Template Version (Retired)</summary>
 		public const uint TemplateVersionRETIRED = 0x0040db06;
+
+		/// <summary>(0040,DB07) VR=DT Template Local Version (Retired)</summary>
 		public const uint TemplateLocalVersionRETIRED = 0x0040db07;
+
+		/// <summary>(0040,DB0B) VR=CS Template Extension Flag (Retired)</summary>
 		public const uint TemplateExtensionFlagRETIRED = 0x0040db0b;
+
+		/// <summary>(0040,DB0C) VR=UI Template Extension Organization UID (Retired)</summary>
 		public const uint TemplateExtensionOrganizationUIDRETIRED = 0x0040db0c;
+
+		/// <summary>(0040,DB0D) VR=UI Template Extension Creator UID (Retired)</summary>
 		public const uint TemplateExtensionCreatorUIDRETIRED = 0x0040db0d;
+
+		/// <summary>(0040,DB73) VR=UL Referenced Content Item Identifier</summary>
 		public const uint ReferencedContentItemIdentifier = 0x0040db73;
+
+		/// <summary>(0040,E001) VR=ST HL7 Instance Identifier</summary>
 		public const uint HL7InstanceIdentifier = 0x0040e001;
+
+		/// <summary>(0040,E004) VR=DT HL7 Document Effective Time</summary>
 		public const uint HL7DocumentEffectiveTime = 0x0040e004;
+
+		/// <summary>(0040,E006) VR=SQ HL7 Document Type Code Sequence</summary>
 		public const uint HL7DocumentTypeCodeSequence = 0x0040e006;
+
+		/// <summary>(0040,E010) VR=UT Retrieve URI</summary>
 		public const uint RetrieveURI = 0x0040e010;
+
+		/// <summary>(0042,0010) VR=ST Document Title</summary>
 		public const uint DocumentTitle = 0x00420010;
+
+		/// <summary>(0042,0011) VR=OB Encapsulated Document</summary>
 		public const uint EncapsulatedDocument = 0x00420011;
+
+		/// <summary>(0042,0012) VR=LO MIME Type of Encapsulated Document</summary>
 		public const uint MIMETypeOfEncapsulatedDocument = 0x00420012;
+
+		/// <summary>(0042,0013) VR=SQ Source Instance Sequence</summary>
 		public const uint SourceInstanceSequence = 0x00420013;
+
+		/// <summary>(0050,0004) VR=CS Calibration Image</summary>
 		public const uint CalibrationImage = 0x00500004;
+
+		/// <summary>(0050,0010) VR=SQ Device Sequence</summary>
 		public const uint DeviceSequence = 0x00500010;
+
+		/// <summary>(0050,0014) VR=DS Device Length</summary>
 		public const uint DeviceLength = 0x00500014;
+
+		/// <summary>(0050,0016) VR=DS Device Diameter</summary>
 		public const uint DeviceDiameter = 0x00500016;
+
+		/// <summary>(0050,0017) VR=CS Device Diameter Units</summary>
 		public const uint DeviceDiameterUnits = 0x00500017;
+
+		/// <summary>(0050,0018) VR=DS Device Volume</summary>
 		public const uint DeviceVolume = 0x00500018;
+
+		/// <summary>(0050,0019) VR=DS Intermarker Distance</summary>
 		public const uint IntermarkerDistance = 0x00500019;
+
+		/// <summary>(0050,0020) VR=LO Device Description</summary>
 		public const uint DeviceDescription = 0x00500020;
+
+		/// <summary>(0054,0010) VR=US Energy Window Vector</summary>
 		public const uint EnergyWindowVector = 0x00540010;
+
+		/// <summary>(0054,0011) VR=US Number of Energy Windows</summary>
 		public const uint NumberOfEnergyWindows = 0x00540011;
+
+		/// <summary>(0054,0012) VR=SQ Energy Window Information Sequence</summary>
 		public const uint EnergyWindowInformationSequence = 0x00540012;
+
+		/// <summary>(0054,0013) VR=SQ Energy Window Range Sequence</summary>
 		public const uint EnergyWindowRangeSequence = 0x00540013;
+
+		/// <summary>(0054,0014) VR=DS Energy Window Lower Limit</summary>
 		public const uint EnergyWindowLowerLimit = 0x00540014;
+
+		/// <summary>(0054,0015) VR=DS Energy Window Upper Limit</summary>
 		public const uint EnergyWindowUpperLimit = 0x00540015;
+
+		/// <summary>(0054,0016) VR=SQ Radiopharmaceutical Information Sequence</summary>
 		public const uint RadiopharmaceuticalInformationSequence = 0x00540016;
+
+		/// <summary>(0054,0017) VR=IS Residual Syringe Counts</summary>
 		public const uint ResidualSyringeCounts = 0x00540017;
+
+		/// <summary>(0054,0018) VR=SH Energy Window Name</summary>
 		public const uint EnergyWindowName = 0x00540018;
+
+		/// <summary>(0054,0020) VR=US Detector Vector</summary>
 		public const uint DetectorVector = 0x00540020;
+
+		/// <summary>(0054,0021) VR=US Number of Detectors</summary>
 		public const uint NumberOfDetectors = 0x00540021;
+
+		/// <summary>(0054,0022) VR=SQ Detector Information Sequence</summary>
 		public const uint DetectorInformationSequence = 0x00540022;
+
+		/// <summary>(0054,0030) VR=US Phase Vector</summary>
 		public const uint PhaseVector = 0x00540030;
+
+		/// <summary>(0054,0031) VR=US Number of Phases</summary>
 		public const uint NumberOfPhases = 0x00540031;
+
+		/// <summary>(0054,0032) VR=SQ Phase Information Sequence</summary>
 		public const uint PhaseInformationSequence = 0x00540032;
+
+		/// <summary>(0054,0033) VR=US Number of Frames in Phase</summary>
 		public const uint NumberOfFramesInPhase = 0x00540033;
+
+		/// <summary>(0054,0036) VR=IS Phase Delay</summary>
 		public const uint PhaseDelay = 0x00540036;
+
+		/// <summary>(0054,0038) VR=IS Pause Between Frames</summary>
 		public const uint PauseBetweenFrames = 0x00540038;
+
+		/// <summary>(0054,0039) VR=CS Phase Description</summary>
 		public const uint PhaseDescription = 0x00540039;
+
+		/// <summary>(0054,0050) VR=US Rotation Vector</summary>
 		public const uint RotationVector = 0x00540050;
+
+		/// <summary>(0054,0051) VR=US Number of Rotations</summary>
 		public const uint NumberOfRotations = 0x00540051;
+
+		/// <summary>(0054,0052) VR=SQ Rotation Information Sequence</summary>
 		public const uint RotationInformationSequence = 0x00540052;
+
+		/// <summary>(0054,0053) VR=US Number of Frames in Rotation</summary>
 		public const uint NumberOfFramesInRotation = 0x00540053;
+
+		/// <summary>(0054,0060) VR=US R-R Interval Vector</summary>
 		public const uint RRIntervalVector = 0x00540060;
+
+		/// <summary>(0054,0061) VR=US Number of R-R Intervals</summary>
 		public const uint NumberOfRRIntervals = 0x00540061;
+
+		/// <summary>(0054,0062) VR=SQ Gated Information Sequence</summary>
 		public const uint GatedInformationSequence = 0x00540062;
+
+		/// <summary>(0054,0063) VR=SQ Data Information Sequence</summary>
 		public const uint DataInformationSequence = 0x00540063;
+
+		/// <summary>(0054,0070) VR=US Time Slot Vector</summary>
 		public const uint TimeSlotVector = 0x00540070;
+
+		/// <summary>(0054,0071) VR=US Number of Time Slots</summary>
 		public const uint NumberOfTimeSlots = 0x00540071;
+
+		/// <summary>(0054,0072) VR=SQ Time Slot Information Sequence</summary>
 		public const uint TimeSlotInformationSequence = 0x00540072;
+
+		/// <summary>(0054,0073) VR=DS Time Slot Time</summary>
 		public const uint TimeSlotTime = 0x00540073;
+
+		/// <summary>(0054,0080) VR=US Slice Vector</summary>
 		public const uint SliceVector = 0x00540080;
+
+		/// <summary>(0054,0081) VR=US Number of Slices</summary>
 		public const uint NumberOfSlices = 0x00540081;
+
+		/// <summary>(0054,0090) VR=US Angular View Vector</summary>
 		public const uint AngularViewVector = 0x00540090;
+
+		/// <summary>(0054,0100) VR=US Time Slice Vector</summary>
 		public const uint TimeSliceVector = 0x00540100;
+
+		/// <summary>(0054,0101) VR=US Number of Time Slices</summary>
 		public const uint NumberOfTimeSlices = 0x00540101;
+
+		/// <summary>(0054,0200) VR=DS Start Angle</summary>
 		public const uint StartAngle = 0x00540200;
+
+		/// <summary>(0054,0202) VR=CS Type of Detector Motion</summary>
 		public const uint TypeOfDetectorMotion = 0x00540202;
+
+		/// <summary>(0054,0210) VR=IS Trigger Vector</summary>
 		public const uint TriggerVector = 0x00540210;
+
+		/// <summary>(0054,0211) VR=US Number of Triggers in Phase</summary>
 		public const uint NumberOfTriggersInPhase = 0x00540211;
+
+		/// <summary>(0054,0220) VR=SQ View Code Sequence</summary>
 		public const uint ViewCodeSequence = 0x00540220;
+
+		/// <summary>(0054,0222) VR=SQ View Modifier Code Sequence</summary>
 		public const uint ViewModifierCodeSequence = 0x00540222;
+
+		/// <summary>(0054,0300) VR=SQ Radionuclide Code Sequence</summary>
 		public const uint RadionuclideCodeSequence = 0x00540300;
+
+		/// <summary>(0054,0302) VR=SQ Administration Route Code Sequence</summary>
 		public const uint AdministrationRouteCodeSequence = 0x00540302;
+
+		/// <summary>(0054,0304) VR=SQ Radiopharmaceutical Code Sequence</summary>
 		public const uint RadiopharmaceuticalCodeSequence = 0x00540304;
+
+		/// <summary>(0054,0306) VR=SQ Calibration Data Sequence</summary>
 		public const uint CalibrationDataSequence = 0x00540306;
+
+		/// <summary>(0054,0308) VR=US Energy Window Number</summary>
 		public const uint EnergyWindowNumber = 0x00540308;
+
+		/// <summary>(0054,0400) VR=SH Image ID</summary>
 		public const uint ImageID = 0x00540400;
+
+		/// <summary>(0054,0410) VR=SQ Patient Orientation Code Sequence</summary>
 		public const uint PatientOrientationCodeSequence = 0x00540410;
+
+		/// <summary>(0054,0412) VR=SQ Patient Orientation Modifier Code Sequence</summary>
 		public const uint PatientOrientationModifierCodeSequence = 0x00540412;
+
+		/// <summary>(0054,0414) VR=SQ Patient Gantry Relationship Code Sequence</summary>
 		public const uint PatientGantryRelationshipCodeSequence = 0x00540414;
+
+		/// <summary>(0054,0500) VR=CS Slice Progression Direction</summary>
 		public const uint SliceProgressionDirection = 0x00540500;
+
+		/// <summary>(0054,1000) VR=CS Series Type</summary>
 		public const uint SeriesType = 0x00541000;
+
+		/// <summary>(0054,1001) VR=CS Units</summary>
 		public const uint Units = 0x00541001;
+
+		/// <summary>(0054,1002) VR=CS Counts Source</summary>
 		public const uint CountsSource = 0x00541002;
+
+		/// <summary>(0054,1004) VR=CS Reprojection Method</summary>
 		public const uint ReprojectionMethod = 0x00541004;
+
+		/// <summary>(0054,1100) VR=CS Randoms Correction Method</summary>
 		public const uint RandomsCorrectionMethod = 0x00541100;
+
+		/// <summary>(0054,1101) VR=LO Attenuation Correction Method</summary>
 		public const uint AttenuationCorrectionMethod = 0x00541101;
+
+		/// <summary>(0054,1102) VR=CS Decay Correction</summary>
 		public const uint DecayCorrection = 0x00541102;
+
+		/// <summary>(0054,1103) VR=LO Reconstruction Method</summary>
 		public const uint ReconstructionMethod = 0x00541103;
+
+		/// <summary>(0054,1104) VR=LO Detector Lines of Response Used</summary>
 		public const uint DetectorLinesOfResponseUsed = 0x00541104;
+
+		/// <summary>(0054,1105) VR=LO Scatter Correction Method</summary>
 		public const uint ScatterCorrectionMethod = 0x00541105;
+
+		/// <summary>(0054,1200) VR=DS Axial Acceptance</summary>
 		public const uint AxialAcceptance = 0x00541200;
+
+		/// <summary>(0054,1201) VR=IS Axial Mash</summary>
 		public const uint AxialMash = 0x00541201;
+
+		/// <summary>(0054,1202) VR=IS Transverse Mash</summary>
 		public const uint TransverseMash = 0x00541202;
+
+		/// <summary>(0054,1203) VR=DS Detector Element Size</summary>
 		public const uint DetectorElementSize = 0x00541203;
+
+		/// <summary>(0054,1210) VR=DS Coincidence Window Width</summary>
 		public const uint CoincidenceWindowWidth = 0x00541210;
+
+		/// <summary>(0054,1220) VR=CS Secondary Counts Type</summary>
 		public const uint SecondaryCountsType = 0x00541220;
+
+		/// <summary>(0054,1300) VR=DS Frame Reference Time</summary>
 		public const uint FrameReferenceTime = 0x00541300;
+
+		/// <summary>(0054,1310) VR=IS Primary (Prompts) Counts Accumulated</summary>
 		public const uint PrimaryPromptsCountsAccumulated = 0x00541310;
+
+		/// <summary>(0054,1311) VR=IS Secondary Counts Accumulated</summary>
 		public const uint SecondaryCountsAccumulated = 0x00541311;
+
+		/// <summary>(0054,1320) VR=DS Slice Sensitivity Factor</summary>
 		public const uint SliceSensitivityFactor = 0x00541320;
+
+		/// <summary>(0054,1321) VR=DS Decay Factor</summary>
 		public const uint DecayFactor = 0x00541321;
+
+		/// <summary>(0054,1322) VR=DS Dose Calibration Factor</summary>
 		public const uint DoseCalibrationFactor = 0x00541322;
+
+		/// <summary>(0054,1323) VR=DS Scatter Fraction Factor</summary>
 		public const uint ScatterFractionFactor = 0x00541323;
+
+		/// <summary>(0054,1324) VR=DS Dead Time Factor</summary>
 		public const uint DeadTimeFactor = 0x00541324;
+
+		/// <summary>(0054,1330) VR=US Image Index</summary>
 		public const uint ImageIndex = 0x00541330;
+
+		/// <summary>(0054,1400) VR=CS Counts Included</summary>
 		public const uint CountsIncluded = 0x00541400;
+
+		/// <summary>(0054,1401) VR=CS Dead Time Correction Flag</summary>
 		public const uint DeadTimeCorrectionFlag = 0x00541401;
+
+		/// <summary>(0060,3000) VR=SQ Histogram Sequence</summary>
 		public const uint HistogramSequence = 0x00603000;
+
+		/// <summary>(0060,3002) VR=US Histogram Number of Bins</summary>
 		public const uint HistogramNumberOfBins = 0x00603002;
+
+		/// <summary>(0060,3004) VR=US Histogram First Bin Value</summary>
 		public const uint HistogramFirstBinValue = 0x00603004;
+
+		/// <summary>(0060,3006) VR=US Histogram Last Bin Value</summary>
 		public const uint HistogramLastBinValue = 0x00603006;
+
+		/// <summary>(0060,3008) VR=US Histogram Bin Width</summary>
 		public const uint HistogramBinWidth = 0x00603008;
+
+		/// <summary>(0060,3010) VR=LO Histogram Explanation</summary>
 		public const uint HistogramExplanation = 0x00603010;
+
+		/// <summary>(0060,3020) VR=UL Histogram Data</summary>
 		public const uint HistogramData = 0x00603020;
+
+		/// <summary>(0062,0001) VR=CS Segmentation Type</summary>
 		public const uint SegmentationType = 0x00620001;
+
+		/// <summary>(0062,0002) VR=SQ Segment Sequence</summary>
 		public const uint SegmentSequence = 0x00620002;
+
+		/// <summary>(0062,0003) VR=SQ Segmented Property Category Code Sequence</summary>
 		public const uint SegmentedPropertyCategoryCodeSequence = 0x00620003;
+
+		/// <summary>(0062,0004) VR=US Segment Number</summary>
 		public const uint SegmentNumber = 0x00620004;
+
+		/// <summary>(0062,0005) VR=LO Segment Label</summary>
 		public const uint SegmentLabel = 0x00620005;
+
+		/// <summary>(0062,0006) VR=ST Segment Description</summary>
 		public const uint SegmentDescription = 0x00620006;
+
+		/// <summary>(0062,0008) VR=CS Segment Algorithm Type</summary>
 		public const uint SegmentAlgorithmType = 0x00620008;
+
+		/// <summary>(0062,0009) VR=LO Segment Algorithm Name</summary>
 		public const uint SegmentAlgorithmName = 0x00620009;
+
+		/// <summary>(0062,000A) VR=SQ Segment Identification Sequence</summary>
 		public const uint SegmentIdentificationSequence = 0x0062000a;
+
+		/// <summary>(0062,000B) VR=US Referenced Segment Number</summary>
 		public const uint ReferencedSegmentNumber = 0x0062000b;
+
+		/// <summary>(0062,000C) VR=US Recommended Display Grayscale Value</summary>
 		public const uint RecommendedDisplayGrayscaleValue = 0x0062000c;
+
+		/// <summary>(0062,000D) VR=US Recommended Display CIELab Value</summary>
 		public const uint RecommendedDisplayCIELabValue = 0x0062000d;
+
+		/// <summary>(0062,000E) VR=US Maximum Fractional Value</summary>
 		public const uint MaximumFractionalValue = 0x0062000e;
+
+		/// <summary>(0062,000F) VR=SQ Segmented Property Type Code Sequence</summary>
 		public const uint SegmentedPropertyTypeCodeSequence = 0x0062000f;
+
+		/// <summary>(0062,0010) VR=CS Segmentation Fractional Type</summary>
 		public const uint SegmentationFractionalType = 0x00620010;
+
+		/// <summary>(0064,0002) VR=SQ Deformable Registration Sequence</summary>
 		public const uint DeformableRegistrationSequence = 0x00640002;
+
+		/// <summary>(0064,0003) VR=UI Source Frame of Reference UID</summary>
 		public const uint SourceFrameOfReferenceUID = 0x00640003;
+
+		/// <summary>(0064,0005) VR=SQ Deformable Registration Grid Sequence</summary>
 		public const uint DeformableRegistrationGridSequence = 0x00640005;
+
+		/// <summary>(0064,0007) VR=UL Grid Dimensions</summary>
 		public const uint GridDimensions = 0x00640007;
+
+		/// <summary>(0064,0008) VR=FD Grid Resolution</summary>
 		public const uint GridResolution = 0x00640008;
+
+		/// <summary>(0064,0009) VR=OF Vector Grid Data</summary>
 		public const uint VectorGridData = 0x00640009;
+
+		/// <summary>(0064,000F) VR=SQ Pre Deformation Matrix Registration Sequence</summary>
 		public const uint PreDeformationMatrixRegistrationSequence = 0x0064000f;
+
+		/// <summary>(0064,0010) VR=SQ Post Deformation Matrix Registration Sequence</summary>
 		public const uint PostDeformationMatrixRegistrationSequence = 0x00640010;
+
+		/// <summary>(0070,0001) VR=SQ Graphic Annotation Sequence</summary>
 		public const uint GraphicAnnotationSequence = 0x00700001;
+
+		/// <summary>(0070,0002) VR=CS Graphic Layer</summary>
 		public const uint GraphicLayer = 0x00700002;
+
+		/// <summary>(0070,0003) VR=CS Bounding Box Annotation Units</summary>
 		public const uint BoundingBoxAnnotationUnits = 0x00700003;
+
+		/// <summary>(0070,0004) VR=CS Anchor Point Annotation Units</summary>
 		public const uint AnchorPointAnnotationUnits = 0x00700004;
+
+		/// <summary>(0070,0005) VR=CS Graphic Annotation Units</summary>
 		public const uint GraphicAnnotationUnits = 0x00700005;
+
+		/// <summary>(0070,0006) VR=ST Unformatted Text Value</summary>
 		public const uint UnformattedTextValue = 0x00700006;
+
+		/// <summary>(0070,0008) VR=SQ Text Object Sequence</summary>
 		public const uint TextObjectSequence = 0x00700008;
+
+		/// <summary>(0070,0009) VR=SQ Graphic Object Sequence</summary>
 		public const uint GraphicObjectSequence = 0x00700009;
+
+		/// <summary>(0070,0010) VR=FL Bounding Box Top Left Hand Corner</summary>
 		public const uint BoundingBoxTopLeftHandCorner = 0x00700010;
+
+		/// <summary>(0070,0011) VR=FL Bounding Box Bottom Right Hand Corner</summary>
 		public const uint BoundingBoxBottomRightHandCorner = 0x00700011;
+
+		/// <summary>(0070,0012) VR=CS Bounding Box Text Horizontal Justification</summary>
 		public const uint BoundingBoxTextHorizontalJustification = 0x00700012;
+
+		/// <summary>(0070,0014) VR=FL Anchor Point</summary>
 		public const uint AnchorPoint = 0x00700014;
+
+		/// <summary>(0070,0015) VR=CS Anchor Point Visibility</summary>
 		public const uint AnchorPointVisibility = 0x00700015;
+
+		/// <summary>(0070,0020) VR=US Graphic Dimensions</summary>
 		public const uint GraphicDimensions = 0x00700020;
+
+		/// <summary>(0070,0021) VR=US Number of Graphic Points</summary>
 		public const uint NumberOfGraphicPoints = 0x00700021;
+
+		/// <summary>(0070,0022) VR=FL Graphic Data</summary>
 		public const uint GraphicData = 0x00700022;
+
+		/// <summary>(0070,0023) VR=CS Graphic Type</summary>
 		public const uint GraphicType = 0x00700023;
+
+		/// <summary>(0070,0024) VR=CS Graphic Filled</summary>
 		public const uint GraphicFilled = 0x00700024;
+
+		/// <summary>(0070,0041) VR=CS Image Horizontal Flip</summary>
 		public const uint ImageHorizontalFlip = 0x00700041;
+
+		/// <summary>(0070,0042) VR=US Image Rotation</summary>
 		public const uint ImageRotation = 0x00700042;
+
+		/// <summary>(0070,0052) VR=SL Displayed Area Top Left Hand Corner</summary>
 		public const uint DisplayedAreaTopLeftHandCorner = 0x00700052;
+
+		/// <summary>(0070,0053) VR=SL Displayed Area Bottom Right Hand Corner</summary>
 		public const uint DisplayedAreaBottomRightHandCorner = 0x00700053;
+
+		/// <summary>(0070,005A) VR=SQ Displayed Area Selection Sequence</summary>
 		public const uint DisplayedAreaSelectionSequence = 0x0070005a;
+
+		/// <summary>(0070,0060) VR=SQ Graphic Layer Sequence</summary>
 		public const uint GraphicLayerSequence = 0x00700060;
+
+		/// <summary>(0070,0062) VR=IS Graphic Layer Order</summary>
 		public const uint GraphicLayerOrder = 0x00700062;
+
+		/// <summary>(0070,0066) VR=US Graphic Layer Recommended Display Grayscale Value</summary>
 		public const uint GraphicLayerRecommendedDisplayGrayscaleValue = 0x00700066;
+
+		/// <summary>(0070,0067) VR=US Graphic Layer Recommended Display RGB Value (Retired)</summary>
 		public const uint GraphicLayerRecommendedDisplayRGBValueRETIRED = 0x00700067;
+
+		/// <summary>(0070,0068) VR=LO Graphic Layer Description</summary>
 		public const uint GraphicLayerDescription = 0x00700068;
+
+		/// <summary>(0070,0080) VR=CS Content Label</summary>
 		public const uint ContentLabel = 0x00700080;
+
+		/// <summary>(0070,0081) VR=LO Content Description</summary>
 		public const uint ContentDescription = 0x00700081;
+
+		/// <summary>(0070,0082) VR=DA Presentation Creation Date</summary>
 		public const uint PresentationCreationDate = 0x00700082;
+
+		/// <summary>(0070,0083) VR=TM Presentation Creation Time</summary>
 		public const uint PresentationCreationTime = 0x00700083;
+
+		/// <summary>(0070,0084) VR=PN Content Creator's Name</summary>
 		public const uint ContentCreatorsName = 0x00700084;
+
+		/// <summary>(0070,0086) VR=SQ Content Creator's Identification Code Sequence</summary>
 		public const uint ContentCreatorsIdentificationCodeSequence = 0x00700086;
+
+		/// <summary>(0070,0100) VR=CS Presentation Size Mode</summary>
 		public const uint PresentationSizeMode = 0x00700100;
+
+		/// <summary>(0070,0101) VR=DS Presentation Pixel Spacing</summary>
 		public const uint PresentationPixelSpacing = 0x00700101;
+
+		/// <summary>(0070,0102) VR=IS Presentation Pixel Aspect Ratio</summary>
 		public const uint PresentationPixelAspectRatio = 0x00700102;
+
+		/// <summary>(0070,0103) VR=FL Presentation Pixel Magnification Ratio</summary>
 		public const uint PresentationPixelMagnificationRatio = 0x00700103;
+
+		/// <summary>(0070,0306) VR=CS Shape Type</summary>
 		public const uint ShapeType = 0x00700306;
+
+		/// <summary>(0070,0308) VR=SQ Registration Sequence</summary>
 		public const uint RegistrationSequence = 0x00700308;
+
+		/// <summary>(0070,0309) VR=SQ Matrix Registration Sequence</summary>
 		public const uint MatrixRegistrationSequence = 0x00700309;
+
+		/// <summary>(0070,030A) VR=SQ Matrix Sequence</summary>
 		public const uint MatrixSequence = 0x0070030a;
+
+		/// <summary>(0070,030C) VR=CS Frame of Reference Transformation Matrix Type</summary>
 		public const uint FrameOfReferenceTransformationMatrixType = 0x0070030c;
+
+		/// <summary>(0070,030D) VR=SQ Registration Type Code Sequence</summary>
 		public const uint RegistrationTypeCodeSequence = 0x0070030d;
+
+		/// <summary>(0070,030F) VR=ST Fiducial Description</summary>
 		public const uint FiducialDescription = 0x0070030f;
+
+		/// <summary>(0070,0310) VR=SH Fiducial Identifier</summary>
 		public const uint FiducialIdentifier = 0x00700310;
+
+		/// <summary>(0070,0311) VR=SQ Fiducial Identifier Code Sequence</summary>
 		public const uint FiducialIdentifierCodeSequence = 0x00700311;
+
+		/// <summary>(0070,0312) VR=FD Contour Uncertainty Radius</summary>
 		public const uint ContourUncertaintyRadius = 0x00700312;
+
+		/// <summary>(0070,0314) VR=SQ Used Fiducials Sequence</summary>
 		public const uint UsedFiducialsSequence = 0x00700314;
+
+		/// <summary>(0070,0318) VR=SQ Graphic Coordinates Data Sequence</summary>
 		public const uint GraphicCoordinatesDataSequence = 0x00700318;
+
+		/// <summary>(0070,031A) VR=UI Fiducial UID</summary>
 		public const uint FiducialUID = 0x0070031a;
+
+		/// <summary>(0070,031C) VR=SQ Fiducial Set Sequence</summary>
 		public const uint FiducialSetSequence = 0x0070031c;
+
+		/// <summary>(0070,031E) VR=SQ Fiducial Sequence</summary>
 		public const uint FiducialSequence = 0x0070031e;
+
+		/// <summary>(0070,0401) VR=US Graphic Layer Recommended Display CIELab Value</summary>
 		public const uint GraphicLayerRecommendedDisplayCIELabValue = 0x00700401;
+
+		/// <summary>(0070,0402) VR=SQ Blending Sequence</summary>
 		public const uint BlendingSequence = 0x00700402;
+
+		/// <summary>(0070,0403) VR=FL Relative Opacity</summary>
 		public const uint RelativeOpacity = 0x00700403;
+
+		/// <summary>(0070,0404) VR=SQ Referenced Spatial Registration Sequence</summary>
 		public const uint ReferencedSpatialRegistrationSequence = 0x00700404;
+
+		/// <summary>(0070,0405) VR=CS Blending Position</summary>
 		public const uint BlendingPosition = 0x00700405;
+
+		/// <summary>(0072,0002) VR=SH Hanging Protocol Name</summary>
 		public const uint HangingProtocolName = 0x00720002;
+
+		/// <summary>(0072,0004) VR=LO Hanging Protocol Description</summary>
 		public const uint HangingProtocolDescription = 0x00720004;
+
+		/// <summary>(0072,0006) VR=CS Hanging Protocol Level</summary>
 		public const uint HangingProtocolLevel = 0x00720006;
+
+		/// <summary>(0072,0008) VR=LO Hanging Protocol Creator</summary>
 		public const uint HangingProtocolCreator = 0x00720008;
+
+		/// <summary>(0072,000A) VR=DT Hanging Protocol Creation Datetime</summary>
 		public const uint HangingProtocolCreationDatetime = 0x0072000a;
+
+		/// <summary>(0072,000C) VR=SQ Hanging Protocol Definition Sequence</summary>
 		public const uint HangingProtocolDefinitionSequence = 0x0072000c;
+
+		/// <summary>(0072,000E) VR=SQ Hanging Protocol User Identification Code Sequence</summary>
 		public const uint HangingProtocolUserIdentificationCodeSequence = 0x0072000e;
+
+		/// <summary>(0072,0010) VR=LO Hanging Protocol User Group Name</summary>
 		public const uint HangingProtocolUserGroupName = 0x00720010;
+
+		/// <summary>(0072,0012) VR=SQ Source Hanging Protocol Sequence</summary>
 		public const uint SourceHangingProtocolSequence = 0x00720012;
+
+		/// <summary>(0072,0014) VR=US Number of Priors Referenced</summary>
 		public const uint NumberOfPriorsReferenced = 0x00720014;
+
+		/// <summary>(0072,0020) VR=SQ Image Sets Sequence</summary>
 		public const uint ImageSetsSequence = 0x00720020;
+
+		/// <summary>(0072,0022) VR=SQ Image Set Selector Sequence</summary>
 		public const uint ImageSetSelectorSequence = 0x00720022;
+
+		/// <summary>(0072,0024) VR=CS Image Set Selector Usage Flag</summary>
 		public const uint ImageSetSelectorUsageFlag = 0x00720024;
+
+		/// <summary>(0072,0026) VR=AT Selector Attribute</summary>
 		public const uint SelectorAttribute = 0x00720026;
+
+		/// <summary>(0072,0028) VR=US Selector Value Number</summary>
 		public const uint SelectorValueNumber = 0x00720028;
+
+		/// <summary>(0072,0030) VR=SQ Time Based Image Sets Sequence</summary>
 		public const uint TimeBasedImageSetsSequence = 0x00720030;
+
+		/// <summary>(0072,0032) VR=US Image Set Number</summary>
 		public const uint ImageSetNumber = 0x00720032;
+
+		/// <summary>(0072,0034) VR=CS Image Set Selector Category</summary>
 		public const uint ImageSetSelectorCategory = 0x00720034;
+
+		/// <summary>(0072,0038) VR=US Relative Time</summary>
 		public const uint RelativeTime = 0x00720038;
+
+		/// <summary>(0072,003A) VR=CS Relative Time Units</summary>
 		public const uint RelativeTimeUnits = 0x0072003a;
+
+		/// <summary>(0072,003C) VR=SS Abstract Prior Value</summary>
 		public const uint AbstractPriorValue = 0x0072003c;
+
+		/// <summary>(0072,003E) VR=SQ Abstract Prior Code Sequence</summary>
 		public const uint AbstractPriorCodeSequence = 0x0072003e;
+
+		/// <summary>(0072,0040) VR=LO Image Set Label</summary>
 		public const uint ImageSetLabel = 0x00720040;
+
+		/// <summary>(0072,0050) VR=CS Selector Attribute VR</summary>
 		public const uint SelectorAttributeVR = 0x00720050;
+
+		/// <summary>(0072,0052) VR=AT Selector Sequence Pointer</summary>
 		public const uint SelectorSequencePointer = 0x00720052;
+
+		/// <summary>(0072,0054) VR=LO Selector Sequence Pointer Private Creator</summary>
 		public const uint SelectorSequencePointerPrivateCreator = 0x00720054;
+
+		/// <summary>(0072,0056) VR=LO Selector Attribute Private Creator</summary>
 		public const uint SelectorAttributePrivateCreator = 0x00720056;
+
+		/// <summary>(0072,0060) VR=AT Selector AT Value</summary>
 		public const uint SelectorATValue = 0x00720060;
+
+		/// <summary>(0072,0062) VR=CS Selector CS Value</summary>
 		public const uint SelectorCSValue = 0x00720062;
+
+		/// <summary>(0072,0064) VR=IS Selector IS Value</summary>
 		public const uint SelectorISValue = 0x00720064;
+
+		/// <summary>(0072,0066) VR=LO Selector LO Value</summary>
 		public const uint SelectorLOValue = 0x00720066;
+
+		/// <summary>(0072,0068) VR=LT Selector LT Value</summary>
 		public const uint SelectorLTValue = 0x00720068;
+
+		/// <summary>(0072,006A) VR=PN Selector PN Value</summary>
 		public const uint SelectorPNValue = 0x0072006a;
+
+		/// <summary>(0072,006C) VR=SH Selector SH Value</summary>
 		public const uint SelectorSHValue = 0x0072006c;
+
+		/// <summary>(0072,006E) VR=ST Selector ST Value</summary>
 		public const uint SelectorSTValue = 0x0072006e;
+
+		/// <summary>(0072,0070) VR=UT Selector UT Value</summary>
 		public const uint SelectorUTValue = 0x00720070;
+
+		/// <summary>(0072,0072) VR=DS Selector DS Value</summary>
 		public const uint SelectorDSValue = 0x00720072;
+
+		/// <summary>(0072,0074) VR=FD Selector FD Value</summary>
 		public const uint SelectorFDValue = 0x00720074;
+
+		/// <summary>(0072,0076) VR=FL Selector FL Value</summary>
 		public const uint SelectorFLValue = 0x00720076;
+
+		/// <summary>(0072,0078) VR=UL Selector UL Value</summary>
 		public const uint SelectorULValue = 0x00720078;
+
+		/// <summary>(0072,007A) VR=US Selector US Value</summary>
 		public const uint SelectorUSValue = 0x0072007a;
+
+		/// <summary>(0072,007C) VR=SL Selector SL Value</summary>
 		public const uint SelectorSLValue = 0x0072007c;
+
+		/// <summary>(0072,007E) VR=SS Selector SS Value</summary>
 		public const uint SelectorSSValue = 0x0072007e;
+
+		/// <summary>(0072,0080) VR=SQ Selector Code Sequence Value</summary>
 		public const uint SelectorCodeSequenceValue = 0x00720080;
+
+		/// <summary>(0072,0100) VR=US Number of Screens</summary>
 		public const uint NumberOfScreens = 0x00720100;
+
+		/// <summary>(0072,0102) VR=SQ Nominal Screen Definition Sequence</summary>
 		public const uint NominalScreenDefinitionSequence = 0x00720102;
+
+		/// <summary>(0072,0104) VR=US Number of Vertical Pixels</summary>
 		public const uint NumberOfVerticalPixels = 0x00720104;
+
+		/// <summary>(0072,0106) VR=US Number of Horizontal Pixels</summary>
 		public const uint NumberOfHorizontalPixels = 0x00720106;
+
+		/// <summary>(0072,0108) VR=FD Display Environment Spatial Position</summary>
 		public const uint DisplayEnvironmentSpatialPosition = 0x00720108;
+
+		/// <summary>(0072,010A) VR=US Screen Minimum Grayscale Bit Depth</summary>
 		public const uint ScreenMinimumGrayscaleBitDepth = 0x0072010a;
+
+		/// <summary>(0072,010C) VR=US Screen Minimum Color Bit Depth</summary>
 		public const uint ScreenMinimumColorBitDepth = 0x0072010c;
+
+		/// <summary>(0072,010E) VR=US Application Maximum Repaint Time</summary>
 		public const uint ApplicationMaximumRepaintTime = 0x0072010e;
+
+		/// <summary>(0072,0200) VR=SQ Display Sets Sequence</summary>
 		public const uint DisplaySetsSequence = 0x00720200;
+
+		/// <summary>(0072,0202) VR=US Display Set Number</summary>
 		public const uint DisplaySetNumber = 0x00720202;
+
+		/// <summary>(0072,0203) VR=LO Display Set Label</summary>
 		public const uint DisplaySetLabel = 0x00720203;
+
+		/// <summary>(0072,0204) VR=US Display Set Presentation Group</summary>
 		public const uint DisplaySetPresentationGroup = 0x00720204;
+
+		/// <summary>(0072,0206) VR=LO Display Set Presentation Group Description</summary>
 		public const uint DisplaySetPresentationGroupDescription = 0x00720206;
+
+		/// <summary>(0072,0208) VR=CS Partial Data Display Handling</summary>
 		public const uint PartialDataDisplayHandling = 0x00720208;
+
+		/// <summary>(0072,0210) VR=SQ Synchronized Scrolling Sequence</summary>
 		public const uint SynchronizedScrollingSequence = 0x00720210;
+
+		/// <summary>(0072,0212) VR=US Display Set Scrolling Group</summary>
 		public const uint DisplaySetScrollingGroup = 0x00720212;
+
+		/// <summary>(0072,0214) VR=SQ Navigation Indicator Sequence</summary>
 		public const uint NavigationIndicatorSequence = 0x00720214;
+
+		/// <summary>(0072,0216) VR=US Navigation Display Set</summary>
 		public const uint NavigationDisplaySet = 0x00720216;
+
+		/// <summary>(0072,0218) VR=US Reference Display Sets</summary>
 		public const uint ReferenceDisplaySets = 0x00720218;
+
+		/// <summary>(0072,0300) VR=SQ Image Boxes Sequence</summary>
 		public const uint ImageBoxesSequence = 0x00720300;
+
+		/// <summary>(0072,0302) VR=US Image Box Number</summary>
 		public const uint ImageBoxNumber = 0x00720302;
+
+		/// <summary>(0072,0304) VR=CS Image Box Layout Type</summary>
 		public const uint ImageBoxLayoutType = 0x00720304;
+
+		/// <summary>(0072,0306) VR=US Image Box Tile Horizontal Dimension</summary>
 		public const uint ImageBoxTileHorizontalDimension = 0x00720306;
+
+		/// <summary>(0072,0308) VR=US Image Box Tile Vertical Dimension</summary>
 		public const uint ImageBoxTileVerticalDimension = 0x00720308;
+
+		/// <summary>(0072,0310) VR=CS Image Box Scroll Direction</summary>
 		public const uint ImageBoxScrollDirection = 0x00720310;
+
+		/// <summary>(0072,0312) VR=CS Image Box Small Scroll Type</summary>
 		public const uint ImageBoxSmallScrollType = 0x00720312;
+
+		/// <summary>(0072,0314) VR=US Image Box Small Scroll Amount</summary>
 		public const uint ImageBoxSmallScrollAmount = 0x00720314;
+
+		/// <summary>(0072,0316) VR=CS Image Box Large Scroll Type</summary>
 		public const uint ImageBoxLargeScrollType = 0x00720316;
+
+		/// <summary>(0072,0318) VR=US Image Box Large Scroll Amount</summary>
 		public const uint ImageBoxLargeScrollAmount = 0x00720318;
+
+		/// <summary>(0072,0320) VR=US Image Box Overlap Priority</summary>
 		public const uint ImageBoxOverlapPriority = 0x00720320;
+
+		/// <summary>(0072,0330) VR=FD Cine Relative to Real-Time</summary>
 		public const uint CineRelativeToRealTime = 0x00720330;
+
+		/// <summary>(0072,0400) VR=SQ Filter Operations Sequence</summary>
 		public const uint FilterOperationsSequence = 0x00720400;
+
+		/// <summary>(0072,0402) VR=CS Filter-by Category</summary>
 		public const uint FilterbyCategory = 0x00720402;
+
+		/// <summary>(0072,0404) VR=CS Filter-by Attribute Presence</summary>
 		public const uint FilterbyAttributePresence = 0x00720404;
+
+		/// <summary>(0072,0406) VR=CS Filter-by Operator</summary>
 		public const uint FilterbyOperator = 0x00720406;
+
+		/// <summary>(0072,0500) VR=CS Blending Operation Type</summary>
 		public const uint BlendingOperationType = 0x00720500;
+
+		/// <summary>(0072,0510) VR=CS Reformatting Operation Type</summary>
 		public const uint ReformattingOperationType = 0x00720510;
+
+		/// <summary>(0072,0512) VR=FD Reformatting Thickness</summary>
 		public const uint ReformattingThickness = 0x00720512;
+
+		/// <summary>(0072,0514) VR=FD Reformatting Interval</summary>
 		public const uint ReformattingInterval = 0x00720514;
+
+		/// <summary>(0072,0516) VR=CS Reformatting Operation Initial View Direction</summary>
 		public const uint ReformattingOperationInitialViewDirection = 0x00720516;
-		public const uint _3DRenderingType = 0x00720520;
+
+		/// <summary>(0072,0520) VR=CS 3D Rendering Type</summary>
+		public const uint RenderingType3D = 0x00720520;
+
+		/// <summary>(0072,0600) VR=SQ Sorting Operations Sequence</summary>
 		public const uint SortingOperationsSequence = 0x00720600;
+
+		/// <summary>(0072,0602) VR=CS Sort-by Category</summary>
 		public const uint SortbyCategory = 0x00720602;
+
+		/// <summary>(0072,0604) VR=CS Sorting Direction</summary>
 		public const uint SortingDirection = 0x00720604;
+
+		/// <summary>(0072,0700) VR=CS Display Set Patient Orientation</summary>
 		public const uint DisplaySetPatientOrientation = 0x00720700;
+
+		/// <summary>(0072,0702) VR=CS VOI Type</summary>
 		public const uint VOIType = 0x00720702;
+
+		/// <summary>(0072,0704) VR=CS Pseudo-color Type</summary>
 		public const uint PseudocolorType = 0x00720704;
+
+		/// <summary>(0072,0706) VR=CS Show Grayscale Inverted</summary>
 		public const uint ShowGrayscaleInverted = 0x00720706;
+
+		/// <summary>(0072,0710) VR=CS Show Image True Size Flag</summary>
 		public const uint ShowImageTrueSizeFlag = 0x00720710;
+
+		/// <summary>(0072,0712) VR=CS Show Graphic Annotation Flag</summary>
 		public const uint ShowGraphicAnnotationFlag = 0x00720712;
+
+		/// <summary>(0072,0714) VR=CS Show Patient Demographics Flag</summary>
 		public const uint ShowPatientDemographicsFlag = 0x00720714;
+
+		/// <summary>(0072,0716) VR=CS Show Acquisition Techniques Flag</summary>
 		public const uint ShowAcquisitionTechniquesFlag = 0x00720716;
+
+		/// <summary>(0072,0717) VR=CS Display Set Horizontal Justification</summary>
 		public const uint DisplaySetHorizontalJustification = 0x00720717;
+
+		/// <summary>(0072,0718) VR=CS Display Set Vertical Justification</summary>
 		public const uint DisplaySetVerticalJustification = 0x00720718;
+
+		/// <summary>(0088,0130) VR=SH Storage Media File-set ID</summary>
 		public const uint StorageMediaFilesetID = 0x00880130;
+
+		/// <summary>(0088,0140) VR=UI Storage Media File-set UID</summary>
 		public const uint StorageMediaFilesetUID = 0x00880140;
+
+		/// <summary>(0088,0200) VR=SQ Icon Image Sequence</summary>
 		public const uint IconImageSequence = 0x00880200;
+
+		/// <summary>(0088,0904) VR=LO Topic Title</summary>
 		public const uint TopicTitle = 0x00880904;
+
+		/// <summary>(0088,0906) VR=ST Topic Subject</summary>
 		public const uint TopicSubject = 0x00880906;
+
+		/// <summary>(0088,0910) VR=LO Topic Author</summary>
 		public const uint TopicAuthor = 0x00880910;
+
+		/// <summary>(0088,0912) VR=LO Topic Keywords</summary>
 		public const uint TopicKeywords = 0x00880912;
+
+		/// <summary>(0100,0410) VR=CS SOP Instance Status</summary>
 		public const uint SOPInstanceStatus = 0x01000410;
+
+		/// <summary>(0100,0420) VR=DT SOP Authorization Date and Time</summary>
 		public const uint SOPAuthorizationDateAndTime = 0x01000420;
+
+		/// <summary>(0100,0424) VR=LT SOP Authorization Comment</summary>
 		public const uint SOPAuthorizationComment = 0x01000424;
+
+		/// <summary>(0100,0426) VR=LO Authorization Equipment Certification Number</summary>
 		public const uint AuthorizationEquipmentCertificationNumber = 0x01000426;
+
+		/// <summary>(0400,0005) VR=US MAC ID Number</summary>
 		public const uint MACIDNumber = 0x04000005;
+
+		/// <summary>(0400,0010) VR=UI MAC Calculation Transfer Syntax UID</summary>
 		public const uint MACCalculationTransferSyntaxUID = 0x04000010;
+
+		/// <summary>(0400,0015) VR=CS MAC Algorithm</summary>
 		public const uint MACAlgorithm = 0x04000015;
+
+		/// <summary>(0400,0020) VR=AT Data Elements Signed</summary>
 		public const uint DataElementsSigned = 0x04000020;
+
+		/// <summary>(0400,0100) VR=UI Digital Signature UID</summary>
 		public const uint DigitalSignatureUID = 0x04000100;
+
+		/// <summary>(0400,0105) VR=DT Digital Signature DateTime</summary>
 		public const uint DigitalSignatureDateTime = 0x04000105;
+
+		/// <summary>(0400,0110) VR=CS Certificate Type</summary>
 		public const uint CertificateType = 0x04000110;
+
+		/// <summary>(0400,0115) VR=OB Certificate of Signer</summary>
 		public const uint CertificateOfSigner = 0x04000115;
+
+		/// <summary>(0400,0120) VR=OB Signature</summary>
 		public const uint Signature = 0x04000120;
+
+		/// <summary>(0400,0305) VR=CS Certified Timestamp Type</summary>
 		public const uint CertifiedTimestampType = 0x04000305;
+
+		/// <summary>(0400,0310) VR=OB Certified Timestamp</summary>
 		public const uint CertifiedTimestamp = 0x04000310;
+
+		/// <summary>(0400,0401) VR=SQ Digital Signature Purpose Code Sequence</summary>
 		public const uint DigitalSignaturePurposeCodeSequence = 0x04000401;
+
+		/// <summary>(0400,0402) VR=SQ Referenced Digital Signature Sequence</summary>
 		public const uint ReferencedDigitalSignatureSequence = 0x04000402;
+
+		/// <summary>(0400,0403) VR=SQ Referenced SOP Instance MAC Sequence</summary>
 		public const uint ReferencedSOPInstanceMACSequence = 0x04000403;
+
+		/// <summary>(0400,0404) VR=OB MAC</summary>
 		public const uint MAC = 0x04000404;
+
+		/// <summary>(0400,0500) VR=SQ Encrypted Attributes Sequence</summary>
 		public const uint EncryptedAttributesSequence = 0x04000500;
+
+		/// <summary>(0400,0510) VR=UI Encrypted Content Transfer Syntax UID</summary>
 		public const uint EncryptedContentTransferSyntaxUID = 0x04000510;
+
+		/// <summary>(0400,0520) VR=OB Encrypted Content</summary>
 		public const uint EncryptedContent = 0x04000520;
+
+		/// <summary>(0400,0550) VR=SQ Modified Attributes Sequence</summary>
 		public const uint ModifiedAttributesSequence = 0x04000550;
+
+		/// <summary>(0400,0561) VR=SQ Original Attributes Sequence</summary>
 		public const uint OriginalAttributesSequence = 0x04000561;
+
+		/// <summary>(0400,0562) VR=DT Attribute Modification Datetime</summary>
 		public const uint AttributeModificationDatetime = 0x04000562;
+
+		/// <summary>(0400,0563) VR=LO Modifying System</summary>
 		public const uint ModifyingSystem = 0x04000563;
+
+		/// <summary>(0400,0564) VR=LO Source of Previous Values</summary>
 		public const uint SourceOfPreviousValues = 0x04000564;
+
+		/// <summary>(0400,0565) VR=CS Reason for the Attribute Modification</summary>
 		public const uint ReasonForTheAttributeModification = 0x04000565;
+
+		/// <summary>(2000,0010) VR=IS Number of Copies</summary>
 		public const uint NumberOfCopies = 0x20000010;
+
+		/// <summary>(2000,001E) VR=SQ Printer Configuration Sequence</summary>
 		public const uint PrinterConfigurationSequence = 0x2000001e;
+
+		/// <summary>(2000,0020) VR=CS Print Priority</summary>
 		public const uint PrintPriority = 0x20000020;
+
+		/// <summary>(2000,0030) VR=CS Medium Type</summary>
 		public const uint MediumType = 0x20000030;
+
+		/// <summary>(2000,0040) VR=CS Film Destination</summary>
 		public const uint FilmDestination = 0x20000040;
+
+		/// <summary>(2000,0050) VR=LO Film Session Label</summary>
 		public const uint FilmSessionLabel = 0x20000050;
+
+		/// <summary>(2000,0060) VR=IS Memory Allocation</summary>
 		public const uint MemoryAllocation = 0x20000060;
+
+		/// <summary>(2000,0061) VR=IS Maximum Memory Allocation</summary>
 		public const uint MaximumMemoryAllocation = 0x20000061;
+
+		/// <summary>(2000,0062) VR=CS Color Image Printing Flag (Retired)</summary>
 		public const uint ColorImagePrintingFlagRETIRED = 0x20000062;
+
+		/// <summary>(2000,0063) VR=CS Collation Flag (Retired)</summary>
 		public const uint CollationFlagRETIRED = 0x20000063;
+
+		/// <summary>(2000,0065) VR=CS Annotation Flag (Retired)</summary>
 		public const uint AnnotationFlagRETIRED = 0x20000065;
+
+		/// <summary>(2000,0067) VR=CS Image Overlay Flag (Retired)</summary>
 		public const uint ImageOverlayFlagRETIRED = 0x20000067;
+
+		/// <summary>(2000,0069) VR=CS Presentation LUT Flag (Retired)</summary>
 		public const uint PresentationLUTFlagRETIRED = 0x20000069;
+
+		/// <summary>(2000,006A) VR=CS Image Box Presentation LUT Flag (Retired)</summary>
 		public const uint ImageBoxPresentationLUTFlagRETIRED = 0x2000006a;
+
+		/// <summary>(2000,00A0) VR=US Memory Bit Depth</summary>
 		public const uint MemoryBitDepth = 0x200000a0;
+
+		/// <summary>(2000,00A1) VR=US Printing Bit Depth</summary>
 		public const uint PrintingBitDepth = 0x200000a1;
+
+		/// <summary>(2000,00A2) VR=SQ Media Installed Sequence</summary>
 		public const uint MediaInstalledSequence = 0x200000a2;
+
+		/// <summary>(2000,00A4) VR=SQ Other Media Available Sequence</summary>
 		public const uint OtherMediaAvailableSequence = 0x200000a4;
+
+		/// <summary>(2000,00A8) VR=SQ Supported Image Display Formats Sequence</summary>
 		public const uint SupportedImageDisplayFormatsSequence = 0x200000a8;
+
+		/// <summary>(2000,0500) VR=SQ Referenced Film Box Sequence</summary>
 		public const uint ReferencedFilmBoxSequence = 0x20000500;
+
+		/// <summary>(2000,0510) VR=SQ Referenced Stored Print Sequence</summary>
 		public const uint ReferencedStoredPrintSequence = 0x20000510;
+
+		/// <summary>(2010,0010) VR=ST Image Display Format</summary>
 		public const uint ImageDisplayFormat = 0x20100010;
+
+		/// <summary>(2010,0030) VR=CS Annotation Display Format ID</summary>
 		public const uint AnnotationDisplayFormatID = 0x20100030;
+
+		/// <summary>(2010,0040) VR=CS Film Orientation</summary>
 		public const uint FilmOrientation = 0x20100040;
+
+		/// <summary>(2010,0050) VR=CS Film Size ID</summary>
 		public const uint FilmSizeID = 0x20100050;
+
+		/// <summary>(2010,0052) VR=CS Printer Resolution ID</summary>
 		public const uint PrinterResolutionID = 0x20100052;
+
+		/// <summary>(2010,0054) VR=CS Default Printer Resolution ID</summary>
 		public const uint DefaultPrinterResolutionID = 0x20100054;
+
+		/// <summary>(2010,0060) VR=CS Magnification Type</summary>
 		public const uint MagnificationType = 0x20100060;
+
+		/// <summary>(2010,0080) VR=CS Smoothing Type</summary>
 		public const uint SmoothingType = 0x20100080;
+
+		/// <summary>(2010,00A6) VR=CS Default Magnification Type</summary>
 		public const uint DefaultMagnificationType = 0x201000a6;
+
+		/// <summary>(2010,00A7) VR=CS Other Magnification Types Available</summary>
 		public const uint OtherMagnificationTypesAvailable = 0x201000a7;
+
+		/// <summary>(2010,00A8) VR=CS Default Smoothing Type</summary>
 		public const uint DefaultSmoothingType = 0x201000a8;
+
+		/// <summary>(2010,00A9) VR=CS Other Smoothing Types Available</summary>
 		public const uint OtherSmoothingTypesAvailable = 0x201000a9;
+
+		/// <summary>(2010,0100) VR=CS Border Density</summary>
 		public const uint BorderDensity = 0x20100100;
+
+		/// <summary>(2010,0110) VR=CS Empty Image Density</summary>
 		public const uint EmptyImageDensity = 0x20100110;
+
+		/// <summary>(2010,0120) VR=US Min Density</summary>
 		public const uint MinDensity = 0x20100120;
+
+		/// <summary>(2010,0130) VR=US Max Density</summary>
 		public const uint MaxDensity = 0x20100130;
+
+		/// <summary>(2010,0140) VR=CS Trim</summary>
 		public const uint Trim = 0x20100140;
+
+		/// <summary>(2010,0150) VR=ST Configuration Information</summary>
 		public const uint ConfigurationInformation = 0x20100150;
+
+		/// <summary>(2010,0152) VR=LT Configuration Information Description</summary>
 		public const uint ConfigurationInformationDescription = 0x20100152;
+
+		/// <summary>(2010,0154) VR=IS Maximum Collated Films</summary>
 		public const uint MaximumCollatedFilms = 0x20100154;
+
+		/// <summary>(2010,015E) VR=US Illumination</summary>
 		public const uint Illumination = 0x2010015e;
+
+		/// <summary>(2010,0160) VR=US Reflected Ambient Light</summary>
 		public const uint ReflectedAmbientLight = 0x20100160;
+
+		/// <summary>(2010,0376) VR=DS Printer Pixel Spacing</summary>
 		public const uint PrinterPixelSpacing = 0x20100376;
+
+		/// <summary>(2010,0500) VR=SQ Referenced Film Session Sequence</summary>
 		public const uint ReferencedFilmSessionSequence = 0x20100500;
+
+		/// <summary>(2010,0510) VR=SQ Referenced Image Box Sequence</summary>
 		public const uint ReferencedImageBoxSequence = 0x20100510;
+
+		/// <summary>(2010,0520) VR=SQ Referenced Basic Annotation Box Sequence</summary>
 		public const uint ReferencedBasicAnnotationBoxSequence = 0x20100520;
+
+		/// <summary>(2020,0010) VR=US Image Position</summary>
 		public const uint ImagePosition = 0x20200010;
+
+		/// <summary>(2020,0020) VR=CS Polarity</summary>
 		public const uint Polarity = 0x20200020;
+
+		/// <summary>(2020,0030) VR=DS Requested Image Size</summary>
 		public const uint RequestedImageSize = 0x20200030;
+
+		/// <summary>(2020,0040) VR=CS Requested Decimate/Crop Behavior</summary>
 		public const uint RequestedDecimateCropBehavior = 0x20200040;
+
+		/// <summary>(2020,0050) VR=CS Requested Resolution ID</summary>
 		public const uint RequestedResolutionID = 0x20200050;
+
+		/// <summary>(2020,00A0) VR=CS Requested Image Size Flag</summary>
 		public const uint RequestedImageSizeFlag = 0x202000a0;
+
+		/// <summary>(2020,00A2) VR=CS Decimate/Crop Result</summary>
 		public const uint DecimateCropResult = 0x202000a2;
+
+		/// <summary>(2020,0110) VR=SQ Basic Grayscale Image Sequence</summary>
 		public const uint BasicGrayscaleImageSequence = 0x20200110;
+
+		/// <summary>(2020,0111) VR=SQ Basic Color Image Sequence</summary>
 		public const uint BasicColorImageSequence = 0x20200111;
+
+		/// <summary>(2020,0130) VR=SQ Referenced Image Overlay Box Sequence (Retired)</summary>
 		public const uint ReferencedImageOverlayBoxSequenceRETIRED = 0x20200130;
+
+		/// <summary>(2020,0140) VR=SQ Referenced VOI LUT Box Sequence (Retired)</summary>
 		public const uint ReferencedVOILUTBoxSequenceRETIRED = 0x20200140;
+
+		/// <summary>(2030,0010) VR=US Annotation Position</summary>
 		public const uint AnnotationPosition = 0x20300010;
+
+		/// <summary>(2030,0020) VR=LO Text String</summary>
 		public const uint TextString = 0x20300020;
+
+		/// <summary>(2040,0010) VR=SQ Referenced Overlay Plane Sequence (Retired)</summary>
 		public const uint ReferencedOverlayPlaneSequenceRETIRED = 0x20400010;
+
+		/// <summary>(2040,0011) VR=US Referenced Overlay Plane Groups (Retired)</summary>
 		public const uint ReferencedOverlayPlaneGroupsRETIRED = 0x20400011;
+
+		/// <summary>(2040,0020) VR=SQ Overlay Pixel Data Sequence (Retired)</summary>
 		public const uint OverlayPixelDataSequenceRETIRED = 0x20400020;
+
+		/// <summary>(2040,0060) VR=CS Overlay Magnification Type (Retired)</summary>
 		public const uint OverlayMagnificationTypeRETIRED = 0x20400060;
+
+		/// <summary>(2040,0070) VR=CS Overlay Smoothing Type (Retired)</summary>
 		public const uint OverlaySmoothingTypeRETIRED = 0x20400070;
+
+		/// <summary>(2040,0072) VR=CS Overlay or Image Magnification (Retired)</summary>
 		public const uint OverlayOrImageMagnificationRETIRED = 0x20400072;
+
+		/// <summary>(2040,0074) VR=US Magnify to Number of Columns (Retired)</summary>
 		public const uint MagnifyToNumberOfColumnsRETIRED = 0x20400074;
+
+		/// <summary>(2040,0080) VR=CS Overlay Foreground Density (Retired)</summary>
 		public const uint OverlayForegroundDensityRETIRED = 0x20400080;
+
+		/// <summary>(2040,0082) VR=CS Overlay Background Density (Retired)</summary>
 		public const uint OverlayBackgroundDensityRETIRED = 0x20400082;
+
+		/// <summary>(2040,0090) VR=CS Overlay Mode (Retired)</summary>
 		public const uint OverlayModeRETIRED = 0x20400090;
+
+		/// <summary>(2040,0100) VR=CS Threshold Density (Retired)</summary>
 		public const uint ThresholdDensityRETIRED = 0x20400100;
+
+		/// <summary>(2040,0500) VR=SQ Referenced Image Box Sequence (Retired)</summary>
 		public const uint ReferencedImageBoxSequenceRETIRED = 0x20400500;
+
+		/// <summary>(2050,0010) VR=SQ Presentation LUT Sequence</summary>
 		public const uint PresentationLUTSequence = 0x20500010;
+
+		/// <summary>(2050,0020) VR=CS Presentation LUT Shape</summary>
 		public const uint PresentationLUTShape = 0x20500020;
+
+		/// <summary>(2050,0500) VR=SQ Referenced Presentation LUT Sequence</summary>
 		public const uint ReferencedPresentationLUTSequence = 0x20500500;
+
+		/// <summary>(2100,0010) VR=SH Print Job ID</summary>
 		public const uint PrintJobID = 0x21000010;
+
+		/// <summary>(2100,0020) VR=CS Execution Status</summary>
 		public const uint ExecutionStatus = 0x21000020;
+
+		/// <summary>(2100,0030) VR=CS Execution Status Info</summary>
 		public const uint ExecutionStatusInfo = 0x21000030;
+
+		/// <summary>(2100,0040) VR=DA Creation Date</summary>
 		public const uint CreationDate = 0x21000040;
+
+		/// <summary>(2100,0050) VR=TM Creation Time</summary>
 		public const uint CreationTime = 0x21000050;
+
+		/// <summary>(2100,0070) VR=AE Originator</summary>
 		public const uint Originator = 0x21000070;
+
+		/// <summary>(2100,0140) VR=AE Destination AE</summary>
 		public const uint DestinationAE = 0x21000140;
+
+		/// <summary>(2100,0160) VR=SH Owner ID</summary>
 		public const uint OwnerID = 0x21000160;
+
+		/// <summary>(2100,0170) VR=IS Number of Films</summary>
 		public const uint NumberOfFilms = 0x21000170;
+
+		/// <summary>(2100,0500) VR=SQ Referenced Print Job Sequence (Pull Stored Print) (Retired)</summary>
 		public const uint ReferencedPrintJobSequencePullStoredPrintRETIRED = 0x21000500;
+
+		/// <summary>(2110,0010) VR=CS Printer Status</summary>
 		public const uint PrinterStatus = 0x21100010;
+
+		/// <summary>(2110,0020) VR=CS Printer Status Info</summary>
 		public const uint PrinterStatusInfo = 0x21100020;
+
+		/// <summary>(2110,0030) VR=LO Printer Name</summary>
 		public const uint PrinterName = 0x21100030;
+
+		/// <summary>(2110,0099) VR=SH Print Queue ID (Retired)</summary>
 		public const uint PrintQueueIDRETIRED = 0x21100099;
+
+		/// <summary>(2120,0010) VR=CS Queue Status (Retired)</summary>
 		public const uint QueueStatusRETIRED = 0x21200010;
+
+		/// <summary>(2120,0050) VR=SQ Print Job Description Sequence (Retired)</summary>
 		public const uint PrintJobDescriptionSequenceRETIRED = 0x21200050;
+
+		/// <summary>(2120,0070) VR=SQ Referenced Print Job Sequence (Retired)</summary>
 		public const uint ReferencedPrintJobSequenceRETIRED = 0x21200070;
+
+		/// <summary>(2130,0010) VR=SQ Print Management Capabilities Sequence (Retired)</summary>
 		public const uint PrintManagementCapabilitiesSequenceRETIRED = 0x21300010;
+
+		/// <summary>(2130,0015) VR=SQ Printer Characteristics Sequence (Retired)</summary>
 		public const uint PrinterCharacteristicsSequenceRETIRED = 0x21300015;
+
+		/// <summary>(2130,0030) VR=SQ Film Box Content Sequence (Retired)</summary>
 		public const uint FilmBoxContentSequenceRETIRED = 0x21300030;
+
+		/// <summary>(2130,0040) VR=SQ Image Box Content Sequence (Retired)</summary>
 		public const uint ImageBoxContentSequenceRETIRED = 0x21300040;
+
+		/// <summary>(2130,0050) VR=SQ Annotation Content Sequence (Retired)</summary>
 		public const uint AnnotationContentSequenceRETIRED = 0x21300050;
+
+		/// <summary>(2130,0060) VR=SQ Image Overlay Box Content Sequence (Retired)</summary>
 		public const uint ImageOverlayBoxContentSequenceRETIRED = 0x21300060;
+
+		/// <summary>(2130,0080) VR=SQ Presentation LUT Content Sequence (Retired)</summary>
 		public const uint PresentationLUTContentSequenceRETIRED = 0x21300080;
+
+		/// <summary>(2130,00A0) VR=SQ Proposed Study Sequence (Retired)</summary>
 		public const uint ProposedStudySequenceRETIRED = 0x213000a0;
+
+		/// <summary>(2130,00C0) VR=SQ Original Image Sequence (Retired)</summary>
 		public const uint OriginalImageSequenceRETIRED = 0x213000c0;
+
+		/// <summary>(2200,0001) VR=CS Label Using Information Extracted From Instances</summary>
 		public const uint LabelUsingInformationExtractedFromInstances = 0x22000001;
+
+		/// <summary>(2200,0002) VR=UT Label Text</summary>
 		public const uint LabelText = 0x22000002;
+
+		/// <summary>(2200,0003) VR=CS Label Style Selection</summary>
 		public const uint LabelStyleSelection = 0x22000003;
+
+		/// <summary>(2200,0004) VR=LT Media Disposition</summary>
 		public const uint MediaDisposition = 0x22000004;
+
+		/// <summary>(2200,0005) VR=LT Barcode Value</summary>
 		public const uint BarcodeValue = 0x22000005;
+
+		/// <summary>(2200,0006) VR=CS Barcode Symbology</summary>
 		public const uint BarcodeSymbology = 0x22000006;
+
+		/// <summary>(2200,0007) VR=CS Allow Media Splitting</summary>
 		public const uint AllowMediaSplitting = 0x22000007;
+
+		/// <summary>(2200,0008) VR=CS Include Non-DICOM Objects</summary>
 		public const uint IncludeNonDICOMObjects = 0x22000008;
+
+		/// <summary>(2200,0009) VR=CS Include Display Application</summary>
 		public const uint IncludeDisplayApplication = 0x22000009;
+
+		/// <summary>(2200,000A) VR=CS Preserve Composite Instances After Media Creation</summary>
 		public const uint PreserveCompositeInstancesAfterMediaCreation = 0x2200000a;
+
+		/// <summary>(2200,000B) VR=US Total Number of Pieces of Media Created</summary>
 		public const uint TotalNumberOfPiecesOfMediaCreated = 0x2200000b;
+
+		/// <summary>(2200,000C) VR=LO Requested Media Application Profile</summary>
 		public const uint RequestedMediaApplicationProfile = 0x2200000c;
+
+		/// <summary>(2200,000D) VR=SQ Referenced Storage Media Sequence</summary>
 		public const uint ReferencedStorageMediaSequence = 0x2200000d;
+
+		/// <summary>(2200,000E) VR=AT Failure Attributes</summary>
 		public const uint FailureAttributes = 0x2200000e;
+
+		/// <summary>(2200,000F) VR=CS Allow Lossy Compression</summary>
 		public const uint AllowLossyCompression = 0x2200000f;
+
+		/// <summary>(2200,0020) VR=CS Request Priority</summary>
 		public const uint RequestPriority = 0x22000020;
+
+		/// <summary>(3002,0002) VR=SH RT Image Label</summary>
 		public const uint RTImageLabel = 0x30020002;
+
+		/// <summary>(3002,0003) VR=LO RT Image Name</summary>
 		public const uint RTImageName = 0x30020003;
+
+		/// <summary>(3002,0004) VR=ST RT Image Description</summary>
 		public const uint RTImageDescription = 0x30020004;
+
+		/// <summary>(3002,000A) VR=CS Reported Values Origin</summary>
 		public const uint ReportedValuesOrigin = 0x3002000a;
+
+		/// <summary>(3002,000C) VR=CS RT Image Plane</summary>
 		public const uint RTImagePlane = 0x3002000c;
+
+		/// <summary>(3002,000D) VR=DS X-Ray Image Receptor Translation</summary>
 		public const uint XRayImageReceptorTranslation = 0x3002000d;
+
+		/// <summary>(3002,000E) VR=DS X-Ray Image Receptor Angle</summary>
 		public const uint XRayImageReceptorAngle = 0x3002000e;
+
+		/// <summary>(3002,0010) VR=DS RT Image Orientation</summary>
 		public const uint RTImageOrientation = 0x30020010;
+
+		/// <summary>(3002,0011) VR=DS Image Plane Pixel Spacing</summary>
 		public const uint ImagePlanePixelSpacing = 0x30020011;
+
+		/// <summary>(3002,0012) VR=DS RT Image Position</summary>
 		public const uint RTImagePosition = 0x30020012;
+
+		/// <summary>(3002,0020) VR=SH Radiation Machine Name</summary>
 		public const uint RadiationMachineName = 0x30020020;
+
+		/// <summary>(3002,0022) VR=DS Radiation Machine SAD</summary>
 		public const uint RadiationMachineSAD = 0x30020022;
+
+		/// <summary>(3002,0024) VR=DS Radiation Machine SSD</summary>
 		public const uint RadiationMachineSSD = 0x30020024;
+
+		/// <summary>(3002,0026) VR=DS RT Image SID</summary>
 		public const uint RTImageSID = 0x30020026;
+
+		/// <summary>(3002,0028) VR=DS Source to Reference Object Distance</summary>
 		public const uint SourceToReferenceObjectDistance = 0x30020028;
+
+		/// <summary>(3002,0029) VR=IS Fraction Number</summary>
 		public const uint FractionNumber = 0x30020029;
+
+		/// <summary>(3002,0030) VR=SQ Exposure Sequence</summary>
 		public const uint ExposureSequence = 0x30020030;
+
+		/// <summary>(3002,0032) VR=DS Meterset Exposure</summary>
 		public const uint MetersetExposure = 0x30020032;
+
+		/// <summary>(3002,0034) VR=DS Diaphragm Position</summary>
 		public const uint DiaphragmPosition = 0x30020034;
+
+		/// <summary>(3002,0040) VR=SQ Fluence Map Sequence</summary>
 		public const uint FluenceMapSequence = 0x30020040;
+
+		/// <summary>(3002,0041) VR=CS Fluence Data Source</summary>
 		public const uint FluenceDataSource = 0x30020041;
+
+		/// <summary>(3002,0042) VR=DS Fluence Data Scale</summary>
 		public const uint FluenceDataScale = 0x30020042;
+
+		/// <summary>(3004,0001) VR=CS DVH Type</summary>
 		public const uint DVHType = 0x30040001;
+
+		/// <summary>(3004,0002) VR=CS Dose Units</summary>
 		public const uint DoseUnits = 0x30040002;
+
+		/// <summary>(3004,0004) VR=CS Dose Type</summary>
 		public const uint DoseType = 0x30040004;
+
+		/// <summary>(3004,0006) VR=LO Dose Comment</summary>
 		public const uint DoseComment = 0x30040006;
+
+		/// <summary>(3004,0008) VR=DS Normalization Point</summary>
 		public const uint NormalizationPoint = 0x30040008;
+
+		/// <summary>(3004,000A) VR=CS Dose Summation Type</summary>
 		public const uint DoseSummationType = 0x3004000a;
+
+		/// <summary>(3004,000C) VR=DS Grid Frame Offset Vector</summary>
 		public const uint GridFrameOffsetVector = 0x3004000c;
+
+		/// <summary>(3004,000E) VR=DS Dose Grid Scaling</summary>
 		public const uint DoseGridScaling = 0x3004000e;
+
+		/// <summary>(3004,0010) VR=SQ RT Dose ROI Sequence</summary>
 		public const uint RTDoseROISequence = 0x30040010;
+
+		/// <summary>(3004,0012) VR=DS Dose Value</summary>
 		public const uint DoseValue = 0x30040012;
+
+		/// <summary>(3004,0014) VR=CS Tissue Heterogeneity Correction</summary>
 		public const uint TissueHeterogeneityCorrection = 0x30040014;
+
+		/// <summary>(3004,0040) VR=DS DVH Normalization Point</summary>
 		public const uint DVHNormalizationPoint = 0x30040040;
+
+		/// <summary>(3004,0042) VR=DS DVH Normalization Dose Value</summary>
 		public const uint DVHNormalizationDoseValue = 0x30040042;
+
+		/// <summary>(3004,0050) VR=SQ DVH Sequence</summary>
 		public const uint DVHSequence = 0x30040050;
+
+		/// <summary>(3004,0052) VR=DS DVH Dose Scaling</summary>
 		public const uint DVHDoseScaling = 0x30040052;
+
+		/// <summary>(3004,0054) VR=CS DVH Volume Units</summary>
 		public const uint DVHVolumeUnits = 0x30040054;
+
+		/// <summary>(3004,0056) VR=IS DVH Number of Bins</summary>
 		public const uint DVHNumberOfBins = 0x30040056;
+
+		/// <summary>(3004,0058) VR=DS DVH Data</summary>
 		public const uint DVHData = 0x30040058;
+
+		/// <summary>(3004,0060) VR=SQ DVH Referenced ROI Sequence</summary>
 		public const uint DVHReferencedROISequence = 0x30040060;
+
+		/// <summary>(3004,0062) VR=CS DVH ROI Contribution Type</summary>
 		public const uint DVHROIContributionType = 0x30040062;
+
+		/// <summary>(3004,0070) VR=DS DVH Minimum Dose</summary>
 		public const uint DVHMinimumDose = 0x30040070;
+
+		/// <summary>(3004,0072) VR=DS DVH Maximum Dose</summary>
 		public const uint DVHMaximumDose = 0x30040072;
+
+		/// <summary>(3004,0074) VR=DS DVH Mean Dose</summary>
 		public const uint DVHMeanDose = 0x30040074;
+
+		/// <summary>(3006,0002) VR=SH Structure Set Label</summary>
 		public const uint StructureSetLabel = 0x30060002;
+
+		/// <summary>(3006,0004) VR=LO Structure Set Name</summary>
 		public const uint StructureSetName = 0x30060004;
+
+		/// <summary>(3006,0006) VR=ST Structure Set Description</summary>
 		public const uint StructureSetDescription = 0x30060006;
+
+		/// <summary>(3006,0008) VR=DA Structure Set Date</summary>
 		public const uint StructureSetDate = 0x30060008;
+
+		/// <summary>(3006,0009) VR=TM Structure Set Time</summary>
 		public const uint StructureSetTime = 0x30060009;
+
+		/// <summary>(3006,0010) VR=SQ Referenced Frame of Reference Sequence</summary>
 		public const uint ReferencedFrameOfReferenceSequence = 0x30060010;
+
+		/// <summary>(3006,0012) VR=SQ RT Referenced Study Sequence</summary>
 		public const uint RTReferencedStudySequence = 0x30060012;
+
+		/// <summary>(3006,0014) VR=SQ RT Referenced Series Sequence</summary>
 		public const uint RTReferencedSeriesSequence = 0x30060014;
+
+		/// <summary>(3006,0016) VR=SQ Contour Image Sequence</summary>
 		public const uint ContourImageSequence = 0x30060016;
+
+		/// <summary>(3006,0020) VR=SQ Structure Set ROI Sequence</summary>
 		public const uint StructureSetROISequence = 0x30060020;
+
+		/// <summary>(3006,0022) VR=IS ROI Number</summary>
 		public const uint ROINumber = 0x30060022;
+
+		/// <summary>(3006,0024) VR=UI Referenced Frame of Reference UID</summary>
 		public const uint ReferencedFrameOfReferenceUID = 0x30060024;
+
+		/// <summary>(3006,0026) VR=LO ROI Name</summary>
 		public const uint ROIName = 0x30060026;
+
+		/// <summary>(3006,0028) VR=ST ROI Description</summary>
 		public const uint ROIDescription = 0x30060028;
+
+		/// <summary>(3006,002A) VR=IS ROI Display Color</summary>
 		public const uint ROIDisplayColor = 0x3006002a;
+
+		/// <summary>(3006,002C) VR=DS ROI Volume</summary>
 		public const uint ROIVolume = 0x3006002c;
+
+		/// <summary>(3006,0030) VR=SQ RT Related ROI Sequence</summary>
 		public const uint RTRelatedROISequence = 0x30060030;
+
+		/// <summary>(3006,0033) VR=CS RT ROI Relationship</summary>
 		public const uint RTROIRelationship = 0x30060033;
+
+		/// <summary>(3006,0036) VR=CS ROI Generation Algorithm</summary>
 		public const uint ROIGenerationAlgorithm = 0x30060036;
+
+		/// <summary>(3006,0038) VR=LO ROI Generation Description</summary>
 		public const uint ROIGenerationDescription = 0x30060038;
+
+		/// <summary>(3006,0039) VR=SQ ROI Contour Sequence</summary>
 		public const uint ROIContourSequence = 0x30060039;
+
+		/// <summary>(3006,0040) VR=SQ Contour Sequence</summary>
 		public const uint ContourSequence = 0x30060040;
+
+		/// <summary>(3006,0042) VR=CS Contour Geometric Type</summary>
 		public const uint ContourGeometricType = 0x30060042;
+
+		/// <summary>(3006,0044) VR=DS Contour Slab Thickness</summary>
 		public const uint ContourSlabThickness = 0x30060044;
+
+		/// <summary>(3006,0045) VR=DS Contour Offset Vector</summary>
 		public const uint ContourOffsetVector = 0x30060045;
+
+		/// <summary>(3006,0046) VR=IS Number of Contour Points</summary>
 		public const uint NumberOfContourPoints = 0x30060046;
+
+		/// <summary>(3006,0048) VR=IS Contour Number</summary>
 		public const uint ContourNumber = 0x30060048;
+
+		/// <summary>(3006,0049) VR=IS Attached Contours</summary>
 		public const uint AttachedContours = 0x30060049;
+
+		/// <summary>(3006,0050) VR=DS Contour Data</summary>
 		public const uint ContourData = 0x30060050;
+
+		/// <summary>(3006,0080) VR=SQ RT ROI Observations Sequence</summary>
 		public const uint RTROIObservationsSequence = 0x30060080;
+
+		/// <summary>(3006,0082) VR=IS Observation Number</summary>
 		public const uint ObservationNumber = 0x30060082;
+
+		/// <summary>(3006,0084) VR=IS Referenced ROI Number</summary>
 		public const uint ReferencedROINumber = 0x30060084;
+
+		/// <summary>(3006,0085) VR=SH ROI Observation Label</summary>
 		public const uint ROIObservationLabel = 0x30060085;
+
+		/// <summary>(3006,0086) VR=SQ RT ROI Identification Code Sequence</summary>
 		public const uint RTROIIdentificationCodeSequence = 0x30060086;
+
+		/// <summary>(3006,0088) VR=ST ROI Observation Description</summary>
 		public const uint ROIObservationDescription = 0x30060088;
+
+		/// <summary>(3006,00A0) VR=SQ Related RT ROI Observations Sequence</summary>
 		public const uint RelatedRTROIObservationsSequence = 0x300600a0;
+
+		/// <summary>(3006,00A4) VR=CS RT ROI Interpreted Type</summary>
 		public const uint RTROIInterpretedType = 0x300600a4;
+
+		/// <summary>(3006,00A6) VR=PN ROI Interpreter</summary>
 		public const uint ROIInterpreter = 0x300600a6;
+
+		/// <summary>(3006,00B0) VR=SQ ROI Physical Properties Sequence</summary>
 		public const uint ROIPhysicalPropertiesSequence = 0x300600b0;
+
+		/// <summary>(3006,00B2) VR=CS ROI Physical Property</summary>
 		public const uint ROIPhysicalProperty = 0x300600b2;
+
+		/// <summary>(3006,00B4) VR=DS ROI Physical Property Value</summary>
 		public const uint ROIPhysicalPropertyValue = 0x300600b4;
+
+		/// <summary>(3006,00C0) VR=SQ Frame of Reference Relationship Sequence</summary>
 		public const uint FrameOfReferenceRelationshipSequence = 0x300600c0;
+
+		/// <summary>(3006,00C2) VR=UI Related Frame of Reference UID</summary>
 		public const uint RelatedFrameOfReferenceUID = 0x300600c2;
+
+		/// <summary>(3006,00C4) VR=CS Frame of Reference Transformation Type</summary>
 		public const uint FrameOfReferenceTransformationType = 0x300600c4;
+
+		/// <summary>(3006,00C6) VR=DS Frame of Reference Transformation Matrix</summary>
 		public const uint FrameOfReferenceTransformationMatrix = 0x300600c6;
+
+		/// <summary>(3006,00C8) VR=LO Frame of Reference Transformation Comment</summary>
 		public const uint FrameOfReferenceTransformationComment = 0x300600c8;
+
+		/// <summary>(3008,0010) VR=SQ Measured Dose Reference Sequence</summary>
 		public const uint MeasuredDoseReferenceSequence = 0x30080010;
+
+		/// <summary>(3008,0012) VR=ST Measured Dose Description</summary>
 		public const uint MeasuredDoseDescription = 0x30080012;
+
+		/// <summary>(3008,0014) VR=CS Measured Dose Type</summary>
 		public const uint MeasuredDoseType = 0x30080014;
+
+		/// <summary>(3008,0016) VR=DS Measured Dose Value</summary>
 		public const uint MeasuredDoseValue = 0x30080016;
+
+		/// <summary>(3008,0020) VR=SQ Treatment Session Beam Sequence</summary>
 		public const uint TreatmentSessionBeamSequence = 0x30080020;
+
+		/// <summary>(3008,0021) VR=SQ Treatment Session Ion Beam Sequence</summary>
 		public const uint TreatmentSessionIonBeamSequence = 0x30080021;
+
+		/// <summary>(3008,0022) VR=IS Current Fraction Number</summary>
 		public const uint CurrentFractionNumber = 0x30080022;
+
+		/// <summary>(3008,0024) VR=DA Treatment Control Point Date</summary>
 		public const uint TreatmentControlPointDate = 0x30080024;
+
+		/// <summary>(3008,0025) VR=TM Treatment Control Point Time</summary>
 		public const uint TreatmentControlPointTime = 0x30080025;
+
+		/// <summary>(3008,002A) VR=CS Treatment Termination Status</summary>
 		public const uint TreatmentTerminationStatus = 0x3008002a;
+
+		/// <summary>(3008,002B) VR=SH Treatment Termination Code</summary>
 		public const uint TreatmentTerminationCode = 0x3008002b;
+
+		/// <summary>(3008,002C) VR=CS Treatment Verification Status</summary>
 		public const uint TreatmentVerificationStatus = 0x3008002c;
+
+		/// <summary>(3008,0030) VR=SQ Referenced Treatment Record Sequence</summary>
 		public const uint ReferencedTreatmentRecordSequence = 0x30080030;
+
+		/// <summary>(3008,0032) VR=DS Specified Primary Meterset</summary>
 		public const uint SpecifiedPrimaryMeterset = 0x30080032;
+
+		/// <summary>(3008,0033) VR=DS Specified Secondary Meterset</summary>
 		public const uint SpecifiedSecondaryMeterset = 0x30080033;
+
+		/// <summary>(3008,0036) VR=DS Delivered Primary Meterset</summary>
 		public const uint DeliveredPrimaryMeterset = 0x30080036;
+
+		/// <summary>(3008,0037) VR=DS Delivered Secondary Meterset</summary>
 		public const uint DeliveredSecondaryMeterset = 0x30080037;
+
+		/// <summary>(3008,003A) VR=DS Specified Treatment Time</summary>
 		public const uint SpecifiedTreatmentTime = 0x3008003a;
+
+		/// <summary>(3008,003B) VR=DS Delivered Treatment Time</summary>
 		public const uint DeliveredTreatmentTime = 0x3008003b;
+
+		/// <summary>(3008,0040) VR=SQ Control Point Delivery Sequence</summary>
 		public const uint ControlPointDeliverySequence = 0x30080040;
+
+		/// <summary>(3008,0041) VR=SQ Ion Control Point Delivery Sequence</summary>
 		public const uint IonControlPointDeliverySequence = 0x30080041;
+
+		/// <summary>(3008,0042) VR=DS Specified Meterset</summary>
 		public const uint SpecifiedMeterset = 0x30080042;
+
+		/// <summary>(3008,0044) VR=DS Delivered Meterset</summary>
 		public const uint DeliveredMeterset = 0x30080044;
+
+		/// <summary>(3008,0045) VR=FL Meterset Rate Set</summary>
 		public const uint MetersetRateSet = 0x30080045;
+
+		/// <summary>(3008,0046) VR=FL Meterset Rate Delivered</summary>
 		public const uint MetersetRateDelivered = 0x30080046;
+
+		/// <summary>(3008,0047) VR=FL Scan Spot Metersets Delivered</summary>
 		public const uint ScanSpotMetersetsDelivered = 0x30080047;
+
+		/// <summary>(3008,0048) VR=DS Dose Rate Delivered</summary>
 		public const uint DoseRateDelivered = 0x30080048;
+
+		/// <summary>(3008,0050) VR=SQ Treatment Summary Calculated Dose Reference Sequence</summary>
 		public const uint TreatmentSummaryCalculatedDoseReferenceSequence = 0x30080050;
+
+		/// <summary>(3008,0052) VR=DS Cumulative Dose to Dose Reference</summary>
 		public const uint CumulativeDoseToDoseReference = 0x30080052;
+
+		/// <summary>(3008,0054) VR=DA First Treatment Date</summary>
 		public const uint FirstTreatmentDate = 0x30080054;
+
+		/// <summary>(3008,0056) VR=DA Most Recent Treatment Date</summary>
 		public const uint MostRecentTreatmentDate = 0x30080056;
+
+		/// <summary>(3008,005A) VR=IS Number of Fractions Delivered</summary>
 		public const uint NumberOfFractionsDelivered = 0x3008005a;
+
+		/// <summary>(3008,0060) VR=SQ Override Sequence</summary>
 		public const uint OverrideSequence = 0x30080060;
+
+		/// <summary>(3008,0061) VR=AT Parameter Sequence Pointer</summary>
 		public const uint ParameterSequencePointer = 0x30080061;
+
+		/// <summary>(3008,0062) VR=AT Override Parameter Pointer</summary>
 		public const uint OverrideParameterPointer = 0x30080062;
+
+		/// <summary>(3008,0063) VR=IS Parameter Item Index</summary>
 		public const uint ParameterItemIndex = 0x30080063;
+
+		/// <summary>(3008,0064) VR=IS Measured Dose Reference Number</summary>
 		public const uint MeasuredDoseReferenceNumber = 0x30080064;
+
+		/// <summary>(3008,0065) VR=AT Parameter Pointer</summary>
 		public const uint ParameterPointer = 0x30080065;
+
+		/// <summary>(3008,0066) VR=ST Override Reason</summary>
 		public const uint OverrideReason = 0x30080066;
+
+		/// <summary>(3008,0068) VR=SQ Corrected Parameter Sequence</summary>
 		public const uint CorrectedParameterSequence = 0x30080068;
+
+		/// <summary>(3008,006A) VR=FL Correction Value</summary>
 		public const uint CorrectionValue = 0x3008006a;
+
+		/// <summary>(3008,0070) VR=SQ Calculated Dose Reference Sequence</summary>
 		public const uint CalculatedDoseReferenceSequence = 0x30080070;
+
+		/// <summary>(3008,0072) VR=IS Calculated Dose Reference Number</summary>
 		public const uint CalculatedDoseReferenceNumber = 0x30080072;
+
+		/// <summary>(3008,0074) VR=ST Calculated Dose Reference Description</summary>
 		public const uint CalculatedDoseReferenceDescription = 0x30080074;
+
+		/// <summary>(3008,0076) VR=DS Calculated Dose Reference Dose Value</summary>
 		public const uint CalculatedDoseReferenceDoseValue = 0x30080076;
+
+		/// <summary>(3008,0078) VR=DS Start Meterset</summary>
 		public const uint StartMeterset = 0x30080078;
+
+		/// <summary>(3008,007A) VR=DS End Meterset</summary>
 		public const uint EndMeterset = 0x3008007a;
+
+		/// <summary>(3008,0080) VR=SQ Referenced Measured Dose Reference Sequence</summary>
 		public const uint ReferencedMeasuredDoseReferenceSequence = 0x30080080;
+
+		/// <summary>(3008,0082) VR=IS Referenced Measured Dose Reference Number</summary>
 		public const uint ReferencedMeasuredDoseReferenceNumber = 0x30080082;
+
+		/// <summary>(3008,0090) VR=SQ Referenced Calculated Dose Reference Sequence</summary>
 		public const uint ReferencedCalculatedDoseReferenceSequence = 0x30080090;
+
+		/// <summary>(3008,0092) VR=IS Referenced Calculated Dose Reference Number</summary>
 		public const uint ReferencedCalculatedDoseReferenceNumber = 0x30080092;
+
+		/// <summary>(3008,00A0) VR=SQ Beam Limiting Device Leaf Pairs Sequence</summary>
 		public const uint BeamLimitingDeviceLeafPairsSequence = 0x300800a0;
+
+		/// <summary>(3008,00B0) VR=SQ Recorded Wedge Sequence</summary>
 		public const uint RecordedWedgeSequence = 0x300800b0;
+
+		/// <summary>(3008,00C0) VR=SQ Recorded Compensator Sequence</summary>
 		public const uint RecordedCompensatorSequence = 0x300800c0;
+
+		/// <summary>(3008,00D0) VR=SQ Recorded Block Sequence</summary>
 		public const uint RecordedBlockSequence = 0x300800d0;
+
+		/// <summary>(3008,00E0) VR=SQ Treatment Summary Measured Dose Reference Sequence</summary>
 		public const uint TreatmentSummaryMeasuredDoseReferenceSequence = 0x300800e0;
+
+		/// <summary>(3008,00F0) VR=SQ Recorded Snout Sequence</summary>
 		public const uint RecordedSnoutSequence = 0x300800f0;
+
+		/// <summary>(3008,00F2) VR=SQ Recorded Range Shifter Sequence</summary>
 		public const uint RecordedRangeShifterSequence = 0x300800f2;
+
+		/// <summary>(3008,00F4) VR=SQ Recorded Lateral Spreading Device Sequence</summary>
 		public const uint RecordedLateralSpreadingDeviceSequence = 0x300800f4;
+
+		/// <summary>(3008,00F6) VR=SQ Recorded Range Modulator Sequence</summary>
 		public const uint RecordedRangeModulatorSequence = 0x300800f6;
+
+		/// <summary>(3008,0100) VR=SQ Recorded Source Sequence</summary>
 		public const uint RecordedSourceSequence = 0x30080100;
+
+		/// <summary>(3008,0105) VR=LO Source Serial Number</summary>
 		public const uint SourceSerialNumber = 0x30080105;
+
+		/// <summary>(3008,0110) VR=SQ Treatment Session Application Setup Sequence</summary>
 		public const uint TreatmentSessionApplicationSetupSequence = 0x30080110;
+
+		/// <summary>(3008,0116) VR=CS Application Setup Check</summary>
 		public const uint ApplicationSetupCheck = 0x30080116;
+
+		/// <summary>(3008,0120) VR=SQ Recorded Brachy Accessory Device Sequence</summary>
 		public const uint RecordedBrachyAccessoryDeviceSequence = 0x30080120;
+
+		/// <summary>(3008,0122) VR=IS Referenced Brachy Accessory Device Number</summary>
 		public const uint ReferencedBrachyAccessoryDeviceNumber = 0x30080122;
+
+		/// <summary>(3008,0130) VR=SQ Recorded Channel Sequence</summary>
 		public const uint RecordedChannelSequence = 0x30080130;
+
+		/// <summary>(3008,0132) VR=DS Specified Channel Total Time</summary>
 		public const uint SpecifiedChannelTotalTime = 0x30080132;
+
+		/// <summary>(3008,0134) VR=DS Delivered Channel Total Time</summary>
 		public const uint DeliveredChannelTotalTime = 0x30080134;
+
+		/// <summary>(3008,0136) VR=IS Specified Number of Pulses</summary>
 		public const uint SpecifiedNumberOfPulses = 0x30080136;
+
+		/// <summary>(3008,0138) VR=IS Delivered Number of Pulses</summary>
 		public const uint DeliveredNumberOfPulses = 0x30080138;
+
+		/// <summary>(3008,013A) VR=DS Specified Pulse Repetition Interval</summary>
 		public const uint SpecifiedPulseRepetitionInterval = 0x3008013a;
+
+		/// <summary>(3008,013C) VR=DS Delivered Pulse Repetition Interval</summary>
 		public const uint DeliveredPulseRepetitionInterval = 0x3008013c;
+
+		/// <summary>(3008,0140) VR=SQ Recorded Source Applicator Sequence</summary>
 		public const uint RecordedSourceApplicatorSequence = 0x30080140;
+
+		/// <summary>(3008,0142) VR=IS Referenced Source Applicator Number</summary>
 		public const uint ReferencedSourceApplicatorNumber = 0x30080142;
+
+		/// <summary>(3008,0150) VR=SQ Recorded Channel Shield Sequence</summary>
 		public const uint RecordedChannelShieldSequence = 0x30080150;
+
+		/// <summary>(3008,0152) VR=IS Referenced Channel Shield Number</summary>
 		public const uint ReferencedChannelShieldNumber = 0x30080152;
+
+		/// <summary>(3008,0160) VR=SQ Brachy Control Point Delivered Sequence</summary>
 		public const uint BrachyControlPointDeliveredSequence = 0x30080160;
+
+		/// <summary>(3008,0162) VR=DA Safe Position Exit Date</summary>
 		public const uint SafePositionExitDate = 0x30080162;
+
+		/// <summary>(3008,0164) VR=TM Safe Position Exit Time</summary>
 		public const uint SafePositionExitTime = 0x30080164;
+
+		/// <summary>(3008,0166) VR=DA Safe Position Return Date</summary>
 		public const uint SafePositionReturnDate = 0x30080166;
+
+		/// <summary>(3008,0168) VR=TM Safe Position Return Time</summary>
 		public const uint SafePositionReturnTime = 0x30080168;
+
+		/// <summary>(3008,0200) VR=CS Current Treatment Status</summary>
 		public const uint CurrentTreatmentStatus = 0x30080200;
+
+		/// <summary>(3008,0202) VR=ST Treatment Status Comment</summary>
 		public const uint TreatmentStatusComment = 0x30080202;
+
+		/// <summary>(3008,0220) VR=SQ Fraction Group Summary Sequence</summary>
 		public const uint FractionGroupSummarySequence = 0x30080220;
+
+		/// <summary>(3008,0223) VR=IS Referenced Fraction Number</summary>
 		public const uint ReferencedFractionNumber = 0x30080223;
+
+		/// <summary>(3008,0224) VR=CS Fraction Group Type</summary>
 		public const uint FractionGroupType = 0x30080224;
+
+		/// <summary>(3008,0230) VR=CS Beam Stopper Position</summary>
 		public const uint BeamStopperPosition = 0x30080230;
+
+		/// <summary>(3008,0240) VR=SQ Fraction Status Summary Sequence</summary>
 		public const uint FractionStatusSummarySequence = 0x30080240;
+
+		/// <summary>(3008,0250) VR=DA Treatment Date</summary>
 		public const uint TreatmentDate = 0x30080250;
+
+		/// <summary>(3008,0251) VR=TM Treatment Time</summary>
 		public const uint TreatmentTime = 0x30080251;
+
+		/// <summary>(300A,0002) VR=SH RT Plan Label</summary>
 		public const uint RTPlanLabel = 0x300a0002;
+
+		/// <summary>(300A,0003) VR=LO RT Plan Name</summary>
 		public const uint RTPlanName = 0x300a0003;
+
+		/// <summary>(300A,0004) VR=ST RT Plan Description</summary>
 		public const uint RTPlanDescription = 0x300a0004;
+
+		/// <summary>(300A,0006) VR=DA RT Plan Date</summary>
 		public const uint RTPlanDate = 0x300a0006;
+
+		/// <summary>(300A,0007) VR=TM RT Plan Time</summary>
 		public const uint RTPlanTime = 0x300a0007;
+
+		/// <summary>(300A,0009) VR=LO Treatment Protocols</summary>
 		public const uint TreatmentProtocols = 0x300a0009;
+
+		/// <summary>(300A,000A) VR=CS Plan Intent</summary>
 		public const uint PlanIntent = 0x300a000a;
+
+		/// <summary>(300A,000B) VR=LO Treatment Sites</summary>
 		public const uint TreatmentSites = 0x300a000b;
+
+		/// <summary>(300A,000C) VR=CS RT Plan Geometry</summary>
 		public const uint RTPlanGeometry = 0x300a000c;
+
+		/// <summary>(300A,000E) VR=ST Prescription Description</summary>
 		public const uint PrescriptionDescription = 0x300a000e;
+
+		/// <summary>(300A,0010) VR=SQ Dose Reference Sequence</summary>
 		public const uint DoseReferenceSequence = 0x300a0010;
+
+		/// <summary>(300A,0012) VR=IS Dose Reference Number</summary>
 		public const uint DoseReferenceNumber = 0x300a0012;
+
+		/// <summary>(300A,0013) VR=UI Dose Reference UID</summary>
 		public const uint DoseReferenceUID = 0x300a0013;
+
+		/// <summary>(300A,0014) VR=CS Dose Reference Structure Type</summary>
 		public const uint DoseReferenceStructureType = 0x300a0014;
+
+		/// <summary>(300A,0015) VR=CS Nominal Beam Energy Unit</summary>
 		public const uint NominalBeamEnergyUnit = 0x300a0015;
+
+		/// <summary>(300A,0016) VR=LO Dose Reference Description</summary>
 		public const uint DoseReferenceDescription = 0x300a0016;
+
+		/// <summary>(300A,0018) VR=DS Dose Reference Point Coordinates</summary>
 		public const uint DoseReferencePointCoordinates = 0x300a0018;
+
+		/// <summary>(300A,001A) VR=DS Nominal Prior Dose</summary>
 		public const uint NominalPriorDose = 0x300a001a;
+
+		/// <summary>(300A,0020) VR=CS Dose Reference Type</summary>
 		public const uint DoseReferenceType = 0x300a0020;
+
+		/// <summary>(300A,0021) VR=DS Constraint Weight</summary>
 		public const uint ConstraintWeight = 0x300a0021;
+
+		/// <summary>(300A,0022) VR=DS Delivery Warning Dose</summary>
 		public const uint DeliveryWarningDose = 0x300a0022;
+
+		/// <summary>(300A,0023) VR=DS Delivery Maximum Dose</summary>
 		public const uint DeliveryMaximumDose = 0x300a0023;
+
+		/// <summary>(300A,0025) VR=DS Target Minimum Dose</summary>
 		public const uint TargetMinimumDose = 0x300a0025;
+
+		/// <summary>(300A,0026) VR=DS Target Prescription Dose</summary>
 		public const uint TargetPrescriptionDose = 0x300a0026;
+
+		/// <summary>(300A,0027) VR=DS Target Maximum Dose</summary>
 		public const uint TargetMaximumDose = 0x300a0027;
+
+		/// <summary>(300A,0028) VR=DS Target Underdose Volume Fraction</summary>
 		public const uint TargetUnderdoseVolumeFraction = 0x300a0028;
+
+		/// <summary>(300A,002A) VR=DS Organ at Risk Full-volume Dose</summary>
 		public const uint OrganAtRiskFullvolumeDose = 0x300a002a;
+
+		/// <summary>(300A,002B) VR=DS Organ at Risk Limit Dose</summary>
 		public const uint OrganAtRiskLimitDose = 0x300a002b;
+
+		/// <summary>(300A,002C) VR=DS Organ at Risk Maximum Dose</summary>
 		public const uint OrganAtRiskMaximumDose = 0x300a002c;
+
+		/// <summary>(300A,002D) VR=DS Organ at Risk Overdose Volume Fraction</summary>
 		public const uint OrganAtRiskOverdoseVolumeFraction = 0x300a002d;
+
+		/// <summary>(300A,0040) VR=SQ Tolerance Table Sequence</summary>
 		public const uint ToleranceTableSequence = 0x300a0040;
+
+		/// <summary>(300A,0042) VR=IS Tolerance Table Number</summary>
 		public const uint ToleranceTableNumber = 0x300a0042;
+
+		/// <summary>(300A,0043) VR=SH Tolerance Table Label</summary>
 		public const uint ToleranceTableLabel = 0x300a0043;
+
+		/// <summary>(300A,0044) VR=DS Gantry Angle Tolerance</summary>
 		public const uint GantryAngleTolerance = 0x300a0044;
+
+		/// <summary>(300A,0046) VR=DS Beam Limiting Device Angle Tolerance</summary>
 		public const uint BeamLimitingDeviceAngleTolerance = 0x300a0046;
+
+		/// <summary>(300A,0048) VR=SQ Beam Limiting Device Tolerance Sequence</summary>
 		public const uint BeamLimitingDeviceToleranceSequence = 0x300a0048;
+
+		/// <summary>(300A,004A) VR=DS Beam Limiting Device Position Tolerance</summary>
 		public const uint BeamLimitingDevicePositionTolerance = 0x300a004a;
+
+		/// <summary>(300A,004B) VR=FL Snout Position Tolerance</summary>
 		public const uint SnoutPositionTolerance = 0x300a004b;
+
+		/// <summary>(300A,004C) VR=DS Patient Support Angle Tolerance</summary>
 		public const uint PatientSupportAngleTolerance = 0x300a004c;
+
+		/// <summary>(300A,004E) VR=DS Table Top Eccentric Angle Tolerance</summary>
 		public const uint TableTopEccentricAngleTolerance = 0x300a004e;
+
+		/// <summary>(300A,004F) VR=FL Table Top Pitch Angle Tolerance</summary>
 		public const uint TableTopPitchAngleTolerance = 0x300a004f;
+
+		/// <summary>(300A,0050) VR=FL Table Top Roll Angle Tolerance</summary>
 		public const uint TableTopRollAngleTolerance = 0x300a0050;
+
+		/// <summary>(300A,0051) VR=DS Table Top Vertical Position Tolerance</summary>
 		public const uint TableTopVerticalPositionTolerance = 0x300a0051;
+
+		/// <summary>(300A,0052) VR=DS Table Top Longitudinal Position Tolerance</summary>
 		public const uint TableTopLongitudinalPositionTolerance = 0x300a0052;
+
+		/// <summary>(300A,0053) VR=DS Table Top Lateral Position Tolerance</summary>
 		public const uint TableTopLateralPositionTolerance = 0x300a0053;
+
+		/// <summary>(300A,0055) VR=CS RT Plan Relationship</summary>
 		public const uint RTPlanRelationship = 0x300a0055;
+
+		/// <summary>(300A,0070) VR=SQ Fraction Group Sequence</summary>
 		public const uint FractionGroupSequence = 0x300a0070;
+
+		/// <summary>(300A,0071) VR=IS Fraction Group Number</summary>
 		public const uint FractionGroupNumber = 0x300a0071;
+
+		/// <summary>(300A,0072) VR=LO Fraction Group Description</summary>
 		public const uint FractionGroupDescription = 0x300a0072;
+
+		/// <summary>(300A,0078) VR=IS Number of Fractions Planned</summary>
 		public const uint NumberOfFractionsPlanned = 0x300a0078;
+
+		/// <summary>(300A,0079) VR=IS Number of Fraction Pattern Digits Per Day</summary>
 		public const uint NumberOfFractionPatternDigitsPerDay = 0x300a0079;
+
+		/// <summary>(300A,007A) VR=IS Repeat Fraction Cycle Length</summary>
 		public const uint RepeatFractionCycleLength = 0x300a007a;
+
+		/// <summary>(300A,007B) VR=LT Fraction Pattern</summary>
 		public const uint FractionPattern = 0x300a007b;
+
+		/// <summary>(300A,0080) VR=IS Number of Beams</summary>
 		public const uint NumberOfBeams = 0x300a0080;
+
+		/// <summary>(300A,0082) VR=DS Beam Dose Specification Point</summary>
 		public const uint BeamDoseSpecificationPoint = 0x300a0082;
+
+		/// <summary>(300A,0084) VR=DS Beam Dose</summary>
 		public const uint BeamDose = 0x300a0084;
+
+		/// <summary>(300A,0086) VR=DS Beam Meterset</summary>
 		public const uint BeamMeterset = 0x300a0086;
+
+		/// <summary>(300A,0088) VR=FL Beam Dose Point Depth</summary>
 		public const uint BeamDosePointDepth = 0x300a0088;
+
+		/// <summary>(300A,0089) VR=FL Beam Dose Point Equivalent Depth</summary>
 		public const uint BeamDosePointEquivalentDepth = 0x300a0089;
+
+		/// <summary>(300A,008A) VR=FL Beam Dose Point SSD</summary>
 		public const uint BeamDosePointSSD = 0x300a008a;
+
+		/// <summary>(300A,00A0) VR=IS Number of Brachy Application Setups</summary>
 		public const uint NumberOfBrachyApplicationSetups = 0x300a00a0;
+
+		/// <summary>(300A,00A2) VR=DS Brachy Application Setup Dose Specification Point</summary>
 		public const uint BrachyApplicationSetupDoseSpecificationPoint = 0x300a00a2;
+
+		/// <summary>(300A,00A4) VR=DS Brachy Application Setup Dose</summary>
 		public const uint BrachyApplicationSetupDose = 0x300a00a4;
+
+		/// <summary>(300A,00B0) VR=SQ Beam Sequence</summary>
 		public const uint BeamSequence = 0x300a00b0;
+
+		/// <summary>(300A,00B2) VR=SH Treatment Machine Name</summary>
 		public const uint TreatmentMachineName = 0x300a00b2;
+
+		/// <summary>(300A,00B3) VR=CS Primary Dosimeter Unit</summary>
 		public const uint PrimaryDosimeterUnit = 0x300a00b3;
+
+		/// <summary>(300A,00B4) VR=DS Source-Axis Distance</summary>
 		public const uint SourceAxisDistance = 0x300a00b4;
+
+		/// <summary>(300A,00B6) VR=SQ Beam Limiting Device Sequence</summary>
 		public const uint BeamLimitingDeviceSequence = 0x300a00b6;
+
+		/// <summary>(300A,00B8) VR=CS RT Beam Limiting Device Type</summary>
 		public const uint RTBeamLimitingDeviceType = 0x300a00b8;
+
+		/// <summary>(300A,00BA) VR=DS Source to Beam Limiting Device Distance</summary>
 		public const uint SourceToBeamLimitingDeviceDistance = 0x300a00ba;
+
+		/// <summary>(300A,00BB) VR=FL Isocenter to Beam Limiting Device Distance</summary>
 		public const uint IsocenterToBeamLimitingDeviceDistance = 0x300a00bb;
+
+		/// <summary>(300A,00BC) VR=IS Number of Leaf/Jaw Pairs</summary>
 		public const uint NumberOfLeafJawPairs = 0x300a00bc;
+
+		/// <summary>(300A,00BE) VR=DS Leaf Position Boundaries</summary>
 		public const uint LeafPositionBoundaries = 0x300a00be;
+
+		/// <summary>(300A,00C0) VR=IS Beam Number</summary>
 		public const uint BeamNumber = 0x300a00c0;
+
+		/// <summary>(300A,00C2) VR=LO Beam Name</summary>
 		public const uint BeamName = 0x300a00c2;
+
+		/// <summary>(300A,00C3) VR=ST Beam Description</summary>
 		public const uint BeamDescription = 0x300a00c3;
+
+		/// <summary>(300A,00C4) VR=CS Beam Type</summary>
 		public const uint BeamType = 0x300a00c4;
+
+		/// <summary>(300A,00C6) VR=CS Radiation Type</summary>
 		public const uint RadiationType = 0x300a00c6;
+
+		/// <summary>(300A,00C7) VR=CS High-Dose Technique Type</summary>
 		public const uint HighDoseTechniqueType = 0x300a00c7;
+
+		/// <summary>(300A,00C8) VR=IS Reference Image Number</summary>
 		public const uint ReferenceImageNumber = 0x300a00c8;
+
+		/// <summary>(300A,00CA) VR=SQ Planned Verification Image Sequence</summary>
 		public const uint PlannedVerificationImageSequence = 0x300a00ca;
+
+		/// <summary>(300A,00CC) VR=LO Imaging Device-Specific Acquisition Parameters</summary>
 		public const uint ImagingDeviceSpecificAcquisitionParameters = 0x300a00cc;
+
+		/// <summary>(300A,00CE) VR=CS Treatment Delivery Type</summary>
 		public const uint TreatmentDeliveryType = 0x300a00ce;
+
+		/// <summary>(300A,00D0) VR=IS Number of Wedges</summary>
 		public const uint NumberOfWedges = 0x300a00d0;
+
+		/// <summary>(300A,00D1) VR=SQ Wedge Sequence</summary>
 		public const uint WedgeSequence = 0x300a00d1;
+
+		/// <summary>(300A,00D2) VR=IS Wedge Number</summary>
 		public const uint WedgeNumber = 0x300a00d2;
+
+		/// <summary>(300A,00D3) VR=CS Wedge Type</summary>
 		public const uint WedgeType = 0x300a00d3;
+
+		/// <summary>(300A,00D4) VR=SH Wedge ID</summary>
 		public const uint WedgeID = 0x300a00d4;
+
+		/// <summary>(300A,00D5) VR=IS Wedge Angle</summary>
 		public const uint WedgeAngle = 0x300a00d5;
+
+		/// <summary>(300A,00D6) VR=DS Wedge Factor</summary>
 		public const uint WedgeFactor = 0x300a00d6;
+
+		/// <summary>(300A,00D7) VR=FL Total Wedge Tray Water-Equivalent Thickness</summary>
 		public const uint TotalWedgeTrayWaterEquivalentThickness = 0x300a00d7;
+
+		/// <summary>(300A,00D8) VR=DS Wedge Orientation</summary>
 		public const uint WedgeOrientation = 0x300a00d8;
+
+		/// <summary>(300A,00D9) VR=FL Isocenter to Wedge Tray Distance</summary>
 		public const uint IsocenterToWedgeTrayDistance = 0x300a00d9;
+
+		/// <summary>(300A,00DA) VR=DS Source to Wedge Tray Distance</summary>
 		public const uint SourceToWedgeTrayDistance = 0x300a00da;
+
+		/// <summary>(300A,00DB) VR=FL Wedge Thin Edge Position</summary>
 		public const uint WedgeThinEdgePosition = 0x300a00db;
+
+		/// <summary>(300A,00DC) VR=SH Bolus ID</summary>
 		public const uint BolusID = 0x300a00dc;
+
+		/// <summary>(300A,00DD) VR=ST Bolus Description</summary>
 		public const uint BolusDescription = 0x300a00dd;
+
+		/// <summary>(300A,00E0) VR=IS Number of Compensators</summary>
 		public const uint NumberOfCompensators = 0x300a00e0;
+
+		/// <summary>(300A,00E1) VR=SH Material ID</summary>
 		public const uint MaterialID = 0x300a00e1;
+
+		/// <summary>(300A,00E2) VR=DS Total Compensator Tray Factor</summary>
 		public const uint TotalCompensatorTrayFactor = 0x300a00e2;
+
+		/// <summary>(300A,00E3) VR=SQ Compensator Sequence</summary>
 		public const uint CompensatorSequence = 0x300a00e3;
+
+		/// <summary>(300A,00E4) VR=IS Compensator Number</summary>
 		public const uint CompensatorNumber = 0x300a00e4;
+
+		/// <summary>(300A,00E5) VR=SH Compensator ID</summary>
 		public const uint CompensatorID = 0x300a00e5;
+
+		/// <summary>(300A,00E6) VR=DS Source to Compensator Tray Distance</summary>
 		public const uint SourceToCompensatorTrayDistance = 0x300a00e6;
+
+		/// <summary>(300A,00E7) VR=IS Compensator Rows</summary>
 		public const uint CompensatorRows = 0x300a00e7;
+
+		/// <summary>(300A,00E8) VR=IS Compensator Columns</summary>
 		public const uint CompensatorColumns = 0x300a00e8;
+
+		/// <summary>(300A,00E9) VR=DS Compensator Pixel Spacing</summary>
 		public const uint CompensatorPixelSpacing = 0x300a00e9;
+
+		/// <summary>(300A,00EA) VR=DS Compensator Position</summary>
 		public const uint CompensatorPosition = 0x300a00ea;
+
+		/// <summary>(300A,00EB) VR=DS Compensator Transmission Data</summary>
 		public const uint CompensatorTransmissionData = 0x300a00eb;
+
+		/// <summary>(300A,00EC) VR=DS Compensator Thickness Data</summary>
 		public const uint CompensatorThicknessData = 0x300a00ec;
+
+		/// <summary>(300A,00ED) VR=IS Number of Boli</summary>
 		public const uint NumberOfBoli = 0x300a00ed;
+
+		/// <summary>(300A,00EE) VR=CS Compensator Type</summary>
 		public const uint CompensatorType = 0x300a00ee;
+
+		/// <summary>(300A,00F0) VR=IS Number of Blocks</summary>
 		public const uint NumberOfBlocks = 0x300a00f0;
+
+		/// <summary>(300A,00F2) VR=DS Total Block Tray Factor</summary>
 		public const uint TotalBlockTrayFactor = 0x300a00f2;
+
+		/// <summary>(300A,00F3) VR=FL Total Block Tray Water-Equivalent Thickness</summary>
 		public const uint TotalBlockTrayWaterEquivalentThickness = 0x300a00f3;
+
+		/// <summary>(300A,00F4) VR=SQ Block Sequence</summary>
 		public const uint BlockSequence = 0x300a00f4;
+
+		/// <summary>(300A,00F5) VR=SH Block Tray ID</summary>
 		public const uint BlockTrayID = 0x300a00f5;
+
+		/// <summary>(300A,00F6) VR=DS Source to Block Tray Distance</summary>
 		public const uint SourceToBlockTrayDistance = 0x300a00f6;
+
+		/// <summary>(300A,00F7) VR=FL Isocenter to Block Tray Distance</summary>
 		public const uint IsocenterToBlockTrayDistance = 0x300a00f7;
+
+		/// <summary>(300A,00F8) VR=CS Block Type</summary>
 		public const uint BlockType = 0x300a00f8;
+
+		/// <summary>(300A,00F9) VR=LO Accessory Code</summary>
 		public const uint AccessoryCode = 0x300a00f9;
+
+		/// <summary>(300A,00FA) VR=CS Block Divergence</summary>
 		public const uint BlockDivergence = 0x300a00fa;
+
+		/// <summary>(300A,00FB) VR=CS Block Mounting Position</summary>
 		public const uint BlockMountingPosition = 0x300a00fb;
+
+		/// <summary>(300A,00FC) VR=IS Block Number</summary>
 		public const uint BlockNumber = 0x300a00fc;
+
+		/// <summary>(300A,00FE) VR=LO Block Name</summary>
 		public const uint BlockName = 0x300a00fe;
+
+		/// <summary>(300A,0100) VR=DS Block Thickness</summary>
 		public const uint BlockThickness = 0x300a0100;
+
+		/// <summary>(300A,0102) VR=DS Block Transmission</summary>
 		public const uint BlockTransmission = 0x300a0102;
+
+		/// <summary>(300A,0104) VR=IS Block Number of Points</summary>
 		public const uint BlockNumberOfPoints = 0x300a0104;
+
+		/// <summary>(300A,0106) VR=DS Block Data</summary>
 		public const uint BlockData = 0x300a0106;
+
+		/// <summary>(300A,0107) VR=SQ Applicator Sequence</summary>
 		public const uint ApplicatorSequence = 0x300a0107;
+
+		/// <summary>(300A,0108) VR=SH Applicator ID</summary>
 		public const uint ApplicatorID = 0x300a0108;
+
+		/// <summary>(300A,0109) VR=CS Applicator Type</summary>
 		public const uint ApplicatorType = 0x300a0109;
+
+		/// <summary>(300A,010A) VR=LO Applicator Description</summary>
 		public const uint ApplicatorDescription = 0x300a010a;
+
+		/// <summary>(300A,010C) VR=DS Cumulative Dose Reference Coefficient</summary>
 		public const uint CumulativeDoseReferenceCoefficient = 0x300a010c;
+
+		/// <summary>(300A,010E) VR=DS Final Cumulative Meterset Weight</summary>
 		public const uint FinalCumulativeMetersetWeight = 0x300a010e;
+
+		/// <summary>(300A,0110) VR=IS Number of Control Points</summary>
 		public const uint NumberOfControlPoints = 0x300a0110;
+
+		/// <summary>(300A,0111) VR=SQ Control Point Sequence</summary>
 		public const uint ControlPointSequence = 0x300a0111;
+
+		/// <summary>(300A,0112) VR=IS Control Point Index</summary>
 		public const uint ControlPointIndex = 0x300a0112;
+
+		/// <summary>(300A,0114) VR=DS Nominal Beam Energy</summary>
 		public const uint NominalBeamEnergy = 0x300a0114;
+
+		/// <summary>(300A,0115) VR=DS Dose Rate Set</summary>
 		public const uint DoseRateSet = 0x300a0115;
+
+		/// <summary>(300A,0116) VR=SQ Wedge Position Sequence</summary>
 		public const uint WedgePositionSequence = 0x300a0116;
+
+		/// <summary>(300A,0118) VR=CS Wedge Position</summary>
 		public const uint WedgePosition = 0x300a0118;
+
+		/// <summary>(300A,011A) VR=SQ Beam Limiting Device Position Sequence</summary>
 		public const uint BeamLimitingDevicePositionSequence = 0x300a011a;
+
+		/// <summary>(300A,011C) VR=DS Leaf/Jaw Positions</summary>
 		public const uint LeafJawPositions = 0x300a011c;
+
+		/// <summary>(300A,011E) VR=DS Gantry Angle</summary>
 		public const uint GantryAngle = 0x300a011e;
+
+		/// <summary>(300A,011F) VR=CS Gantry Rotation Direction</summary>
 		public const uint GantryRotationDirection = 0x300a011f;
+
+		/// <summary>(300A,0120) VR=DS Beam Limiting Device Angle</summary>
 		public const uint BeamLimitingDeviceAngle = 0x300a0120;
+
+		/// <summary>(300A,0121) VR=CS Beam Limiting Device Rotation Direction</summary>
 		public const uint BeamLimitingDeviceRotationDirection = 0x300a0121;
+
+		/// <summary>(300A,0122) VR=DS Patient Support Angle</summary>
 		public const uint PatientSupportAngle = 0x300a0122;
+
+		/// <summary>(300A,0123) VR=CS Patient Support Rotation Direction</summary>
 		public const uint PatientSupportRotationDirection = 0x300a0123;
+
+		/// <summary>(300A,0124) VR=DS Table Top Eccentric Axis Distance</summary>
 		public const uint TableTopEccentricAxisDistance = 0x300a0124;
+
+		/// <summary>(300A,0125) VR=DS Table Top Eccentric Angle</summary>
 		public const uint TableTopEccentricAngle = 0x300a0125;
+
+		/// <summary>(300A,0126) VR=CS Table Top Eccentric Rotation Direction</summary>
 		public const uint TableTopEccentricRotationDirection = 0x300a0126;
+
+		/// <summary>(300A,0128) VR=DS Table Top Vertical Position</summary>
 		public const uint TableTopVerticalPosition = 0x300a0128;
+
+		/// <summary>(300A,0129) VR=DS Table Top Longitudinal Position</summary>
 		public const uint TableTopLongitudinalPosition = 0x300a0129;
+
+		/// <summary>(300A,012A) VR=DS Table Top Lateral Position</summary>
 		public const uint TableTopLateralPosition = 0x300a012a;
+
+		/// <summary>(300A,012C) VR=DS Isocenter Position</summary>
 		public const uint IsocenterPosition = 0x300a012c;
+
+		/// <summary>(300A,012E) VR=DS Surface Entry Point</summary>
 		public const uint SurfaceEntryPoint = 0x300a012e;
+
+		/// <summary>(300A,0130) VR=DS Source to Surface Distance</summary>
 		public const uint SourceToSurfaceDistance = 0x300a0130;
+
+		/// <summary>(300A,0134) VR=DS Cumulative Meterset Weight</summary>
 		public const uint CumulativeMetersetWeight = 0x300a0134;
+
+		/// <summary>(300A,0140) VR=FL Table Top Pitch Angle</summary>
 		public const uint TableTopPitchAngle = 0x300a0140;
+
+		/// <summary>(300A,0142) VR=CS Table Top Pitch Rotation Direction</summary>
 		public const uint TableTopPitchRotationDirection = 0x300a0142;
+
+		/// <summary>(300A,0144) VR=FL Table Top Roll Angle</summary>
 		public const uint TableTopRollAngle = 0x300a0144;
+
+		/// <summary>(300A,0146) VR=CS Table Top Roll Rotation Direction</summary>
 		public const uint TableTopRollRotationDirection = 0x300a0146;
+
+		/// <summary>(300A,0148) VR=FL Head Fixation Angle</summary>
 		public const uint HeadFixationAngle = 0x300a0148;
+
+		/// <summary>(300A,014A) VR=FL Gantry Pitch Angle</summary>
 		public const uint GantryPitchAngle = 0x300a014a;
+
+		/// <summary>(300A,014C) VR=CS Gantry Pitch Rotation Direction</summary>
 		public const uint GantryPitchRotationDirection = 0x300a014c;
+
+		/// <summary>(300A,014E) VR=FL Gantry Pitch Angle Tolerance</summary>
 		public const uint GantryPitchAngleTolerance = 0x300a014e;
+
+		/// <summary>(300A,0180) VR=SQ Patient Setup Sequence</summary>
 		public const uint PatientSetupSequence = 0x300a0180;
+
+		/// <summary>(300A,0182) VR=IS Patient Setup Number</summary>
 		public const uint PatientSetupNumber = 0x300a0182;
+
+		/// <summary>(300A,0183) VR=LO Patient Setup Label</summary>
 		public const uint PatientSetupLabel = 0x300a0183;
+
+		/// <summary>(300A,0184) VR=LO Patient Additional Position</summary>
 		public const uint PatientAdditionalPosition = 0x300a0184;
+
+		/// <summary>(300A,0190) VR=SQ Fixation Device Sequence</summary>
 		public const uint FixationDeviceSequence = 0x300a0190;
+
+		/// <summary>(300A,0192) VR=CS Fixation Device Type</summary>
 		public const uint FixationDeviceType = 0x300a0192;
+
+		/// <summary>(300A,0194) VR=SH Fixation Device Label</summary>
 		public const uint FixationDeviceLabel = 0x300a0194;
+
+		/// <summary>(300A,0196) VR=ST Fixation Device Description</summary>
 		public const uint FixationDeviceDescription = 0x300a0196;
+
+		/// <summary>(300A,0198) VR=SH Fixation Device Position</summary>
 		public const uint FixationDevicePosition = 0x300a0198;
+
+		/// <summary>(300A,0199) VR=FL Fixation Device Pitch Angle</summary>
 		public const uint FixationDevicePitchAngle = 0x300a0199;
+
+		/// <summary>(300A,019A) VR=FL Fixation Device Roll Angle</summary>
 		public const uint FixationDeviceRollAngle = 0x300a019a;
+
+		/// <summary>(300A,01A0) VR=SQ Shielding Device Sequence</summary>
 		public const uint ShieldingDeviceSequence = 0x300a01a0;
+
+		/// <summary>(300A,01A2) VR=CS Shielding Device Type</summary>
 		public const uint ShieldingDeviceType = 0x300a01a2;
+
+		/// <summary>(300A,01A4) VR=SH Shielding Device Label</summary>
 		public const uint ShieldingDeviceLabel = 0x300a01a4;
+
+		/// <summary>(300A,01A6) VR=ST Shielding Device Description</summary>
 		public const uint ShieldingDeviceDescription = 0x300a01a6;
+
+		/// <summary>(300A,01A8) VR=SH Shielding Device Position</summary>
 		public const uint ShieldingDevicePosition = 0x300a01a8;
+
+		/// <summary>(300A,01B0) VR=CS Setup Technique</summary>
 		public const uint SetupTechnique = 0x300a01b0;
+
+		/// <summary>(300A,01B2) VR=ST Setup Technique Description</summary>
 		public const uint SetupTechniqueDescription = 0x300a01b2;
+
+		/// <summary>(300A,01B4) VR=SQ Setup Device Sequence</summary>
 		public const uint SetupDeviceSequence = 0x300a01b4;
+
+		/// <summary>(300A,01B6) VR=CS Setup Device Type</summary>
 		public const uint SetupDeviceType = 0x300a01b6;
+
+		/// <summary>(300A,01B8) VR=SH Setup Device Label</summary>
 		public const uint SetupDeviceLabel = 0x300a01b8;
+
+		/// <summary>(300A,01BA) VR=ST Setup Device Description</summary>
 		public const uint SetupDeviceDescription = 0x300a01ba;
+
+		/// <summary>(300A,01BC) VR=DS Setup Device Parameter</summary>
 		public const uint SetupDeviceParameter = 0x300a01bc;
+
+		/// <summary>(300A,01D0) VR=ST Setup Reference Description</summary>
 		public const uint SetupReferenceDescription = 0x300a01d0;
+
+		/// <summary>(300A,01D2) VR=DS Table Top Vertical Setup Displacement</summary>
 		public const uint TableTopVerticalSetupDisplacement = 0x300a01d2;
+
+		/// <summary>(300A,01D4) VR=DS Table Top Longitudinal Setup Displacement</summary>
 		public const uint TableTopLongitudinalSetupDisplacement = 0x300a01d4;
+
+		/// <summary>(300A,01D6) VR=DS Table Top Lateral Setup Displacement</summary>
 		public const uint TableTopLateralSetupDisplacement = 0x300a01d6;
+
+		/// <summary>(300A,0200) VR=CS Brachy Treatment Technique</summary>
 		public const uint BrachyTreatmentTechnique = 0x300a0200;
+
+		/// <summary>(300A,0202) VR=CS Brachy Treatment Type</summary>
 		public const uint BrachyTreatmentType = 0x300a0202;
+
+		/// <summary>(300A,0206) VR=SQ Treatment Machine Sequence</summary>
 		public const uint TreatmentMachineSequence = 0x300a0206;
+
+		/// <summary>(300A,0210) VR=SQ Source Sequence</summary>
 		public const uint SourceSequence = 0x300a0210;
+
+		/// <summary>(300A,0212) VR=IS Source Number</summary>
 		public const uint SourceNumber = 0x300a0212;
+
+		/// <summary>(300A,0214) VR=CS Source Type</summary>
 		public const uint SourceType = 0x300a0214;
+
+		/// <summary>(300A,0216) VR=LO Source Manufacturer</summary>
 		public const uint SourceManufacturer = 0x300a0216;
+
+		/// <summary>(300A,0218) VR=DS Active Source Diameter</summary>
 		public const uint ActiveSourceDiameter = 0x300a0218;
+
+		/// <summary>(300A,021A) VR=DS Active Source Length</summary>
 		public const uint ActiveSourceLength = 0x300a021a;
+
+		/// <summary>(300A,0222) VR=DS Source Encapsulation Nominal Thickness</summary>
 		public const uint SourceEncapsulationNominalThickness = 0x300a0222;
+
+		/// <summary>(300A,0224) VR=DS Source Encapsulation Nominal Transmission</summary>
 		public const uint SourceEncapsulationNominalTransmission = 0x300a0224;
+
+		/// <summary>(300A,0226) VR=LO Source Isotope Name</summary>
 		public const uint SourceIsotopeName = 0x300a0226;
+
+		/// <summary>(300A,0228) VR=DS Source Isotope Half Life</summary>
 		public const uint SourceIsotopeHalfLife = 0x300a0228;
+
+		/// <summary>(300A,0229) VR=CS Source Strength Units</summary>
 		public const uint SourceStrengthUnits = 0x300a0229;
+
+		/// <summary>(300A,022A) VR=DS Reference Air Kerma Rate</summary>
 		public const uint ReferenceAirKermaRate = 0x300a022a;
+
+		/// <summary>(300A,022B) VR=DS Source Strength</summary>
 		public const uint SourceStrength = 0x300a022b;
+
+		/// <summary>(300A,022C) VR=DA Source Strength Reference Date</summary>
 		public const uint SourceStrengthReferenceDate = 0x300a022c;
+
+		/// <summary>(300A,022E) VR=TM Source Strength Reference Time</summary>
 		public const uint SourceStrengthReferenceTime = 0x300a022e;
+
+		/// <summary>(300A,0230) VR=SQ Application Setup Sequence</summary>
 		public const uint ApplicationSetupSequence = 0x300a0230;
+
+		/// <summary>(300A,0232) VR=CS Application Setup Type</summary>
 		public const uint ApplicationSetupType = 0x300a0232;
+
+		/// <summary>(300A,0234) VR=IS Application Setup Number</summary>
 		public const uint ApplicationSetupNumber = 0x300a0234;
+
+		/// <summary>(300A,0236) VR=LO Application Setup Name</summary>
 		public const uint ApplicationSetupName = 0x300a0236;
+
+		/// <summary>(300A,0238) VR=LO Application Setup Manufacturer</summary>
 		public const uint ApplicationSetupManufacturer = 0x300a0238;
+
+		/// <summary>(300A,0240) VR=IS Template Number</summary>
 		public const uint TemplateNumber = 0x300a0240;
+
+		/// <summary>(300A,0242) VR=SH Template Type</summary>
 		public const uint TemplateType = 0x300a0242;
+
+		/// <summary>(300A,0244) VR=LO Template Name</summary>
 		public const uint TemplateName = 0x300a0244;
+
+		/// <summary>(300A,0250) VR=DS Total Reference Air Kerma</summary>
 		public const uint TotalReferenceAirKerma = 0x300a0250;
+
+		/// <summary>(300A,0260) VR=SQ Brachy Accessory Device Sequence</summary>
 		public const uint BrachyAccessoryDeviceSequence = 0x300a0260;
+
+		/// <summary>(300A,0262) VR=IS Brachy Accessory Device Number</summary>
 		public const uint BrachyAccessoryDeviceNumber = 0x300a0262;
+
+		/// <summary>(300A,0263) VR=SH Brachy Accessory Device ID</summary>
 		public const uint BrachyAccessoryDeviceID = 0x300a0263;
+
+		/// <summary>(300A,0264) VR=CS Brachy Accessory Device Type</summary>
 		public const uint BrachyAccessoryDeviceType = 0x300a0264;
+
+		/// <summary>(300A,0266) VR=LO Brachy Accessory Device Name</summary>
 		public const uint BrachyAccessoryDeviceName = 0x300a0266;
+
+		/// <summary>(300A,026A) VR=DS Brachy Accessory Device Nominal Thickness</summary>
 		public const uint BrachyAccessoryDeviceNominalThickness = 0x300a026a;
+
+		/// <summary>(300A,026C) VR=DS Brachy Accessory Device Nominal Transmission</summary>
 		public const uint BrachyAccessoryDeviceNominalTransmission = 0x300a026c;
+
+		/// <summary>(300A,0280) VR=SQ Channel Sequence</summary>
 		public const uint ChannelSequence = 0x300a0280;
+
+		/// <summary>(300A,0282) VR=IS Channel Number</summary>
 		public const uint ChannelNumber = 0x300a0282;
+
+		/// <summary>(300A,0284) VR=DS Channel Length</summary>
 		public const uint ChannelLength = 0x300a0284;
+
+		/// <summary>(300A,0286) VR=DS Channel Total Time</summary>
 		public const uint ChannelTotalTime = 0x300a0286;
+
+		/// <summary>(300A,0288) VR=CS Source Movement Type</summary>
 		public const uint SourceMovementType = 0x300a0288;
+
+		/// <summary>(300A,028A) VR=IS Number of Pulses</summary>
 		public const uint NumberOfPulses = 0x300a028a;
+
+		/// <summary>(300A,028C) VR=DS Pulse Repetition Interval</summary>
 		public const uint PulseRepetitionInterval = 0x300a028c;
+
+		/// <summary>(300A,0290) VR=IS Source Applicator Number</summary>
 		public const uint SourceApplicatorNumber = 0x300a0290;
+
+		/// <summary>(300A,0291) VR=SH Source Applicator ID</summary>
 		public const uint SourceApplicatorID = 0x300a0291;
+
+		/// <summary>(300A,0292) VR=CS Source Applicator Type</summary>
 		public const uint SourceApplicatorType = 0x300a0292;
+
+		/// <summary>(300A,0294) VR=LO Source Applicator Name</summary>
 		public const uint SourceApplicatorName = 0x300a0294;
+
+		/// <summary>(300A,0296) VR=DS Source Applicator Length</summary>
 		public const uint SourceApplicatorLength = 0x300a0296;
+
+		/// <summary>(300A,0298) VR=LO Source Applicator Manufacturer</summary>
 		public const uint SourceApplicatorManufacturer = 0x300a0298;
+
+		/// <summary>(300A,029C) VR=DS Source Applicator Wall Nominal Thickness</summary>
 		public const uint SourceApplicatorWallNominalThickness = 0x300a029c;
+
+		/// <summary>(300A,029E) VR=DS Source Applicator Wall Nominal Transmission</summary>
 		public const uint SourceApplicatorWallNominalTransmission = 0x300a029e;
+
+		/// <summary>(300A,02A0) VR=DS Source Applicator Step Size</summary>
 		public const uint SourceApplicatorStepSize = 0x300a02a0;
+
+		/// <summary>(300A,02A2) VR=IS Transfer Tube Number</summary>
 		public const uint TransferTubeNumber = 0x300a02a2;
+
+		/// <summary>(300A,02A4) VR=DS Transfer Tube Length</summary>
 		public const uint TransferTubeLength = 0x300a02a4;
+
+		/// <summary>(300A,02B0) VR=SQ Channel Shield Sequence</summary>
 		public const uint ChannelShieldSequence = 0x300a02b0;
+
+		/// <summary>(300A,02B2) VR=IS Channel Shield Number</summary>
 		public const uint ChannelShieldNumber = 0x300a02b2;
+
+		/// <summary>(300A,02B3) VR=SH Channel Shield ID</summary>
 		public const uint ChannelShieldID = 0x300a02b3;
+
+		/// <summary>(300A,02B4) VR=LO Channel Shield Name</summary>
 		public const uint ChannelShieldName = 0x300a02b4;
+
+		/// <summary>(300A,02B8) VR=DS Channel Shield Nominal Thickness</summary>
 		public const uint ChannelShieldNominalThickness = 0x300a02b8;
+
+		/// <summary>(300A,02BA) VR=DS Channel Shield Nominal Transmission</summary>
 		public const uint ChannelShieldNominalTransmission = 0x300a02ba;
+
+		/// <summary>(300A,02C8) VR=DS Final Cumulative Time Weight</summary>
 		public const uint FinalCumulativeTimeWeight = 0x300a02c8;
+
+		/// <summary>(300A,02D0) VR=SQ Brachy Control Point Sequence</summary>
 		public const uint BrachyControlPointSequence = 0x300a02d0;
+
+		/// <summary>(300A,02D2) VR=DS Control Point Relative Position</summary>
 		public const uint ControlPointRelativePosition = 0x300a02d2;
+
+		/// <summary>(300A,02D4) VR=DS Control Point 3D Position</summary>
 		public const uint ControlPoint3DPosition = 0x300a02d4;
+
+		/// <summary>(300A,02D6) VR=DS Cumulative Time Weight</summary>
 		public const uint CumulativeTimeWeight = 0x300a02d6;
+
+		/// <summary>(300A,02E0) VR=CS Compensator Divergence</summary>
 		public const uint CompensatorDivergence = 0x300a02e0;
+
+		/// <summary>(300A,02E1) VR=CS Compensator Mounting Position</summary>
 		public const uint CompensatorMountingPosition = 0x300a02e1;
+
+		/// <summary>(300A,02E2) VR=DS Source to Compensator Distance</summary>
 		public const uint SourceToCompensatorDistance = 0x300a02e2;
+
+		/// <summary>(300A,02E3) VR=FL Total Compensator Tray Water-Equivalent Thickness</summary>
 		public const uint TotalCompensatorTrayWaterEquivalentThickness = 0x300a02e3;
+
+		/// <summary>(300A,02E4) VR=FL Isocenter to Compensator Tray Distance</summary>
 		public const uint IsocenterToCompensatorTrayDistance = 0x300a02e4;
+
+		/// <summary>(300A,02E5) VR=FL Compensator Column Offset</summary>
 		public const uint CompensatorColumnOffset = 0x300a02e5;
+
+		/// <summary>(300A,02E6) VR=FL Isocenter to Compensator Distances</summary>
 		public const uint IsocenterToCompensatorDistances = 0x300a02e6;
+
+		/// <summary>(300A,02E7) VR=FL Compensator Relative Stopping Power Ratio</summary>
 		public const uint CompensatorRelativeStoppingPowerRatio = 0x300a02e7;
+
+		/// <summary>(300A,02E8) VR=FL Compensator Milling Tool Diameter</summary>
 		public const uint CompensatorMillingToolDiameter = 0x300a02e8;
+
+		/// <summary>(300A,02EA) VR=SQ Ion Range Compensator Sequence</summary>
 		public const uint IonRangeCompensatorSequence = 0x300a02ea;
+
+		/// <summary>(300A,0302) VR=IS Radiation Mass Number</summary>
 		public const uint RadiationMassNumber = 0x300a0302;
+
+		/// <summary>(300A,0304) VR=IS Radiation Atomic Number</summary>
 		public const uint RadiationAtomicNumber = 0x300a0304;
+
+		/// <summary>(300A,0306) VR=SS Radiation Charge State</summary>
 		public const uint RadiationChargeState = 0x300a0306;
+
+		/// <summary>(300A,0308) VR=CS Scan Mode</summary>
 		public const uint ScanMode = 0x300a0308;
+
+		/// <summary>(300A,030A) VR=FL Virtual Source-Axis Distances</summary>
 		public const uint VirtualSourceAxisDistances = 0x300a030a;
+
+		/// <summary>(300A,030C) VR=SQ Snout Sequence</summary>
 		public const uint SnoutSequence = 0x300a030c;
+
+		/// <summary>(300A,030D) VR=FL Snout Position</summary>
 		public const uint SnoutPosition = 0x300a030d;
+
+		/// <summary>(300A,030F) VR=SH Snout ID</summary>
 		public const uint SnoutID = 0x300a030f;
+
+		/// <summary>(300A,0312) VR=IS Number of Range Shifters</summary>
 		public const uint NumberOfRangeShifters = 0x300a0312;
+
+		/// <summary>(300A,0314) VR=SQ Range Shifter Sequence</summary>
 		public const uint RangeShifterSequence = 0x300a0314;
+
+		/// <summary>(300A,0316) VR=IS Range Shifter Number</summary>
 		public const uint RangeShifterNumber = 0x300a0316;
+
+		/// <summary>(300A,0318) VR=SH Range Shifter ID</summary>
 		public const uint RangeShifterID = 0x300a0318;
+
+		/// <summary>(300A,0320) VR=CS Range Shifter Type</summary>
 		public const uint RangeShifterType = 0x300a0320;
+
+		/// <summary>(300A,0322) VR=LO Range Shifter Description</summary>
 		public const uint RangeShifterDescription = 0x300a0322;
+
+		/// <summary>(300A,0330) VR=IS Number of Lateral Spreading Devices</summary>
 		public const uint NumberOfLateralSpreadingDevices = 0x300a0330;
+
+		/// <summary>(300A,0332) VR=SQ Lateral Spreading Device Sequence</summary>
 		public const uint LateralSpreadingDeviceSequence = 0x300a0332;
+
+		/// <summary>(300A,0334) VR=IS Lateral Spreading Device Number</summary>
 		public const uint LateralSpreadingDeviceNumber = 0x300a0334;
+
+		/// <summary>(300A,0336) VR=SH Lateral Spreading Device ID</summary>
 		public const uint LateralSpreadingDeviceID = 0x300a0336;
+
+		/// <summary>(300A,0338) VR=CS Lateral Spreading Device Type</summary>
 		public const uint LateralSpreadingDeviceType = 0x300a0338;
+
+		/// <summary>(300A,033A) VR=LO Lateral Spreading Device Description</summary>
 		public const uint LateralSpreadingDeviceDescription = 0x300a033a;
+
+		/// <summary>(300A,033C) VR=FL Lateral Spreading Device Water Equivalent Thickness</summary>
 		public const uint LateralSpreadingDeviceWaterEquivalentThickness = 0x300a033c;
+
+		/// <summary>(300A,0340) VR=IS Number of Range Modulators</summary>
 		public const uint NumberOfRangeModulators = 0x300a0340;
+
+		/// <summary>(300A,0342) VR=SQ Range Modulator Sequence</summary>
 		public const uint RangeModulatorSequence = 0x300a0342;
+
+		/// <summary>(300A,0344) VR=IS Range Modulator Number</summary>
 		public const uint RangeModulatorNumber = 0x300a0344;
+
+		/// <summary>(300A,0346) VR=SH Range Modulator ID</summary>
 		public const uint RangeModulatorID = 0x300a0346;
+
+		/// <summary>(300A,0348) VR=CS Range Modulator Type</summary>
 		public const uint RangeModulatorType = 0x300a0348;
+
+		/// <summary>(300A,034A) VR=LO Range Modulator Description</summary>
 		public const uint RangeModulatorDescription = 0x300a034a;
+
+		/// <summary>(300A,034C) VR=SH Beam Current Modulation ID</summary>
 		public const uint BeamCurrentModulationID = 0x300a034c;
+
+		/// <summary>(300A,0350) VR=CS Patient Support Type</summary>
 		public const uint PatientSupportType = 0x300a0350;
+
+		/// <summary>(300A,0352) VR=SH Patient Support ID</summary>
 		public const uint PatientSupportID = 0x300a0352;
+
+		/// <summary>(300A,0354) VR=LO Patient Support Accessory Code</summary>
 		public const uint PatientSupportAccessoryCode = 0x300a0354;
+
+		/// <summary>(300A,0356) VR=FL Fixation Light Azimuthal Angle</summary>
 		public const uint FixationLightAzimuthalAngle = 0x300a0356;
+
+		/// <summary>(300A,0358) VR=FL Fixation Light Polar Angle</summary>
 		public const uint FixationLightPolarAngle = 0x300a0358;
+
+		/// <summary>(300A,035A) VR=FL Meterset Rate</summary>
 		public const uint MetersetRate = 0x300a035a;
+
+		/// <summary>(300A,0360) VR=SQ Range Shifter Settings Sequence</summary>
 		public const uint RangeShifterSettingsSequence = 0x300a0360;
+
+		/// <summary>(300A,0362) VR=LO Range Shifter Setting</summary>
 		public const uint RangeShifterSetting = 0x300a0362;
+
+		/// <summary>(300A,0364) VR=FL Isocenter to Range Shifter Distance</summary>
 		public const uint IsocenterToRangeShifterDistance = 0x300a0364;
+
+		/// <summary>(300A,0366) VR=FL Range Shifter Water Equivalent Thickness</summary>
 		public const uint RangeShifterWaterEquivalentThickness = 0x300a0366;
+
+		/// <summary>(300A,0370) VR=SQ Lateral Spreading Device Settings Sequence</summary>
 		public const uint LateralSpreadingDeviceSettingsSequence = 0x300a0370;
+
+		/// <summary>(300A,0372) VR=LO Lateral Spreading Device Setting</summary>
 		public const uint LateralSpreadingDeviceSetting = 0x300a0372;
+
+		/// <summary>(300A,0374) VR=FL Isocenter to Lateral Spreading Device Distance</summary>
 		public const uint IsocenterToLateralSpreadingDeviceDistance = 0x300a0374;
+
+		/// <summary>(300A,0380) VR=SQ Range Modulator Settings Sequence</summary>
 		public const uint RangeModulatorSettingsSequence = 0x300a0380;
+
+		/// <summary>(300A,0382) VR=FL Range Modulator Gating Start Value</summary>
 		public const uint RangeModulatorGatingStartValue = 0x300a0382;
+
+		/// <summary>(300A,0384) VR=FL Range Modulator Gating Stop Value</summary>
 		public const uint RangeModulatorGatingStopValue = 0x300a0384;
+
+		/// <summary>(300A,0386) VR=FL Range Modulator Gating Start Water Equivalent Thickness</summary>
 		public const uint RangeModulatorGatingStartWaterEquivalentThickness = 0x300a0386;
+
+		/// <summary>(300A,0388) VR=FL Range Modulator Gating Stop Water Equivalent Thickness</summary>
 		public const uint RangeModulatorGatingStopWaterEquivalentThickness = 0x300a0388;
+
+		/// <summary>(300A,038A) VR=FL Isocenter to Range Modulator Distance</summary>
 		public const uint IsocenterToRangeModulatorDistance = 0x300a038a;
+
+		/// <summary>(300A,0390) VR=SH Scan Spot Tune ID</summary>
 		public const uint ScanSpotTuneID = 0x300a0390;
+
+		/// <summary>(300A,0392) VR=IS Number of Scan Spot Positions</summary>
 		public const uint NumberOfScanSpotPositions = 0x300a0392;
+
+		/// <summary>(300A,0394) VR=FL Scan Spot Position Map</summary>
 		public const uint ScanSpotPositionMap = 0x300a0394;
+
+		/// <summary>(300A,0396) VR=FL Scan Spot Meterset Weights</summary>
 		public const uint ScanSpotMetersetWeights = 0x300a0396;
+
+		/// <summary>(300A,0398) VR=FL Scanning Spot Size</summary>
 		public const uint ScanningSpotSize = 0x300a0398;
+
+		/// <summary>(300A,039A) VR=IS Number of Paintings</summary>
 		public const uint NumberOfPaintings = 0x300a039a;
+
+		/// <summary>(300A,03A0) VR=SQ Ion Tolerance Table Sequence</summary>
 		public const uint IonToleranceTableSequence = 0x300a03a0;
+
+		/// <summary>(300A,03A2) VR=SQ Ion Beam Sequence</summary>
 		public const uint IonBeamSequence = 0x300a03a2;
+
+		/// <summary>(300A,03A4) VR=SQ Ion Beam Limiting Device Sequence</summary>
 		public const uint IonBeamLimitingDeviceSequence = 0x300a03a4;
+
+		/// <summary>(300A,03A6) VR=SQ Ion Block Sequence</summary>
 		public const uint IonBlockSequence = 0x300a03a6;
+
+		/// <summary>(300A,03A8) VR=SQ Ion Control Point Sequence</summary>
 		public const uint IonControlPointSequence = 0x300a03a8;
+
+		/// <summary>(300A,03AA) VR=SQ Ion Wedge Sequence</summary>
 		public const uint IonWedgeSequence = 0x300a03aa;
+
+		/// <summary>(300A,03AC) VR=SQ Ion Wedge Position Sequence</summary>
 		public const uint IonWedgePositionSequence = 0x300a03ac;
+
+		/// <summary>(300A,0401) VR=SQ Referenced Setup Image Sequence</summary>
 		public const uint ReferencedSetupImageSequence = 0x300a0401;
+
+		/// <summary>(300A,0402) VR=ST Setup Image Comment</summary>
 		public const uint SetupImageComment = 0x300a0402;
+
+		/// <summary>(300A,0410) VR=SQ Motion Synchronization Sequence</summary>
 		public const uint MotionSynchronizationSequence = 0x300a0410;
+
+		/// <summary>(300C,0002) VR=SQ Referenced RT Plan Sequence</summary>
 		public const uint ReferencedRTPlanSequence = 0x300c0002;
+
+		/// <summary>(300C,0004) VR=SQ Referenced Beam Sequence</summary>
 		public const uint ReferencedBeamSequence = 0x300c0004;
+
+		/// <summary>(300C,0006) VR=IS Referenced Beam Number</summary>
 		public const uint ReferencedBeamNumber = 0x300c0006;
+
+		/// <summary>(300C,0007) VR=IS Referenced Reference Image Number</summary>
 		public const uint ReferencedReferenceImageNumber = 0x300c0007;
+
+		/// <summary>(300C,0008) VR=DS Start Cumulative Meterset Weight</summary>
 		public const uint StartCumulativeMetersetWeight = 0x300c0008;
+
+		/// <summary>(300C,0009) VR=DS End Cumulative Meterset Weight</summary>
 		public const uint EndCumulativeMetersetWeight = 0x300c0009;
+
+		/// <summary>(300C,000A) VR=SQ Referenced Brachy Application Setup Sequence</summary>
 		public const uint ReferencedBrachyApplicationSetupSequence = 0x300c000a;
+
+		/// <summary>(300C,000C) VR=IS Referenced Brachy Application Setup Number</summary>
 		public const uint ReferencedBrachyApplicationSetupNumber = 0x300c000c;
+
+		/// <summary>(300C,000E) VR=IS Referenced Source Number</summary>
 		public const uint ReferencedSourceNumber = 0x300c000e;
+
+		/// <summary>(300C,0020) VR=SQ Referenced Fraction Group Sequence</summary>
 		public const uint ReferencedFractionGroupSequence = 0x300c0020;
+
+		/// <summary>(300C,0022) VR=IS Referenced Fraction Group Number</summary>
 		public const uint ReferencedFractionGroupNumber = 0x300c0022;
+
+		/// <summary>(300C,0040) VR=SQ Referenced Verification Image Sequence</summary>
 		public const uint ReferencedVerificationImageSequence = 0x300c0040;
+
+		/// <summary>(300C,0042) VR=SQ Referenced Reference Image Sequence</summary>
 		public const uint ReferencedReferenceImageSequence = 0x300c0042;
+
+		/// <summary>(300C,0050) VR=SQ Referenced Dose Reference Sequence</summary>
 		public const uint ReferencedDoseReferenceSequence = 0x300c0050;
+
+		/// <summary>(300C,0051) VR=IS Referenced Dose Reference Number</summary>
 		public const uint ReferencedDoseReferenceNumber = 0x300c0051;
+
+		/// <summary>(300C,0055) VR=SQ Brachy Referenced Dose Reference Sequence</summary>
 		public const uint BrachyReferencedDoseReferenceSequence = 0x300c0055;
+
+		/// <summary>(300C,0060) VR=SQ Referenced Structure Set Sequence</summary>
 		public const uint ReferencedStructureSetSequence = 0x300c0060;
+
+		/// <summary>(300C,006A) VR=IS Referenced Patient Setup Number</summary>
 		public const uint ReferencedPatientSetupNumber = 0x300c006a;
+
+		/// <summary>(300C,0080) VR=SQ Referenced Dose Sequence</summary>
 		public const uint ReferencedDoseSequence = 0x300c0080;
+
+		/// <summary>(300C,00A0) VR=IS Referenced Tolerance Table Number</summary>
 		public const uint ReferencedToleranceTableNumber = 0x300c00a0;
+
+		/// <summary>(300C,00B0) VR=SQ Referenced Bolus Sequence</summary>
 		public const uint ReferencedBolusSequence = 0x300c00b0;
+
+		/// <summary>(300C,00C0) VR=IS Referenced Wedge Number</summary>
 		public const uint ReferencedWedgeNumber = 0x300c00c0;
+
+		/// <summary>(300C,00D0) VR=IS Referenced Compensator Number</summary>
 		public const uint ReferencedCompensatorNumber = 0x300c00d0;
+
+		/// <summary>(300C,00E0) VR=IS Referenced Block Number</summary>
 		public const uint ReferencedBlockNumber = 0x300c00e0;
+
+		/// <summary>(300C,00F0) VR=IS Referenced Control Point Index</summary>
 		public const uint ReferencedControlPointIndex = 0x300c00f0;
+
+		/// <summary>(300C,00F2) VR=SQ Referenced Control Point Sequence</summary>
 		public const uint ReferencedControlPointSequence = 0x300c00f2;
+
+		/// <summary>(300C,00F4) VR=IS Referenced Start Control Point Index</summary>
 		public const uint ReferencedStartControlPointIndex = 0x300c00f4;
+
+		/// <summary>(300C,00F6) VR=IS Referenced Stop Control Point Index</summary>
 		public const uint ReferencedStopControlPointIndex = 0x300c00f6;
+
+		/// <summary>(300C,0100) VR=IS Referenced Range Shifter Number</summary>
 		public const uint ReferencedRangeShifterNumber = 0x300c0100;
+
+		/// <summary>(300C,0102) VR=IS Referenced Lateral Spreading Device Number</summary>
 		public const uint ReferencedLateralSpreadingDeviceNumber = 0x300c0102;
+
+		/// <summary>(300C,0104) VR=IS Referenced Range Modulator Number</summary>
 		public const uint ReferencedRangeModulatorNumber = 0x300c0104;
+
+		/// <summary>(300E,0002) VR=CS Approval Status</summary>
 		public const uint ApprovalStatus = 0x300e0002;
+
+		/// <summary>(300E,0004) VR=DA Review Date</summary>
 		public const uint ReviewDate = 0x300e0004;
+
+		/// <summary>(300E,0005) VR=TM Review Time</summary>
 		public const uint ReviewTime = 0x300e0005;
+
+		/// <summary>(300E,0008) VR=PN Reviewer Name</summary>
 		public const uint ReviewerName = 0x300e0008;
+
+		/// <summary>(4000,0010) VR=LT Arbitrary (Retired)</summary>
 		public const uint ArbitraryRETIRED = 0x40000010;
+
+		/// <summary>(4000,4000) VR=LT Text Comments (Retired)</summary>
 		public const uint TextCommentsRETIRED = 0x40004000;
+
+		/// <summary>(4008,0040) VR=SH Results ID (Retired)</summary>
 		public const uint ResultsIDRETIRED = 0x40080040;
+
+		/// <summary>(4008,0042) VR=LO Results ID Issuer (Retired)</summary>
 		public const uint ResultsIDIssuerRETIRED = 0x40080042;
+
+		/// <summary>(4008,0050) VR=SQ Referenced Interpretation Sequence (Retired)</summary>
 		public const uint ReferencedInterpretationSequenceRETIRED = 0x40080050;
+
+		/// <summary>(4008,0100) VR=DA Interpretation Recorded Date (Retired)</summary>
 		public const uint InterpretationRecordedDateRETIRED = 0x40080100;
+
+		/// <summary>(4008,0101) VR=TM Interpretation Recorded Time (Retired)</summary>
 		public const uint InterpretationRecordedTimeRETIRED = 0x40080101;
+
+		/// <summary>(4008,0102) VR=PN Interpretation Recorder (Retired)</summary>
 		public const uint InterpretationRecorderRETIRED = 0x40080102;
+
+		/// <summary>(4008,0103) VR=LO Reference to Recorded Sound (Retired)</summary>
 		public const uint ReferenceToRecordedSoundRETIRED = 0x40080103;
+
+		/// <summary>(4008,0108) VR=DA Interpretation Transcription Date (Retired)</summary>
 		public const uint InterpretationTranscriptionDateRETIRED = 0x40080108;
+
+		/// <summary>(4008,0109) VR=TM Interpretation Transcription Time (Retired)</summary>
 		public const uint InterpretationTranscriptionTimeRETIRED = 0x40080109;
+
+		/// <summary>(4008,010A) VR=PN Interpretation Transcriber (Retired)</summary>
 		public const uint InterpretationTranscriberRETIRED = 0x4008010a;
+
+		/// <summary>(4008,010B) VR=ST Interpretation Text (Retired)</summary>
 		public const uint InterpretationTextRETIRED = 0x4008010b;
+
+		/// <summary>(4008,010C) VR=PN Interpretation Author (Retired)</summary>
 		public const uint InterpretationAuthorRETIRED = 0x4008010c;
+
+		/// <summary>(4008,0111) VR=SQ Interpretation Approver Sequence (Retired)</summary>
 		public const uint InterpretationApproverSequenceRETIRED = 0x40080111;
+
+		/// <summary>(4008,0112) VR=DA Interpretation Approval Date (Retired)</summary>
 		public const uint InterpretationApprovalDateRETIRED = 0x40080112;
+
+		/// <summary>(4008,0113) VR=TM Interpretation Approval Time (Retired)</summary>
 		public const uint InterpretationApprovalTimeRETIRED = 0x40080113;
+
+		/// <summary>(4008,0114) VR=PN Physician Approving Interpretation (Retired)</summary>
 		public const uint PhysicianApprovingInterpretationRETIRED = 0x40080114;
+
+		/// <summary>(4008,0115) VR=LT Interpretation Diagnosis Description (Retired)</summary>
 		public const uint InterpretationDiagnosisDescriptionRETIRED = 0x40080115;
+
+		/// <summary>(4008,0117) VR=SQ Interpretation Diagnosis Code Sequence (Retired)</summary>
 		public const uint InterpretationDiagnosisCodeSequenceRETIRED = 0x40080117;
+
+		/// <summary>(4008,0118) VR=SQ Results Distribution List Sequence (Retired)</summary>
 		public const uint ResultsDistributionListSequenceRETIRED = 0x40080118;
+
+		/// <summary>(4008,0119) VR=PN Distribution Name (Retired)</summary>
 		public const uint DistributionNameRETIRED = 0x40080119;
+
+		/// <summary>(4008,011A) VR=LO Distribution Address (Retired)</summary>
 		public const uint DistributionAddressRETIRED = 0x4008011a;
+
+		/// <summary>(4008,0200) VR=SH Interpretation ID (Retired)</summary>
 		public const uint InterpretationIDRETIRED = 0x40080200;
+
+		/// <summary>(4008,0202) VR=LO Interpretation ID Issuer (Retired)</summary>
 		public const uint InterpretationIDIssuerRETIRED = 0x40080202;
+
+		/// <summary>(4008,0210) VR=CS Interpretation Type ID (Retired)</summary>
 		public const uint InterpretationTypeIDRETIRED = 0x40080210;
+
+		/// <summary>(4008,0212) VR=CS Interpretation Status ID (Retired)</summary>
 		public const uint InterpretationStatusIDRETIRED = 0x40080212;
+
+		/// <summary>(4008,0300) VR=ST Impressions (Retired)</summary>
 		public const uint ImpressionsRETIRED = 0x40080300;
+
+		/// <summary>(4008,4000) VR=ST Results Comments (Retired)</summary>
 		public const uint ResultsCommentsRETIRED = 0x40084000;
+
+		/// <summary>(4FFE,0001) VR=SQ MAC Parameters Sequence</summary>
 		public const uint MACParametersSequence = 0x4ffe0001;
+
+		/// <summary>(5200,9229) VR=SQ Shared Functional Groups Sequence</summary>
 		public const uint SharedFunctionalGroupsSequence = 0x52009229;
+
+		/// <summary>(5200,9230) VR=SQ Per-frame Functional Groups Sequence</summary>
 		public const uint PerframeFunctionalGroupsSequence = 0x52009230;
+
+		/// <summary>(5400,0100) VR=SQ Waveform Sequence</summary>
 		public const uint WaveformSequence = 0x54000100;
+
+		/// <summary>(5400,0110) VR=OB Channel Minimum Value</summary>
 		public const uint ChannelMinimumValue = 0x54000110;
+
+		/// <summary>(5400,0112) VR=OB Channel Maximum Value</summary>
 		public const uint ChannelMaximumValue = 0x54000112;
+
+		/// <summary>(5400,1004) VR=US Waveform Bits Allocated</summary>
 		public const uint WaveformBitsAllocated = 0x54001004;
+
+		/// <summary>(5400,1006) VR=CS Waveform Sample Interpretation</summary>
 		public const uint WaveformSampleInterpretation = 0x54001006;
+
+		/// <summary>(5400,100A) VR=OB Waveform Padding Value</summary>
 		public const uint WaveformPaddingValue = 0x5400100a;
+
+		/// <summary>(5400,1010) VR=OB Waveform Data</summary>
 		public const uint WaveformData = 0x54001010;
+
+		/// <summary>(5600,0010) VR=OF First Order Phase Correction Angle</summary>
 		public const uint FirstOrderPhaseCorrectionAngle = 0x56000010;
+
+		/// <summary>(5600,0020) VR=OF Spectroscopy Data</summary>
 		public const uint SpectroscopyData = 0x56000020;
+
+		/// <summary>(7FE0,0010) VR=OB Pixel Data</summary>
 		public const uint PixelData = 0x7fe00010;
+
+		/// <summary>(FFFA,FFFA) VR=SQ Digital Signatures Sequence</summary>
 		public const uint DigitalSignaturesSequence = 0xfffafffa;
+
+		/// <summary>(FFFC,FFFC) VR=OB Data Set Trailing Padding</summary>
 		public const uint DataSetTrailingPadding = 0xfffcfffc;
+
+		/// <summary>(FFFE,E000) VR=NONE Item</summary>
 		public const uint Item = 0xfffee000;
+
+		/// <summary>(FFFE,E00D) VR=NONE Item Delimitation Item</summary>
 		public const uint ItemDelimitationItem = 0xfffee00d;
+
+		/// <summary>(FFFE,E0DD) VR=NONE Sequence Delimitation Item</summary>
 		public const uint SequenceDelimitationItem = 0xfffee0dd;
 		#endregion
 	}
 
+	/// <summary>DICOM Tag mask for matching groups of tags</summary>
 	public class DcmTagMask {
 		#region Private Members
 		private uint _c;

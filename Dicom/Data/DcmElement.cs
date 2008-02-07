@@ -32,17 +32,17 @@ namespace Dicom.Data {
 		protected ByteBuffer _bb;
 		#endregion
 
-		#region Public Constructors
-		public DcmElement(DcmTag tag, DcmVR vr) : base(tag, vr) {
+		#region Constructors
+		protected DcmElement(DcmTag tag, DcmVR vr) : base(tag, vr) {
 			_bb = new ByteBuffer();
 		}
 
-		public DcmElement(DcmTag tag, DcmVR vr, long pos, Endian endian)
+		protected DcmElement(DcmTag tag, DcmVR vr, long pos, Endian endian)
 			: base(tag, vr, pos, endian) {
 			_bb = new ByteBuffer(_endian);
 		}
 
-		public DcmElement(DcmTag tag, DcmVR vr, long pos, Endian endian, ByteBuffer buffer)
+		protected DcmElement(DcmTag tag, DcmVR vr, long pos, Endian endian, ByteBuffer buffer)
 			: base(tag, vr, pos, endian) {
 			if (buffer == null && _endian != Endian.LocalMachine)
 				_bb = new ByteBuffer(_endian);
@@ -52,6 +52,10 @@ namespace Dicom.Data {
 		#endregion
 
 		#region Public Properties
+		/// <summary>
+		/// Gets the length of the internal byte buffer
+		/// </summary>
+		/// <value>The length.</value>
 		public int Length {
 			get {
 				if (_bb == null)
@@ -60,6 +64,9 @@ namespace Dicom.Data {
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the byte buffer.
+		/// </summary>
 		public ByteBuffer ByteBuffer {
 			get {
 				if (_bb == null)
@@ -698,9 +705,7 @@ namespace Dicom.Data {
 	#endregion
 
 	#region Value Types
-	/// <summary>
-	/// Application Entity (AE)
-	/// </summary>
+	/// <summary>Application Entity (AE)</summary>
 	public class DcmApplicationEntity : DcmMultiStringElement {
 		#region Public Constructors
 		public DcmApplicationEntity(DcmTag tag)
@@ -717,9 +722,7 @@ namespace Dicom.Data {
 		#endregion
 	}
 
-	/// <summary>
-	/// Age String (AS)
-	/// </summary>
+	/// <summary>Age String (AS)</summary>
 	public class DcmAgeString : DcmMultiStringElement {
 		#region Public Constructors
 		public DcmAgeString(DcmTag tag)
@@ -736,9 +739,7 @@ namespace Dicom.Data {
 		#endregion
 	}
 
-	/// <summary>
-	/// Attribute Tag (AT)
-	/// </summary>
+	/// <summary>Attribute Tag (AT)</summary>
 	public class DcmAttributeTag : DcmElement {
 		#region Public Constructors
 		public DcmAttributeTag(DcmTag tag)
@@ -857,9 +858,7 @@ namespace Dicom.Data {
 		#endregion
 	}
 
-	/// <summary>
-	/// Code String (CS)
-	/// </summary>
+	/// <summary>Code String (CS)</summary>
 	public class DcmCodeString : DcmMultiStringElement {
 		#region Public Constructors
 		public DcmCodeString(DcmTag tag)
@@ -876,9 +875,7 @@ namespace Dicom.Data {
 		#endregion
 	}
 
-	/// <summary>
-	/// Date (DA)
-	/// </summary>
+	/// <summary>Date (DA)</summary>
 	public class DcmDate : DcmDateElementBase {
 		#region Public Constructors
 		public DcmDate(DcmTag tag)
@@ -910,9 +907,7 @@ namespace Dicom.Data {
 		#endregion
 	}
 
-	/// <summary>
-	/// Decimal String (DS)
-	/// </summary>
+	/// <summary>Decimal String (DS)</summary>
 	public class DcmDecimalString : DcmMultiStringElement {
 		#region Public Constructors
 		public DcmDecimalString(DcmTag tag)
@@ -989,9 +984,7 @@ namespace Dicom.Data {
 		#endregion
 	}
 
-	/// <summary>
-	/// Date Time (DT)
-	/// </summary>
+	/// <summary>Date Time (DT)</summary>
 	public class DcmDateTime : DcmDateElementBase {
 		#region Public Constructors
 		public DcmDateTime(DcmTag tag)
@@ -1008,9 +1001,7 @@ namespace Dicom.Data {
 		#endregion
 	}
 
-	/// <summary>
-	/// Floating Point Double (FD)
-	/// </summary>
+	/// <summary>Floating Point Double (FD)</summary>
 	public class DcmFloatingPointDouble : DcmValueElement<double> {
 		#region Public Constructors
 		public DcmFloatingPointDouble(DcmTag tag)
@@ -1027,9 +1018,7 @@ namespace Dicom.Data {
 		#endregion
 	}
 
-	/// <summary>
-	/// Floating Point Single (FL)
-	/// </summary>
+	/// <summary>Floating Point Single (FL)</summary>
 	public class DcmFloatingPointSingle : DcmValueElement<float> {
 		#region Public Constructors
 		public DcmFloatingPointSingle(DcmTag tag) 
@@ -1046,9 +1035,7 @@ namespace Dicom.Data {
 		#endregion
 	}
 
-	/// <summary>
-	/// Integer String (IS)
-	/// </summary>
+	/// <summary>Integer String (IS)</summary>
 	public class DcmIntegerString : DcmMultiStringElement {
 		#region Public Constructors
 		public DcmIntegerString(DcmTag tag)
@@ -1096,9 +1083,7 @@ namespace Dicom.Data {
 		#endregion
 	}
 
-	/// <summary>
-	/// Long String (LO)
-	/// </summary>
+	/// <summary>Long String (LO)</summary>
 	public class DcmLongString : DcmStringElement {
 		#region Public Constructors
 		public DcmLongString(DcmTag tag)
@@ -1115,9 +1100,7 @@ namespace Dicom.Data {
 		#endregion
 	}
 
-	/// <summary>
-	/// Long Text (LT)
-	/// </summary>
+	/// <summary>Long Text (LT)</summary>
 	public class DcmLongText : DcmStringElement {
 		#region Public Constructors
 		public DcmLongText(DcmTag tag)
@@ -1134,9 +1117,7 @@ namespace Dicom.Data {
 		#endregion
 	}
 
-	/// <summary>
-	/// Other Byte (OB)
-	/// </summary>
+	/// <summary>Other Byte (OB)</summary>
 	public class DcmOtherByte : DcmValueElement<byte> {
 		#region Public Constructors
 		public DcmOtherByte(DcmTag tag)
@@ -1159,9 +1140,7 @@ namespace Dicom.Data {
 		#endregion
 	}
 
-	/// <summary>
-	/// Other Word (OW)
-	/// </summary>
+	/// <summary>Other Word (OW)</summary>
 	public class DcmOtherWord : DcmValueElement<ushort> {
 		#region Public Constructors
 		public DcmOtherWord(DcmTag tag)
@@ -1184,9 +1163,7 @@ namespace Dicom.Data {
 		#endregion
 	}
 
-	/// <summary>
-	/// Other Float (OF)
-	/// </summary>
+	/// <summary>Other Float (OF)</summary>
 	public class DcmOtherFloat : DcmValueElement<float> {
 		#region Public Constructors
 		public DcmOtherFloat(DcmTag tag)
@@ -1203,9 +1180,7 @@ namespace Dicom.Data {
 		#endregion
 	}
 
-	/// <summary>
-	/// Person Name (PN)
-	/// </summary>
+	/// <summary>Person Name (PN)</summary>
 	public class DcmPersonName : DcmStringElement {
 		#region Public Constructors
 		public DcmPersonName(DcmTag tag)
@@ -1222,9 +1197,7 @@ namespace Dicom.Data {
 		#endregion
 	}
 
-	/// <summary>
-	/// Short String (SH)
-	/// </summary>
+	/// <summary>Short String (SH)</summary>
 	public class DcmShortString : DcmStringElement {
 		#region Public Constructors
 		public DcmShortString(DcmTag tag)
@@ -1241,9 +1214,7 @@ namespace Dicom.Data {
 		#endregion
 	}
 
-	/// <summary>
-	/// Signed Long (SL)
-	/// </summary>
+	/// <summary>Signed Long (SL)</summary>
 	public class DcmSignedLong : DcmValueElement<int> {
 		#region Public Constructors
 		public DcmSignedLong(DcmTag tag)
@@ -1260,9 +1231,7 @@ namespace Dicom.Data {
 		#endregion
 	}
 
-	/// <summary>
-	/// Signed Short (SS)
-	/// </summary>
+	/// <summary>Signed Short (SS)</summary>
 	public class DcmSignedShort : DcmValueElement<short> {
 		#region Public Constructors
 		public DcmSignedShort(DcmTag tag)
@@ -1279,9 +1248,7 @@ namespace Dicom.Data {
 		#endregion
 	}
 
-	/// <summary>
-	/// Short Text (ST)
-	/// </summary>
+	/// <summary>Short Text (ST)</summary>
 	public class DcmShortText : DcmStringElement {
 		#region Public Constructors
 		public DcmShortText(DcmTag tag)
@@ -1298,9 +1265,7 @@ namespace Dicom.Data {
 		#endregion
 	}
 
-	/// <summary>
-	/// Time (TM)
-	/// </summary>
+	/// <summary>Time (TM)</summary>
 	public class DcmTime : DcmDateElementBase {
 		#region Public Constructors
 		public DcmTime(DcmTag tag)
@@ -1363,9 +1328,7 @@ namespace Dicom.Data {
 		#endregion
 	}
 
-	/// <summary>
-	/// Unique Identifier (UI)
-	/// </summary>
+	/// <summary>Unique Identifier (UI)</summary>
 	public class DcmUniqueIdentifier : DcmMultiStringElement {
 		#region Public Constructors
 		public DcmUniqueIdentifier(DcmTag tag)
@@ -1400,9 +1363,7 @@ namespace Dicom.Data {
 		#endregion
 	}
 
-	/// <summary>
-	/// Unsigned Long (UL)
-	/// </summary>
+	/// <summary>Unsigned Long (UL)</summary>
 	public class DcmUnsignedLong : DcmValueElement<uint> {
 		#region Public Constructors
 		public DcmUnsignedLong(DcmTag tag)
@@ -1419,9 +1380,7 @@ namespace Dicom.Data {
 		#endregion
 	}
 
-	/// <summary>
-	/// Unknown (UN)
-	/// </summary>
+	/// <summary>Unknown (UN)</summary>
 	public class DcmUnknown : DcmValueElement<byte> {
 		#region Public Constructors
 		public DcmUnknown(DcmTag tag)
@@ -1444,9 +1403,7 @@ namespace Dicom.Data {
 		#endregion
 	}
 
-	/// <summary>
-	/// Unsigned Short (US)
-	/// </summary>
+	/// <summary>Unsigned Short (US)</summary>
 	public class DcmUnsignedShort : DcmValueElement<ushort> {
 		#region Public Constructors
 		public DcmUnsignedShort(DcmTag tag)
@@ -1463,9 +1420,7 @@ namespace Dicom.Data {
 		#endregion
 	}
 
-	/// <summary>
-	/// Unlimited Text (UT)
-	/// </summary>
+	/// <summary>Unlimited Text (UT)</summary>
 	public class DcmUnlimitedText : DcmStringElement {
 		#region Public Constructors
 		public DcmUnlimitedText(DcmTag tag)

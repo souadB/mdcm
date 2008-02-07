@@ -271,6 +271,15 @@ namespace Dicom.Network {
 			SendAbort(DcmAbortSource.ServiceProvider, DcmAbortReason.NotSpecified);
 		}
 
+		protected virtual void OnReceiveCGetRequest(byte presentationID, ushort messageID, DcmPriority priority, DcmDataset dataset) {
+			SendAbort(DcmAbortSource.ServiceProvider, DcmAbortReason.NotSpecified);
+		}
+
+		protected virtual void OnReceiveCGetResponse(byte presentationID, ushort messageID, DcmStatus status,
+			ushort remain, ushort complete, ushort warning, ushort failure) {
+			SendAbort(DcmAbortSource.ServiceProvider, DcmAbortReason.NotSpecified);
+		}
+
 		protected virtual void OnReceiveCMoveRequest(byte presentationID, ushort messageID, string destinationAE, DcmPriority priority, DcmDataset dataset) {
 			SendAbort(DcmAbortSource.ServiceProvider, DcmAbortReason.NotSpecified);
 		}
@@ -393,6 +402,28 @@ namespace Dicom.Network {
 			SendDimse(presentationID, command, dataset);
 		}
 
+		protected void SendCGetRequest(byte presentationID, ushort messageID, DcmPriority priority, DcmDataset dataset) {
+			DcmUID affectedClass = Associate.GetAbstractSyntax(presentationID);
+			DcmCommand command = CreateRequest(messageID, DcmCommandField.CGetRequest, affectedClass, priority, true);
+			SendDimse(presentationID, command, dataset);
+		}
+
+		protected void SendCGetResponse(byte presentationID, ushort messageID, DcmStatus status,
+			ushort remain, ushort complete, ushort warning, ushort failure) {
+			SendCGetResponse(presentationID, messageID, status, remain, complete, warning, failure, null);
+		}
+
+		protected void SendCGetResponse(byte presentationID, ushort messageID, DcmStatus status,
+			ushort remain, ushort complete, ushort warning, ushort failure, DcmDataset dataset) {
+			DcmUID affectedClass = Associate.GetAbstractSyntax(presentationID);
+			DcmCommand command = CreateResponse(messageID, DcmCommandField.CGetResponse, affectedClass, status, dataset != null);
+			command.RemainingSuboperations = remain;
+			command.CompletedSuboperations = complete;
+			command.WarningSuboperations = warning;
+			command.FailedSuboperations = failure;
+			SendDimse(presentationID, command, dataset);
+		}
+
 		protected void SendCMoveRequest(byte presentationID, ushort messageID, string destinationAE, DcmPriority priority, DcmDataset dataset) {
 			DcmUID affectedClass = Associate.GetAbstractSyntax(presentationID);
 			DcmCommand command = CreateRequest(messageID, DcmCommandField.CMoveRequest, affectedClass, priority, true);
@@ -408,7 +439,7 @@ namespace Dicom.Network {
 		protected void SendCMoveResponse(byte presentationID, ushort messageID, DcmStatus status,
 			ushort remain, ushort complete, ushort warning, ushort failure, DcmDataset dataset) {
 			DcmUID affectedClass = Associate.GetAbstractSyntax(presentationID);
-			DcmCommand command = CreateResponse(messageID, DcmCommandField.CFindResponse, affectedClass, status, dataset != null);
+			DcmCommand command = CreateResponse(messageID, DcmCommandField.CMoveResponse, affectedClass, status, dataset != null);
 			command.RemainingSuboperations = remain;
 			command.CompletedSuboperations = complete;
 			command.WarningSuboperations = warning;
@@ -735,6 +766,21 @@ namespace Dicom.Network {
 			if (commandField == DcmCommandField.CFindResponse) {
 				DcmStatus status = _dimse.Command.Status;
 				OnReceiveCFindResponse(pcid, messageID, _dimse.Dataset, status);
+				return true;
+			}
+
+			if (commandField == DcmCommandField.CGetRequest) {
+				OnReceiveCGetRequest(pcid, messageID, priority, _dimse.Dataset);
+				return true;
+			}
+
+			if (commandField == DcmCommandField.CGetResponse) {
+				DcmStatus status = _dimse.Command.Status;
+				ushort remain = _dimse.Command.RemainingSuboperations;
+				ushort complete = _dimse.Command.CompletedSuboperations;
+				ushort warning = _dimse.Command.WarningSuboperations;
+				ushort failure = _dimse.Command.FailedSuboperations;
+				OnReceiveCGetResponse(pcid, messageID, status, remain, complete, warning, failure);
 				return true;
 			}
 
