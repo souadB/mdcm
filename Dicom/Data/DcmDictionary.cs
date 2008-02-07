@@ -27,31 +27,75 @@ using System.Text;
 using Dicom.Utility;
 
 namespace Dicom.Data {
+	/// <summary>DICOM Dictionary Exception</summary>
 	public class DcmDictionaryException : Exception {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DcmDictionaryException"/> class.
+		/// </summary>
+		/// <param name="msg">Exception message</param>
 		public DcmDictionaryException(string msg) : base(msg) {
 		}
 	}
 
+	/// <summary>DICOM Dictionary Entry</summary>
 	public class DcmDictionaryEntry {
+		/// <summary>DICOM Tag card</summary>
 		public readonly uint Tag;
+
+		/// <summary>DICOM Tag mask</summary>
 		public readonly uint Mask;
+
+		/// <summary>Formatted tag for display</summary>
 		public readonly string DisplayTag;
+
+		/// <summary>Group</summary>
 		public readonly ushort Group;
+
+		/// <summary>Element</summary>
 		public readonly ushort Element;
+
+		/// <summary>Name</summary>
 		public readonly string Name;
+
+		/// <summary>Private Creator</summary>
 		public readonly string PrivateCreator;
+
+		/// <summary>Set to <c>true</c> if tag is private, <c>false</c> otherwise</summary>
 		public readonly bool IsPrivate;
+
+		/// <summary>Allowed VRs</summary>
 		public readonly DcmVR[] AllowedVRs;
+
+		/// <summary>Value multiplicity description</summary>
 		public readonly string VM;
+
+		/// <summary>Minimum number of values required</summary>
 		public readonly uint MinimumVM;
+
+		/// <summary>Maximum number of values accepted</summary>
 		public readonly uint MaximumVM;
-		public readonly uint DivideVM;
+
+		/// <summary>Mutiple VM</summary>
+		public readonly uint MultipleVM;
+
+		/// <summary>Retired</summary>
 		public readonly bool Retired;
 
+		/// <summary>Default VR</summary>
 		public DcmVR DefaultVR {
 			get { return AllowedVRs[0]; }
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DcmDictionaryEntry"/> class.
+		/// </summary>
+		/// <param name="group">Group</param>
+		/// <param name="element">Element</param>
+		/// <param name="name">Name</param>
+		/// <param name="privcreator">Private Creator</param>
+		/// <param name="vrs">VR</param>
+		/// <param name="vm">VM</param>
+		/// <param name="retired">Retired</param>
 		public DcmDictionaryEntry(string group, string element,
 			string name, string privcreator, DcmVR[] vrs, string vm, bool retired) {
 
@@ -78,18 +122,18 @@ namespace Dicom.Data {
 			AllowedVRs = vrs;
 
 			if (DefaultVR == DcmVR.NONE) {
-				DivideVM = 0;
+				MultipleVM = 0;
 				MinimumVM = 0;
 				MaximumVM = 0;
 			} else {
-				DivideVM = 1;
+				MultipleVM = 1;
 				if (vm.Contains("-")) {
 					string[] parts = vm.Split('-');
 					MinimumVM = uint.Parse(parts[0]);
 					if (parts[1].Contains("n")) {
 						MaximumVM = 0xffffffff;
 						if (parts[1] != "n") {
-							DivideVM = uint.Parse(parts[1].Replace("n", ""));
+							MultipleVM = uint.Parse(parts[1].Replace("n", ""));
 						}
 					} else {
 						MaximumVM = uint.Parse(parts[1]);
@@ -102,6 +146,11 @@ namespace Dicom.Data {
 			IsPrivate = !String.IsNullOrEmpty(PrivateCreator);
 		}
 
+		/// <summary>
+		/// Checks tag against mask
+		/// </summary>
+		/// <param name="tag"></param>
+		/// <returns></returns>
 		public bool IsMatchForTag(DcmTag tag) {
 			if ((tag.Card & Mask) != Tag)
 				return false;
@@ -110,16 +159,29 @@ namespace Dicom.Data {
 			return true;
 		}
 
+		/// <summary>
+		/// Description of this entry
+		/// </summary>
+		/// <returns></returns>
 		public override string ToString() {
 			return String.Format("({0}) {1}{2}", DisplayTag, Name, Retired ? " (Retired)" : "");
 		}
 	}
 
+	/// <summary>
+	/// DICOM Dictionary
+	/// </summary>
 	public static class DcmDictionary {
+		/// <summary>
+		/// Loaded dictionary entries
+		/// </summary>
 		public static List<DcmDictionaryEntry> Entries = new List<DcmDictionaryEntry>();
 		private static Dictionary<uint, DcmDictionaryEntry> QuickLookup = new Dictionary<uint, DcmDictionaryEntry>();
 
+		/// <summary>Unknown Tag</summary>
 		public static DcmDictionaryEntry UnknownTag;
+
+		/// <summary>Private Tag</summary>
 		public static DcmDictionaryEntry PrivateTag;
 
 		private static bool Initialzied = false;
@@ -132,13 +194,20 @@ namespace Dicom.Data {
 			}
 		}
 
+		/// <summary>
+		/// Clears loaded DICOM dictionary
+		/// </summary>
 		public static void Clear() {
 			lock (Lock) {
 				Entries.Clear();
 				QuickLookup.Clear();
+				Initialzied = false;
 			}
 		}
 
+		/// <summary>
+		/// Loads default DICOM dictionary
+		/// </summary>
 		public static void LoadInternalDictionary() {
 			lock (Lock) {
 				#region VR Tables
@@ -2629,6 +2698,11 @@ namespace Dicom.Data {
 			}
 		}
 
+		/// <summary>
+		/// Lookup Dictionary entry from tag
+		/// </summary>
+		/// <param name="tag">DICOM tag</param>
+		/// <returns>Dictionary entry</returns>
 		public static DcmDictionaryEntry Lookup(DcmTag tag) {
 			lock (Lock) {
 				if (!Initialzied)
@@ -2649,6 +2723,13 @@ namespace Dicom.Data {
 
 		private const char Seperator = '\t';
 		private const string Retired = "RETIRED";
+
+		/// <summary>
+		/// Internal use
+		/// </summary>
+		/// <param name="filename"></param>
+		/// <param name="publicOnly"></param>
+		/// <param name="privateOnly"></param>
 		public static void ExportDictionary(string filename, bool publicOnly, bool privateOnly) {
 			StringBuilder sb = new StringBuilder();
 			privateOnly = publicOnly ? false : privateOnly;
@@ -2683,6 +2764,10 @@ namespace Dicom.Data {
 			File.WriteAllText(filename, sb.ToString());
 		}
 
+		/// <summary>
+		/// Internal use
+		/// </summary>
+		/// <param name="filename"></param>
 		public static void ImportDictionary(string filename) {
 			lock (Lock) {
 				string[] lines = File.ReadAllLines(filename);
@@ -2725,6 +2810,10 @@ namespace Dicom.Data {
 			}
 		}
 
+		/// <summary>
+		/// Internal use
+		/// </summary>
+		/// <param name="filename"></param>
 		public static void ImportDcmtkPrivateDictionary(string filename) {
 			lock (Lock) {
 				string[] lines = File.ReadAllLines(filename);
