@@ -361,8 +361,8 @@ namespace Dicom.Network {
 			SendAbort(DcmAbortSource.ServiceProvider, DcmAbortReason.NotSpecified);
 		}
 
-		protected virtual void OnReceiveCGetResponse(byte presentationID, ushort messageIdRespondedTo, DcmStatus status,
-			ushort remain, ushort complete, ushort warning, ushort failure) {
+		protected virtual void OnReceiveCGetResponse(byte presentationID, ushort messageIdRespondedTo, DcmDataset dataset, 
+			DcmStatus status, ushort remain, ushort complete, ushort warning, ushort failure) {
 			SendAbort(DcmAbortSource.ServiceProvider, DcmAbortReason.NotSpecified);
 		}
 
@@ -370,8 +370,8 @@ namespace Dicom.Network {
 			SendAbort(DcmAbortSource.ServiceProvider, DcmAbortReason.NotSpecified);
 		}
 
-		protected virtual void OnReceiveCMoveResponse(byte presentationID, ushort messageIdRespondedTo, DcmStatus status, 
-			ushort remain, ushort complete, ushort warning, ushort failure) {
+		protected virtual void OnReceiveCMoveResponse(byte presentationID, ushort messageIdRespondedTo, DcmDataset dataset, 
+			DcmStatus status, ushort remain, ushort complete, ushort warning, ushort failure) {
 			SendAbort(DcmAbortSource.ServiceProvider, DcmAbortReason.NotSpecified);
 		}
 
@@ -567,11 +567,11 @@ namespace Dicom.Network {
 
 		protected void SendCGetResponse(byte presentationID, ushort messageIdRespondedTo, DcmStatus status,
 			ushort remain, ushort complete, ushort warning, ushort failure) {
-			SendCGetResponse(presentationID, messageIdRespondedTo, status, remain, complete, warning, failure, null);
+			SendCGetResponse(presentationID, messageIdRespondedTo, null, status, remain, complete, warning, failure);
 		}
 
-		protected void SendCGetResponse(byte presentationID, ushort messageIdRespondedTo, DcmStatus status,
-			ushort remain, ushort complete, ushort warning, ushort failure, DcmDataset dataset) {
+		protected void SendCGetResponse(byte presentationID, ushort messageIdRespondedTo, DcmDataset dataset, 
+			DcmStatus status, ushort remain, ushort complete, ushort warning, ushort failure) {
 			DcmUID affectedClass = Associate.GetAbstractSyntax(presentationID);
 			DcmCommand command = CreateResponse(messageIdRespondedTo, DcmCommandField.CGetResponse, affectedClass, status, dataset != null);
 			command.RemainingSuboperations = remain;
@@ -594,11 +594,11 @@ namespace Dicom.Network {
 
 		protected void SendCMoveResponse(byte presentationID, ushort messageIdRespondedTo, DcmStatus status,
 			ushort remain, ushort complete, ushort warning, ushort failure) {
-			SendCMoveResponse(presentationID, messageIdRespondedTo, status, remain, complete, warning, failure, null);
+			SendCMoveResponse(presentationID, messageIdRespondedTo, null, status, remain, complete, warning, failure);
 		}
 
-		protected void SendCMoveResponse(byte presentationID, ushort messageIdRespondedTo, DcmStatus status,
-			ushort remain, ushort complete, ushort warning, ushort failure, DcmDataset dataset) {
+		protected void SendCMoveResponse(byte presentationID, ushort messageIdRespondedTo, DcmDataset dataset, DcmStatus status,
+			ushort remain, ushort complete, ushort warning, ushort failure) {
 			DcmUID affectedClass = Associate.GetAbstractSyntax(presentationID);
 			DcmCommand command = CreateResponse(messageIdRespondedTo, DcmCommandField.CMoveResponse, affectedClass, status, dataset != null);
 			command.RemainingSuboperations = remain;
@@ -801,16 +801,34 @@ namespace Dicom.Network {
 
 			try {
 				_socket = DcmSocket.Create(_socketType);
-				_socket.SendTimeout = _connectTimeout * 1000;
-				_socket.ReceiveTimeout = _connectTimeout * 1000;
-				_socket.ThrottleSpeed = _throttle;
 
 				Log.Info("{0} -> Connecting to server at {1}:{2}", LogID, _host, _port);
-				_socket.Connect(_host, _port);
+
+				if (_connectTimeout == 0) {
+					_socket.Connect(_host, _port);
+				} else {
+					try {
+						_socket.Blocking = false;
+						_socket.Connect(_host, _port);
+					}
+					catch (SocketException e) {
+						if (e.SocketErrorCode != SocketError.WouldBlock)
+							throw;
+					}
+
+					if (!_socket.Poll(_connectTimeout * 1000000, SelectMode.SelectWrite))
+						throw new SocketException((int)SocketError.TimedOut);
+					
+					_socket.Blocking = true;
+				}
 
 				if (_socketType == DcmSocketType.TLS)
 					Log.Info("{0} -> Authenticating SSL/TLS for server: {1}", LogID, _socket.RemoteEndPoint);
 
+				
+				_socket.SendTimeout = _socketTimeout * 1000;
+				_socket.ReceiveTimeout = _socketTimeout * 1000;
+				_socket.ThrottleSpeed = _throttle;
 				_network = _socket.GetStream();
 				success = true;
 			}
@@ -1188,7 +1206,7 @@ namespace Dicom.Network {
 				ushort failure = _dimse.Command.FailedSuboperations;
 				Log.Info("{0} <- C-Get response [id: {1}; remain: {2}; complete: {3}; warning: {4}; failure: {5}]: {6}",
 					LogID, messageIdRespondedTo, remain, complete, warning, failure, status);
-				OnReceiveCGetResponse(presentationID, messageIdRespondedTo, status, remain, complete, warning, failure);
+				OnReceiveCGetResponse(presentationID, messageIdRespondedTo, _dimse.Dataset, status, remain, complete, warning, failure);
 				return true;
 			}
 
@@ -1211,7 +1229,7 @@ namespace Dicom.Network {
 				ushort failure = _dimse.Command.FailedSuboperations;
 				Log.Info("{0} <- C-Move response [id: {1}; remain: {2}; complete: {3}; warning: {4}; failure: {5}]: {6}",
 					LogID, messageIdRespondedTo, remain, complete, warning, failure, status);
-				OnReceiveCMoveResponse(presentationID, messageIdRespondedTo, status, remain, complete, warning, failure);
+				OnReceiveCMoveResponse(presentationID, messageIdRespondedTo, _dimse.Dataset, status, remain, complete, warning, failure);
 				return true;
 			}
 

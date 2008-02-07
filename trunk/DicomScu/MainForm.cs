@@ -148,7 +148,7 @@ namespace DicomScu {
 				scu.CallingAE = Config.LocalAE;
 				scu.CalledAE = Config.RemoteAE;
 				scu.MaxPduSize = Config.MaxPdu;
-				scu.ConnectTimeout = 5;
+				scu.ConnectTimeout = 1;
 				scu.SocketTimeout = 5;
 				scu.DimseTimeout = 5;
 				scu.OnCEchoResponse += delegate(byte presentationId, ushort messageId, DcmStatus status) {

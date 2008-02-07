@@ -87,7 +87,7 @@ namespace Dicom.Network.Client {
 		#endregion
 
 		#region Public Properties
-		public delegate void CMoveResponseDelegate(CMoveQuery query, DcmStatus status, ushort remain, ushort complete, ushort warning, ushort failure);
+		public delegate void CMoveResponseDelegate(CMoveQuery query, DcmDataset dataset, DcmStatus status, ushort remain, ushort complete, ushort warning, ushort failure);
 		public CMoveResponseDelegate OnCMoveResponse;
 
 		public string DestinationAE {
@@ -169,10 +169,10 @@ namespace Dicom.Network.Client {
 			PerformQueryOrRelease();
 		}
 
-		protected override void OnReceiveCMoveResponse(byte presentationID, ushort messageID, DcmStatus status, 
-			ushort remain, ushort complete, ushort warning, ushort failure) {
+		protected override void OnReceiveCMoveResponse(byte presentationID, ushort messageID, DcmDataset dataset, 
+			DcmStatus status, ushort remain, ushort complete, ushort warning, ushort failure) {
 			if (OnCMoveResponse != null) {
-				OnCMoveResponse(_current, status, remain, complete, warning, failure);
+				OnCMoveResponse(_current, dataset, status, remain, complete, warning, failure);
 			}
 			if (remain == 0 && status != DcmStatus.Pending) {
 				PerformQueryOrRelease();
