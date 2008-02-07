@@ -30,6 +30,7 @@ using Dicom.Utility;
 
 namespace Dicom.Network {
 	#region Raw PDU
+	/// <summary>Encapsulates PDU data for reading or writing</summary>
 	public class RawPDU {
 		#region Private members
 		private byte _type;
@@ -42,6 +43,10 @@ namespace Dicom.Network {
 		#endregion
 
 		#region Public Constructors
+		/// <summary>
+		/// Initializes new PDU for writing
+		/// </summary>
+		/// <param name="type">Type of PDU</param>
 		public RawPDU(byte type) {
 			_type = type;
 			_ms = new MemoryStream();
@@ -49,30 +54,44 @@ namespace Dicom.Network {
 			_m16 = new Stack<long>();
 			_m32 = new Stack<long>();
 		}
+
+		/// <summary>
+		/// Initializes new PDU reader from stream
+		/// </summary>
+		/// <param name="s">Input stream</param>
 		public RawPDU(Stream s) {
-			BinaryReader br = EndianBinaryReader.Create(s, Endian.Big);
-
-			_type = br.ReadByte();	// PDU-Type
 			_is = s;
+			BinaryReader br = EndianBinaryReader.Create(_is, Endian.Big);
+			_type = br.ReadByte();
 		}
-		public RawPDU(byte[] d) {
-			_is = new MemoryStream(d);
 
+		/// <summary>
+		/// Initializes new PDU reader from buffer
+		/// </summary>
+		/// <param name="buffer">Buffer</param>
+		public RawPDU(byte[] buffer) {
+			_is = new MemoryStream(buffer);
 			BinaryReader br = EndianBinaryReader.Create(_is, Endian.Big);
 			_type = br.ReadByte();
 		}
 		#endregion
 
 		#region Public Properties
+		/// <summary>PDU type</summary>
 		public byte Type {
 			get { return _type; }
 		}
+
+		/// <summary>PDU length</summary>
 		public uint Length {
 			get { return (uint)_ms.Length; }
 		}
 		#endregion
 
-		#region Private Methods
+		#region Public Methods
+		/// <summary>
+		/// Reads PDU into memory
+		/// </summary>
 		public void ReadPDU() {
 			_ms = new MemoryStream();
 			BinaryReader br = EndianBinaryReader.Create(_is, Endian.Big);
@@ -85,6 +104,10 @@ namespace Dicom.Network {
 			_br = EndianBinaryReader.Create(_ms, Endian.Big);
 		}
 
+		/// <summary>
+		/// Writes PDU to stream
+		/// </summary>
+		/// <param name="s">Output stream</param>
 		public void WritePDU(Stream s) {
 			BinaryWriter bw = EndianBinaryWriter.Create(s, Endian.Big);
 			bw.Write((byte)_type);
@@ -93,9 +116,11 @@ namespace Dicom.Network {
 			_ms.WriteTo(s);
 			s.Flush();
 		}
-		#endregion
 
-		#region Public Methods
+		/// <summary>
+		/// Saves PDU to file
+		/// </summary>
+		/// <param name="file">Filename</param>
 		public void Save(String file) {
 			FileInfo f = new FileInfo(file);
 			DirectoryInfo d = f.Directory;
@@ -108,10 +133,17 @@ namespace Dicom.Network {
 			}
 		}
 
+		/// <summary>
+		/// Gets string describing this PDU
+		/// </summary>
+		/// <returns>PDU description</returns>
 		public override String ToString() {
 			return String.Format("Pdu[type={0:X2}, length={1}]", Type, Length);
 		}
 
+		/// <summary>
+		/// Reset PDU read stream
+		/// </summary>
 		public void Reset() {
 			_ms.Seek(0, SeekOrigin.Begin);
 		}
@@ -125,33 +157,66 @@ namespace Dicom.Network {
 			}
 		}
 
+		/// <summary>
+		/// Read byte from PDU
+		/// </summary>
+		/// <param name="name">Name of field</param>
+		/// <returns>Field value</returns>
 		public byte ReadByte(String name) {
 			CheckOffset(1, name);
 			return _br.ReadByte();
 		}
 
+		/// <summary>
+		/// Read bytes from PDU
+		/// </summary>
+		/// <param name="name">Name of field</param>
+		/// <param name="count">Number of bytes to read</param>
+		/// <returns>Field value</returns>
 		public byte[] ReadBytes(String name, int count) {
 			CheckOffset(count, name);
 			return _br.ReadBytes(count);
 		}
 
+		/// <summary>
+		/// Read ushort from PDU
+		/// </summary>
+		/// <param name="name">Name of field</param>
+		/// <returns>Field value</returns>
 		public ushort ReadUInt16(String name) {
 			CheckOffset(2, name);
 			return _br.ReadUInt16();
 		}
 
+		/// <summary>
+		/// Reads uint from PDU
+		/// </summary>
+		/// <param name="name">Name of field</param>
+		/// <returns>Field value</returns>
 		public uint ReadUInt32(String name) {
 			CheckOffset(4, name);
 			return _br.ReadUInt32();
 		}
 
 		private char[] trimChars = { ' ', '\0' };
+
+		/// <summary>
+		/// Reads string from PDU
+		/// </summary>
+		/// <param name="name">Name of field</param>
+		/// <param name="count">Length of string</param>
+		/// <returns>Field value</returns>
 		public String ReadString(String name, int count) {
 			CheckOffset(count, name);
 			char[] c = _br.ReadChars(count);
 			return new String(c).Trim(trimChars);
 		}
 
+		/// <summary>
+		/// Skips ahead in PDU
+		/// </summary>
+		/// <param name="name">Name of field</param>
+		/// <param name="count">Number of bytes to skip</param>
 		public void SkipBytes(String name, int count) {
 			CheckOffset(count, name);
 			_ms.Seek(count, SeekOrigin.Current);
@@ -159,40 +224,85 @@ namespace Dicom.Network {
 		#endregion
 
 		#region Write Methods
-		public void Write(String name, byte v) {
-			_bw.Write(v);
+		/// <summary>
+		/// Writes byte to PDU
+		/// </summary>
+		/// <param name="name">Field name</param>
+		/// <param name="value">Field value</param>
+		public void Write(String name, byte value) {
+			_bw.Write(value);
 		}
 
-		public void Write(String name, byte v, int count) {
+		/// <summary>
+		/// Writes byte to PDU multiple times
+		/// </summary>
+		/// <param name="name">Field name</param>
+		/// <param name="value">Field value</param>
+		/// <param name="count">Number of times to write PDU value</param>
+		public void Write(String name, byte value, int count) {
 			for (int i = 0; i < count; i++)
-				_bw.Write(v);
+				_bw.Write(value);
 		}
 
-		public void Write(String name, byte[] v) {
-			_bw.Write(v);
+		/// <summary>
+		/// Writes byte[] to PDU
+		/// </summary>
+		/// <param name="name">Field name</param>
+		/// <param name="value">Field value</param>
+		public void Write(String name, byte[] value) {
+			_bw.Write(value);
 		}
 
-		public void Write(String name, ushort v) {
-			_bw.Write(v);
+		/// <summary>
+		/// Writes ushort to PDU
+		/// </summary>
+		/// <param name="name">Field name</param>
+		/// <param name="value">Field value</param>
+		public void Write(String name, ushort value) {
+			_bw.Write(value);
 		}
 
-		public void Write(String name, uint v) {
-			_bw.Write(v);
+		/// <summary>
+		/// Writes uint to PDU
+		/// </summary>
+		/// <param name="name">Field name</param>
+		/// <param name="value">Field value</param>
+		public void Write(String name, uint value) {
+			_bw.Write(value);
 		}
 
-		public void Write(String name, String v) {
-			_bw.Write(v.ToCharArray());
+		/// <summary>
+		/// Writes string to PDU
+		/// </summary>
+		/// <param name="name">Field name</param>
+		/// <param name="value">Field value</param>
+		public void Write(String name, String value) {
+			_bw.Write(value.ToCharArray());
 		}
 
-		public void Write(String name, String v, int count, char pad) {
-			_bw.Write(ToCharArray(v, count, pad));
+		/// <summary>
+		/// Writes string to PDU
+		/// </summary>
+		/// <param name="name">Field name</param>
+		/// <param name="value">Field value</param>
+		/// <param name="count">Number of characters to write</param>
+		/// <param name="pad">Padding character</param>
+		public void Write(String name, String value, int count, char pad) {
+			_bw.Write(ToCharArray(value, count, pad));
 		}
 
+		/// <summary>
+		/// Marks position to write 16-bit length value
+		/// </summary>
+		/// <param name="name">Field name</param>
 		public void MarkLength16(String name) {
 			_m16.Push(_ms.Position);
 			_bw.Write((ushort)0);
 		}
 
+		/// <summary>
+		/// Writes 16-bit length to top length marker
+		/// </summary>
 		public void WriteLength16() {
 			long p1 = _m16.Pop();
 			long p2 = _ms.Position;
@@ -201,11 +311,18 @@ namespace Dicom.Network {
 			_ms.Position = p2;
 		}
 
+		/// <summary>
+		/// Marks position to write 32-bit length value
+		/// </summary>
+		/// <param name="name">Field name</param>
 		public void MarkLength32(String name) {
 			_m32.Push(_ms.Position);
 			_bw.Write((uint)0);
 		}
 
+		/// <summary>
+		/// Writes 32-bit length to top length marker
+		/// </summary>
 		public void WriteLength32() {
 			long p1 = _m32.Pop();
 			long p2 = _ms.Position;
@@ -230,21 +347,42 @@ namespace Dicom.Network {
 	#endregion
 
 	#region PDU Interface
+	/// <summary>
+	/// Interface for PDU
+	/// </summary>
 	public interface PDU {
+		/// <summary>
+		/// Writes PDU to PDU buffer
+		/// </summary>
+		/// <returns>PDU buffer</returns>
 		RawPDU Write();
+
+		/// <summary>
+		/// Reads PDU from PDU buffer
+		/// </summary>
+		/// <param name="raw">PDU buffer</param>
 		void Read(RawPDU raw);
 	}
 	#endregion
 
 	#region A-Associate-RQ
+	/// <summary>A-ASSOCIATE-RQ</summary>
 	public class AAssociateRQ : PDU {
 		private DcmAssociate _assoc;
 
+		/// <summary>
+		/// Initializes new A-ASSOCIATE-RQ
+		/// </summary>
+		/// <param name="assoc">Association parameters</param>
 		public AAssociateRQ(DcmAssociate assoc) {
 			_assoc = assoc;
 		}
 
 		#region Write
+		/// <summary>
+		/// Writes A-ASSOCIATE-RQ to PDU buffer
+		/// </summary>
+		/// <returns>PDU buffer</returns>
 		public RawPDU Write() {
 			RawPDU pdu = new RawPDU((byte)0x01);
 
@@ -329,6 +467,10 @@ namespace Dicom.Network {
 		#endregion
 
 		#region Read
+		/// <summary>
+		/// Reads A-ASSOCIATE-RQ from PDU buffer
+		/// </summary>
+		/// <param name="raw">PDU buffer</param>
 		public void Read(RawPDU raw) {
 			uint l = raw.Length;
 
@@ -411,14 +553,23 @@ namespace Dicom.Network {
 	#endregion
 
 	#region A-Associate-AC
+	/// <summary>A-ASSOCIATE-AC</summary>
 	public class AAssociateAC : PDU {
 		private DcmAssociate _assoc;
 
+		/// <summary>
+		/// Initializes new A-ASSOCIATE-AC
+		/// </summary>
+		/// <param name="assoc">Association parameters</param>
 		public AAssociateAC(DcmAssociate assoc) {
 			_assoc = assoc;
 		}
 
 		#region Write
+		/// <summary>
+		/// Writes A-ASSOCIATE-AC to PDU buffer
+		/// </summary>
+		/// <returns>PDU buffer</returns>
 		public RawPDU Write() {
 			RawPDU pdu = new RawPDU((byte)0x02);
 
@@ -496,6 +647,10 @@ namespace Dicom.Network {
 		#endregion
 
 		#region Read
+		/// <summary>
+		/// Reads A-ASSOCIATE-AC from PDU buffer
+		/// </summary>
+		/// <param name="raw">PDU buffer</param>
 		public void Read(RawPDU raw) {
 			uint l = raw.Length;
 			ushort c = 0;
@@ -579,55 +734,94 @@ namespace Dicom.Network {
 	#endregion
 
 	#region A-Associate-RJ
+	/// <summary>Rejection result</summary>
 	public enum DcmRejectResult {
+		/// <summary>Permanent rejection</summary>
 		Permanent = 1,
+
+		/// <summary>Transient rejection</summary>
 		Transient = 2
 	}
 
+	/// <summary>Rejection source</summary>
 	public enum DcmRejectSource {
+		/// <summary>Service user</summary>
 		ServiceUser = 1,
+
+		/// <summary>Service provider - ACSE</summary>
 		ServiceProviderACSE = 2,
+
+		/// <summary>Service provider - Presentation</summary>
 		ServiceProviderPresentation = 3
 	}
 
+	/// <summary>Rejection reason</summary>
 	public enum DcmRejectReason {
-		// Service User
+		/// <summary>No reason given (Service user)</summary>
 		NoReasonGiven = 1,
+
+		/// <summary>Application context not supported (Service user)</summary>
 		ApplicationContextNotSupported = 2,
+
+		/// <summary>Calling AE not recognized (Service user)</summary>
 		CallingAENotRecognized = 3,
+
+		/// <summary>Called AE not recognized (Service user)</summary>
 		CalledAENotRecognized = 7,
 
-		// Service Provider ACSE
+		/// <summary>Protocol version not supported (Service provider - ACSE)</summary>
 		ProtocolVersionNotSupported = 1,
 
-		// Service Provider Presentation
+		/// <summary>Temporary congestion (Service provider - Presentation)</summary>
 		TemporaryCongestion = 1,
+
+		/// <summary>Local limit exceeded (Service provider - Presentation)</summary>
 		LocalLimitExceeded = 2
 	}
 
+	/// <summary>A-ASSOCIATE-RJ</summary>
 	public class AAssociateRJ : PDU {
 		private DcmRejectResult _rt = DcmRejectResult.Permanent;
 		private DcmRejectSource _so = DcmRejectSource.ServiceUser;
 		private DcmRejectReason _rn = DcmRejectReason.NoReasonGiven;
 
+		/// <summary>
+		/// Initializes new A-ASSOCIATE-RJ
+		/// </summary>
 		public AAssociateRJ() {
 		}
+
+		/// <summary>
+		/// Initializes new A-ASSOCIATE-RJ
+		/// </summary>
+		/// <param name="rt">Rejection result</param>
+		/// <param name="so">Rejection source</param>
+		/// <param name="rn">Rejection reason</param>
 		public AAssociateRJ(DcmRejectResult rt, DcmRejectSource so, DcmRejectReason rn) {
 			_rt = rt;
 			_so = so;
 			_rn = rn;
 		}
 
+		/// <summary>Rejection result</summary>
 		public DcmRejectResult Result {
 			get { return _rt; }
 		}
+
+		/// <summary>Rejection source</summary>
 		public DcmRejectSource Source {
 			get { return _so; }
 		}
+
+		/// <summary>Rejection reason</summary>
 		public DcmRejectReason Reason {
 			get { return _rn; }
 		}
 
+		/// <summary>
+		/// Writes A-ASSOCIATE-RJ to PDU buffer
+		/// </summary>
+		/// <returns>PDU buffer</returns>
 		public RawPDU Write() {
 			RawPDU pdu = new RawPDU((byte)0x03);
 			pdu.Write("Reserved", (byte)0x00);
@@ -637,6 +831,10 @@ namespace Dicom.Network {
 			return pdu;
 		}
 
+		/// <summary>
+		/// Reads A-ASSOCIATE-RJ from PDU buffer
+		/// </summary>
+		/// <param name="raw">PDU buffer</param>
 		public void Read(RawPDU raw) {
 			raw.ReadByte("Reserved");
 			_rt = (DcmRejectResult)raw.ReadByte("Result");
@@ -647,13 +845,22 @@ namespace Dicom.Network {
 	#endregion
 
 	#region A-Release-RQ
+	/// <summary>A-RELEASE-RQ</summary>
 	public class AReleaseRQ : PDU {
+		/// <summary>
+		/// Writes A-RELEASE-RQ to PDU buffer
+		/// </summary>
+		/// <returns>PDU buffer</returns>
 		public RawPDU Write() {
 			RawPDU pdu = new RawPDU((byte)0x05);
 			pdu.Write("Reserved", (uint)0x00000000);
 			return pdu;
 		}
 
+		/// <summary>
+		/// Reads A-RELEASE-RQ from PDU buffer
+		/// </summary>
+		/// <param name="raw">PDU buffer</param>
 		public void Read(RawPDU raw) {
 			raw.ReadUInt32("Reserved");
 		}
@@ -661,13 +868,22 @@ namespace Dicom.Network {
 	#endregion
 
 	#region A-Release-RP
+	/// <summary>A-RELEASE-RP</summary>
 	public class AReleaseRP : PDU {
+		/// <summary>
+		/// Writes A-RELEASE-RP to PDU buffer
+		/// </summary>
+		/// <returns>PDU buffer</returns>
 		public RawPDU Write() {
 			RawPDU pdu = new RawPDU((byte)0x06);
 			pdu.Write("Reserved", (uint)0x00000000);
 			return pdu;
 		}
 
+		/// <summary>
+		/// Reads A-RELEASE-RP from PDU buffer
+		/// </summary>
+		/// <param name="raw">PDU buffer</param>
 		public void Read(RawPDU raw) {
 			raw.ReadUInt32("Reserved");
 		}
@@ -675,38 +891,76 @@ namespace Dicom.Network {
 	#endregion
 
 	#region A-Abort
+	/// <summary>Abort source</summary>
 	public enum DcmAbortSource {
+		/// <summary>Unknown</summary>
 		Unknown = 0,
+
+		/// <summary>Service user</summary>
 		ServiceUser = 1,
+
+		/// <summary>Service provider</summary>
 		ServiceProvider = 2
 	}
+
+	/// <summary>Abort reason</summary>
 	public enum DcmAbortReason {
+		/// <summary>Not specified</summary>
 		NotSpecified = 0,
+
+		/// <summary>Unrecognized PDU type</summary>
 		UnrecognizedPDU = 1,
+
+		/// <summary>Unexpected PDU</summary>
 		UnexpectedPDU = 2,
+
+		/// <summary>Unrecognized PDU parameter</summary>
 		UnrecognizedPDUParameter = 4,
+
+		/// <summary>Unexpected PDU parameter</summary>
 		UnexpectedPDUParameter = 5,
+
+		/// <summary>Invalid PDU parameter</summary>
 		InvalidPDUParameter = 6
 	}
 
+	/// <summary>A-ABORT</summary>
 	public class AAbort : PDU {
-		private DcmAbortSource _s = DcmAbortSource.ServiceUser;
+		private DcmAbortSource _s;
+		private DcmAbortReason _r;
+
+		/// <summary>Abort source</summary>
 		public DcmAbortSource Source {
 			get { return _s; }
 		}
 
-		private DcmAbortReason _r = DcmAbortReason.NotSpecified;
+		/// <summary>Abort reason</summary>
 		public DcmAbortReason Reason {
 			get { return _r; }
 		}
 
+		/// <summary>
+		/// Initializes new A-ABORT
+		/// </summary>
 		public AAbort() {
+			_s = DcmAbortSource.ServiceUser;
+			_r = DcmAbortReason.NotSpecified;
 		}
-		public AAbort(DcmAbortSource s, DcmAbortReason r) {
-			_s = s; _r = r;
+
+		/// <summary>
+		/// Initializes new A-ABORT
+		/// </summary>
+		/// <param name="source">Abort source</param>
+		/// <param name="reason">Abort reason</param>
+		public AAbort(DcmAbortSource source, DcmAbortReason reason) {
+			_s = source; _r = reason;
 		}
 
 		#region Write
+		/// <summary>
+		/// Writes A-ABORT to PDU buffer
+		/// </summary>
+		/// <returns>PDU buffer</returns>
 		public RawPDU Write() {
 			RawPDU pdu = new RawPDU((byte)0x07);
 			pdu.Write("Reserved", (byte)0x00);
@@ -718,6 +972,10 @@ namespace Dicom.Network {
 		#endregion
 
 		#region Read
+		/// <summary>
+		/// Reads A-ABORT from PDU buffer
+		/// </summary>
+		/// <param name="raw">PDU buffer</param>
 		public void Read(RawPDU raw) {
 			raw.ReadByte("Reserved");
 			raw.ReadByte("Reserved");
@@ -729,15 +987,23 @@ namespace Dicom.Network {
 	#endregion
 
 	#region P-Data-TF
+	/// <summary>P-DATA-TF</summary>
 	public class PDataTF : PDU {
+		private List<PDV> _pdvs = new List<PDV>();
+
+		/// <summary>
+		/// Initializes new P-DATA-TF
+		/// </summary>
 		public PDataTF() {
 		}
 
-		private List<PDV> _pdvs = new List<PDV>();
+		/// <summary>PDVs in this P-DATA-TF</summary>
 		public List<PDV> PDVs {
 			get { return _pdvs; }
 		}
 
+		/// <summary>Calculates the total length of the PDVs in this P-DATA-TF</summary>
+		/// <returns>Length of PDVs</returns>
 		public uint GetLengthOfPDVs() {
 			uint len = 0;
 			foreach (PDV pdv in _pdvs) {
@@ -747,6 +1013,10 @@ namespace Dicom.Network {
 		}
 
 		#region Write
+		/// <summary>
+		/// Writes P-DATA-TF to PDU buffer
+		/// </summary>
+		/// <returns>PDU buffer</returns>
 		public RawPDU Write() {
 			RawPDU pdu = new RawPDU((byte)0x04);
 			foreach (PDV pdv in _pdvs) {
@@ -757,6 +1027,10 @@ namespace Dicom.Network {
 		#endregion
 
 		#region Read
+		/// <summary>
+		/// Reads P-DATA-TF from PDU buffer
+		/// </summary>
+		/// <param name="raw">PDU buffer</param>
 		public void Read(RawPDU raw) {
 			uint len = raw.Length;
 			uint read = 0;
@@ -771,42 +1045,67 @@ namespace Dicom.Network {
 	#endregion
 
 	#region PDV
+	/// <summary>PDV</summary>
 	public class PDV {
 		private byte _pcid;
 		private byte[] _value = new byte[0];
 		private bool _command = false;
 		private bool _last = false;
 
+		/// <summary>
+		/// Initializes new PDV
+		/// </summary>
+		/// <param name="pcid">Presentation context ID</param>
+		/// <param name="value">PDV data</param>
+		/// <param name="command">Is command</param>
+		/// <param name="last">Is last fragment of command or data</param>
 		public PDV(byte pcid, byte[] value, bool command, bool last) {
 			_pcid = pcid;
 			_value = value;
 			_command = command;
 			_last = last;
 		}
+
+		/// <summary>
+		/// Initializes new PDV
+		/// </summary>
 		public PDV() {
 		}
 
+		/// <summary>Presentation context ID</summary>
 		public byte PCID {
 			get { return _pcid; }
 			set { _pcid = value; }
 		}
+
+		/// <summary>PDV data</summary>
 		public byte[] Value {
 			get { return _value; }
 			set { _value = value; }
 		}
+
+		/// <summary>PDV is command</summary>
 		public bool IsCommand {
 			get { return _command; }
 			set { _command = value; }
 		}
+
+		/// <summary>PDV is last fragment of command or data</summary>
 		public bool IsLastFragment {
 			get { return _last; }
 			set { _last = value; }
 		}
+
+		/// <summary>Length of this PDV</summary>
 		public uint PDVLength {
 			get { return (uint)_value.Length + 6; }
 		}
 
 		#region Write
+		/// <summary>
+		/// Writes PDV to PDU buffer
+		/// </summary>
+		/// <param name="pdu">PDU buffer</param>
 		public void Write(RawPDU pdu) {
 			byte mch = (byte)((_last ? 2 : 0) + (_command ? 1 : 0));
 			pdu.MarkLength32("PDV-Length");
@@ -818,6 +1117,10 @@ namespace Dicom.Network {
 		#endregion
 
 		#region Read
+		/// <summary>
+		/// Reads PDV from PDU buffer
+		/// </summary>
+		/// <param name="raw">PDU buffer</param>
 		public uint Read(RawPDU raw) {
 			uint len = raw.ReadUInt32("PDV-Length");
 			_pcid = raw.ReadByte("Presentation Context ID");

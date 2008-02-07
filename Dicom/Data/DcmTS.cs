@@ -64,10 +64,6 @@ namespace Dicom.Data {
 		}
 
 		#region Dicom Transfer Syntax
-		public static DcmTS JPEGXRPrivate = new DcmTS(DcmUIDs.JPEGXRPrivate, false, true, true, false, false);
-
-		public static DcmTS PNGPrivate = new DcmTS(DcmUIDs.PNGPrivate, false, true, true, false, false);
-
 		/// <summary>Implicit VR Little Endian</summary>
 		public static DcmTS ImplicitVRLittleEndian = new DcmTS(DcmUIDs.ImplicitVRLittleEndian, false, false, false, false, false);
 
@@ -159,8 +155,6 @@ namespace Dicom.Data {
 
 		static DcmTSs() {
 			#region Load Transfer Syntax List
-			Entries.Add(DcmTS.JPEGXRPrivate);
-			Entries.Add(DcmTS.PNGPrivate);
 			Entries.Add(DcmTS.ImplicitVRLittleEndian);
 			Entries.Add(DcmTS.ExplicitVRLittleEndian);
 			Entries.Add(DcmTS.ExplicitVRBigEndian);

@@ -34,7 +34,6 @@ namespace Dicom.Network.Server {
 		protected override void OnReceiveAssociateRequest(DcmAssociate association) {
 			association.NegotiateAsyncOps = false;
 			LogID = association.CallingAE;
-			Log.Info("{0} <- Association request:\n{1}", LogID, association.ToString());
 			foreach (DcmPresContext pc in association.GetPresentationContexts()) {
 				if (pc.AbstractSyntax == DcmUIDs.Verification) {
 					if (pc.HasTransfer(DcmTS.ImplicitVRLittleEndian)) {
@@ -50,13 +49,10 @@ namespace Dicom.Network.Server {
 					pc.SetResult(DcmPresContextResult.RejectAbstractSyntaxNotSupported);
 				}
 			}
-			Log.Info("{0} -> Association accept:\n{1}", LogID, association.ToString());
 			SendAssociateAccept(association);
 		}
 
 		protected override void OnReceiveCEchoRequest(byte presentationID, ushort messageID, DcmPriority priority) {
-			Log.Info("{0} <- C-Echo request [pc: {1}; id: {2}]", LogID, presentationID, messageID);
-			Log.Info("{0} -> C-Echo response [{1}]: {2}", LogID, messageID, DcmStatus.Success);
 			SendCEchoResponse(presentationID, messageID, DcmStatus.Success);
 		}
 	}

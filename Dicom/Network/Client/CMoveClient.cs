@@ -123,7 +123,6 @@ namespace Dicom.Network.Client {
 			associate.CallingAE = CallingAE;
 			associate.MaximumPduLength = MaxPduSize;
 
-			Log.Info("{0} -> Association request:\n{1}", LogID, associate.ToString());
 			SendAssociateRequest(associate);
 		}
 
@@ -132,7 +131,6 @@ namespace Dicom.Network.Client {
 				byte pcid = Associate.FindAbstractSyntax(MoveSopClassUID);
 				if (Associate.GetPresentationContextResult(pcid) == DcmPresContextResult.Accept) {
 					CMoveQuery query = _moveQueries.Dequeue();
-					Log.Info("{0} -> C-Move request", LogID);
 					DcmDataset dataset = new DcmDataset(Associate.GetAcceptedTransferSyntax(pcid));
 					switch (query.QueryRetrieveLevel) {
 					case DcmQueryRetrieveLevel.Patient:
@@ -159,24 +157,20 @@ namespace Dicom.Network.Client {
 				}
 				else {
 					Log.Info("{0} -> Presentation context rejected: {1}", LogID, Associate.GetPresentationContextResult(pcid));
-					Log.Info("{0} -> Association release request", LogID);
 					SendReleaseRequest();
 				}
 			}
 			else {
-				Log.Info("{0} -> Association release request", LogID);
 				SendReleaseRequest();
 			}
 		}
 
 		protected override void OnReceiveAssociateAccept(DcmAssociate association) {
-			Log.Info("{0} <- Association accept:\n{1}", LogID, association.ToString());
 			PerformQueryOrRelease();
 		}
 
 		protected override void OnReceiveCMoveResponse(byte presentationID, ushort messageID, DcmStatus status, 
 			ushort remain, ushort complete, ushort warning, ushort failure) {
-			Log.Info("{0} -> C-Move response: {1} [r: {2}; c: {3}; w: {4}; f: {5}]", LogID, status, remain, complete, warning, failure);
 			if (OnCMoveResponse != null) {
 				OnCMoveResponse(_current, status, remain, complete, warning, failure);
 			}

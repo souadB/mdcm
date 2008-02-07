@@ -542,7 +542,6 @@ namespace Dicom.Network.Client {
 			associate.CallingAE = CallingAE;
 			associate.MaximumPduLength = MaxPduSize;
 
-			Log.Info("{0} -> Association request:\n{1}", LogID, associate.ToString());
 			SendAssociateRequest(associate);
 		}
 
@@ -552,29 +551,24 @@ namespace Dicom.Network.Client {
 				_current = query;
 				byte pcid = Associate.FindAbstractSyntax(FindSopClassUID);
 				if (Associate.GetPresentationContextResult(pcid) == DcmPresContextResult.Accept) {
-					Log.Info("{0} -> C-Find request", LogID);
 					DcmDataset dataset = query.ToDataset(Associate.GetAcceptedTransferSyntax(pcid));
 					SendCFindRequest(pcid, NextMessageID(), Priority, dataset);
 				}
 				else {
 					Log.Info("{0} <- Presentation context rejected: {1}", LogID, Associate.GetPresentationContextResult(pcid));
-					Log.Info("{0} -> Association release request", LogID);
 					SendReleaseRequest();
 				}
 			}
 			else {
-				Log.Info("{0} -> Association release request", LogID);
 				SendReleaseRequest();
 			}
 		}
 
 		protected override void OnReceiveAssociateAccept(DcmAssociate association) {
-			Log.Info("{0} <- Association accept:\n{1}", LogID, association.ToString());
 			PerformQueryOrRelease();
 		}
 
 		protected override void OnReceiveCFindResponse(byte presentationID, ushort messageID, DcmDataset dataset, DcmStatus status) {
-			Log.Info("{0} <- C-Find response: {1}", LogID, status);
 			if (status.State != DcmState.Pending) {
 				if (OnCFindComplete != null) {
 					OnCFindComplete(_current);

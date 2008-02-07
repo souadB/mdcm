@@ -47,30 +47,6 @@ namespace Dicom.Network.Server {
 			get { return _closedOnError; }
 		}
 
-		private int _timeout = 30;
-		public int Timeout {
-			get { return _timeout; }
-			set {
-				_timeout = value;
-				if (Socket != null) {
-					Socket.SendTimeout = _timeout * 1000;
-					Socket.ReceiveTimeout = _timeout * 1000;
-				}
-			}
-		}
-
-		private string _logid = "SCP";
-		public string LogID {
-			get { return _logid; }
-			set { _logid = value; }
-		}
-
-		private Logger _log = Debug.Log;
-		public Logger Log {
-			get { return _log; }
-			set { _log = value; }
-		}
-
 		private object _state = null;
 		public object UserState {
 			get { return _state; }
@@ -79,22 +55,15 @@ namespace Dicom.Network.Server {
 		#endregion
 
 		internal void InitializeService(DcmSocket socket) {
-			socket.SendTimeout = Timeout * 1000;
-			socket.ReceiveTimeout = Timeout * 1000;
 			InitializeNetwork(socket);
 		}
 
 		protected override void OnNetworkError(Exception e) {
-			if (e != null)
-				Log.Error("{0} -> Network error: {1}", LogID, e.ToString());
-			else
-				Log.Error("{0} -> Unknown network error", LogID);
 			_closedOnError = true;
 			Close();
 		}
 
 		protected override void OnDimseTimeout() {
-			Log.Error("{0} -> DIMSE Timeout after {1} seconds", LogID, DimseTimeout);
 			_closedOnError = true;
 			Close();
 		}
@@ -108,8 +77,6 @@ namespace Dicom.Network.Server {
 		}
 
 		protected override void OnReceiveReleaseRequest() {
-			Log.Info("{0} <- Associate release request", LogID);
-			Log.Info("{0} -> Associate release response", LogID);
 			SendReleaseResponse();
 			if (_closeConnectionAfterRelease) {
 				Thread.Sleep(1);
@@ -119,7 +86,6 @@ namespace Dicom.Network.Server {
 
 		public void Close() {
 			ShutdownNetwork();
-			Log.Info("{0} <- Connection closed", LogID);
 		}
 	}
 }

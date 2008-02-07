@@ -43,16 +43,13 @@ namespace Dicom.Network.Server {
 		protected override void OnReceiveAssociateRequest(DcmAssociate association) {
 			association.NegotiateAsyncOps = false;
 			LogID = association.CallingAE;
-			Log.Info("{0} <- Association request:\n{1}", LogID, association.ToString());
 			if (OnAssociationRequest != null) {
 				DcmAssociateResult result = OnAssociationRequest(this, association);
 				if (result == DcmAssociateResult.RejectCalledAE) {
-					Log.Info("{0} -> Association reject: Rejected Called AE [{1}]", LogID, association.CalledAE);
 					SendAssociateReject(DcmRejectResult.Permanent, DcmRejectSource.ServiceUser, DcmRejectReason.CalledAENotRecognized);
 					return;
 				}
 				else if (result == DcmAssociateResult.RejectCallingAE) {
-					Log.Info("{0} -> Association reject: Rejected Calling AE [{1}]", LogID, association.CallingAE);
 					SendAssociateReject(DcmRejectResult.Permanent, DcmRejectSource.ServiceUser, DcmRejectReason.CallingAENotRecognized);
 					return;
 				}
@@ -67,30 +64,21 @@ namespace Dicom.Network.Server {
 				DcmAssociateProfile profile = DcmAssociateProfile.Find(association, true);
 				profile.Apply(association);
 			}
-			Log.Info("{0} -> Association accept:\n{1}", LogID, association.ToString());
 			SendAssociateAccept(association);
 		}
 
 		protected override void OnReceiveCEchoRequest(byte presentationID, ushort messageID, DcmPriority priority) {
-			Log.Info("{0} <- C-Echo request [pc: {1}; id: {2}]", LogID, presentationID, messageID);
-			Log.Info("{0} -> C-Echo response [{1}]: {2}", LogID, messageID, DcmStatus.Success);
 			SendCEchoResponse(presentationID, messageID, DcmStatus.Success);
 		}
 
 		protected override void OnReceiveCStoreRequest(byte presentationID, ushort messageID, DcmUID affectedInstance, 
 			DcmPriority priority, string moveAE, ushort moveMessageID, DcmDataset dataset, string fileName)
 		{
-			if (fileName != null)
-				Log.Info("{0} <- C-Store request [pc: {1}; id: {2}] (stream)", LogID, presentationID, messageID);
-			else
-				Log.Info("{0} <- C-Store request [pc: {1}; id: {2}]", LogID, presentationID, messageID);
-
 			DcmStatus status = DcmStatus.Success;
 
 			if (OnCStoreRequest != null)
 				status = OnCStoreRequest(this, presentationID, messageID, affectedInstance, priority, moveAE, moveMessageID, dataset, fileName);
 
-			Log.Info("{0} -> C-Store response [{1}]: {2}", LogID, messageID, status);
 			SendCStoreResponse(presentationID, messageID, affectedInstance, status);
 		}
 	}
