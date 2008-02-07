@@ -115,6 +115,7 @@ namespace Dicom.Network {
 		private Thread _thread;
 		private bool _stop;
 		private int _dimseTimeout;
+		private int _connectTimeout;
 		private int _socketTimeout;
 		private bool _disableTimeout;
 		private bool _isRunning;
@@ -126,7 +127,10 @@ namespace Dicom.Network {
 		#region Public Constructors
 		public DcmNetworkBase() {
 			_messageId = 1;
+			_connectTimeout = 10;
+			_socketTimeout = 30;
 			_dimseTimeout = 180;
+			_throttle = 0;
 			_isRunning = false;
 			_useFileBuffer = true;
 			_log = Dicom.Debug.Log;
@@ -142,6 +146,11 @@ namespace Dicom.Network {
 		public int DimseTimeout {
 			get { return _dimseTimeout; }
 			set { _dimseTimeout = value; }
+		}
+
+		public int ConnectTimeout {
+			get { return _connectTimeout; }
+			set { _connectTimeout = value; }
 		}
 
 		public int SocketTimeout {
@@ -206,8 +215,8 @@ namespace Dicom.Network {
 			_host = host; _port = port;
 
 			DcmSocket socket = DcmSocket.Create(type);
-			socket.SendTimeout = _socketTimeout * 1000;
-			socket.ReceiveTimeout = _socketTimeout * 1000;
+			socket.SendTimeout = _connectTimeout * 1000;
+			socket.ReceiveTimeout = _connectTimeout * 1000;
 			socket.ThrottleSpeed = _throttle;
 
 			Log.Info("{0} -> Connecting to server at {1}:{2}", LogID, host, port);
