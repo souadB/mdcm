@@ -142,7 +142,7 @@ namespace DicomScu {
 
 		private void RunDicomEcho(object state) {
 			bool success = false;
-			string msg = "Timeout or unknown failure!";
+			string msg = "Unknown failure!";
 			try {
 				CEchoClient scu = new CEchoClient();
 				scu.CallingAE = Config.LocalAE;
@@ -156,13 +156,15 @@ namespace DicomScu {
 				};
 				scu.Connect(Config.RemoteHost, Config.RemotePort, Config.UseTls ? DcmSocketType.TLS : DcmSocketType.TCP);
 				success = scu.Wait();
+
+				if (!success)
+					msg = scu.ErrorMessage;
 			}
 			catch (Exception ex) {
 				msg = ex.Message;
 			}
 
 			Invoke(new MessageBoxDelegate(ShowMessageBox), msg, "DICOM C-Echo Result", !success);
-
 			Invoke(new BoolDelegate(ToggleEchoButtons), true);
 		}
 
@@ -245,14 +247,10 @@ namespace DicomScu {
 		}
 
 		private void RunDicomSend(object state) {
-			try {
-				CStoreClient scu = (CStoreClient)state;
-				scu.Connect(Config.RemoteHost, Config.RemotePort, Config.UseTls ? DcmSocketType.TLS : DcmSocketType.TCP);
-				scu.Wait();
-			}
-			catch (Exception e) {
-				Invoke(new MessageBoxDelegate(ShowMessageBox), e.Message, "DICOM C-Store Error", true);
-			}
+			CStoreClient scu = (CStoreClient)state;
+			scu.Connect(Config.RemoteHost, Config.RemotePort, Config.UseTls ? DcmSocketType.TLS : DcmSocketType.TCP);
+			if (!scu.Wait())
+				Invoke(new MessageBoxDelegate(ShowMessageBox), scu.ErrorMessage, "DICOM C-Store Error", true);
 
 			Invoke(new BoolDelegate(ToggleSendButtons), true);
 		}

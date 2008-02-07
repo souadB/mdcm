@@ -107,6 +107,7 @@ namespace Dicom.Network {
 		private ushort _messageId;
 		private string _host;
 		private int _port;
+		private DcmSocketType _socketType;
 		private int _throttle;
 		private Stream _network;
 		private DcmSocket _socket;
@@ -172,6 +173,10 @@ namespace Dicom.Network {
 			get { return _port; }
 		}
 
+		public DcmSocketType SocketType {
+			get { return _socketType; }
+		}
+
 		public int ThrottleSpeed {
 			get { return _throttle; }
 			set {
@@ -212,20 +217,14 @@ namespace Dicom.Network {
 
 		#region Public Methods
 		public void Connect(string host, int port, DcmSocketType type) {
-			_host = host; _port = port;
-
-			DcmSocket socket = DcmSocket.Create(type);
-			socket.SendTimeout = _connectTimeout * 1000;
-			socket.ReceiveTimeout = _connectTimeout * 1000;
-			socket.ThrottleSpeed = _throttle;
-
-			Log.Info("{0} -> Connecting to server at {1}:{2}", LogID, host, port);
-			socket.Connect(host, port);
-
-			if (type == DcmSocketType.TLS)
-				Log.Info("{0} -> Authenticating SSL/TLS for server: {1}", LogID, socket.RemoteEndPoint);
-
-			InitializeNetwork(socket);
+			_host = host;
+			_port = port;
+			_socketType = type;
+			_stop = false;
+			_isRunning = true;
+			_thread = new Thread(Connect);
+			_thread.IsBackground = true;
+			_thread.Start();
 		}
 		#endregion
 
@@ -233,6 +232,7 @@ namespace Dicom.Network {
 		protected void InitializeNetwork(DcmSocket socket) {
 			socket.SendTimeout = _socketTimeout * 1000;
 			socket.ReceiveTimeout = _socketTimeout * 1000;
+			socket.ThrottleSpeed = _throttle;
 
 			_socket = socket;
 			_network = _socket.GetStream();
@@ -796,6 +796,53 @@ namespace Dicom.Network {
 			return command;
 		}
 
+		private void Connect() {
+			bool success = false;
+
+			try {
+				_socket = DcmSocket.Create(_socketType);
+				_socket.SendTimeout = _connectTimeout * 1000;
+				_socket.ReceiveTimeout = _connectTimeout * 1000;
+				_socket.ThrottleSpeed = _throttle;
+
+				Log.Info("{0} -> Connecting to server at {1}:{2}", LogID, _host, _port);
+				_socket.Connect(_host, _port);
+
+				if (_socketType == DcmSocketType.TLS)
+					Log.Info("{0} -> Authenticating SSL/TLS for server: {1}", LogID, _socket.RemoteEndPoint);
+
+				_network = _socket.GetStream();
+				success = true;
+			}
+			catch (SocketException e) {
+				if (e.SocketErrorCode == SocketError.TimedOut)
+					Log.Error("{0} -> Network timeout after {1} seconds", LogID, SocketTimeout);
+				else
+					Log.Error("{0} -> Network error: {1}", LogID, e.Message);
+				OnNetworkError(e);
+				OnConnectionClosed();
+			}
+			catch (Exception e) {
+				Log.Error("{0} -> Processing failure: {1}", LogID, e.Message);
+				OnNetworkError(e);
+				OnConnectionClosed();
+			}
+			finally {
+				if (!success) {
+					try { _network.Close(); }
+					catch { }
+					_network = null;
+					try { _socket.Close(); }
+					catch { }
+					_socket = null;
+					_isRunning = false;
+				}
+			}
+
+			if (success)
+				Process();
+		}
+
 		private void Process() {
 			try {
 				OnConnected();
@@ -828,6 +875,7 @@ namespace Dicom.Network {
 				else
 					Log.Error("{0} -> Network error: {2}", LogID, e.Message);
 				OnNetworkError(e);
+				OnConnectionClosed();
 			}
 			catch (Exception e) {
 				Log.Error("{0} -> Processing failure: {1}", LogID, e.Message);

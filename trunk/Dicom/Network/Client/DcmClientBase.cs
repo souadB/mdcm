@@ -42,6 +42,7 @@ namespace Dicom.Network.Client {
 		private DcmPriority _priority;
 		private ManualResetEvent _closedEvent;
 		private bool _closedOnError;
+		private string _error;
 		#endregion
 
 		#region Public Constructors
@@ -50,6 +51,7 @@ namespace Dicom.Network.Client {
 			_priority = DcmPriority.High;
 			_closedOnError = false;
 			_closedEvent = new ManualResetEvent(false);
+			_error = "No error";
 		}
 		#endregion
 
@@ -79,6 +81,10 @@ namespace Dicom.Network.Client {
 		public DcmPriority Priority {
 			get { return _priority; }
 			set { _priority = value; }
+		}
+
+		public string ErrorMessage {
+			get { return _error; }
 		}
 		#endregion
 
@@ -112,6 +118,7 @@ namespace Dicom.Network.Client {
 		}
 
 		protected override void OnNetworkError(Exception e) {
+			_error = e.Message;
 			_closedOnError = true;
 			Close();
 		}
