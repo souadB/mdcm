@@ -28,15 +28,25 @@ using Dicom.Codec;
 using Dicom.IO;
 
 namespace Dicom.Data {
+	/// <summary>
+	/// User class for loading and saving DICOM files
+	/// </summary>
 	public class DicomFileFormat {
-		#region Protected Members
-		protected DcmFileMetaInfo _metainfo;
-		protected DcmDataset _dataset;
+		#region Private Members
+		private DcmFileMetaInfo _metainfo;
+		private DcmDataset _dataset;
 		#endregion
 
+		/// <summary>
+		/// Initializes new DICOM file format
+		/// </summary>
 		public DicomFileFormat() {
 		}
 
+		/// <summary>
+		/// Initializes new DICOM file format from dataset
+		/// </summary>
+		/// <param name="dataset">Dataset</param>
 		public DicomFileFormat(DcmDataset dataset) {
 			_metainfo = new DcmFileMetaInfo();
 			_metainfo.FileMetaInformationVersion = DcmFileMetaInfo.Version;
@@ -49,6 +59,9 @@ namespace Dicom.Data {
 			_dataset = dataset;
 		}
 
+		/// <summary>
+		/// File Meta Information
+		/// </summary>
 		public DcmFileMetaInfo FileMetaInfo {
 			get {
 				if (_metainfo == null)
@@ -56,15 +69,29 @@ namespace Dicom.Data {
 				return _metainfo;
 			}
 		}
+
+		/// <summary>
+		/// DICOM Dataset
+		/// </summary>
 		public DcmDataset Dataset {
 			get { return _dataset; }
 		}
 
+		/// <summary>
+		/// Changes transfer syntax of dataset and updates file meta information
+		/// </summary>
+		/// <param name="ts">New transfer syntax</param>
+		/// <param name="parameters">Encode/Decode params</param>
 		public void ChangeTransferSytnax(DcmTS ts, DcmCodecParameters parameters) {
 			Dataset.ChangeTransferSyntax(ts, parameters);
 			FileMetaInfo.TransferSyntax = ts;
 		}
 
+		/// <summary>
+		/// Gets the file meta information from a DICOM file
+		/// </summary>
+		/// <param name="file">Filename</param>
+		/// <returns>File meta information</returns>
 		public static DcmFileMetaInfo LoadFileMetaInfo(String file) {
 			using (FileStream fs = File.OpenRead(file)) {
 				fs.Seek(128, SeekOrigin.Begin);
@@ -77,10 +104,21 @@ namespace Dicom.Data {
 			}
 		}
 
+		/// <summary>
+		/// Loads a dicom file
+		/// </summary>
+		/// <param name="file">Filename</param>
+		/// <param name="options">DICOM read options</param>
 		public void Load(String file, DicomReadOptions options) {
 			Load(file, null, options);
 		}
 
+		/// <summary>
+		/// Loads a dicom file, stopping at a certain tag
+		/// </summary>
+		/// <param name="file">Filename</param>
+		/// <param name="stopTag">Tag to stop parsing at</param>
+		/// <param name="options">DICOM read options</param>
 		public void Load(String file, DcmTag stopTag, DicomReadOptions options) {
 			using (FileStream fs = File.OpenRead(file)) {
 				fs.Seek(128, SeekOrigin.Begin);
@@ -96,7 +134,7 @@ namespace Dicom.Data {
 			}
 		}
 
-		protected static void CheckFileHeader(FileStream fs) {
+		private static void CheckFileHeader(FileStream fs) {
 			if (fs.ReadByte() != (byte)'D' ||
 				fs.ReadByte() != (byte)'I' ||
 				fs.ReadByte() != (byte)'C' ||
@@ -104,6 +142,11 @@ namespace Dicom.Data {
 				throw new DcmDataException("Invalid DICOM file: " + fs.Name);
 		}
 
+		/// <summary>
+		/// Gets file stream starting at DICOM dataset
+		/// </summary>
+		/// <param name="file">Filename</param>
+		/// <returns>File stream</returns>
 		public static FileStream GetDatasetStream(String file) {
 			FileStream fs = File.OpenRead(file);
 			fs.Seek(128, SeekOrigin.Begin);
@@ -119,6 +162,11 @@ namespace Dicom.Data {
 			return null;
 		}
 
+		/// <summary>
+		/// Saves a DICOM file
+		/// </summary>
+		/// <param name="file">Filename</param>
+		/// <param name="options">DICOM write options</param>
 		public void Save(String file, DicomWriteOptions options) {
 			string dir = Path.GetDirectoryName(file);
 			if (!Directory.Exists(dir))

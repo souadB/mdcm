@@ -24,8 +24,15 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace Dicom.IO {
-	class DicomParseException : Exception {
-		public DicomParseException(String s) : base(s) {
+	/// <summary>
+	/// DICOM parse exception
+	/// </summary>
+	public class DicomParseException : Exception {
+		/// <summary>
+		/// Initializes a new DicomParseException
+		/// </summary>
+		/// <param name="msg">Exception message</param>
+		public DicomParseException(String msg) : base(msg) {
 		}
 	}
 }

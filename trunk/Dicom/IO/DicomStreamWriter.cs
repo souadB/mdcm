@@ -28,11 +28,18 @@ using Dicom.Data;
 using Dicom.Utility;
 
 namespace Dicom.IO {
+	/// <summary>DICOM write status</summary>
 	public enum DicomWriteStatus {
+		/// <summary>Write operation completed successfully</summary>
 		Success,
+
+		/// <summary>Unknown error occured during write operation</summary>
 		UnknownError
 	}
 
+	/// <summary>
+	/// Writes a DICOM dataset to a stream
+	/// </summary>
 	public class DicomStreamWriter {
 		#region Private Members
 		private const uint UndefinedLength = 0xFFFFFFFF;
@@ -46,6 +53,10 @@ namespace Dicom.IO {
 		#endregion
 
 		#region Public Constructors
+		/// <summary>
+		/// Initializes a new DicomStreamWriter with a target stream
+		/// </summary>
+		/// <param name="stream">Target stream</param>
 		public DicomStreamWriter(Stream stream) {
 			_stream = stream;
 			TransferSyntax = DcmTS.ExplicitVRLittleEndian;
@@ -53,6 +64,9 @@ namespace Dicom.IO {
 		#endregion
 
 		#region Public Properties
+		/// <summary>
+		/// Transfer syntax
+		/// </summary>
 		public DcmTS TransferSyntax {
 			get { return _syntax; }
 			set {
@@ -65,6 +79,12 @@ namespace Dicom.IO {
 		}
 		#endregion
 
+		/// <summary>
+		/// Write dataset to stream
+		/// </summary>
+		/// <param name="dataset">Dataset</param>
+		/// <param name="options">DICOM write options</param>
+		/// <returns>Status code</returns>
 		public DicomWriteStatus Write(DcmDataset dataset, DicomWriteOptions options) {
 			TransferSyntax = dataset.InternalTransferSyntax;
 			dataset.SelectByteOrder(_syntax.Endian);

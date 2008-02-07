@@ -28,12 +28,21 @@ using Dicom.Data;
 using Dicom.Utility;
 
 namespace Dicom.IO {
+	/// <summary>DICOM read status</summary>
 	public enum DicomReadStatus {
+		/// <summary>Read operation completed successfully</summary>
 		Success,
+
+		/// <summary>Unknown error occurred during read operation</summary>
 		UnknownError,
+
+		/// <summary>More data is needed to complete dataset</summary>
 		NeedMoreData
 	}
 
+	/// <summary>
+	/// Reads a DICOM dataset from a stream
+	/// </summary>
 	public class DicomStreamReader {
 		#region Private Members
 		private const uint UndefinedLength = 0xFFFFFFFF;
@@ -65,6 +74,10 @@ namespace Dicom.IO {
 		#endregion
 
 		#region Public Constructors
+		/// <summary>
+		/// Initializes a new DicomStreamReader with a source stream
+		/// </summary>
+		/// <param name="stream">Source stream</param>
 		public DicomStreamReader(Stream stream) {
 			_stream = stream;
 			_isFile = _stream is FileStream;
@@ -73,6 +86,9 @@ namespace Dicom.IO {
 		#endregion
 
 		#region Public Properties
+		/// <summary>
+		/// Transfer syntax
+		/// </summary>
 		public DcmTS TransferSyntax {
 			get { return _syntax; }
 			set {
@@ -82,6 +98,9 @@ namespace Dicom.IO {
 			}
 		}
 
+		/// <summary>
+		/// DICOM dataset
+		/// </summary>
 		public DcmDataset Dataset {
 			get { return _dataset; }
 			set {
@@ -90,18 +109,30 @@ namespace Dicom.IO {
 			}
 		}
 
+		/// <summary>
+		/// Estimated size of dataset
+		/// </summary>
 		public long BytesEstimated {
 			get { return _bytes + _need; }
 		}
 
+		/// <summary>
+		/// Number of bytes read from stream
+		/// </summary>
 		public long BytesRead {
 			get { return _read; }
 		}
 
+		/// <summary>
+		/// Number of bytes remaining in stream
+		/// </summary>
 		public long BytesRemaining {
 			get { return _remain; }
 		}
 
+		/// <summary>
+		/// Number of bytes needed to complete current read operation
+		/// </summary>
 		public uint BytesNeeded {
 			get { return _need; }
 		}
@@ -136,6 +167,12 @@ namespace Dicom.IO {
 			return DicomReadStatus.NeedMoreData;
 		}
 
+		/// <summary>
+		/// Read dataset from stream
+		/// </summary>
+		/// <param name="stopAtTag">End parsing at this tag</param>
+		/// <param name="options">DICOM read options</param>
+		/// <returns>Status code</returns>
 		public DicomReadStatus Read(DcmTag stopAtTag, DicomReadOptions options) {
 			// Counters:
 			//  _remain - bytes remaining in stream
