@@ -251,7 +251,7 @@ namespace Dicom.Network {
 					File.Delete(fileName);
 		}
 
-		protected virtual void OnReceiveCStoreResponse(byte presentationID, ushort messageID, DcmUID affectedInstance, DcmStatus status) {
+		protected virtual void OnReceiveCStoreResponse(byte presentationID, ushort messageIdRespondedTo, DcmUID affectedInstance, DcmStatus status) {
 			SendAbort(DcmAbortSource.ServiceProvider, DcmAbortReason.NotSpecified);
 		}
 
@@ -259,7 +259,7 @@ namespace Dicom.Network {
 			SendAbort(DcmAbortSource.ServiceProvider, DcmAbortReason.NotSpecified);
 		}
 
-		protected virtual void OnReceiveCEchoResponse(byte presentationID, ushort messageID, DcmStatus status) {
+		protected virtual void OnReceiveCEchoResponse(byte presentationID, ushort messageIdRespondedTo, DcmStatus status) {
 			SendAbort(DcmAbortSource.ServiceProvider, DcmAbortReason.NotSpecified);
 		}
 
@@ -267,7 +267,7 @@ namespace Dicom.Network {
 			SendAbort(DcmAbortSource.ServiceProvider, DcmAbortReason.NotSpecified);
 		}
 
-		protected virtual void OnReceiveCFindResponse(byte presentationID, ushort messageID, DcmDataset dataset, DcmStatus status) {
+		protected virtual void OnReceiveCFindResponse(byte presentationID, ushort messageIdRespondedTo, DcmDataset dataset, DcmStatus status) {
 			SendAbort(DcmAbortSource.ServiceProvider, DcmAbortReason.NotSpecified);
 		}
 
@@ -275,7 +275,7 @@ namespace Dicom.Network {
 			SendAbort(DcmAbortSource.ServiceProvider, DcmAbortReason.NotSpecified);
 		}
 
-		protected virtual void OnReceiveCGetResponse(byte presentationID, ushort messageID, DcmStatus status,
+		protected virtual void OnReceiveCGetResponse(byte presentationID, ushort messageIdRespondedTo, DcmStatus status,
 			ushort remain, ushort complete, ushort warning, ushort failure) {
 			SendAbort(DcmAbortSource.ServiceProvider, DcmAbortReason.NotSpecified);
 		}
@@ -284,12 +284,67 @@ namespace Dicom.Network {
 			SendAbort(DcmAbortSource.ServiceProvider, DcmAbortReason.NotSpecified);
 		}
 
-		protected virtual void OnReceiveCMoveResponse(byte presentationID, ushort messageID, DcmStatus status, 
+		protected virtual void OnReceiveCMoveResponse(byte presentationID, ushort messageIdRespondedTo, DcmStatus status, 
 			ushort remain, ushort complete, ushort warning, ushort failure) {
 			SendAbort(DcmAbortSource.ServiceProvider, DcmAbortReason.NotSpecified);
 		}
 
 		protected virtual void OnReceiveCCancelRequest(byte presentationID, ushort messageIdRespondedTo) {
+			SendAbort(DcmAbortSource.ServiceProvider, DcmAbortReason.NotSpecified);
+		}
+
+		protected virtual void OnReceiveNEventReportRequest(byte presentationID, ushort messageID, DcmUID affectedClass, DcmUID affectedInstance,
+			ushort eventTypeID, DcmDataset dataset) {
+			SendAbort(DcmAbortSource.ServiceProvider, DcmAbortReason.NotSpecified);
+		}
+
+		protected virtual void OnReceiveNEventReportResponse(byte presentationID, ushort messageIdRespondedTo, DcmUID affectedClass, DcmUID affectedInstance,
+			ushort eventTypeID, DcmDataset dataset, DcmStatus status) {
+			SendAbort(DcmAbortSource.ServiceProvider, DcmAbortReason.NotSpecified);
+		}
+
+		protected virtual void OnReceiveNGetRequest(byte presentationID, ushort messageID, DcmUID requestedClass, DcmUID requestedInstance, DcmTag[] attributes) {
+			SendAbort(DcmAbortSource.ServiceProvider, DcmAbortReason.NotSpecified);
+		}
+
+		protected virtual void OnReceiveNGetResponse(byte presentationID, ushort messageIdRespondedTo, DcmUID affectedClass, DcmUID affectedInstance,
+			DcmDataset dataset, DcmStatus status) {
+			SendAbort(DcmAbortSource.ServiceProvider, DcmAbortReason.NotSpecified);
+		}
+
+		protected virtual void OnReceiveNSetRequest(byte presentationID, ushort messageID, DcmUID requestedClass, DcmUID requestedInstance, DcmDataset dataset) {
+			SendAbort(DcmAbortSource.ServiceProvider, DcmAbortReason.NotSpecified);
+		}
+
+		protected virtual void OnReceiveNSetResponse(byte presentationID, ushort messageIdRespondedTo, DcmUID affectedClass, DcmUID affectedInstance,
+			DcmDataset dataset, DcmStatus status) {
+			SendAbort(DcmAbortSource.ServiceProvider, DcmAbortReason.NotSpecified);
+		}
+
+		protected virtual void OnReceiveNActionRequest(byte presentationID, ushort messageID, DcmUID requestedClass, DcmUID requestedInstance,
+			ushort actionTypeID, DcmDataset dataset) {
+			SendAbort(DcmAbortSource.ServiceProvider, DcmAbortReason.NotSpecified);
+		}
+
+		protected virtual void OnReceiveNActionResponse(byte presentationID, ushort messageIdRespondedTo, DcmUID affectedClass, DcmUID affectedInstance,
+			ushort actionTypeID, DcmDataset dataset, DcmStatus status) {
+			SendAbort(DcmAbortSource.ServiceProvider, DcmAbortReason.NotSpecified);
+		}
+
+		protected virtual void OnReceiveNCreateRequest(byte presentationID, ushort messageID, DcmUID requestedClass, DcmUID requestedInstance, DcmDataset dataset) {
+			SendAbort(DcmAbortSource.ServiceProvider, DcmAbortReason.NotSpecified);
+		}
+
+		protected virtual void OnReceiveNCreateResponse(byte presentationID, ushort messageIdRespondedTo, DcmUID affectedClass, DcmUID affectedInstance,
+			DcmDataset dataset, DcmStatus status) {
+			SendAbort(DcmAbortSource.ServiceProvider, DcmAbortReason.NotSpecified);
+		}
+
+		protected virtual void OnReceiveNDeleteRequest(byte presentationID, ushort messageID, DcmUID requestedClass, DcmUID requestedInstance) {
+			SendAbort(DcmAbortSource.ServiceProvider, DcmAbortReason.NotSpecified);
+		}
+
+		protected virtual void OnReceiveNDeleteResponse(byte presentationID, ushort messageIdRespondedTo, DcmUID affectedClass, DcmUID affectedInstance, DcmStatus status) {
 			SendAbort(DcmAbortSource.ServiceProvider, DcmAbortReason.NotSpecified);
 		}
 
@@ -379,9 +434,9 @@ namespace Dicom.Network {
 			SendDimseStream(presentationID, command, datastream);
 		}
 
-		protected void SendCStoreResponse(byte presentationID, ushort messageID, DcmUID affectedInstance, DcmStatus status) {
+		protected void SendCStoreResponse(byte presentationID, ushort messageIdRespondedTo, DcmUID affectedInstance, DcmStatus status) {
 			DcmUID affectedClass = Associate.GetAbstractSyntax(presentationID);
-			DcmCommand command = CreateResponse(messageID, DcmCommandField.CStoreResponse, affectedClass, status, false);
+			DcmCommand command = CreateResponse(messageIdRespondedTo, DcmCommandField.CStoreResponse, affectedClass, status, false);
 			command.AffectedSOPInstanceUID = affectedInstance;
 			SendDimse(presentationID, command, null);
 		}
@@ -392,13 +447,13 @@ namespace Dicom.Network {
 			SendDimse(presentationID, command, dataset);
 		}
 
-		protected void SendCFindResponse(byte presentationID, ushort messageID, DcmStatus status) {
-			SendCFindResponse(presentationID, messageID, null, status);
+		protected void SendCFindResponse(byte presentationID, ushort messageIdRespondedTo, DcmStatus status) {
+			SendCFindResponse(presentationID, messageIdRespondedTo, null, status);
 		}
 
-		protected void SendCFindResponse(byte presentationID, ushort messageID, DcmDataset dataset, DcmStatus status) {
+		protected void SendCFindResponse(byte presentationID, ushort messageIdRespondedTo, DcmDataset dataset, DcmStatus status) {
 			DcmUID affectedClass = Associate.GetAbstractSyntax(presentationID);
-			DcmCommand command = CreateResponse(messageID, DcmCommandField.CFindResponse, affectedClass, status, dataset != null);
+			DcmCommand command = CreateResponse(messageIdRespondedTo, DcmCommandField.CFindResponse, affectedClass, status, dataset != null);
 			SendDimse(presentationID, command, dataset);
 		}
 
@@ -408,15 +463,15 @@ namespace Dicom.Network {
 			SendDimse(presentationID, command, dataset);
 		}
 
-		protected void SendCGetResponse(byte presentationID, ushort messageID, DcmStatus status,
+		protected void SendCGetResponse(byte presentationID, ushort messageIdRespondedTo, DcmStatus status,
 			ushort remain, ushort complete, ushort warning, ushort failure) {
-			SendCGetResponse(presentationID, messageID, status, remain, complete, warning, failure, null);
+			SendCGetResponse(presentationID, messageIdRespondedTo, status, remain, complete, warning, failure, null);
 		}
 
-		protected void SendCGetResponse(byte presentationID, ushort messageID, DcmStatus status,
+		protected void SendCGetResponse(byte presentationID, ushort messageIdRespondedTo, DcmStatus status,
 			ushort remain, ushort complete, ushort warning, ushort failure, DcmDataset dataset) {
 			DcmUID affectedClass = Associate.GetAbstractSyntax(presentationID);
-			DcmCommand command = CreateResponse(messageID, DcmCommandField.CGetResponse, affectedClass, status, dataset != null);
+			DcmCommand command = CreateResponse(messageIdRespondedTo, DcmCommandField.CGetResponse, affectedClass, status, dataset != null);
 			command.RemainingSuboperations = remain;
 			command.CompletedSuboperations = complete;
 			command.WarningSuboperations = warning;
@@ -431,15 +486,15 @@ namespace Dicom.Network {
 			SendDimse(presentationID, command, dataset);
 		}
 
-		protected void SendCMoveResponse(byte presentationID, ushort messageID, DcmStatus status,
+		protected void SendCMoveResponse(byte presentationID, ushort messageIdRespondedTo, DcmStatus status,
 			ushort remain, ushort complete, ushort warning, ushort failure) {
-			SendCMoveResponse(presentationID, messageID, status, remain, complete, warning, failure, null);
+			SendCMoveResponse(presentationID, messageIdRespondedTo, status, remain, complete, warning, failure, null);
 		}
 
-		protected void SendCMoveResponse(byte presentationID, ushort messageID, DcmStatus status,
+		protected void SendCMoveResponse(byte presentationID, ushort messageIdRespondedTo, DcmStatus status,
 			ushort remain, ushort complete, ushort warning, ushort failure, DcmDataset dataset) {
 			DcmUID affectedClass = Associate.GetAbstractSyntax(presentationID);
-			DcmCommand command = CreateResponse(messageID, DcmCommandField.CMoveResponse, affectedClass, status, dataset != null);
+			DcmCommand command = CreateResponse(messageIdRespondedTo, DcmCommandField.CMoveResponse, affectedClass, status, dataset != null);
 			command.RemainingSuboperations = remain;
 			command.CompletedSuboperations = complete;
 			command.WarningSuboperations = warning;
@@ -452,6 +507,145 @@ namespace Dicom.Network {
 			command.CommandField = DcmCommandField.CCancelRequest;
 			command.MessageIDRespondedTo = messageIdRespondedTo;
 			command.HasDataset = false;
+			SendDimse(presentationID, command, null);
+		}
+
+		protected void SendNEventReportRequest(byte presentationID, ushort messageID, DcmUID affectedClass, DcmUID affectedInstance, 
+			ushort eventTypeID, DcmDataset dataset) {
+			DcmCommand command = new DcmCommand();
+			command.AffectedSOPClassUID = affectedClass;
+			command.CommandField = DcmCommandField.NEventReportRequest;
+			command.MessageID = messageID;
+			command.HasDataset = (dataset != null);
+			command.AffectedSOPInstanceUID = affectedInstance;
+			command.EventTypeID = eventTypeID;
+			SendDimse(presentationID, command, dataset);
+		}
+
+		protected void SendNEventReportResponse(byte presentationID, ushort messageIdRespondedTo, DcmUID affectedClass, DcmUID affectedInstance,
+			ushort eventTypeID, DcmDataset dataset, DcmStatus status) {
+			DcmCommand command = new DcmCommand();
+			command.AffectedSOPClassUID = affectedClass;
+			command.CommandField = DcmCommandField.NEventReportResponse;
+			command.MessageIDRespondedTo = messageIdRespondedTo;
+			command.HasDataset = (dataset != null);
+			command.Status = status;
+			command.AffectedSOPInstanceUID = affectedInstance;
+			command.EventTypeID = eventTypeID;
+			SendDimse(presentationID, command, dataset);
+		}
+
+		protected void SendNGetRequest(byte presentationID, ushort messageID, DcmUID requestedClass, DcmUID requestedInstance, DcmTag[] attributes) {
+			DcmCommand command = new DcmCommand();
+			command.RequestedSOPClassUID = requestedClass;
+			command.CommandField = DcmCommandField.NGetRequest;
+			command.MessageID = messageID;
+			command.HasDataset = false;
+			command.RequestedSOPInstanceUID = requestedInstance;
+			command.AttributeIdentifierList = new DcmAttributeTag(DcmTags.AttributeIdentifierList);
+			command.AttributeIdentifierList.SetValues(attributes);
+			SendDimse(presentationID, command, null);
+		}
+
+		protected void SendNGetResponse(byte presentationID, ushort messageIdRespondedTo, DcmUID affectedClass, DcmUID affectedInstance, 
+			DcmDataset dataset, DcmStatus status) {
+			DcmCommand command = new DcmCommand();
+			command.AffectedSOPClassUID = affectedClass;
+			command.CommandField = DcmCommandField.NGetResponse;
+			command.MessageIDRespondedTo = messageIdRespondedTo;
+			command.HasDataset = (dataset != null);
+			command.Status = status;
+			command.AffectedSOPInstanceUID = affectedInstance;
+			SendDimse(presentationID, command, dataset);
+		}
+
+		protected void SendNSetRequest(byte presentationID, ushort messageID, DcmUID requestedClass, DcmUID requestedInstance, DcmDataset dataset) {
+			DcmCommand command = new DcmCommand();
+			command.RequestedSOPClassUID = requestedClass;
+			command.CommandField = DcmCommandField.NSetRequest;
+			command.MessageID = messageID;
+			command.HasDataset = (dataset != null);
+			command.RequestedSOPInstanceUID = requestedInstance;
+			SendDimse(presentationID, command, dataset);
+		}
+
+		protected void SendNSetResponse(byte presentationID, ushort messageIdRespondedTo, DcmUID affectedClass, DcmUID affectedInstance,
+			DcmDataset dataset, DcmStatus status) {
+			DcmCommand command = new DcmCommand();
+			command.AffectedSOPClassUID = affectedClass;
+			command.CommandField = DcmCommandField.NSetResponse;
+			command.MessageIDRespondedTo = messageIdRespondedTo;
+			command.HasDataset = (dataset != null);
+			command.Status = status;
+			command.AffectedSOPInstanceUID = affectedInstance;
+			SendDimse(presentationID, command, dataset);
+		}
+
+		protected void SendNActionRequest(byte presentationID, ushort messageID, DcmUID requestedClass, DcmUID requestedInstance, 
+			ushort actionTypeID, DcmDataset dataset) {
+			DcmCommand command = new DcmCommand();
+			command.RequestedSOPClassUID = requestedClass;
+			command.CommandField = DcmCommandField.NActionRequest;
+			command.MessageID = messageID;
+			command.HasDataset = (dataset != null);
+			command.RequestedSOPInstanceUID = requestedInstance;
+			command.ActionTypeID = actionTypeID;
+			SendDimse(presentationID, command, dataset);
+		}
+
+		protected void SendNActionResponse(byte presentationID, ushort messageIdRespondedTo, DcmUID affectedClass, DcmUID affectedInstance, 
+			ushort actionTypeID, DcmDataset dataset, DcmStatus status) {
+			DcmCommand command = new DcmCommand();
+			command.AffectedSOPClassUID = affectedClass;
+			command.CommandField = DcmCommandField.NActionResponse;
+			command.MessageIDRespondedTo = messageIdRespondedTo;
+			command.HasDataset = (dataset != null);
+			command.Status = status;
+			command.AffectedSOPInstanceUID = affectedInstance;
+			command.ActionTypeID = actionTypeID;
+			SendDimse(presentationID, command, dataset);
+		}
+
+		protected void SendNCreateRequest(byte presentationID, ushort messageID, DcmUID requestedClass, DcmUID requestedInstance, DcmDataset dataset) {
+			DcmCommand command = new DcmCommand();
+			command.RequestedSOPClassUID = requestedClass;
+			command.CommandField = DcmCommandField.NCreateRequest;
+			command.MessageID = messageID;
+			command.HasDataset = (dataset != null);
+			command.RequestedSOPInstanceUID = requestedInstance;
+			SendDimse(presentationID, command, dataset);
+		}
+
+		protected void SendNCreateResponse(byte presentationID, ushort messageIdRespondedTo, DcmUID affectedClass, DcmUID affectedInstance,
+			DcmDataset dataset, DcmStatus status) {
+			DcmCommand command = new DcmCommand();
+			command.AffectedSOPClassUID = affectedClass;
+			command.CommandField = DcmCommandField.NCreateResponse;
+			command.MessageIDRespondedTo = messageIdRespondedTo;
+			command.HasDataset = (dataset != null);
+			command.Status = status;
+			command.AffectedSOPInstanceUID = affectedInstance;
+			SendDimse(presentationID, command, dataset);
+		}
+
+		protected void SendNDeleteRequest(byte presentationID, ushort messageID, DcmUID requestedClass, DcmUID requestedInstance) {
+			DcmCommand command = new DcmCommand();
+			command.RequestedSOPClassUID = requestedClass;
+			command.CommandField = DcmCommandField.NDeleteRequest;
+			command.MessageID = messageID;
+			command.HasDataset = false;
+			command.RequestedSOPInstanceUID = requestedInstance;
+			SendDimse(presentationID, command, null);
+		}
+
+		protected void SendNDeleteResponse(byte presentationID, ushort messageIdRespondedTo, DcmUID affectedClass, DcmUID affectedInstance, DcmStatus status) {
+			DcmCommand command = new DcmCommand();
+			command.AffectedSOPClassUID = affectedClass;
+			command.CommandField = DcmCommandField.NDeleteResponse;
+			command.MessageIDRespondedTo = messageIdRespondedTo;
+			command.HasDataset = false;
+			command.Status = status;
+			command.AffectedSOPInstanceUID = affectedInstance;
 			SendDimse(presentationID, command, null);
 		}
 		#endregion
@@ -724,11 +918,11 @@ namespace Dicom.Network {
 		}
 
 		private bool ProcessDimse(byte pcid) {
-			ushort messageID = _dimse.Command.MessageID;
-			DcmPriority priority = _dimse.Command.Priority;
 			DcmCommandField commandField = _dimse.Command.CommandField;
 
 			if (commandField == DcmCommandField.CStoreRequest) {
+				ushort messageID = _dimse.Command.MessageID;
+				DcmPriority priority = _dimse.Command.Priority;
 				DcmUID affectedInstance = _dimse.Command.AffectedSOPInstanceUID;
 				string moveAE = _dimse.Command.MoveOriginator;
 				ushort moveMessageID = _dimse.Command.MoveOriginatorMessageID;
@@ -741,68 +935,190 @@ namespace Dicom.Network {
 			}
 
 			if (commandField == DcmCommandField.CStoreResponse) {
+				ushort messageIdRespondedTo = _dimse.Command.MessageIDRespondedTo;
 				DcmUID affectedInstance = _dimse.Command.AffectedSOPInstanceUID;
 				DcmStatus status = _dimse.Command.Status;
-				OnReceiveCStoreResponse(pcid, messageID, affectedInstance, status);
+				OnReceiveCStoreResponse(pcid, messageIdRespondedTo, affectedInstance, status);
 				return true;
 			}
 
 			if (commandField == DcmCommandField.CEchoRequest) {
+				ushort messageID = _dimse.Command.MessageID;
+				DcmPriority priority = _dimse.Command.Priority;
 				OnReceiveCEchoRequest(pcid, messageID, priority);
 				return true;
 			}
 
 			if (commandField == DcmCommandField.CEchoResponse) {
+				ushort messageIdRespondedTo = _dimse.Command.MessageIDRespondedTo;
 				DcmStatus status = _dimse.Command.Status;
-				OnReceiveCEchoResponse(pcid, messageID, status);
+				OnReceiveCEchoResponse(pcid, messageIdRespondedTo, status);
 				return true;
 			}
 
 			if (commandField == DcmCommandField.CFindRequest) {
+				ushort messageID = _dimse.Command.MessageID;
+				DcmPriority priority = _dimse.Command.Priority;
 				OnReceiveCFindRequest(pcid, messageID, priority, _dimse.Dataset);
 				return true;
 			}
 
 			if (commandField == DcmCommandField.CFindResponse) {
+				ushort messageIdRespondedTo = _dimse.Command.MessageIDRespondedTo;
 				DcmStatus status = _dimse.Command.Status;
-				OnReceiveCFindResponse(pcid, messageID, _dimse.Dataset, status);
+				OnReceiveCFindResponse(pcid, messageIdRespondedTo, _dimse.Dataset, status);
 				return true;
 			}
 
 			if (commandField == DcmCommandField.CGetRequest) {
+				ushort messageID = _dimse.Command.MessageID;
+				DcmPriority priority = _dimse.Command.Priority;
 				OnReceiveCGetRequest(pcid, messageID, priority, _dimse.Dataset);
 				return true;
 			}
 
 			if (commandField == DcmCommandField.CGetResponse) {
+				ushort messageIdRespondedTo = _dimse.Command.MessageIDRespondedTo;
 				DcmStatus status = _dimse.Command.Status;
 				ushort remain = _dimse.Command.RemainingSuboperations;
 				ushort complete = _dimse.Command.CompletedSuboperations;
 				ushort warning = _dimse.Command.WarningSuboperations;
 				ushort failure = _dimse.Command.FailedSuboperations;
-				OnReceiveCGetResponse(pcid, messageID, status, remain, complete, warning, failure);
+				OnReceiveCGetResponse(pcid, messageIdRespondedTo, status, remain, complete, warning, failure);
 				return true;
 			}
 
 			if (commandField == DcmCommandField.CMoveRequest) {
+				ushort messageID = _dimse.Command.MessageID;
+				DcmPriority priority = _dimse.Command.Priority;
 				string destAE = _dimse.Command.MoveDestination;
 				OnReceiveCMoveRequest(pcid, messageID, destAE, priority, _dimse.Dataset);
 				return true;
 			}
 
 			if (commandField == DcmCommandField.CMoveResponse) {
+				ushort messageIdRespondedTo = _dimse.Command.MessageIDRespondedTo;
 				DcmStatus status = _dimse.Command.Status;
 				ushort remain = _dimse.Command.RemainingSuboperations;
 				ushort complete = _dimse.Command.CompletedSuboperations;
 				ushort warning = _dimse.Command.WarningSuboperations;
 				ushort failure = _dimse.Command.FailedSuboperations;
-				OnReceiveCMoveResponse(pcid, messageID, status, remain, complete, warning, failure);
+				OnReceiveCMoveResponse(pcid, messageIdRespondedTo, status, remain, complete, warning, failure);
 				return true;
 			}
 
 			if (commandField == DcmCommandField.CCancelRequest) {
-				ushort messageIdRespondedTo = _dimse.Command.GetUInt16(DcmTags.MessageIDRespondedTo, 0);
+				ushort messageIdRespondedTo = _dimse.Command.MessageIDRespondedTo;
 				OnReceiveCCancelRequest(pcid, messageIdRespondedTo);
+				return true;
+			}
+
+			if (commandField == DcmCommandField.NEventReportRequest) {
+				ushort messageID = _dimse.Command.MessageID;
+				DcmUID affectedClass = _dimse.Command.AffectedSOPClassUID;
+				DcmUID affectedInstance = _dimse.Command.AffectedSOPInstanceUID;
+				ushort eventTypeID = _dimse.Command.EventTypeID;
+				OnReceiveNEventReportRequest(pcid, messageID, affectedClass, affectedInstance, eventTypeID, _dimse.Dataset);
+				return true;
+			}
+
+			if (commandField == DcmCommandField.NEventReportResponse) {
+				ushort messageIdRespondedTo = _dimse.Command.MessageIDRespondedTo;
+				DcmUID affectedClass = _dimse.Command.AffectedSOPClassUID;
+				DcmUID affectedInstance = _dimse.Command.AffectedSOPInstanceUID;
+				ushort eventTypeID = _dimse.Command.EventTypeID;
+				DcmStatus status = _dimse.Command.Status;
+				OnReceiveNEventReportResponse(pcid, messageIdRespondedTo, affectedClass, affectedInstance, eventTypeID, _dimse.Dataset, status);
+				return true;
+			}
+
+			if (commandField == DcmCommandField.NGetRequest) {
+				ushort messageID = _dimse.Command.MessageID;
+				DcmUID requestedClass = _dimse.Command.RequestedSOPClassUID;
+				DcmUID requestedInstance = _dimse.Command.RequestedSOPInstanceUID;
+				DcmTag[] attributes = new DcmTag[0];
+				if (_dimse.Command.AttributeIdentifierList != null)
+					attributes = _dimse.Command.AttributeIdentifierList.GetValues();
+				OnReceiveNGetRequest(pcid, messageID, requestedClass, requestedInstance, attributes);
+				return true;
+			}
+
+			if (commandField == DcmCommandField.NGetResponse) {
+				ushort messageIdRespondedTo = _dimse.Command.MessageIDRespondedTo;
+				DcmUID affectedClass = _dimse.Command.AffectedSOPClassUID;
+				DcmUID affectedInstance = _dimse.Command.AffectedSOPInstanceUID;
+				DcmStatus status = _dimse.Command.Status;
+				OnReceiveNGetResponse(pcid, messageIdRespondedTo, affectedClass, affectedInstance, _dimse.Dataset, status);
+				return true;
+			}
+
+			if (commandField == DcmCommandField.NSetRequest) {
+				ushort messageID = _dimse.Command.MessageID;
+				DcmUID requestedClass = _dimse.Command.RequestedSOPClassUID;
+				DcmUID requestedInstance = _dimse.Command.RequestedSOPInstanceUID;
+				OnReceiveNSetRequest(pcid, messageID, requestedClass, requestedInstance, _dimse.Dataset);
+				return true;
+			}
+
+			if (commandField == DcmCommandField.NSetResponse) {
+				ushort messageIdRespondedTo = _dimse.Command.MessageIDRespondedTo;
+				DcmUID affectedClass = _dimse.Command.AffectedSOPClassUID;
+				DcmUID affectedInstance = _dimse.Command.AffectedSOPInstanceUID;
+				DcmStatus status = _dimse.Command.Status;
+				OnReceiveNSetResponse(pcid, messageIdRespondedTo, affectedClass, affectedInstance, _dimse.Dataset, status);
+				return true;
+			}
+
+			if (commandField == DcmCommandField.NActionRequest) {
+				ushort messageID = _dimse.Command.MessageID;
+				DcmUID requestedClass = _dimse.Command.RequestedSOPClassUID;
+				DcmUID requestedInstance = _dimse.Command.RequestedSOPInstanceUID;
+				ushort actionTypeID = _dimse.Command.ActionTypeID;
+				OnReceiveNActionRequest(pcid, messageID, requestedClass, requestedInstance, actionTypeID, _dimse.Dataset);
+				return true;
+			}
+
+			if (commandField == DcmCommandField.NActionResponse) {
+				ushort messageIdRespondedTo = _dimse.Command.MessageIDRespondedTo;
+				DcmUID affectedClass = _dimse.Command.AffectedSOPClassUID;
+				DcmUID affectedInstance = _dimse.Command.AffectedSOPInstanceUID;
+				ushort actionTypeID = _dimse.Command.ActionTypeID;
+				DcmStatus status = _dimse.Command.Status;
+				OnReceiveNActionResponse(pcid, messageIdRespondedTo, affectedClass, affectedInstance, actionTypeID, _dimse.Dataset, status);
+				return true;
+			}
+
+			if (commandField == DcmCommandField.NCreateRequest) {
+				ushort messageID = _dimse.Command.MessageID;
+				DcmUID requestedClass = _dimse.Command.RequestedSOPClassUID;
+				DcmUID requestedInstance = _dimse.Command.RequestedSOPInstanceUID;
+				OnReceiveNCreateRequest(pcid, messageID, requestedClass, requestedInstance, _dimse.Dataset);
+				return true;
+			}
+
+			if (commandField == DcmCommandField.NCreateResponse) {
+				ushort messageIdRespondedTo = _dimse.Command.MessageIDRespondedTo;
+				DcmUID affectedClass = _dimse.Command.AffectedSOPClassUID;
+				DcmUID affectedInstance = _dimse.Command.AffectedSOPInstanceUID;
+				DcmStatus status = _dimse.Command.Status;
+				OnReceiveNCreateResponse(pcid, messageIdRespondedTo, affectedClass, affectedInstance, _dimse.Dataset, status);
+				return true;
+			}
+
+			if (commandField == DcmCommandField.NDeleteRequest) {
+				ushort messageID = _dimse.Command.MessageID;
+				DcmUID requestedClass = _dimse.Command.RequestedSOPClassUID;
+				DcmUID requestedInstance = _dimse.Command.RequestedSOPInstanceUID;
+				OnReceiveNDeleteRequest(pcid, messageID, requestedClass, requestedInstance);
+				return true;
+			}
+
+			if (commandField == DcmCommandField.NDeleteResponse) {
+				ushort messageIdRespondedTo = _dimse.Command.MessageIDRespondedTo;
+				DcmUID affectedClass = _dimse.Command.AffectedSOPClassUID;
+				DcmUID affectedInstance = _dimse.Command.AffectedSOPInstanceUID;
+				DcmStatus status = _dimse.Command.Status;
+				OnReceiveNDeleteResponse(pcid, messageIdRespondedTo, affectedClass, affectedInstance, status);
 				return true;
 			}
 

@@ -287,9 +287,6 @@ namespace Dicom.Data {
 		}
 
 		#region Dicom UIDs
-		public static DcmUID JPEGXRPrivate = new DcmUID(Implementation.ClassUID + ".12", "JPEG XR Private", UidType.TransferSyntax);
-		public static DcmUID PNGPrivate = new DcmUID(Implementation.ClassUID + ".15", "PNG Private", UidType.TransferSyntax);
-
 		/// <summary>TransferSyntax: Implicit VR Little Endian</summary>
 		public static DcmUID ImplicitVRLittleEndian = new DcmUID("1.2.840.10008.1.2", "Implicit VR Little Endian", UidType.TransferSyntax);
 

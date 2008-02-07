@@ -336,8 +336,8 @@ namespace Dicom.Network.Client {
 			InternalClose(_images.Count == 0);
 		}
 
-		protected override void OnReceiveCStoreResponse(byte presentationID, ushort messageID, DcmUID affectedInstance, DcmStatus status) {
-			Log.Info("{0} <- C-Store response [{1}]: {2}", LogID, messageID, status);
+		protected override void OnReceiveCStoreResponse(byte presentationID, ushort messageIdRespondedTo, DcmUID affectedInstance, DcmStatus status) {
+			Log.Info("{0} <- C-Store response [{1}]: {2}", LogID, messageIdRespondedTo, status);
 			_images[0].Status = status;
 			if (OnCStoreResponse != null)
 				OnCStoreResponse(this, _images[0], status);
