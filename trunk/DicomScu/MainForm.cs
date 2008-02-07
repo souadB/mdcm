@@ -148,6 +148,7 @@ namespace DicomScu {
 				scu.CallingAE = Config.LocalAE;
 				scu.CalledAE = Config.RemoteAE;
 				scu.MaxPduSize = Config.MaxPdu;
+				scu.ConnectTimeout = 5;
 				scu.SocketTimeout = 5;
 				scu.DimseTimeout = 5;
 				scu.OnCEchoResponse += delegate(byte presentationId, ushort messageId, DcmStatus status) {
@@ -223,7 +224,8 @@ namespace DicomScu {
 			scu.CallingAE = Config.LocalAE;
 			scu.CalledAE = Config.RemoteAE;
 			scu.MaxPduSize = Config.MaxPdu;
-			scu.SocketTimeout = 5;
+			scu.ConnectTimeout = 10;
+			scu.SocketTimeout = Config.Timeout;
 			scu.DimseTimeout = Config.Timeout;
 			scu.SerializedPresentationContexts = true;
 			scu.PreferredTransferSyntax = TransferSyntaxes[Config.TransferSyntax];
@@ -246,7 +248,6 @@ namespace DicomScu {
 			try {
 				CStoreClient scu = (CStoreClient)state;
 				scu.Connect(Config.RemoteHost, Config.RemotePort, Config.UseTls ? DcmSocketType.TLS : DcmSocketType.TCP);
-				scu.SocketTimeout = Config.Timeout;
 				scu.Wait();
 			}
 			catch (Exception e) {
