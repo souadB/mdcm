@@ -291,19 +291,19 @@
             this.NotifyMenuOpen,
             this.NotifyMenuExit});
 			this.menuNotify.Name = "menuNotify";
-			this.menuNotify.Size = new System.Drawing.Size(101, 48);
+			this.menuNotify.Size = new System.Drawing.Size(112, 48);
 			// 
 			// NotifyMenuOpen
 			// 
 			this.NotifyMenuOpen.Name = "NotifyMenuOpen";
-			this.NotifyMenuOpen.Size = new System.Drawing.Size(100, 22);
+			this.NotifyMenuOpen.Size = new System.Drawing.Size(111, 22);
 			this.NotifyMenuOpen.Text = "&Open";
 			this.NotifyMenuOpen.Click += new System.EventHandler(this.OnNotifyMenuOpen);
 			// 
 			// NotifyMenuExit
 			// 
 			this.NotifyMenuExit.Name = "NotifyMenuExit";
-			this.NotifyMenuExit.Size = new System.Drawing.Size(100, 22);
+			this.NotifyMenuExit.Size = new System.Drawing.Size(111, 22);
 			this.NotifyMenuExit.Text = "&Exit";
 			this.NotifyMenuExit.Click += new System.EventHandler(this.OnClickNotifyMenuExit);
 			// 
