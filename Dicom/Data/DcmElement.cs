@@ -121,6 +121,10 @@ namespace Dicom.Data {
 				_bb.Unload();
 		}
 
+		public override DcmItem Clone() {
+			return DcmElement.Create(Tag, VR, StreamPosition, Endian, ByteBuffer.Clone());
+		}
+
 		public override void Dump(StringBuilder sb, string prefix, DicomDumpOptions options) {
 			int ValueWidth = 40 - prefix.Length;
 			int SbLength = sb.Length;
@@ -1286,9 +1290,9 @@ namespace Dicom.Data {
 		private void InitFormats() {
 			if (_formats == null) {
 				_formats = new string[37];
-				_formats[0] = "HH";
-				_formats[1] = "HHmm";
-				_formats[2] = "HHmmss";
+				_formats[0] = "HHmmss";
+				_formats[1] = "HH";
+				_formats[2] = "HHmm";				
 				_formats[3] = "HHmmssf";
 				_formats[4] = "HHmmssff";
 				_formats[5] = "HHmmssfff";

@@ -103,4 +103,12 @@ namespace Dicom.Utility {
 			return ByteUtility.SHA1(bytes);
 		}
 	}
+
+	public static class MiscUtility {
+		public static void Swap(ref int i1, ref int i2) {
+			int it = i1;
+			i1 = i2;
+			i2 = it;
+		}
+	}
 }

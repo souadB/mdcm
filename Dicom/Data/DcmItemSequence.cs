@@ -82,6 +82,12 @@ namespace Dicom.Data {
 				_dataset.UnloadDeferredBuffers();
 		}
 
+		public override DcmItem Clone() {
+			DcmItemSequenceItem si = new DcmItemSequenceItem(StreamPosition, StreamLength);
+			si.Dataset = Dataset.Clone();
+			return si;
+		}
+
 		public override void Dump(StringBuilder sb, string prefix, DicomDumpOptions options) {
 			sb.AppendLine().Append(prefix).Append(" Item:").AppendLine();
 			Dataset.Dump(sb, prefix + "  > ", options);
@@ -109,6 +115,12 @@ namespace Dicom.Data {
 
 		public IList<DcmItemSequenceItem> SequenceItems {
 			get { return _items; }
+		}
+
+		public void AddSequenceItem(DcmDataset itemDataset) {
+			DcmItemSequenceItem item = new DcmItemSequenceItem();
+			item.Dataset = itemDataset;
+			AddSequenceItem(item);
 		}
 
 		public void AddSequenceItem(DcmItemSequenceItem item) {
@@ -148,6 +160,14 @@ namespace Dicom.Data {
 			foreach (DcmItemSequenceItem item in SequenceItems) {
 				item.Unload();
 			}
+		}
+
+		public override DcmItem Clone() {
+			DcmItemSequence sq = new DcmItemSequence(Tag, StreamPosition, StreamLength, Endian);
+			foreach (DcmItemSequenceItem si in SequenceItems) {
+				sq.AddSequenceItem((DcmItemSequenceItem)si.Clone());
+			}
+			return sq;
 		}
 
 		public override void Dump(StringBuilder sb, string prefix, DicomDumpOptions options) {

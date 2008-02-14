@@ -26,7 +26,7 @@ using System.Text;
 using Dicom.IO;
 
 namespace Dicom.Data {
-	public class DcmItem {
+	public abstract class DcmItem {
 		#region Protected Members
 		protected DcmTag _tag;
 		protected DcmVR _vr;
@@ -87,18 +87,15 @@ namespace Dicom.Data {
 		#endregion
 
 		#region Methods to Override
-		internal virtual uint CalculateWriteLength(DcmTS syntax, DicomWriteOptions options) {
-			return 0;
-		}
+		internal abstract uint CalculateWriteLength(DcmTS syntax, DicomWriteOptions options);
 
-		protected virtual void ChangeEndianInternal() {
-		}
+		protected abstract void ChangeEndianInternal();
 
-		internal virtual void Preload() {
-		}
+		internal abstract void Preload();
 
-		internal virtual void Unload() {
-		}
+		internal abstract void Unload();
+
+		public abstract DcmItem Clone();
 
 		public virtual void Dump(StringBuilder sb, String prefix,  DicomDumpOptions options) {
 			sb.Append(prefix).AppendLine(_tag.Entry.ToString());

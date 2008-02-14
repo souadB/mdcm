@@ -123,6 +123,33 @@ namespace Dicom.Data {
 				item.Unload();
 			}
 		}
+
+		public void AddReferenceSequenceItem(DcmTag tag, DcmUID classUid, DcmUID instUid) {
+			DcmItemSequence sq = GetSQ(tag);
+
+			if (sq == null) {
+				sq = new DcmItemSequence(tag);
+				AddItem(sq);
+			}
+
+			DcmItemSequenceItem item = new DcmItemSequenceItem();
+			item.Dataset.AddElementWithValue(DcmTags.ReferencedSOPClassUID, classUid);
+			item.Dataset.AddElementWithValue(DcmTags.ReferencedSOPInstanceUID, instUid);
+			sq.AddSequenceItem(item);
+		}
+
+		public void Merge(DcmDataset dataset) {
+			foreach (DcmItem item in dataset.Elements)
+				AddItem(item);
+		}
+
+		public DcmDataset Clone() {
+			DcmDataset dataset = new DcmDataset(StreamPosition, StreamLength, InternalTransferSyntax);
+			foreach (DcmItem item in Elements) {
+				dataset.AddItem(item.Clone());
+			}
+			return dataset;
+		}
 		#endregion
 
 		#region Element Access Methods
@@ -252,7 +279,10 @@ namespace Dicom.Data {
 		}
 
 		public DcmItem GetItem(DcmTag tag) {
-			return _items[tag.Card];
+			DcmItem item = null;
+			if (!_items.TryGetValue(tag.Card, out item))
+				return null;
+			return item;
 		}
 
 		public bool Contains(DcmTag tag) {
@@ -527,6 +557,13 @@ namespace Dicom.Data {
 		#endregion
 
 		#region Data Access Methods
+		public string GetValueString(DcmTag tag) {
+			DcmElement elem = GetElement(tag);
+			if (elem == null)
+				return null;
+			return elem.GetValueString();
+		}
+
 		public string GetString(DcmTag tag, string deflt) {
 			return GetString(tag, 0, deflt);
 		}
@@ -615,6 +652,16 @@ namespace Dicom.Data {
 			}
 			catch { }
 			return dt;
+		}
+
+		public void SetDateTime(DcmTag dtag, DcmTag ttag, DateTime value) {
+			DcmDate da = new DcmDate(dtag);
+			da.SetDateTime(value);
+			AddItem(da);
+
+			DcmTime tm = new DcmTime(ttag);
+			tm.SetDateTime(value);
+			AddItem(tm);
 		}
 
 		public DcmTag GetDcmTag(DcmTag tag) {
@@ -712,7 +759,7 @@ namespace Dicom.Data {
 				SetInternalTransferSyntax(newTransferSyntax);
 			}
 
-			if (!newTransferSyntax.IsExplicitVR && GetVR(DcmTags.PixelData) != DcmVR.OW) {
+			if (Contains(DcmTags.PixelData) && !newTransferSyntax.IsExplicitVR && GetVR(DcmTags.PixelData) != DcmVR.OW) {
 				DcmOtherWord ow = new DcmOtherWord(DcmTags.PixelData);
 				if (newPixelData == null)
 					newPixelData = new DcmPixelData(this);
@@ -735,7 +782,7 @@ namespace Dicom.Data {
 				}
 				else {
 					throw new DcmDataException(
-						String.Format("Unable to pixel data to OW:  bits allocated = {0}", newPixelData.BitsAllocated));
+						String.Format("Unable to convert pixel data to OW:  bits allocated = {0}", newPixelData.BitsAllocated));
 				}
 				AddItem(ow);
 			}

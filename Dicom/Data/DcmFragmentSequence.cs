@@ -127,6 +127,15 @@ namespace Dicom.Data {
 			}
 		}
 
+		public override DcmItem Clone() {
+			DcmFragmentSequence sq = new DcmFragmentSequence(Tag, VR, StreamPosition, Endian);
+			sq.SetOffsetTable(OffsetTable);
+			foreach (ByteBuffer fragment in Fragments) {
+				sq.AddFragment(fragment.Clone());
+			}
+			return sq;
+		}
+
 		public override void Dump(StringBuilder sb, string prefix, DicomDumpOptions options) {
 			sb.Append(prefix);
 			sb.AppendFormat("{0} {1} {2} {3}", Tag.ToString(), VR.VR, Tag.Entry.Name, HasOffsetTable ? "/w Offset Table" : "");

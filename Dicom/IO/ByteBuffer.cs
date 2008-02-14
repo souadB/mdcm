@@ -150,6 +150,13 @@ namespace Dicom.IO {
 			}
 		}
 
+		public ByteBuffer Clone() {
+			if (_segment != null)
+				return new ByteBuffer(_segment, Endian);
+			else
+				return new ByteBuffer(ToBytes(), Endian);
+		}
+
 		public void Clear() {
 			_ms = null;
 			_br = null;

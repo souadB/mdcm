@@ -43,7 +43,7 @@ namespace Dicom.Network {
 		RejectTransferSyntaxesNotSupported = 4
 	}
 
-	internal class DcmPresContext {
+	public class DcmPresContext {
 		#region Private Members
 		private byte _pcid;
 		private DcmPresContextResult _result;
@@ -405,21 +405,19 @@ namespace Dicom.Network {
 			}
 			return 0;
 		}
-		#endregion
 
-		#region Internal Methods
-		internal void AddPresentationContext(byte pcid, DcmUID abstractSyntax, DcmTS transferSyntax, DcmPresContextResult result) {
+		public void AddPresentationContext(byte pcid, DcmUID abstractSyntax, DcmTS transferSyntax, DcmPresContextResult result) {
 			_presContexts.Add(pcid, new DcmPresContext(pcid, abstractSyntax, transferSyntax, result));
 		}
 
-		internal DcmPresContext GetPresentationContext(byte pcid) {
+		public DcmPresContext GetPresentationContext(byte pcid) {
 			DcmPresContext ctx = null;
 			if (!_presContexts.TryGetValue(pcid, out ctx))
 				throw new DcmNetworkException("Invalid Presentaion Context ID");
 			return ctx;
 		}
 
-		internal IList<DcmPresContext> GetPresentationContexts() {
+		public IList<DcmPresContext> GetPresentationContexts() {
 			return _presContexts.Values;
 		}
 		#endregion
