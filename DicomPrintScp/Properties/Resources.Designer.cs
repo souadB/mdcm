@@ -59,12 +59,5 @@ namespace DicomPrintScp.Properties {
                 resourceCulture = value;
             }
         }
-        
-        internal static System.Drawing.Icon TrayIcon {
-            get {
-                object obj = ResourceManager.GetObject("TrayIcon", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
     }
 }
