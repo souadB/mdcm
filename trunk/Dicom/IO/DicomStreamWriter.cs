@@ -131,6 +131,8 @@ namespace Dicom.IO {
 					}
 
 					foreach (DcmItemSequenceItem ids in sq.SequenceItems) {
+						ids.Dataset.ChangeTransferSyntax(dataset.InternalTransferSyntax, null);
+
 						_writer.Write((ushort)DcmTags.Item.Group);
 						_writer.Write((ushort)DcmTags.Item.Element);
 

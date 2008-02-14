@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DicomDump", "DicomDump\Dico
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DicomScu", "DicomScu\DicomScu.csproj", "{D08C440B-4FE7-407F-8024-2CAB3F009DBE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DicomPrintScp", "DicomPrintScp\DicomPrintScp.csproj", "{712032DE-DB4A-4669-A7B3-C6534B75B9BB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,10 @@ Global
 		{D08C440B-4FE7-407F-8024-2CAB3F009DBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D08C440B-4FE7-407F-8024-2CAB3F009DBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D08C440B-4FE7-407F-8024-2CAB3F009DBE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{712032DE-DB4A-4669-A7B3-C6534B75B9BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{712032DE-DB4A-4669-A7B3-C6534B75B9BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{712032DE-DB4A-4669-A7B3-C6534B75B9BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{712032DE-DB4A-4669-A7B3-C6534B75B9BB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

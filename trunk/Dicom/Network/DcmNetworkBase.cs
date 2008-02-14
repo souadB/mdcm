@@ -417,7 +417,7 @@ namespace Dicom.Network {
 			SendAbort(DcmAbortSource.ServiceProvider, DcmAbortReason.NotSpecified);
 		}
 
-		protected virtual void OnReceiveNCreateRequest(byte presentationID, ushort messageID, DcmUID requestedClass, DcmUID requestedInstance, DcmDataset dataset) {
+		protected virtual void OnReceiveNCreateRequest(byte presentationID, ushort messageID, DcmUID affectedClass, DcmUID affectedInstance, DcmDataset dataset) {
 			SendAbort(DcmAbortSource.ServiceProvider, DcmAbortReason.NotSpecified);
 		}
 
@@ -629,7 +629,7 @@ namespace Dicom.Network {
 			command.AffectedSOPInstanceUID = affectedInstance;
 			command.EventTypeID = eventTypeID;
 			Log.Info("{0} -> N-EventReport request [pc: {1}; id: {2}; class: {3}; event: {4:x4}]", 
-				LogID, presentationID, messageID, affectedClass, eventTypeID);
+				LogID, presentationID, messageID, affectedClass.Description, eventTypeID);
 			SendDimse(presentationID, command, dataset);
 		}
 
@@ -644,7 +644,7 @@ namespace Dicom.Network {
 			command.AffectedSOPInstanceUID = affectedInstance;
 			command.EventTypeID = eventTypeID;
 			Log.Info("{0} -> N-EventReport response [id: {1}; class: {2}; event: {3:x4}]: {4}}",
-				LogID, messageIdRespondedTo, affectedClass, eventTypeID, status);
+				LogID, messageIdRespondedTo, affectedClass.Description, eventTypeID, status);
 			SendDimse(presentationID, command, dataset);
 		}
 
@@ -657,7 +657,7 @@ namespace Dicom.Network {
 			command.RequestedSOPInstanceUID = requestedInstance;
 			command.AttributeIdentifierList = new DcmAttributeTag(DcmTags.AttributeIdentifierList);
 			command.AttributeIdentifierList.SetValues(attributes);
-			Log.Info("{0} -> N-Get request [pc: {1}; id: {2}; class: {3}]", LogID, presentationID, messageID, requestedClass);
+			Log.Info("{0} -> N-Get request [pc: {1}; id: {2}; class: {3}]", LogID, presentationID, messageID, requestedClass.Description);
 			SendDimse(presentationID, command, null);
 		}
 
@@ -670,7 +670,7 @@ namespace Dicom.Network {
 			command.HasDataset = (dataset != null);
 			command.Status = status;
 			command.AffectedSOPInstanceUID = affectedInstance;
-			Log.Info("{0} -> N-Get response [id: {1}; class: {2}]: {3}", LogID, messageIdRespondedTo, affectedClass, status);
+			Log.Info("{0} -> N-Get response [id: {1}; class: {2}]: {3}", LogID, messageIdRespondedTo, affectedClass.Description, status);
 			SendDimse(presentationID, command, dataset);
 		}
 
@@ -681,7 +681,7 @@ namespace Dicom.Network {
 			command.MessageID = messageID;
 			command.HasDataset = (dataset != null);
 			command.RequestedSOPInstanceUID = requestedInstance;
-			Log.Info("{0} -> N-Set request [pc: {1}; id: {2}; class: {3}]", LogID, presentationID, messageID, requestedClass);
+			Log.Info("{0} -> N-Set request [pc: {1}; id: {2}; class: {3}]", LogID, presentationID, messageID, requestedClass.Description);
 			SendDimse(presentationID, command, dataset);
 		}
 
@@ -694,7 +694,7 @@ namespace Dicom.Network {
 			command.HasDataset = (dataset != null);
 			command.Status = status;
 			command.AffectedSOPInstanceUID = affectedInstance;
-			Log.Info("{0} -> N-Set response [id: {1}; class: {2}]: {3}", LogID, messageIdRespondedTo, affectedClass, status);
+			Log.Info("{0} -> N-Set response [id: {1}; class: {2}]: {3}", LogID, messageIdRespondedTo, affectedClass.Description, status);
 			SendDimse(presentationID, command, dataset);
 		}
 
@@ -723,18 +723,18 @@ namespace Dicom.Network {
 			command.AffectedSOPInstanceUID = affectedInstance;
 			command.ActionTypeID = actionTypeID;
 			Log.Info("{0} -> N-Action response [id: {1}; class: {2}; action: {3:x4}]: {4}",
-				LogID, messageIdRespondedTo, affectedClass, actionTypeID, status);
+				LogID, messageIdRespondedTo, affectedClass.Description, actionTypeID, status);
 			SendDimse(presentationID, command, dataset);
 		}
 
-		protected void SendNCreateRequest(byte presentationID, ushort messageID, DcmUID requestedClass, DcmUID requestedInstance, DcmDataset dataset) {
+		protected void SendNCreateRequest(byte presentationID, ushort messageID, DcmUID affectedClass, DcmUID affectedInstance, DcmDataset dataset) {
 			DcmCommand command = new DcmCommand();
-			command.RequestedSOPClassUID = requestedClass;
+			command.AffectedSOPClassUID = affectedClass;
 			command.CommandField = DcmCommandField.NCreateRequest;
 			command.MessageID = messageID;
 			command.HasDataset = (dataset != null);
-			command.RequestedSOPInstanceUID = requestedInstance;
-			Log.Info("{0} -> N-Create request [pc: {1}; id: {2}; class: {3}]", LogID, presentationID, messageID, requestedClass);
+			command.AffectedSOPInstanceUID = affectedInstance;
+			Log.Info("{0} -> N-Create request [pc: {1}; id: {2}; class: {3}]", LogID, presentationID, messageID, affectedClass.Description);
 			SendDimse(presentationID, command, dataset);
 		}
 
@@ -747,7 +747,7 @@ namespace Dicom.Network {
 			command.HasDataset = (dataset != null);
 			command.Status = status;
 			command.AffectedSOPInstanceUID = affectedInstance;
-			Log.Info("{0} -> N-Create response [id: {1}; class: {2}]: {3}", LogID, messageIdRespondedTo, affectedClass, status);
+			Log.Info("{0} -> N-Create response [id: {1}; class: {2}]: {3}", LogID, messageIdRespondedTo, affectedClass.Description, status);
 			SendDimse(presentationID, command, dataset);
 		}
 
@@ -758,7 +758,7 @@ namespace Dicom.Network {
 			command.MessageID = messageID;
 			command.HasDataset = false;
 			command.RequestedSOPInstanceUID = requestedInstance;
-			Log.Info("{0} -> N-Delete request [pc: {1}; id: {2}; class: {3}]", LogID, presentationID, messageID, requestedClass);
+			Log.Info("{0} -> N-Delete request [pc: {1}; id: {2}; class: {3}]", LogID, presentationID, messageID, requestedClass.Description);
 			SendDimse(presentationID, command, null);
 		}
 
@@ -770,7 +770,7 @@ namespace Dicom.Network {
 			command.HasDataset = false;
 			command.Status = status;
 			command.AffectedSOPInstanceUID = affectedInstance;
-			Log.Info("{0} -> N-Delete response [id: {1}; class: {2}]: {3}", LogID, messageIdRespondedTo, affectedClass, status);
+			Log.Info("{0} -> N-Delete response [id: {1}; class: {2}]: {3}", LogID, messageIdRespondedTo, affectedClass.Description, status);
 			SendDimse(presentationID, command, null);
 		}
 		#endregion
@@ -825,7 +825,6 @@ namespace Dicom.Network {
 				if (_socketType == DcmSocketType.TLS)
 					Log.Info("{0} -> Authenticating SSL/TLS for server: {1}", LogID, _socket.RemoteEndPoint);
 
-				
 				_socket.SendTimeout = _socketTimeout * 1000;
 				_socket.ReceiveTimeout = _socketTimeout * 1000;
 				_socket.ThrottleSpeed = _throttle;
@@ -1120,7 +1119,7 @@ namespace Dicom.Network {
 
 				return true;
 			} catch (Exception e) {
-				Log.Error("{0} -> Error reading DIMSE: {1}", e.Message);
+				Log.Error("{0} -> Error reading DIMSE: {1}", LogID, e.Message);
 				_dimse.Abort();
 				_dimse = null;
 				return false;
@@ -1150,7 +1149,8 @@ namespace Dicom.Network {
 				ushort messageIdRespondedTo = _dimse.Command.MessageIDRespondedTo;
 				DcmUID affectedInstance = _dimse.Command.AffectedSOPInstanceUID;
 				DcmStatus status = _dimse.Command.Status;
-				Log.Info("{0} <- C-Store response [id: {1}]: {2}", LogID, messageIdRespondedTo, status);
+				Log.Info("{0} <- C-Store response [id: {1}]: {2}", 
+					LogID, messageIdRespondedTo, status);
 				OnReceiveCStoreResponse(presentationID, messageIdRespondedTo, affectedInstance, status);
 				return true;
 			}
@@ -1158,7 +1158,8 @@ namespace Dicom.Network {
 			if (commandField == DcmCommandField.CEchoRequest) {
 				ushort messageID = _dimse.Command.MessageID;
 				DcmPriority priority = _dimse.Command.Priority;
-				Log.Info("{0} <- C-Echo request [pc: {1}; id: {2}]", LogID, presentationID, messageID);
+				Log.Info("{0} <- C-Echo request [pc: {1}; id: {2}]", 
+					LogID, presentationID, messageID);
 				OnReceiveCEchoRequest(presentationID, messageID, priority);
 				return true;
 			}
@@ -1166,7 +1167,8 @@ namespace Dicom.Network {
 			if (commandField == DcmCommandField.CEchoResponse) {
 				ushort messageIdRespondedTo = _dimse.Command.MessageIDRespondedTo;
 				DcmStatus status = _dimse.Command.Status;
-				Log.Info("{0} <- C-Echo response [{1}]: {2}", LogID, messageIdRespondedTo, status);
+				Log.Info("{0} <- C-Echo response [{1}]: {2}", 
+					LogID, messageIdRespondedTo, status);
 				OnReceiveCEchoResponse(presentationID, messageIdRespondedTo, status);
 				return true;
 			}
@@ -1175,7 +1177,8 @@ namespace Dicom.Network {
 				ushort messageID = _dimse.Command.MessageID;
 				DcmPriority priority = _dimse.Command.Priority;
 				String level = _dimse.Dataset.GetString(DcmTags.QueryRetrieveLevel, "UNKNOWN");
-				Log.Info("{0} <- C-Find request [pc: {1}; id: {2}; lvl: {3}]", LogID, presentationID, messageID, level);
+				Log.Info("{0} <- C-Find request [pc: {1}; id: {2}; lvl: {3}]", 
+					LogID, presentationID, messageID, level);
 				OnReceiveCFindRequest(presentationID, messageID, priority, _dimse.Dataset);
 				return true;
 			}
@@ -1183,7 +1186,8 @@ namespace Dicom.Network {
 			if (commandField == DcmCommandField.CFindResponse) {
 				ushort messageIdRespondedTo = _dimse.Command.MessageIDRespondedTo;
 				DcmStatus status = _dimse.Command.Status;
-				Log.Info("{0} <- C-Find response [id: {1}]: {2}", LogID, messageIdRespondedTo, status);
+				Log.Info("{0} <- C-Find response [id: {1}]: {2}", 
+					LogID, messageIdRespondedTo, status);
 				OnReceiveCFindResponse(presentationID, messageIdRespondedTo, _dimse.Dataset, status);
 				return true;
 			}
@@ -1192,7 +1196,8 @@ namespace Dicom.Network {
 				ushort messageID = _dimse.Command.MessageID;
 				DcmPriority priority = _dimse.Command.Priority;
 				String level = _dimse.Dataset.GetString(DcmTags.QueryRetrieveLevel, "UNKNOWN");
-				Log.Info("{0} <- C-Get request [pc: {1}; id: {2}; lvl: {3}]", LogID, presentationID, messageID, level);
+				Log.Info("{0} <- C-Get request [pc: {1}; id: {2}; lvl: {3}]", 
+					LogID, presentationID, messageID, level);
 				OnReceiveCGetRequest(presentationID, messageID, priority, _dimse.Dataset);
 				return true;
 			}
@@ -1215,7 +1220,8 @@ namespace Dicom.Network {
 				DcmPriority priority = _dimse.Command.Priority;
 				string destAE = _dimse.Command.MoveDestination;
 				String level = _dimse.Dataset.GetString(DcmTags.QueryRetrieveLevel, "UNKNOWN");
-				Log.Info("{0} <- C-Move request [pc: {1}; id: {2}; lvl: {3}]", LogID, presentationID, messageID, level);
+				Log.Info("{0} <- C-Move request [pc: {1}; id: {2}; lvl: {3}]", 
+					LogID, presentationID, messageID, level);
 				OnReceiveCMoveRequest(presentationID, messageID, destAE, priority, _dimse.Dataset);
 				return true;
 			}
@@ -1245,8 +1251,8 @@ namespace Dicom.Network {
 				DcmUID affectedClass = _dimse.Command.AffectedSOPClassUID;
 				DcmUID affectedInstance = _dimse.Command.AffectedSOPInstanceUID;
 				ushort eventTypeID = _dimse.Command.EventTypeID;
-				Log.Info("{0} <- N-EventReport request [pc: {1}; id: {2}; class: {3}; event: {4:x4}]", 
-					LogID, presentationID, messageID, affectedClass, eventTypeID);
+				Log.Info("{0} <- N-EventReport request [pc: {1}; id: {2}; class: {3}; event: {4:x4}]",
+					LogID, presentationID, messageID, affectedClass.Description, eventTypeID);
 				OnReceiveNEventReportRequest(presentationID, messageID, affectedClass, affectedInstance, eventTypeID, _dimse.Dataset);
 				return true;
 			}
@@ -1258,7 +1264,7 @@ namespace Dicom.Network {
 				ushort eventTypeID = _dimse.Command.EventTypeID;
 				DcmStatus status = _dimse.Command.Status;
 				Log.Info("{0} <- N-EventReport response [id: {1}; class: {2}; event: {3:x4}]: {4}}",
-					LogID, messageIdRespondedTo, affectedClass, eventTypeID, status);
+					LogID, messageIdRespondedTo, affectedClass.Description, eventTypeID, status);
 				OnReceiveNEventReportResponse(presentationID, messageIdRespondedTo, affectedClass, affectedInstance, eventTypeID, _dimse.Dataset, status);
 				return true;
 			}
@@ -1270,7 +1276,8 @@ namespace Dicom.Network {
 				DcmTag[] attributes = new DcmTag[0];
 				if (_dimse.Command.AttributeIdentifierList != null)
 					attributes = _dimse.Command.AttributeIdentifierList.GetValues();
-				Log.Info("{0} <- N-Get request [pc: {1}; id: {2}; class: {3}]", LogID, presentationID, messageID, requestedClass);
+				Log.Info("{0} <- N-Get request [pc: {1}; id: {2}; class: {3}]", 
+					LogID, presentationID, messageID, requestedClass.Description);
 				OnReceiveNGetRequest(presentationID, messageID, requestedClass, requestedInstance, attributes);
 				return true;
 			}
@@ -1280,7 +1287,8 @@ namespace Dicom.Network {
 				DcmUID affectedClass = _dimse.Command.AffectedSOPClassUID;
 				DcmUID affectedInstance = _dimse.Command.AffectedSOPInstanceUID;
 				DcmStatus status = _dimse.Command.Status;
-				Log.Info("{0} <- N-Get response [id: {1}; class: {2}]: {3}", LogID, messageIdRespondedTo, affectedClass, status);
+				Log.Info("{0} <- N-Get response [id: {1}; class: {2}]: {3}", 
+					LogID, messageIdRespondedTo, affectedClass.Description, status);
 				OnReceiveNGetResponse(presentationID, messageIdRespondedTo, affectedClass, affectedInstance, _dimse.Dataset, status);
 				return true;
 			}
@@ -1289,7 +1297,8 @@ namespace Dicom.Network {
 				ushort messageID = _dimse.Command.MessageID;
 				DcmUID requestedClass = _dimse.Command.RequestedSOPClassUID;
 				DcmUID requestedInstance = _dimse.Command.RequestedSOPInstanceUID;
-				Log.Info("{0} <- N-Set request [pc: {1}; id: {2}; class: {3}]", LogID, presentationID, messageID, requestedClass);
+				Log.Info("{0} <- N-Set request [pc: {1}; id: {2}; class: {3}]", 
+					LogID, presentationID, messageID, requestedClass.Description);
 				OnReceiveNSetRequest(presentationID, messageID, requestedClass, requestedInstance, _dimse.Dataset);
 				return true;
 			}
@@ -1299,7 +1308,8 @@ namespace Dicom.Network {
 				DcmUID affectedClass = _dimse.Command.AffectedSOPClassUID;
 				DcmUID affectedInstance = _dimse.Command.AffectedSOPInstanceUID;
 				DcmStatus status = _dimse.Command.Status;
-				Log.Info("{0} <- N-Set response [id: {1}; class: {2}]: {3}", LogID, messageIdRespondedTo, affectedClass, status);
+				Log.Info("{0} <- N-Set response [id: {1}; class: {2}]: {3}", 
+					LogID, messageIdRespondedTo, affectedClass.Description, status);
 				OnReceiveNSetResponse(presentationID, messageIdRespondedTo, affectedClass, affectedInstance, _dimse.Dataset, status);
 				return true;
 			}
@@ -1310,7 +1320,7 @@ namespace Dicom.Network {
 				DcmUID requestedInstance = _dimse.Command.RequestedSOPInstanceUID;
 				ushort actionTypeID = _dimse.Command.ActionTypeID;
 				Log.Info("{0} <- N-Action request [pc: {1}; id: {2}; class: {3}; action: {4:x4}]",
-					LogID, presentationID, messageID, requestedClass, actionTypeID);
+					LogID, presentationID, messageID, requestedClass.Description, actionTypeID);
 				OnReceiveNActionRequest(presentationID, messageID, requestedClass, requestedInstance, actionTypeID, _dimse.Dataset);
 				return true;
 			}
@@ -1322,17 +1332,18 @@ namespace Dicom.Network {
 				ushort actionTypeID = _dimse.Command.ActionTypeID;
 				DcmStatus status = _dimse.Command.Status;
 				Log.Info("{0} <- N-Action response [id: {1}; class: {2}; action: {3:x4}]: {4}",
-					LogID, messageIdRespondedTo, affectedClass, actionTypeID, status);
+					LogID, messageIdRespondedTo, affectedClass.Description, actionTypeID, status);
 				OnReceiveNActionResponse(presentationID, messageIdRespondedTo, affectedClass, affectedInstance, actionTypeID, _dimse.Dataset, status);
 				return true;
 			}
 
 			if (commandField == DcmCommandField.NCreateRequest) {
 				ushort messageID = _dimse.Command.MessageID;
-				DcmUID requestedClass = _dimse.Command.RequestedSOPClassUID;
-				DcmUID requestedInstance = _dimse.Command.RequestedSOPInstanceUID;
-				Log.Info("{0} <- N-Create request [pc: {1}; id: {2}; class: {3}]", LogID, presentationID, messageID, requestedClass);
-				OnReceiveNCreateRequest(presentationID, messageID, requestedClass, requestedInstance, _dimse.Dataset);
+				DcmUID affectedClass = _dimse.Command.AffectedSOPClassUID;
+				DcmUID affectedInstance = _dimse.Command.AffectedSOPInstanceUID;
+				Log.Info("{0} <- N-Create request [pc: {1}; id: {2}; class: {3}]", 
+					LogID, presentationID, messageID, affectedClass.Description);
+				OnReceiveNCreateRequest(presentationID, messageID, affectedClass, affectedInstance, _dimse.Dataset);
 				return true;
 			}
 
@@ -1341,7 +1352,8 @@ namespace Dicom.Network {
 				DcmUID affectedClass = _dimse.Command.AffectedSOPClassUID;
 				DcmUID affectedInstance = _dimse.Command.AffectedSOPInstanceUID;
 				DcmStatus status = _dimse.Command.Status;
-				Log.Info("{0} <- N-Create response [id: {1}; class: {2}]: {3}", LogID, messageIdRespondedTo, affectedClass, status);
+				Log.Info("{0} <- N-Create response [id: {1}; class: {2}]: {3}", 
+					LogID, messageIdRespondedTo, affectedClass.Description, status);
 				OnReceiveNCreateResponse(presentationID, messageIdRespondedTo, affectedClass, affectedInstance, _dimse.Dataset, status);
 				return true;
 			}
@@ -1350,7 +1362,8 @@ namespace Dicom.Network {
 				ushort messageID = _dimse.Command.MessageID;
 				DcmUID requestedClass = _dimse.Command.RequestedSOPClassUID;
 				DcmUID requestedInstance = _dimse.Command.RequestedSOPInstanceUID;
-				Log.Info("{0} <- N-Delete request [pc: {1}; id: {2}; class: {3}]", LogID, presentationID, messageID, requestedClass);
+				Log.Info("{0} <- N-Delete request [pc: {1}; id: {2}; class: {3}]", 
+					LogID, presentationID, messageID, requestedClass.Description);
 				OnReceiveNDeleteRequest(presentationID, messageID, requestedClass, requestedInstance);
 				return true;
 			}
@@ -1360,7 +1373,8 @@ namespace Dicom.Network {
 				DcmUID affectedClass = _dimse.Command.AffectedSOPClassUID;
 				DcmUID affectedInstance = _dimse.Command.AffectedSOPInstanceUID;
 				DcmStatus status = _dimse.Command.Status;
-				Log.Info("{0} <- N-Delete response [id: {1}; class: {2}]: {3}", LogID, messageIdRespondedTo, affectedClass, status);
+				Log.Info("{0} <- N-Delete response [id: {1}; class: {2}]: {3}", 
+					LogID, messageIdRespondedTo, affectedClass.Description, status);
 				OnReceiveNDeleteResponse(presentationID, messageIdRespondedTo, affectedClass, affectedInstance, status);
 				return true;
 			}
@@ -1370,9 +1384,11 @@ namespace Dicom.Network {
 
 		private void SendRawPDU(RawPDU pdu) {
 			try {
-				_disableTimeout = true;
-				pdu.WritePDU(_network);
-				_disableTimeout = false;
+				lock (_socket) {
+					_disableTimeout = true;
+					pdu.WritePDU(_network);
+					_disableTimeout = false;
+				}
 			}
 			catch (Exception e) {
 				Log.Error("{0} -> Error sending PDU [type: 0x{1:x2}]: {2}", LogID, pdu.Type, e.Message);
@@ -1385,6 +1401,12 @@ namespace Dicom.Network {
 				_disableTimeout = true;
 
 				DcmTS ts = _assoc.GetAcceptedTransferSyntax(pcid);
+
+				if (ts != dataset.InternalTransferSyntax) {
+					if (ts.IsEncapsulated || dataset.InternalTransferSyntax.IsEncapsulated)
+						throw new DcmNetworkException("Unable to transcode encapsulated transfer syntax!");
+					dataset.ChangeTransferSyntax(ts, null);
+				}
 
 				DcmDimseProgress progress = new DcmDimseProgress();
 
@@ -1399,20 +1421,22 @@ namespace Dicom.Network {
 					OnSendDimseProgress(pcid, command, dataset, progress);
 				};
 
-				OnSendDimseBegin(pcid, command, dataset, progress);
+				lock (_socket) {
+					OnSendDimseBegin(pcid, command, dataset, progress);
 
-				DicomStreamWriter dsw = new DicomStreamWriter(pdustream);
-				dsw.Write(command, DicomWriteOptions.Default | DicomWriteOptions.CalculateGroupLengths);
+					DicomStreamWriter dsw = new DicomStreamWriter(pdustream);
+					dsw.Write(command, DicomWriteOptions.Default | DicomWriteOptions.CalculateGroupLengths);
 
-				if (dataset != null) {
-					pdustream.IsCommand = false;
-					dsw.Write(dataset, DicomWriteOptions.Default);
+					if (dataset != null) {
+						pdustream.IsCommand = false;
+						dsw.Write(dataset, DicomWriteOptions.Default);
+					}
+
+					// flush last pdu
+					pdustream.Flush(true);
+
+					OnSendDimse(pcid, command, dataset, progress);
 				}
-
-				// flush last pdu
-				pdustream.Flush(true);
-
-				OnSendDimse(pcid, command, dataset, progress);
 
 				return true;
 			}
@@ -1445,21 +1469,23 @@ namespace Dicom.Network {
 					OnSendDimseProgress(pcid, command, null, progress);
 				};
 
-				OnSendDimseBegin(pcid, command, null, progress);
+				lock (_socket) {
+					OnSendDimseBegin(pcid, command, null, progress);
 
-				DicomStreamWriter dsw = new DicomStreamWriter(pdustream);
-				dsw.Write(command, DicomWriteOptions.Default | DicomWriteOptions.CalculateGroupLengths);
-				dsw = null;
+					DicomStreamWriter dsw = new DicomStreamWriter(pdustream);
+					dsw.Write(command, DicomWriteOptions.Default | DicomWriteOptions.CalculateGroupLengths);
+					dsw = null;
 
-				if (datastream != null) {
-					pdustream.IsCommand = false;
-					pdustream.Write(datastream);
+					if (datastream != null) {
+						pdustream.IsCommand = false;
+						pdustream.Write(datastream);
+					}
+
+					// flush last pdu
+					pdustream.Flush(true);
+
+					OnSendDimse(pcid, command, null, progress);
 				}
-
-				// flush last pdu
-				pdustream.Flush(true);
-
-				OnSendDimse(pcid, command, null, progress);
 
 				return true;
 			}

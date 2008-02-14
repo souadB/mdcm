@@ -65,6 +65,16 @@ namespace Dicom.Data {
 		public override int GetHashCode() {
 			return base.GetHashCode();
 		}
+
+		public static DcmUID Generate() {
+			return Generate(Implementation.ClassUID, DateTime.UtcNow.Ticks);
+		}
+
+		public static DcmUID Generate(DcmUID baseUid, long nextSeq) {
+			StringBuilder uid = new StringBuilder();
+			uid.Append(baseUid.UID).Append('.').Append(nextSeq);
+			return new DcmUID(uid.ToString(), "SOP Instance UID", UidType.SOPInstance);
+		}
 	}
 
 	public static class DcmUIDs {
