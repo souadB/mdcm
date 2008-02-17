@@ -941,40 +941,24 @@ namespace Dicom.Network {
 			bool success = false;
 
 			try {
-				_socket = DcmSocket.Create(_socketType);
-
 				Log.Info("{0} -> Connecting to server at {1}:{2}", LogID, _host, _port);
-
-				if (_connectTimeout == 0) {
-					_socket.Connect(_host, _port);
-				} else {
-					try {
-						_socket.Blocking = false;
-						_socket.Connect(_host, _port);
-					}
-					catch (SocketException e) {
-						if (e.SocketErrorCode != SocketError.WouldBlock)
-							throw;
-					}
-
-					if (!_socket.Poll(_connectTimeout * 1000000, SelectMode.SelectWrite))
-						throw new SocketException((int)SocketError.TimedOut);
-					
-					_socket.Blocking = true;
-				}
+				
+				_socket = DcmSocket.Create(_socketType);
+				_socket.ConnectTimeout = _connectTimeout * 1000;
+				_socket.SendTimeout = _socketTimeout * 1000;
+				_socket.ReceiveTimeout = _socketTimeout * 1000;
+				_socket.ThrottleSpeed = _throttle;
+				_socket.Connect(_host, _port);
 
 				if (_socketType == DcmSocketType.TLS)
 					Log.Info("{0} -> Authenticating SSL/TLS for server: {1}", LogID, _socket.RemoteEndPoint);
 
-				_socket.SendTimeout = _socketTimeout * 1000;
-				_socket.ReceiveTimeout = _socketTimeout * 1000;
-				_socket.ThrottleSpeed = _throttle;
 				_network = _socket.GetStream();
 				success = true;
 			}
 			catch (SocketException e) {
 				if (e.SocketErrorCode == SocketError.TimedOut)
-					Log.Error("{0} -> Network timeout after {1} seconds", LogID, SocketTimeout);
+					Log.Error("{0} -> Connection timeout after {1} seconds", LogID, _connectTimeout);
 				else
 					Log.Error("{0} -> Network error: {1}", LogID, e.Message);
 				OnNetworkError(e);
