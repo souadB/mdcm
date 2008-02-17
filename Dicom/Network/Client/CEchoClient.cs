@@ -41,7 +41,7 @@ namespace Dicom.Network.Client {
 		protected override void OnConnected() {
 			DcmAssociate associate = new DcmAssociate();
 
-			byte pcid = associate.AddPresentationContext(DcmUIDs.Verification);
+			byte pcid = associate.AddPresentationContext(DcmUIDs.VerificationSOPClass);
 			associate.AddTransferSyntax(pcid, DcmTS.ExplicitVRLittleEndian);
 			associate.AddTransferSyntax(pcid, DcmTS.ImplicitVRLittleEndian);
 
@@ -53,7 +53,7 @@ namespace Dicom.Network.Client {
 		}
 
 		protected override void OnReceiveAssociateAccept(DcmAssociate association) {
-			byte pcid = association.FindAbstractSyntax(DcmUIDs.Verification);
+			byte pcid = association.FindAbstractSyntax(DcmUIDs.VerificationSOPClass);
 			SendCEchoRequest(pcid, NextMessageID(), Priority);
 		}
 

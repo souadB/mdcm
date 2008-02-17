@@ -107,7 +107,7 @@ namespace Dicom.Network {
 			SupportedTransferSyntaxes.Add(DcmTS.ExplicitVRBigEndian.UID.UID);
 
 			SupportedStorageSyntaxes = new List<string>();
-			SupportedStorageSyntaxes.Add(DcmUIDs.Verification.UID);
+			SupportedStorageSyntaxes.Add(DcmUIDs.VerificationSOPClass.UID);
 			foreach (DcmUID uid in DcmUIDs.Entries.Values) {
 				if (uid.Description.Contains("Storage"))
 					SupportedStorageSyntaxes.Add(uid.UID);

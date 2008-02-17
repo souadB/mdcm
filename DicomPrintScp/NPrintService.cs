@@ -16,6 +16,7 @@ using Dicom.Utility;
 
 namespace DicomPrintScp {
 	class NPrintState {
+		public byte PresentationID;
 		public DcmPrintJob Job;
 		public DcmPrintDocument Document;
 	}
@@ -38,9 +39,16 @@ namespace DicomPrintScp {
 			association.NegotiateAsyncOps = false;
 			LogID = association.CallingAE;
 			foreach (DcmPresContext pc in association.GetPresentationContexts()) {
-				if (pc.AbstractSyntax == DcmUIDs.Verification ||
-					pc.AbstractSyntax == DcmUIDs.BasicColorPrintManagement ||
-					pc.AbstractSyntax == DcmUIDs.BasicGrayscalePrintManagement) {
+				if (pc.AbstractSyntax == DcmUIDs.VerificationSOPClass ||
+					pc.AbstractSyntax == DcmUIDs.BasicColorPrintManagementMetaSOPClass ||
+					pc.AbstractSyntax == DcmUIDs.BasicGrayscalePrintManagementMetaSOPClass ||
+					pc.AbstractSyntax == DcmUIDs.PrinterSOPClass ||
+					//pc.AbstractSyntax == DcmUIDs.PrinterConfigurationRetrieval ||
+					//pc.AbstractSyntax == DcmUIDs.PrintJob ||
+					pc.AbstractSyntax == DcmUIDs.BasicFilmSessionSOPClass ||
+					pc.AbstractSyntax == DcmUIDs.BasicFilmBoxSOPClass ||
+					pc.AbstractSyntax == DcmUIDs.BasicGrayscaleImageBoxSOPClass ||
+					pc.AbstractSyntax == DcmUIDs.BasicColorImageBoxSOPClass) {
 					pc.SetResult(DcmPresContextResult.Accept);
 				} else {
 					pc.SetResult(DcmPresContextResult.RejectAbstractSyntaxNotSupported);
@@ -57,26 +65,27 @@ namespace DicomPrintScp {
 			DcmUID affectedClass, DcmUID affectedInstance, DcmDataset dataset) {
 			DcmUID sopClass = Associate.GetAbstractSyntax(presentationID);
 
-			if (affectedClass == DcmUIDs.BasicFilmSession) {
+			if (affectedClass == DcmUIDs.BasicFilmSessionSOPClass) {
 				if (_session != null) {
-					Log.Error("Attempted to create second Basic Film Session on association");
+					Log.Error("{0} -> Attempted to create second Basic Film Session on association", LogID);
 					SendAbort(DcmAbortSource.ServiceProvider, DcmAbortReason.NotSpecified);
 					return;
 				}
 
-				_session = new DcmFilmSession(sopClass, DcmUID.Generate(), dataset);
+				_session = new DcmFilmSession(sopClass, affectedInstance, dataset);
 
 				SendNCreateResponse(presentationID, messageID, affectedClass, _session.SOPInstanceUID, null, DcmStatus.Success);
 				return;
 			}
 
-			if (affectedClass == DcmUIDs.BasicFilmBoxSOP) {
+			if (affectedClass == DcmUIDs.BasicFilmBoxSOPClass) {
 				if (_session == null) {
+					Log.Error("{0} -> A Basic Film Session does not exist for this association", LogID);
 					SendAbort(DcmAbortSource.ServiceProvider, DcmAbortReason.NotSpecified);
 					return;
 				}
 
-				DcmFilmBox box = _session.CreateFilmBox(dataset);
+				DcmFilmBox box = _session.CreateFilmBox(affectedInstance, dataset);
 				if (!box.Initialize()) {
 					SendAbort(DcmAbortSource.ServiceProvider, DcmAbortReason.NotSpecified);
 					return;
@@ -92,8 +101,9 @@ namespace DicomPrintScp {
 		protected override void OnReceiveNDeleteRequest(byte presentationID, ushort messageID, 
 			DcmUID requestedClass, DcmUID requestedInstance) {
 
-			if (requestedClass == DcmUIDs.BasicFilmSession) {
+			if (requestedClass == DcmUIDs.BasicFilmSessionSOPClass) {
 				if (_session == null) {
+					Log.Error("{0} -> A Basic Film Session does not exist for this association", LogID);
 					SendAbort(DcmAbortSource.ServiceProvider, DcmAbortReason.NotSpecified);
 					return;
 				}
@@ -104,8 +114,9 @@ namespace DicomPrintScp {
 				return;
 			}
 
-			if (requestedClass == DcmUIDs.BasicFilmBoxSOP) {
+			if (requestedClass == DcmUIDs.BasicFilmBoxSOPClass) {
 				if (_session == null) {
+					Log.Error("{0} -> A Basic Film Session does not exist for this association", LogID);
 					SendAbort(DcmAbortSource.ServiceProvider, DcmAbortReason.NotSpecified);
 					return;
 				}
@@ -122,8 +133,9 @@ namespace DicomPrintScp {
 		protected override void OnReceiveNSetRequest(byte presentationID, ushort messageID, 
 			DcmUID requestedClass, DcmUID requestedInstance, DcmDataset dataset) {
 
-			if (requestedClass == DcmUIDs.BasicFilmSession) {
+			if (requestedClass == DcmUIDs.BasicFilmSessionSOPClass) {
 				if (_session == null) {
+					Log.Error("{0} -> A Basic Film Session does not exist for this association", LogID);
 					SendAbort(DcmAbortSource.ServiceProvider, DcmAbortReason.NotSpecified);
 					return;
 				}
@@ -134,15 +146,16 @@ namespace DicomPrintScp {
 				return;
 			}
 
-			if (requestedClass == DcmUIDs.BasicFilmBoxSOP) {
+			if (requestedClass == DcmUIDs.BasicFilmBoxSOPClass) {
 				if (_session == null) {
+					Log.Error("{0} -> A Basic Film Session does not exist for this association", LogID);
 					SendAbort(DcmAbortSource.ServiceProvider, DcmAbortReason.NotSpecified);
 					return;
 				}
 
 				DcmFilmBox box = _session.FindFilmBox(requestedInstance);
 				if (box == null) {
-					Log.Error("Received N-SET request for invalid film box");
+					Log.Error("{0} -> Received N-SET request for invalid film box", LogID);
 					SendAbort(DcmAbortSource.ServiceProvider, DcmAbortReason.NotSpecified);
 					return;
 				}
@@ -153,17 +166,18 @@ namespace DicomPrintScp {
 				return;
 			}
 
-			if (requestedClass == DcmUIDs.BasicColorImageBox ||
-				requestedClass == DcmUIDs.BasicGrayscaleImageBox)
+			if (requestedClass == DcmUIDs.BasicColorImageBoxSOPClass ||
+				requestedClass == DcmUIDs.BasicGrayscaleImageBoxSOPClass)
 			{
 				if (_session == null) {
+					Log.Error("{0} -> A Basic Film Session does not exist for this association", LogID);
 					SendAbort(DcmAbortSource.ServiceProvider, DcmAbortReason.NotSpecified);
 					return;
 				}
 
 				DcmImageBox box = _session.FindImageBox(requestedInstance);
 				if (box == null) {
-					Log.Error("Received N-SET request for invalid image box");
+					Log.Error("{0} -> Received N-SET request for invalid image box", LogID);
 					SendAbort(DcmAbortSource.ServiceProvider, DcmAbortReason.NotSpecified);
 					return;
 				}
@@ -180,7 +194,7 @@ namespace DicomPrintScp {
 		protected override void OnReceiveNGetRequest(byte presentationID, ushort messageID, 
 			DcmUID requestedClass, DcmUID requestedInstance, DcmTag[] attributes) {
 
-			if (requestedClass == DcmUIDs.Printer && requestedInstance == DcmUIDs.PrinterSOPInstance) {
+			if (requestedClass == DcmUIDs.PrinterSOPClass && requestedInstance == DcmUIDs.PrinterSOPInstance) {
 				DcmDataset ds = new DcmDataset(DcmTS.ImplicitVRLittleEndian);
 				ds.AddElementWithValue(DcmTags.PrinterStatus, "NORMAL");
 				ds.AddElementWithValue(DcmTags.PrinterStatus, "NORMAL");
@@ -195,7 +209,30 @@ namespace DicomPrintScp {
 				return;
 			}
 
-			if (requestedClass == DcmUIDs.PrinterConfigurationRetrieval && requestedInstance == DcmUIDs.PrinterConfigurationRetrievalSOPInstance) {
+			if (requestedClass == DcmUIDs.PrintJobSOPClass) {
+				DcmPrintJob job = null;
+
+				foreach (DcmPrintJob pj in _jobs) {
+					if (pj.SOPInstanceUID == requestedInstance) {
+						job = pj;
+						break;
+					}
+				}
+
+				if (job == null) {
+					job = new DcmPrintJob(requestedInstance);
+					job.ExecutionStatus = "DONE";
+					job.CreationDateTime = DateTime.Today;
+					job.PrintPriority = _session.PrintPriority;
+					job.PrinterName = Config.Instance.PrinterSettings.PrinterName;
+					job.Originator = Associate.CallingAE;
+				}
+
+				SendNGetResponse(presentationID, messageID, requestedClass, requestedInstance, job.Dataset, DcmStatus.Success);
+				return;
+			}
+
+			if (requestedClass == DcmUIDs.PrinterConfigurationRetrievalSOPClass && requestedInstance == DcmUIDs.PrinterConfigurationRetrievalSOPInstance) {
 				DcmDataset ds = new DcmDataset(DcmTS.ImplicitVRLittleEndian);
 				DcmDataset config = new DcmDataset(DcmTS.ImplicitVRLittleEndian);
 
@@ -215,32 +252,22 @@ namespace DicomPrintScp {
 			DcmUID requestedClass, DcmUID requestedInstance, ushort actionTypeID, DcmDataset dataset) {
 
 			if (_session == null) {
+				Log.Error("{0} -> A Basic Film Session does not exist for this association", LogID);
 				SendAbort(DcmAbortSource.ServiceProvider, DcmAbortReason.NotSpecified);
 				return;
 			}
 
-			DcmUID jobUid = DcmUID.Generate(_session.SOPInstanceUID, 9999);
-			jobUid = DcmUID.Generate(jobUid, _jobs.Count + 1);
-
-			DcmPrintJob job = new DcmPrintJob(jobUid);
-			job.ExecutionStatus = "PENDING";
-			job.ExecutionStatusInfo = "QUEUED";
-			job.CreationDateTime = DateTime.Now;
-			job.PrintPriority = _session.PrintPriority;
-			job.PrinterName = Config.Instance.PrinterSettings.PrinterName;
-			job.Originator = Associate.CallingAE;
-
 			DcmPrintDocument document = new DcmPrintDocument(_session);
 
-			if (requestedClass == DcmUIDs.BasicFilmSession && actionTypeID == 0x0001) {
+			if (requestedClass == DcmUIDs.BasicFilmSessionSOPClass && actionTypeID == 0x0001) {
 				foreach (DcmFilmBox box in _session.BasicFilmBoxes)
 					document.AddFilmBox(box);
 			}
-
-			else if (requestedClass == DcmUIDs.BasicFilmBoxSOP && actionTypeID == 0x0001) {
+			
+			else if (requestedClass == DcmUIDs.BasicFilmBoxSOPClass && actionTypeID == 0x0001) {
 				DcmFilmBox box = _session.FindFilmBox(requestedInstance);
 				if (box == null) {
-					Log.Error("Received N-ACTION request for invalid film box");
+					Log.Error("{0} -> Received N-ACTION request for invalid film box", LogID);
 					SendAbort(DcmAbortSource.ServiceProvider, DcmAbortReason.NotSpecified);
 					return;
 				}
@@ -252,19 +279,84 @@ namespace DicomPrintScp {
 				SendAbort(DcmAbortSource.ServiceProvider, DcmAbortReason.NotSpecified);
 			}
 
+			DcmDataset result = null;
+
+			NPrintState state = new NPrintState();
+			state.PresentationID = presentationID;
+			state.Document = document;
+
+			//DcmUID jobUid = DcmUID.Generate(_session.SOPInstanceUID, 9999);
+			//jobUid = DcmUID.Generate(jobUid, _jobs.Count + 1);
+
+			//DcmPrintJob job = new DcmPrintJob(jobUid);
+			//job.ExecutionStatus = "PENDING";
+			//job.ExecutionStatusInfo = "QUEUED";
+			//job.CreationDateTime = DateTime.Now;
+			//job.PrintPriority = _session.PrintPriority;
+			//job.PrinterName = Config.Instance.PrinterSettings.PrinterName;
+			//job.Originator = Associate.CallingAE;
+
+			//result = new DcmDataset(DcmTS.ImplicitVRLittleEndian);
+			//result.AddReferenceSequenceItem(DcmTags.ReferencedPrintJobSequenceRETIRED, DcmUIDs.PrintJob, job.SOPInstanceUID);
+
+			//state.Job = job;
 			//_jobs.Add(job);
+			
+			new Thread(PrintJobProc).Start(state);
 
-			//DcmDataset dataset = new DcmDataset(DcmTS.ImplicitVRLittleEndian);
-			//dataset.AddReferenceSequenceItem(DcmTags.ReferencedPrintJobSequenceRETIRED, DcmUIDs.PrintJob, job.SOPInstanceUID);
+			SendNActionResponse(presentationID, messageID, requestedClass, requestedInstance, actionTypeID, result, DcmStatus.Success);
 
-			document.Print();
+			if (state.Job != null) {
+				SendNEventReportRequest(presentationID, NextMessageID(), DcmUIDs.PrintJobSOPClass, state.Job.SOPInstanceUID, 1, state.Job.Dataset);
+			}
+		}
 
-			SendNActionResponse(presentationID, messageID, requestedClass, requestedInstance, actionTypeID, dataset, DcmStatus.Success);
+		protected override void OnReceiveNEventReportResponse(byte presentationID, ushort messageIdRespondedTo, 
+			DcmUID affectedClass, DcmUID affectedInstance, ushort eventTypeID, DcmDataset dataset, DcmStatus status) {
+			if (affectedClass == DcmUIDs.PrintJobSOPClass) {
+				DcmPrintJob job = null;
+
+				foreach (DcmPrintJob pj in _jobs) {
+					if (pj.SOPInstanceUID == affectedInstance) {
+						job = pj;
+						break;
+					}
+				}
+
+				if (job != null && (job.ExecutionStatus == "DONE" || job.ExecutionStatus == "FAILURE"))
+					_jobs.Remove(job);
+
+				return;
+			}
 		}
 		#endregion
 
-		#region Private Members
+		#region Private Methods
+		private void PrintJobProc(object state) {
+			NPrintState print = (NPrintState)state;
 
+			if (print.Job != null) {
+				print.Job.ExecutionStatus = "PRINTING";
+				print.Job.ExecutionStatusInfo = "PRINTING";
+				SendNEventReportRequest(print.PresentationID, NextMessageID(), DcmUIDs.PrintJobSOPClass, print.Job.SOPInstanceUID, 2, print.Job.Dataset);
+			}
+
+			try {
+				print.Document.Print();
+
+				if (print.Job != null) {
+					print.Job.ExecutionStatus = "DONE";
+					print.Job.ExecutionStatusInfo = "SUCCESS";
+					SendNEventReportRequest(print.PresentationID, NextMessageID(), DcmUIDs.PrintJobSOPClass, print.Job.SOPInstanceUID, 3, print.Job.Dataset);
+				}
+			} catch (Exception e) {
+				if (print.Job != null) {
+					print.Job.ExecutionStatus = "FAILURE";
+					print.Job.ExecutionStatusInfo = e.Message;
+					SendNEventReportRequest(print.PresentationID, NextMessageID(), DcmUIDs.PrintJobSOPClass, print.Job.SOPInstanceUID, 4, print.Job.Dataset);
+				}
+			}
+		}
 		#endregion
 	}
 

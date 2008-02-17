@@ -99,16 +99,16 @@ namespace Dicom.Network {
 			}
 		}
 
-		public ushort MessageIDRespondedTo {
+		public ushort MessageIDBeingRespondedTo {
 			get {
-				return GetUInt16(DcmTags.MessageIDRespondedTo, 0);
+				return GetUInt16(DcmTags.MessageIDBeingRespondedTo, 0);
 			}
 			set {
-				AddElementWithValue(DcmTags.MessageIDRespondedTo, value);
+				AddElementWithValue(DcmTags.MessageIDBeingRespondedTo, value);
 			}
 		}
 
-		public string MoveDestination {
+		public string MoveDestinationAE {
 			get {
 				return GetString(DcmTags.MoveDestination, null);
 			}
@@ -225,48 +225,48 @@ namespace Dicom.Network {
 			}
 		}
 
-		public ushort RemainingSuboperations {
+		public ushort NumberOfRemainingSuboperations {
 			get {
-				return GetUInt16(DcmTags.RemainingSuboperations, 0);
+				return GetUInt16(DcmTags.NumberOfRemainingSuboperations, 0);
 			}
 			set {
-				AddElementWithValue(DcmTags.RemainingSuboperations, value);
+				AddElementWithValue(DcmTags.NumberOfRemainingSuboperations, value);
 			}
 		}
 
-		public ushort CompletedSuboperations {
+		public ushort NumberOfCompletedSuboperations {
 			get {
-				return GetUInt16(DcmTags.CompletedSuboperations, 0);
+				return GetUInt16(DcmTags.NumberOfCompletedSuboperations, 0);
 			}
 			set {
-				AddElementWithValue(DcmTags.CompletedSuboperations, value);
+				AddElementWithValue(DcmTags.NumberOfCompletedSuboperations, value);
 			}
 		}
 
-		public ushort FailedSuboperations {
+		public ushort NumberOfFailedSuboperations {
 			get {
-				return GetUInt16(DcmTags.FailedSuboperations, 0);
+				return GetUInt16(DcmTags.NumberOfFailedSuboperations, 0);
 			}
 			set {
-				AddElementWithValue(DcmTags.FailedSuboperations, value);
+				AddElementWithValue(DcmTags.NumberOfFailedSuboperations, value);
 			}
 		}
 
-		public ushort WarningSuboperations {
+		public ushort NumberOfWarningSuboperations {
 			get {
-				return GetUInt16(DcmTags.WarningSuboperations, 0);
+				return GetUInt16(DcmTags.NumberOfWarningSuboperations, 0);
 			}
 			set {
-				AddElementWithValue(DcmTags.WarningSuboperations, value);
+				AddElementWithValue(DcmTags.NumberOfWarningSuboperations, value);
 			}
 		}
 
-		public string MoveOriginator {
+		public string MoveOriginatorAE {
 			get {
-				return GetString(DcmTags.MoveOriginator, null);
+				return GetString(DcmTags.MoveOriginatorApplicationEntityTitle, null);
 			}
 			set {
-				AddElementWithValue(DcmTags.MoveOriginator, value);
+				AddElementWithValue(DcmTags.MoveOriginatorApplicationEntityTitle, value);
 			}
 		}
 

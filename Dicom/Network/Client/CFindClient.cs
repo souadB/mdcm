@@ -324,7 +324,7 @@ namespace Dicom.Network.Client {
 			dataset.AddElement(DcmTags.PatientsWeight);
 			dataset.AddElement(DcmTags.MedicalAlerts);
 			dataset.AddElement(DcmTags.PregnancyStatus);
-			dataset.AddElement(DcmTags.ContrastAllergies);//*
+			dataset.AddElement(DcmTags.Allergies);//*Contrast allergies??
 			dataset.AddElement(DcmTags.PatientComments);
 			dataset.AddElement(DcmTags.SpecialNeeds);//*
 			dataset.AddElement(DcmTags.PatientState);//*

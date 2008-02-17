@@ -122,8 +122,12 @@ namespace DicomPrintScp {
 					Config.Save();
 				}
 			} else {
-				e.Cancel = true;
-				Hide();
+				if (_server != null) {
+					e.Cancel = true;
+					Hide();
+				} else {
+					Config.Save();
+				}
 			}
 		}
 

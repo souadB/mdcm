@@ -205,7 +205,19 @@ namespace Dicom.Network {
 		}
 
 		public override bool Connected {
-			get { return _Socket.Connected; }
+			get {
+				if (!_Socket.Connected)
+					return false;
+				try {
+					_Socket.Send(new byte[1], 0, 0);
+					return true;
+				}
+				catch (SocketException ex) {
+					if (ex.SocketErrorCode == SocketError.WouldBlock)
+						return true;
+				}
+				return false;
+			}
 		}
 
 		public override int SendTimeout {
@@ -304,7 +316,19 @@ namespace Dicom.Network {
 		}
 
 		public override bool Connected {
-			get { return _Socket.Connected; }
+			get {
+				if (!_Socket.Connected)
+					return false;
+				try {
+					_Socket.Send(new byte[1], 0, 0);
+					return true;
+				}
+				catch (SocketException ex) {
+					if (ex.SocketErrorCode == SocketError.WouldBlock)
+						return true;
+				}
+				return false;
+			}
 		}
 
 		public override int SendTimeout {

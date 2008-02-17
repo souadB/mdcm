@@ -38,17 +38,24 @@ namespace DicomPrintScp {
 		#region Public Constructors
 		public DcmPrintJob(DcmUID sopInst) {
 			_sopInst = sopInst;
+			if (_sopInst == null || _sopInst.UID == String.Empty)
+				_sopInst = DcmUID.Generate();
 			_dataset = new DcmDataset(DcmTS.ImplicitVRLittleEndian);
 		}
 		#endregion
 
 		#region Public Properties
 		/// <summary>Print Job SOP</summary>
-		public static readonly DcmUID SOPClassUID = DcmUIDs.PrintJob;
+		public static readonly DcmUID SOPClassUID = DcmUIDs.PrintJobSOPClass;
 
 		/// <summary>SOP Instance UID</summary>
 		public DcmUID SOPInstanceUID {
 			get { return _sopInst; }
+		}
+
+		/// <summary>Print Job data</summary>
+		public DcmDataset Dataset {
+			get { return _dataset; }
 		}
 
 		/// <summary>Execution status of print job.</summary>
@@ -99,8 +106,8 @@ namespace DicomPrintScp {
 
 		/// <summary>DICOM Application Entity Title that issued the print operation.</summary>
 		public string Originator {
-			get { return _dataset.GetString(DcmTags.OriginatorAE, String.Empty); }
-			set { _dataset.AddElementWithValue(DcmTags.OriginatorAE, value); }
+			get { return _dataset.GetString(DcmTags.Originator, String.Empty); }
+			set { _dataset.AddElementWithValue(DcmTags.Originator, value); }
 		}
 		#endregion
 	}
@@ -137,12 +144,15 @@ namespace DicomPrintScp {
 			_sopInstance = sopInstance;
 			_dataset = dataset;
 			_boxes = new List<DcmFilmBox>();
+
+			if (_sopInstance == null || _sopInstance.UID == String.Empty)
+				_sopInstance = DcmUID.Generate();
 		}
 		#endregion
 
 		#region Public Properties
 		/// <summary>Basic Film Box SOP</summary>
-		public static readonly DcmUID SOPClassUID = DcmUIDs.BasicFilmSession;
+		public static readonly DcmUID SOPClassUID = DcmUIDs.BasicFilmSessionSOPClass;
 
 		/// <summary>
 		/// Color or Grayscale Basic Print Management UID
@@ -248,8 +258,10 @@ namespace DicomPrintScp {
 		#endregion
 
 		#region Public Methods
-		public DcmFilmBox CreateFilmBox(DcmDataset dataset) {
-			DcmUID uid = DcmUID.Generate(SOPInstanceUID, _boxes.Count + 1);
+		public DcmFilmBox CreateFilmBox(DcmUID sopInstance, DcmDataset dataset) {
+			DcmUID uid = sopInstance;
+			if (uid == null || uid.UID == String.Empty)
+				uid = DcmUID.Generate(SOPInstanceUID, _boxes.Count + 1);
 			DcmFilmBox box = new DcmFilmBox(this, uid, dataset);
 			_boxes.Add(box);
 			return box;
@@ -325,7 +337,7 @@ namespace DicomPrintScp {
 
 		#region Public Properties
 		/// <summary>Basic Film Session SOP</summary>
-		public static readonly DcmUID SOPClassUID = DcmUIDs.BasicFilmBoxSOP;
+		public static readonly DcmUID SOPClassUID = DcmUIDs.BasicFilmBoxSOPClass;
 
 		/// <summary>SOP Instance UID</summary>
 		public DcmUID SOPInstanceUID {
@@ -670,14 +682,14 @@ namespace DicomPrintScp {
 
 		#region Private Methods
 		private void CreateImageBox() {
-			DcmUID classUid = DcmUIDs.BasicGrayscaleImageBox;
-			if (_session.SessionClassUID == DcmUIDs.BasicColorPrintManagement)
-				classUid = DcmUIDs.BasicColorImageBox;
+			DcmUID classUid = DcmUIDs.BasicGrayscaleImageBoxSOPClass;
+			if (_session.SessionClassUID == DcmUIDs.BasicColorPrintManagementMetaSOPClass)
+				classUid = DcmUIDs.BasicColorImageBoxSOPClass;
 
 			DcmUID instUid = DcmUID.Generate(SOPInstanceUID, _boxes.Count + 1);
 
 			DcmImageBox box = new DcmImageBox(this, classUid, instUid);
-			box.ImagePosition = (ushort)(_boxes.Count + 1);
+			box.ImageBoxPosition = (ushort)(_boxes.Count + 1);
 			_boxes.Add(box);
 
 			_dataset.AddReferenceSequenceItem(DcmTags.ReferencedImageBoxSequence, classUid, instUid);
@@ -725,10 +737,10 @@ namespace DicomPrintScp {
 
 		#region Public Properties
 		/// <summary>Basic Color Image Box SOP</summary>
-		public static readonly DcmUID ColorSOPClassUID = DcmUIDs.BasicColorImageBox;
+		public static readonly DcmUID ColorSOPClassUID = DcmUIDs.BasicColorImageBoxSOPClass;
 
 		/// <summary>Basic Grayscale Image Box SOP</summary>
-		public static readonly DcmUID GraySOPClassUID = DcmUIDs.BasicGrayscaleImageBox;
+		public static readonly DcmUID GraySOPClassUID = DcmUIDs.BasicGrayscaleImageBoxSOPClass;
 
 		/// <summary>SOP Class UID</summary>
 		public DcmUID SOPClassUID {
@@ -763,9 +775,9 @@ namespace DicomPrintScp {
 
 		/// <summary>The position of the image on the film, based on Image Display 
 		/// Format (2010,0010). See C.13.5.1 for specification.</summary>
-		public ushort ImagePosition {
-			get { return _dataset.GetUInt16(DcmTags.ImagePosition, 1); }
-			set { _dataset.AddElementWithValue(DcmTags.ImagePosition, value); }
+		public ushort ImageBoxPosition {
+			get { return _dataset.GetUInt16(DcmTags.ImageBoxPosition, 1); }
+			set { _dataset.AddElementWithValue(DcmTags.ImageBoxPosition, value); }
 		}
 
 		/// <summary>Specifies whether minimum pixel values (after VOI LUT transformation) 

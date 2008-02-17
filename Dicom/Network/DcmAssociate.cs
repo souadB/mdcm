@@ -92,7 +92,7 @@ namespace Dicom.Network {
 
 		#region Public Members
 		public void SetResult(DcmPresContextResult result) {
-			_result = result;
+			SetResult(result, _transfers[0]);
 		}
 
 		public void SetResult(DcmPresContextResult result, DcmTS acceptedTs) {
