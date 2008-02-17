@@ -89,11 +89,6 @@ namespace Dicom.Network.Client {
 		#endregion
 
 		#region Public Methods
-		public void Abort() {
-			SendAbort(DcmAbortSource.ServiceUser, DcmAbortReason.NotSpecified);
-			InternalClose(true);
-		}
-
 		public void Close() {
 			InternalClose(true);
 		}
@@ -135,7 +130,7 @@ namespace Dicom.Network.Client {
 
 		protected override void OnReceiveAbort(DcmAbortSource source, DcmAbortReason reason) {
 			_closedOnError = true;
-			Close();
+			SendReleaseRequest();
 		}
 
 		protected override void OnReceiveReleaseResponse() {
@@ -145,7 +140,6 @@ namespace Dicom.Network.Client {
 
 		protected override void OnReceiveReleaseRequest() {
 			SendReleaseResponse();
-			Close();
 		}
 		#endregion
 	}

@@ -248,31 +248,51 @@ namespace Dicom.Data {
 
 				#region Internal Dictionary
 				Entries.Add(new DcmDictionaryEntry("xxxx", "0000", "Group Length", String.Empty, ULa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0000", "0001", "Command Length to End", String.Empty, ULa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0000", "0001", "Length to End", String.Empty, ULa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("0000", "0002", "Affected SOP Class UID", String.Empty, UIa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0000", "0003", "Requested SOP Class UID", String.Empty, UIa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0000", "0010", "Command Recognition Code", String.Empty, SHa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0000", "0010", "Recognition Code", String.Empty, CSa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("0000", "0100", "Command Field", String.Empty, USa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0000", "0110", "Message ID (first)", String.Empty, USa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0000", "0120", "Message ID Responded to", String.Empty, USa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0000", "0110", "Message ID", String.Empty, USa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0000", "0120", "Message ID Being Responded To", String.Empty, USa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0000", "0200", "Initiator", String.Empty, AEa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0000", "0300", "Receiver", String.Empty, AEa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0000", "0400", "Find Location", String.Empty, AEa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("0000", "0600", "Move Destination", String.Empty, AEa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0000", "0700", "Priority", String.Empty, USa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0000", "0800", "Data Set Type", String.Empty, USa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0000", "0850", "Number of Matches", String.Empty, USa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0000", "0860", "Response Sequence Number", String.Empty, USa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("0000", "0900", "Status", String.Empty, USa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0000", "0901", "Offending Element", String.Empty, ATa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0000", "0901", "Offending Element", String.Empty, ATa, "1-n", false));
 				Entries.Add(new DcmDictionaryEntry("0000", "0902", "Error Comment", String.Empty, LOa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0000", "0903", "Error ID", String.Empty, USa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0000", "1000", "SOP Affected Instance UID", String.Empty, UIa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0000", "1001", "SOP Requested Instance UID", String.Empty, UIa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0000", "1000", "Affected SOP Instance UID", String.Empty, UIa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0000", "1001", "Requested SOP Instance UID", String.Empty, UIa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0000", "1002", "Event Type ID", String.Empty, USa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0000", "1005", "Attribute Identifier List", String.Empty, ATa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0000", "1005", "Attribute Identifier List", String.Empty, ATa, "1-n", false));
 				Entries.Add(new DcmDictionaryEntry("0000", "1008", "Action Type ID", String.Empty, USa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0000", "1020", "Remaining Suboperations", String.Empty, USa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0000", "1021", "Completed Suboperations", String.Empty, USa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0000", "1022", "Failed Suboperations", String.Empty, USa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0000", "1023", "Warning Suboperations", String.Empty, USa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0000", "1030", "Move Originator", String.Empty, AEa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0000", "1031", "Message ID (second)", String.Empty, USa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0000", "1020", "Number of Remaining Sub-operations", String.Empty, USa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0000", "1021", "Number of Completed Sub-operations", String.Empty, USa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0000", "1022", "Number of Failed Sub-operations", String.Empty, USa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0000", "1023", "Number of Warning Sub-operations", String.Empty, USa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0000", "1030", "Move Originator Application Entity Title", String.Empty, AEa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0000", "1031", "Move Originator Message ID", String.Empty, USa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0000", "4000", "DIALOG Receiver", String.Empty, ATa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0000", "4010", "Terminal Type", String.Empty, ATa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0000", "5010", "Message Set ID", String.Empty, SHa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0000", "5020", "End Message ID", String.Empty, SHa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0000", "5110", "Display Format", String.Empty, ATa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0000", "5120", "Page Position ID", String.Empty, ATa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0000", "5130", "Text Format ID", String.Empty, CSa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0000", "5140", "Nor/Rev", String.Empty, CSa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0000", "5150", "Add Gray Scale", String.Empty, CSa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0000", "5160", "Borders", String.Empty, CSa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0000", "5170", "Copies", String.Empty, ISa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0000", "5180", "Magnification Type", String.Empty, CSa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0000", "5190", "Erase", String.Empty, CSa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0000", "51a0", "Print", String.Empty, CSa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0000", "51b0", "Overlays", String.Empty, USa, "1-n", true));
 				Entries.Add(new DcmDictionaryEntry("0002", "0001", "File Meta Information Version", String.Empty, OBa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0002", "0002", "Media Storage SOP Class UID", String.Empty, UIa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0002", "0003", "Media Storage SOP Instance UID", String.Empty, UIa, "1", false));
@@ -303,7 +323,7 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0004", "1600", "Number of References", String.Empty, ULa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("0008", "0001", "Length to End", String.Empty, ULa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("0008", "0005", "Specific Character Set", String.Empty, CSa, "1-n", false));
-				Entries.Add(new DcmDictionaryEntry("0008", "0008", "Image Type", String.Empty, CSa, "1-n", false));
+				Entries.Add(new DcmDictionaryEntry("0008", "0008", "Image Type", String.Empty, CSa, "2-n", false));
 				Entries.Add(new DcmDictionaryEntry("0008", "0010", "Recognition Code", String.Empty, CSa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("0008", "0012", "Instance Creation Date", String.Empty, DAa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0008", "0013", "Instance Creation Time", String.Empty, TMa, "1", false));
@@ -318,7 +338,7 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0008", "0023", "Content Date", String.Empty, DAa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0008", "0024", "Overlay Date", String.Empty, DAa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("0008", "0025", "Curve Date", String.Empty, DAa, "1", true));
-				Entries.Add(new DcmDictionaryEntry("0008", "002a", "Acquisition Datetime", String.Empty, DTa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0008", "002a", "Acquisition DateTime", String.Empty, DTa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0008", "0030", "Study Time", String.Empty, TMa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0008", "0031", "Series Time", String.Empty, TMa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0008", "0032", "Acquisition Time", String.Empty, TMa, "1", false));
@@ -361,7 +381,7 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0008", "0112", "Coding Scheme Registry", String.Empty, LOa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0008", "0114", "Coding Scheme External ID", String.Empty, STa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0008", "0115", "Coding Scheme Name", String.Empty, STa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0008", "0116", "Responsible Organization", String.Empty, STa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0008", "0116", "Coding Scheme Responsible Organization", String.Empty, STa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0008", "0201", "Timezone Offset From UTC", String.Empty, SHa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0008", "1000", "Network ID", String.Empty, AEa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("0008", "1010", "Station Name", String.Empty, SHa, "1", false));
@@ -402,7 +422,7 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0008", "1199", "Referenced SOP Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0008", "1200", "Studies Containing Other Referenced Instances Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0008", "1250", "Related Series Sequence", String.Empty, SQa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0008", "2110", "Lossy Image Compression", String.Empty, CSa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0008", "2110", "Lossy Image Compression (Retired)", String.Empty, CSa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("0008", "2111", "Derivation Description", String.Empty, STa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0008", "2112", "Source Image Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0008", "2120", "Stage Name", String.Empty, SHa, "1", false));
@@ -429,6 +449,15 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0008", "2242", "Transducer Position Modifier Sequence", String.Empty, SQa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("0008", "2244", "Transducer Orientation Sequence", String.Empty, SQa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("0008", "2246", "Transducer Orientation Modifier Sequence", String.Empty, SQa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0008", "2251", "Anatomic Structure Space Or Region Code Sequence (Trial)", String.Empty, SQa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0008", "2253", "Anatomic Portal Of Entrance Code Sequence (Trial)", String.Empty, SQa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0008", "2255", "Anatomic Approach Direction Code Sequence (Trial)", String.Empty, SQa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0008", "2256", "Anatomic Perspective Description (Trial)", String.Empty, STa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0008", "2257", "Anatomic Perspective Code Sequence (Trial)", String.Empty, SQa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0008", "2258", "Anatomic Location Of Examining Instrument Description (Trial)", String.Empty, STa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0008", "2259", "Anatomic Location Of Examining Instrument Code Sequence (Trial)", String.Empty, SQa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0008", "225a", "Anatomic Structure Space Or Region Modifier Code Sequence (Trial)", String.Empty, SQa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0008", "225c", "OnAxis Background Anatomic Structure Code Sequence (Trial)", String.Empty, SQa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("0008", "3001", "Alternate Representation Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0008", "3010", "Irradiation Event UID", String.Empty, UIa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0008", "4000", "Identifying Comments", String.Empty, LTa, "1", true));
@@ -473,7 +502,7 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0010", "1081", "Branch of Service", String.Empty, LOa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0010", "1090", "Medical Record Locator", String.Empty, LOa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0010", "2000", "Medical Alerts", String.Empty, LOa, "1-n", false));
-				Entries.Add(new DcmDictionaryEntry("0010", "2110", "Contrast Allergies", String.Empty, LOa, "1-n", false));
+				Entries.Add(new DcmDictionaryEntry("0010", "2110", "Allergies", String.Empty, LOa, "1-n", false));
 				Entries.Add(new DcmDictionaryEntry("0010", "2150", "Country of Residence", String.Empty, LOa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0010", "2152", "Region of Residence", String.Empty, LOa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0010", "2154", "Patient's Telephone Numbers", String.Empty, SHa, "1-n", false));
@@ -510,6 +539,8 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0012", "0062", "Patient Identity Removed", String.Empty, CSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0012", "0063", "De-identification Method", String.Empty, LOa, "1-n", false));
 				Entries.Add(new DcmDictionaryEntry("0012", "0064", "De-identification Method Code Sequence", String.Empty, SQa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0012", "0071", "Clinical Trial Series ID", String.Empty, LOa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0012", "0072", "Clinical Trial Series Description", String.Empty, LOa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "0010", "Contrast/Bolus Agent", String.Empty, LOa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "0012", "Contrast/Bolus Agent Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "0014", "Contrast/Bolus Administration Route Sequence", String.Empty, SQa, "1", false));
@@ -538,7 +569,7 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0018", "003a", "Intervention Description", String.Empty, STa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "0040", "Cine Rate", String.Empty, ISa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "0050", "Slice Thickness", String.Empty, DSa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0018", "0060", "kVp", String.Empty, DSa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0018", "0060", "KVP", String.Empty, DSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "0070", "Counts Accumulated", String.Empty, ISa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "0071", "Acquisition Termination Condition", String.Empty, CSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "0072", "Effective Duration", String.Empty, DSa, "1", false));
@@ -569,15 +600,15 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0018", "1007", "Cassette ID", String.Empty, LOa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "1008", "Gantry ID", String.Empty, LOa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "1010", "Secondary Capture Device ID", String.Empty, LOa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0018", "1011", "Hardcopy Creation Device ID", String.Empty, LOa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0018", "1011", "Hardcopy Creation Device ID", String.Empty, LOa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("0018", "1012", "Date of Secondary Capture", String.Empty, DAa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "1014", "Time of Secondary Capture", String.Empty, TMa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0018", "1016", "Secondary Capture Device Manufacturer", String.Empty, LOa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0018", "1017", "Hardcopy Device Manufacturer", String.Empty, LOa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0018", "1016", "Secondary Capture Device Manufacturers", String.Empty, LOa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0018", "1017", "Hardcopy Device Manufacturer", String.Empty, LOa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("0018", "1018", "Secondary Capture Device Manufacturer's Model Name", String.Empty, LOa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "1019", "Secondary Capture Device Software Version(s)", String.Empty, LOa, "1-n", false));
-				Entries.Add(new DcmDictionaryEntry("0018", "101a", "Hardcopy Device Software Version", String.Empty, LOa, "1-n", false));
-				Entries.Add(new DcmDictionaryEntry("0018", "101b", "Hardcopy Device Manufacturer's Model Name", String.Empty, LOa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0018", "101a", "Hardcopy Device Software Version", String.Empty, LOa, "1-n", true));
+				Entries.Add(new DcmDictionaryEntry("0018", "101b", "Hardcopy Device Manufacturer's Model Name", String.Empty, LOa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("0018", "1020", "Software Version(s)", String.Empty, LOa, "1-n", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "1022", "Video Image Format Acquired", String.Empty, SHa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "1023", "Digital Image Format Acquired", String.Empty, LOa, "1", false));
@@ -597,7 +628,7 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0018", "1061", "Trigger Source or Type", String.Empty, LOa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "1062", "Nominal Interval", String.Empty, ISa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "1063", "Frame Time", String.Empty, DSa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0018", "1064", "Framing Type", String.Empty, LOa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0018", "1064", "Cardiac Framing Type", String.Empty, LOa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "1065", "Frame Time Vector", String.Empty, DSa, "1-n", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "1066", "Frame Delay", String.Empty, DSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "1067", "Image Trigger Delay", String.Empty, DSa, "1", false));
@@ -614,8 +645,8 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0018", "1075", "Radionuclide Half Life", String.Empty, DSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "1076", "Radionuclide Positron Fraction", String.Empty, DSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "1077", "Radiopharmaceutical Specific Activity", String.Empty, DSa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0018", "1078", "Radiopharmaceutical Start Datetime", String.Empty, DTa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0018", "1079", "Radiopharmaceutical Stop Datetime", String.Empty, DTa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0018", "1078", "Radiopharmaceutical Start DateTime", String.Empty, DTa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0018", "1079", "Radiopharmaceutical Stop DateTime", String.Empty, DTa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "1080", "Beat Rejection Flag", String.Empty, CSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "1081", "Low R-R Value", String.Empty, ISa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "1082", "High R-R Value", String.Empty, ISa, "1", false));
@@ -641,7 +672,7 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0018", "1138", "Table Angle", String.Empty, DSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "113a", "Table Type", String.Empty, CSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "1140", "Rotation Direction", String.Empty, CSa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0018", "1141", "Angular Position", String.Empty, DSa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0018", "1141", "Angular Position", String.Empty, DSa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("0018", "1142", "Radial Position", String.Empty, DSa, "1-n", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "1143", "Scan Arc", String.Empty, DSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "1144", "Angular Step", String.Empty, DSa, "1", false));
@@ -650,7 +681,7 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0018", "1147", "Field of View Shape", String.Empty, CSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "1149", "Field of View Dimension(s)", String.Empty, ISa, "1-2", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "1150", "Exposure Time", String.Empty, ISa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0018", "1151", "X-ray Tube Current", String.Empty, ISa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0018", "1151", "X-Ray Tube Current", String.Empty, ISa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "1152", "Exposure", String.Empty, ISa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "1153", "Exposure in µAs", String.Empty, ISa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "1154", "Average Pulse Width", String.Empty, DSa, "1", false));
@@ -698,7 +729,7 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0018", "1402", "Cassette Orientation", String.Empty, CSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "1403", "Cassette Size", String.Empty, CSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "1404", "Exposures on Plate", String.Empty, USa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0018", "1405", "Relative X-ray Exposure", String.Empty, ISa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0018", "1405", "Relative X-Ray Exposure", String.Empty, ISa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "1450", "Column Angulation", String.Empty, DSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "1460", "Tomo Layer Height", String.Empty, DSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "1470", "Tomo Angle", String.Empty, DSa, "1", false));
@@ -757,7 +788,7 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0018", "5010", "Transducer Data", String.Empty, LOa, "3", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "5012", "Focus Depth", String.Empty, DSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "5020", "Processing Function", String.Empty, LOa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0018", "5021", "Postprocessing Function", String.Empty, LOa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0018", "5021", "Postprocessing Function", String.Empty, LOa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("0018", "5022", "Mechanical Index", String.Empty, DSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "5024", "Bone Thermal Index", String.Empty, DSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "5026", "Cranial Thermal Index", String.Empty, DSa, "1", false));
@@ -794,17 +825,17 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0018", "6032", "Pulse Repetition Frequency", String.Empty, ULa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "6034", "Doppler Correction Angle", String.Empty, FDa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "6036", "Steering Angle", String.Empty, FDa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0018", "6038", "Doppler Sample Volume X Position", String.Empty, ULa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0018", "6038", "Doppler Sample Volume X Position (Retired)", String.Empty, ULa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("0018", "6039", "Doppler Sample Volume X Position", String.Empty, SLa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0018", "603a", "Doppler Sample Volume Y Position", String.Empty, ULa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0018", "603a", "Doppler Sample Volume Y Position (Retired)", String.Empty, ULa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("0018", "603b", "Doppler Sample Volume Y Position", String.Empty, SLa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0018", "603c", "TM-Line Position X0", String.Empty, ULa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0018", "603c", "TM-Line Position X0 (Retired)", String.Empty, ULa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("0018", "603d", "TM-Line Position X0", String.Empty, SLa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0018", "603e", "TM-Line Position Y0", String.Empty, ULa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0018", "603e", "TM-Line Position Y0 (Retired)", String.Empty, ULa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("0018", "603f", "TM-Line Position Y0", String.Empty, SLa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0018", "6040", "TM-Line Position X1", String.Empty, ULa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0018", "6040", "TM-Line Position X1 (Retired)", String.Empty, ULa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("0018", "6041", "TM-Line Position X1", String.Empty, SLa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0018", "6042", "TM-Line Position Y1", String.Empty, ULa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0018", "6042", "TM-Line Position Y1 (Retired)", String.Empty, ULa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("0018", "6043", "TM-Line Position Y1", String.Empty, SLa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "6044", "Pixel Component Organization", String.Empty, USa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "6046", "Pixel Component Mask", String.Empty, ULa, "1", false));
@@ -917,7 +948,7 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0018", "9069", "Parallel Reduction Factor In-plane", String.Empty, FDa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "9070", "Cardiac R-R Interval Specified", String.Empty, FDa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "9073", "Acquisition Duration", String.Empty, FDa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0018", "9074", "Frame Acquisition Datetime", String.Empty, DTa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0018", "9074", "Frame Acquisition DateTime", String.Empty, DTa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "9075", "Diffusion Directionality", String.Empty, CSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "9076", "Diffusion Gradient Direction Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "9077", "Parallel Acquisition", String.Empty, CSa, "1", false));
@@ -936,6 +967,7 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0018", "9093", "Number of k-Space Trajectories", String.Empty, USa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "9094", "Coverage of k-Space", String.Empty, CSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "9095", "Spectroscopy Acquisition Phase Rows", String.Empty, ULa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0018", "9096", "Parallel Reduction Factor In-plane (Retired)", String.Empty, FDa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("0018", "9098", "Transmitter Frequency", String.Empty, FDa, "1-2", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "9100", "Resonant Nucleus", String.Empty, CSa, "1-2", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "9101", "Frequency Correction", String.Empty, CSa, "1", false));
@@ -948,17 +980,17 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0018", "9114", "MR Echo Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "9115", "MR Modifier Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "9117", "MR Diffusion Sequence", String.Empty, SQa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0018", "9118", "Cardiac Trigger Sequence", String.Empty, SQa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0018", "9118", "Cardiac Synchronization Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "9119", "MR Averages Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "9125", "MR FOV/Geometry Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "9126", "Volume Localization Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "9127", "Spectroscopy Acquisition Data Columns", String.Empty, ULa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "9147", "Diffusion Anisotropy Type", String.Empty, CSa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0018", "9151", "Frame Reference Datetime", String.Empty, DTa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0018", "9151", "Frame Reference DateTime", String.Empty, DTa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "9152", "MR Metabolite Map Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "9155", "Parallel Reduction Factor out-of-plane", String.Empty, FDa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "9159", "Spectroscopy Acquisition Out-of-plane Phase Steps", String.Empty, ULa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0018", "9166", "Bulk Motion Status", String.Empty, CSa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0018", "9166", "Bulk Motion Status", String.Empty, CSa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("0018", "9168", "Parallel Reduction Factor Second In-plane", String.Empty, FDa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "9169", "Cardiac Beat Rejection Technique", String.Empty, CSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "9170", "Respiratory Motion Compensation Technique", String.Empty, CSa, "1", false));
@@ -1024,7 +1056,7 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0018", "9322", "Reconstruction Pixel Spacing", String.Empty, FDa, "2", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "9323", "Exposure Modulation Type", String.Empty, CSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "9324", "Estimated Dose Saving", String.Empty, FDa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0018", "9325", "CT X-ray Details Sequence", String.Empty, SQa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0018", "9325", "CT X-Ray Details Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "9326", "CT Position Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "9327", "Table Position", String.Empty, FDa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "9328", "Exposure Time in ms", String.Empty, FDa, "1", false));
@@ -1042,6 +1074,10 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0018", "9343", "Contrast/Bolus Agent Detected", String.Empty, CSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "9344", "Contrast/Bolus Agent Phase", String.Empty, CSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "9345", "CTDIvol", String.Empty, FDa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0018", "9346", "CTDI Phantom Type Code Sequence", String.Empty, SQa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0018", "9351", "Calcium Scoring Mass Factor Patient", String.Empty, FLa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0018", "9352", "Calcium Scoring Mass Factor Device", String.Empty, FLa, "3", false));
+				Entries.Add(new DcmDictionaryEntry("0018", "9360", "CT Additional X-Ray Source Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "9401", "Projection Pixel Calibration Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "9402", "Distance Source to Isocenter", String.Empty, FLa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "9403", "Distance Object to Table Top", String.Empty, FLa, "1", false));
@@ -1070,8 +1106,8 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0018", "9439", "Exposure Control Sensing Region Lower Horizontal Edge", String.Empty, SSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "9440", "Center of Circular Exposure Control Sensing Region", String.Empty, SSa, "2", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "9441", "Radius of Circular Exposure Control Sensing Region", String.Empty, USa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0018", "9442", "Vertices of the Polygonal Exposure Control Sensing Region", String.Empty, SSa, "2-2n", false));
-				Entries.Add(new DcmDictionaryEntry("0018", "9445", "SHALL NOT BE USED", String.Empty, NONEa, "", true));
+				Entries.Add(new DcmDictionaryEntry("0018", "9442", "Vertices of the Polygonal Exposure Control Sensing Region", String.Empty, SSa, "2-n", false));
+				Entries.Add(new DcmDictionaryEntry("0018", "9445", "", String.Empty, NONEa, "", true));
 				Entries.Add(new DcmDictionaryEntry("0018", "9447", "Column Angulation (Patient)", String.Empty, FLa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "9449", "Beam Angle", String.Empty, FLa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "9451", "Frame Detector Parameters Sequence", String.Empty, SQa, "1", false));
@@ -1095,6 +1131,32 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0018", "9474", "C-arm Positioner Tabletop Relationship", String.Empty, CSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "9476", "X-Ray Geometry Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "9477", "Irradiation Event Identification Sequence", String.Empty, SQa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0018", "9504", "X-Ray 3D Frame Type Sequence", String.Empty, SQa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0018", "9506", "Contributing Sources Sequence", String.Empty, SQa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0018", "9507", "X-Ray 3D Acquisition Sequence", String.Empty, SQa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0018", "9508", "Primary Positioner Scan Arc", String.Empty, FLa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0018", "9509", "Secondary Positioner Scan Arc", String.Empty, FLa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0018", "9510", "Primary Positioner Scan Start Angle", String.Empty, FLa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0018", "9511", "Secondary Positioner Scan Start Angle", String.Empty, FLa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0018", "9514", "Primary Positioner Increment", String.Empty, FLa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0018", "9515", "Secondary Positioner Increment", String.Empty, FLa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0018", "9516", "Start Acquisition DateTime", String.Empty, DTa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0018", "9517", "End Acquisition DateTime", String.Empty, DTa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0018", "9524", "Application Name", String.Empty, LOa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0018", "9525", "Application Version", String.Empty, LOa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0018", "9526", "Application Manufacturer", String.Empty, LOa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0018", "9527", "Algorithm Type", String.Empty, CSa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0018", "9528", "Algorithm Description", String.Empty, LOa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0018", "9530", "X-Ray 3D Reconstruction Sequence", String.Empty, SQa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0018", "9531", "Reconstruction Description", String.Empty, LOa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0018", "9538", "Per Projection Acquisition Sequence", String.Empty, SQa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0018", "9601", "Diffusion b-matrix Sequence", String.Empty, SQa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0018", "9602", "Diffusion b-value XX", String.Empty, FDa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0018", "9603", "Diffusion b-value XY", String.Empty, FDa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0018", "9604", "Diffusion b-value XZ", String.Empty, FDa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0018", "9605", "Diffusion b-value YY", String.Empty, FDa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0018", "9606", "Diffusion b-value YZ", String.Empty, FDa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0018", "9607", "Diffusion b-value ZZ", String.Empty, FDa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "a001", "Contributing Equipment Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "a002", "Contribution Date Time", String.Empty, DTa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0018", "a003", "Contribution Description", String.Empty, STa, "1", false));
@@ -1162,7 +1224,7 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0020", "9113", "Plane Position Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0020", "9116", "Plane Orientation Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0020", "9128", "Temporal Position Index", String.Empty, ULa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0020", "9153", "Cardiac Trigger Delay Time", String.Empty, FDa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0020", "9153", "Nominal Cardiac Trigger Delay Time", String.Empty, FDa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0020", "9156", "Frame Acquisition Number", String.Empty, USa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0020", "9157", "Dimension Index Values", String.Empty, ULa, "1-n", false));
 				Entries.Add(new DcmDictionaryEntry("0020", "9158", "Frame Comments", String.Empty, LTa, "1", false));
@@ -1177,14 +1239,26 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0020", "9222", "Dimension Index Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0020", "9228", "Concatenation Frame Offset Number", String.Empty, ULa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0020", "9238", "Functional Group Private Creator", String.Empty, LOa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0020", "9251", "R-R Interval Time Measured", String.Empty, FDa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0020", "9253", "Respiratory Trigger Sequence", String.Empty, SQa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0020", "9241", "Nominal Percentage of Cardiac Phase", String.Empty, FLa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0020", "9245", "Nominal Percentage of Respiratory Phase", String.Empty, FLa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0020", "9246", "Starting Respiratory Amplitude", String.Empty, FLa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0020", "9247", "Starting Respiratory Phase", String.Empty, CSa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0020", "9248", "Ending Respiratory Amplitude", String.Empty, FLa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0020", "9249", "Ending Respiratory Phase", String.Empty, CSa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0020", "9250", "Respiratory Trigger Type", String.Empty, CSa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0020", "9251", "R - R Interval Time Nominal", String.Empty, FDa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0020", "9252", "Actual Cardiac Trigger Delay Time", String.Empty, FDa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0020", "9253", "Respiratory Synchronization Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0020", "9254", "Respiratory Interval Time", String.Empty, FDa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0020", "9255", "Respiratory Trigger Delay Time", String.Empty, FDa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0020", "9255", "Nominal Respiratory Trigger Delay Time", String.Empty, FDa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0020", "9256", "Respiratory Trigger Delay Threshold", String.Empty, FDa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0020", "9257", "Actual Respiratory Trigger Delay Time", String.Empty, FDa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0020", "9421", "Dimension Description Label", String.Empty, LOa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0020", "9450", "Patient Orientation in Frame Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0020", "9453", "Frame Label", String.Empty, LOa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0020", "9518", "Acquisition Index", String.Empty, USa, "1-n", false));
+				Entries.Add(new DcmDictionaryEntry("0020", "9529", "Contributing SOP Instances Reference Sequence", String.Empty, SQa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0020", "9536", "Reconstruction Index", String.Empty, USa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0022", "0001", "Light Path Filter Pass-Through Wavelength", String.Empty, USa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0022", "0002", "Light Path Filter Pass Band", String.Empty, USa, "2", false));
 				Entries.Add(new DcmDictionaryEntry("0022", "0003", "Image Path Filter Pass-Through Wavelength", String.Empty, USa, "1", false));
@@ -1216,6 +1290,23 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0022", "0020", "Stereo Pairs Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0022", "0021", "Left Image Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0022", "0022", "Right Image Sequence", String.Empty, SQa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0022", "0030", "Axial Length of the Eye", String.Empty, FLa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0022", "0031", "Ophthalmic Frame Location Sequence", String.Empty, SQa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0022", "0032", "Reference Coordinates", String.Empty, FLa, "2-2n", false));
+				Entries.Add(new DcmDictionaryEntry("0022", "0035", "Depth Spatial Resolution", String.Empty, FLa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0022", "0036", "Maximum Depth Distortion", String.Empty, FLa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0022", "0037", "Along-scan Spatial Resolution", String.Empty, FLa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0022", "0038", "Maximum Along-scan Distortion", String.Empty, FLa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0022", "0039", "Ophthalmic Image Orientation", String.Empty, CSa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0022", "0041", "Depth of Transverse Image", String.Empty, FLa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0022", "0042", "Mydriatic Agent Concentration Units Sequence", String.Empty, SQa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0022", "0048", "Across-scan Spatial Resolution", String.Empty, FLa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0022", "0049", "Maximum Across-scan Distortion", String.Empty, FLa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0022", "004e", "Mydriatic Agent Concentration", String.Empty, DSa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0022", "0055", "Illumination Wave Length", String.Empty, FLa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0022", "0056", "Illumination Power", String.Empty, FLa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0022", "0057", "Illumination Bandwidth", String.Empty, FLa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0022", "0058", "Mydriatic Agent Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0028", "0002", "Samples per Pixel", String.Empty, USa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0028", "0003", "Samples per Pixel Used", String.Empty, USa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0028", "0004", "Photometric Interpretation", String.Empty, CSa, "1", false));
@@ -1226,8 +1317,9 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0028", "000a", "Frame Dimension Pointer", String.Empty, ATa, "1-n", false));
 				Entries.Add(new DcmDictionaryEntry("0028", "0010", "Rows", String.Empty, USa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0028", "0011", "Columns", String.Empty, USa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0028", "0012", "Planes", String.Empty, USa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0028", "0012", "Planes", String.Empty, USa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("0028", "0014", "Ultrasound Color Data Present", String.Empty, USa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0028", "0020", "", String.Empty, NONEa, "", true));
 				Entries.Add(new DcmDictionaryEntry("0028", "0030", "Pixel Spacing", String.Empty, DSa, "2", false));
 				Entries.Add(new DcmDictionaryEntry("0028", "0031", "Zoom Factor", String.Empty, DSa, "2", false));
 				Entries.Add(new DcmDictionaryEntry("0028", "0032", "Zoom Center", String.Empty, DSa, "2", false));
@@ -1235,7 +1327,25 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0028", "0040", "Image Format", String.Empty, CSa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("0028", "0050", "Manipulated Image", String.Empty, LOa, "1-n", true));
 				Entries.Add(new DcmDictionaryEntry("0028", "0051", "Corrected Image", String.Empty, CSa, "1-n", false));
+				Entries.Add(new DcmDictionaryEntry("0028", "005f", "Compression Recognition Code", String.Empty, LOa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("0028", "0060", "Compression Code", String.Empty, CSa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0028", "0061", "Compression Originator", String.Empty, SHa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0028", "0062", "Compression Label", String.Empty, LOa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0028", "0063", "Compression Description", String.Empty, SHa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0028", "0065", "Compression Sequence", String.Empty, CSa, "1-n", true));
+				Entries.Add(new DcmDictionaryEntry("0028", "0066", "Compression Step Pointers", String.Empty, ATa, "1-n", true));
+				Entries.Add(new DcmDictionaryEntry("0028", "0068", "Repeat Interval", String.Empty, USa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0028", "0069", "Bits Grouped", String.Empty, USa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0028", "0070", "Perimeter Table", String.Empty, USa, "1-n", true));
+				Entries.Add(new DcmDictionaryEntry("0028", "0071", "Perimeter Value", String.Empty, USaSSa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0028", "0080", "Predictor Rows", String.Empty, USa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0028", "0081", "Predictor Columns", String.Empty, USa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0028", "0082", "Predictor Constants", String.Empty, USa, "1-n", true));
+				Entries.Add(new DcmDictionaryEntry("0028", "0090", "Blocked Pixels", String.Empty, CSa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0028", "0091", "Block Rows", String.Empty, USa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0028", "0092", "Block Columns", String.Empty, USa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0028", "0093", "Row Overlap", String.Empty, USa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0028", "0094", "Column Overlap", String.Empty, USa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("0028", "0100", "Bits Allocated", String.Empty, USa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0028", "0101", "Bits Stored", String.Empty, USa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0028", "0102", "High Bit", String.Empty, USa, "1", false));
@@ -1246,14 +1356,38 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0028", "0107", "Largest Image Pixel Value", String.Empty, USaSSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0028", "0108", "Smallest Pixel Value in Series", String.Empty, USaSSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0028", "0109", "Largest Pixel Value in Series", String.Empty, USaSSa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0028", "0110", "Smallest Image Pixel Value in Plane", String.Empty, USaSSa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0028", "0111", "Largest Image Pixel Value in Plane", String.Empty, USaSSa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0028", "0110", "Smallest Image Pixel Value in Plane", String.Empty, USaSSa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0028", "0111", "Largest Image Pixel Value in Plane", String.Empty, USaSSa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("0028", "0120", "Pixel Padding Value", String.Empty, USaSSa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0028", "0121", "Pixel Padding Range Limit", String.Empty, USaSSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0028", "0200", "Image Location", String.Empty, USa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("0028", "0300", "Quality Control Image", String.Empty, CSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0028", "0301", "Burned In Annotation", String.Empty, CSa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0028", "0402", "Pixel Spacing Calibration Type", String.Empty, CSa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0028", "0404", "Pixel Spacing Calibration Description", String.Empty, LOa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0028", "0400", "Transform Label", String.Empty, LOa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0028", "0401", "Transform Version Number", String.Empty, LOa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0028", "0402", "Number of Transform Steps", String.Empty, USa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0028", "0403", "Sequence of Compressed Data", String.Empty, LOa, "1-n", true));
+				Entries.Add(new DcmDictionaryEntry("0028", "0404", "Details of Coefficients", String.Empty, ATa, "1-n", true));
+				Entries.Add(new DcmDictionaryEntry("0028", "04x0", "Rows For Nth Order Coefficients", String.Empty, USa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0028", "04x1", "Columns For Nth Order Coefficients", String.Empty, USa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0028", "04x2", "Coefficient Coding", String.Empty, LOa, "1-n", true));
+				Entries.Add(new DcmDictionaryEntry("0028", "04x3", "Coefficient Coding Pointers", String.Empty, ATa, "1-n", true));
+				Entries.Add(new DcmDictionaryEntry("0028", "0700", "DCT Label", String.Empty, LOa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0028", "0701", "Data Block Description", String.Empty, CSa, "1-n", true));
+				Entries.Add(new DcmDictionaryEntry("0028", "0702", "Data Block", String.Empty, ATa, "1-n", true));
+				Entries.Add(new DcmDictionaryEntry("0028", "0710", "Normalization Factor Format", String.Empty, USa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0028", "0720", "Zonal Map Number Format", String.Empty, USa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0028", "0721", "Zonal Map Location", String.Empty, ATa, "1-n", true));
+				Entries.Add(new DcmDictionaryEntry("0028", "0722", "Zonal Map Format", String.Empty, USa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0028", "0730", "Adaptive Map Format", String.Empty, USa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0028", "0740", "Code Number Format", String.Empty, USa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0028", "08x0", "Code Label", String.Empty, CSa, "1-n", true));
+				Entries.Add(new DcmDictionaryEntry("0028", "08x2", "Number of Table", String.Empty, USa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0028", "08x3", "Code Table Location", String.Empty, ATa, "1-n", true));
+				Entries.Add(new DcmDictionaryEntry("0028", "08x4", "Bits For Code Word", String.Empty, USa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0028", "08x8", "Image Data Location", String.Empty, ATa, "1-n", true));
+				Entries.Add(new DcmDictionaryEntry("0028", "0a02", "Pixel Spacing Calibration Type", String.Empty, CSa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0028", "0a04", "Pixel Spacing Calibration Description", String.Empty, LOa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0028", "1040", "Pixel Intensity Relationship", String.Empty, CSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0028", "1041", "Pixel Intensity Relationship Sign", String.Empty, SSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0028", "1050", "Window Center", String.Empty, DSa, "1-n", false));
@@ -1269,11 +1403,18 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0028", "1101", "Red Palette Color Lookup Table Descriptor", String.Empty, USaSSa, "3", false));
 				Entries.Add(new DcmDictionaryEntry("0028", "1102", "Green Palette Color Lookup Table Descriptor", String.Empty, USaSSa, "3", false));
 				Entries.Add(new DcmDictionaryEntry("0028", "1103", "Blue Palette Color Lookup Table Descriptor", String.Empty, USaSSa, "3", false));
+				Entries.Add(new DcmDictionaryEntry("0028", "1111", "Large Red Palette Color Lookup Table Descriptor", String.Empty, USaSSa, "4", true));
+				Entries.Add(new DcmDictionaryEntry("0028", "1112", "Large Green Palette Color Lookup Table Descriptor", String.Empty, USaSSa, "4", true));
+				Entries.Add(new DcmDictionaryEntry("0028", "1113", "Large Blue Palette Color Lookup Table Descriptor", String.Empty, USaSSa, "4", true));
 				Entries.Add(new DcmDictionaryEntry("0028", "1199", "Palette Color Lookup Table UID", String.Empty, UIa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0028", "1200", "Gray Lookup Table Data", String.Empty, USaSSaOWa, "1-n", true));
 				Entries.Add(new DcmDictionaryEntry("0028", "1201", "Red Palette Color Lookup Table Data", String.Empty, OWa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0028", "1202", "Green Palette Color Lookup Table Data", String.Empty, OWa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0028", "1203", "Blue Palette Color Lookup Table Data", String.Empty, OWa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0028", "1211", "Large Red Palette Color Lookup Table Data", String.Empty, OWa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0028", "1212", "Large Green Palette Color Lookup Table Data", String.Empty, OWa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0028", "1213", "Large Blue Palette Color Lookup Table Data", String.Empty, OWa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0028", "1214", "Large Palette Color Lookup Table UID", String.Empty, UIa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("0028", "1221", "Segmented Red Palette Color Lookup Table Data", String.Empty, OWa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0028", "1222", "Segmented Green Palette Color Lookup Table Data", String.Empty, OWa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0028", "1223", "Segmented Blue Palette Color Lookup Table Data", String.Empty, OWa, "1", false));
@@ -1294,7 +1435,7 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0028", "3010", "VOI LUT Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0028", "3110", "Softcopy VOI LUT Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0028", "4000", "Image Presentation Comments", String.Empty, LTa, "1", true));
-				Entries.Add(new DcmDictionaryEntry("0028", "5000", "Bi-Plane Acquisition Sequence", String.Empty, SQa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0028", "5000", "Bi-Plane Acquisition Sequence", String.Empty, SQa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("0028", "6010", "Representative Frame Number", String.Empty, USa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0028", "6020", "Frame Numbers of Interest (FOI)", String.Empty, USa, "1-n", false));
 				Entries.Add(new DcmDictionaryEntry("0028", "6022", "Frame(s) of Interest Description", String.Empty, LOa, "1-n", false));
@@ -1329,6 +1470,8 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0028", "9446", "Image Processing Applied", String.Empty, CSa, "1-n", false));
 				Entries.Add(new DcmDictionaryEntry("0028", "9454", "Mask Selection Mode", String.Empty, CSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0028", "9474", "LUT Function", String.Empty, CSa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0028", "9520", "Image to Equipment Mapping Matrix", String.Empty, DSa, "16", false));
+				Entries.Add(new DcmDictionaryEntry("0028", "9537", "Equipment Coordinate System Identification", String.Empty, CSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0032", "000a", "Study Status ID", String.Empty, CSa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("0032", "000c", "Study Priority ID", String.Empty, CSa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("0032", "0012", "Study ID Issuer", String.Empty, LOa, "1", true));
@@ -1354,7 +1497,7 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0032", "1060", "Requested Procedure Description", String.Empty, LOa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0032", "1064", "Requested Procedure Code Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0032", "1070", "Requested Contrast Agent", String.Empty, LOa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0032", "4000", "Study Comments", String.Empty, LTa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0032", "4000", "Study Comments", String.Empty, LTa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("0038", "0004", "Referenced Patient Alias Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0038", "0008", "Visit Status ID", String.Empty, CSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0038", "0010", "Admission ID", String.Empty, LOa, "1", false));
@@ -1372,6 +1515,9 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0038", "0040", "Discharge Diagnosis Description", String.Empty, LOa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("0038", "0044", "Discharge Diagnosis Code Sequence", String.Empty, SQa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("0038", "0050", "Special Needs", String.Empty, LOa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0038", "0060", "Service Episode ID", String.Empty, LOa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0038", "0061", "Issuer of Service Episode ID", String.Empty, LOa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0038", "0062", "Service Episode Description", String.Empty, LOa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0038", "0100", "Pertinent Documents Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0038", "0300", "Current Patient Location", String.Empty, LOa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0038", "0400", "Patient's Institution Residence", String.Empty, LOa, "1", false));
@@ -1403,6 +1549,16 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("003a", "0221", "Filter High Frequency", String.Empty, DSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("003a", "0222", "Notch Filter Frequency", String.Empty, DSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("003a", "0223", "Notch Filter Bandwidth", String.Empty, DSa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("003a", "0230", "Waveform Data Display Scale", String.Empty, FLa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("003a", "0231", "Waveform Display Background CIELab Value", String.Empty, USa, "3", false));
+				Entries.Add(new DcmDictionaryEntry("003a", "0240", "Waveform Presentation Group Sequence", String.Empty, SQa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("003a", "0241", "Presentation Group Number", String.Empty, USa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("003a", "0242", "Channel Display Sequence", String.Empty, SQa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("003a", "0244", "Channel Recommended Display CIELab Value", String.Empty, USa, "3", false));
+				Entries.Add(new DcmDictionaryEntry("003a", "0245", "Channel Position", String.Empty, FLa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("003a", "0246", "Display Shading Flag", String.Empty, CSa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("003a", "0247", "Fractional Channel Display Scale", String.Empty, FLa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("003a", "0248", "Absolute Channel Display Scale", String.Empty, FLa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("003a", "0300", "Multiplexed Audio Channels Description Code Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("003a", "0301", "Channel Identification Code", String.Empty, ISa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("003a", "0302", "Channel Mode", String.Empty, CSa, "1", false));
@@ -1466,6 +1622,8 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0040", "050a", "Specimen Accession Number", String.Empty, LOa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0040", "0550", "Specimen Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0040", "0551", "Specimen Identifier", String.Empty, LOa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0040", "0552", "Specimen Description Sequence - Trial", String.Empty, SQa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0040", "0553", "Specimen Description - Trial", String.Empty, STa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("0040", "0555", "Acquisition Context Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0040", "0556", "Acquisition Context Description", String.Empty, STa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0040", "059a", "Specimen Type Code Sequence", String.Empty, SQa, "1", false));
@@ -1477,6 +1635,7 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0040", "08d8", "Pixel Spacing Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0040", "08da", "Coordinate System Axis Code Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0040", "08ea", "Measurement Units Code Sequence", String.Empty, SQa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0040", "09f8", "Vital Stain Code Sequence - Trial", String.Empty, SQa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("0040", "1001", "Requested Procedure ID", String.Empty, SHa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0040", "1002", "Reason for the Requested Procedure", String.Empty, LOa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0040", "1003", "Requested Procedure Priority", String.Empty, SHa, "1", false));
@@ -1496,8 +1655,8 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0040", "2001", "Reason for the Imaging Service Request", String.Empty, LOa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("0040", "2004", "Issue Date of Imaging Service Request", String.Empty, DAa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0040", "2005", "Issue Time of Imaging Service Request", String.Empty, TMa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0040", "2006", "Placer Order Number / Imaging Service Request", String.Empty, SHa, "1", true));
-				Entries.Add(new DcmDictionaryEntry("0040", "2007", "Filler Order Number / Imaging Service Request", String.Empty, SHa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0040", "2006", "Placer Order Number / Imaging Service Request (Retired)", String.Empty, SHa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0040", "2007", "Filler Order Number / Imaging Service Request (Retired)", String.Empty, SHa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("0040", "2008", "Order Entered By", String.Empty, PNa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0040", "2009", "Order Enterer's Location", String.Empty, SHa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0040", "2010", "Order Callback Phone Number", String.Empty, SHa, "1", false));
@@ -1559,7 +1718,7 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0040", "a07a", "Participant Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0040", "a07c", "Custodial Organization Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0040", "a080", "Participation Type", String.Empty, CSa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0040", "a082", "Participation Datetime", String.Empty, DTa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0040", "a082", "Participation DateTime", String.Empty, DTa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0040", "a084", "Observer Type", String.Empty, CSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0040", "a088", "Verifying Observer Identification Code Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0040", "a090", "Equivalent CDA Document Sequence", String.Empty, SQa, "1", true));
@@ -1573,7 +1732,7 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0040", "a132", "Referenced Sample Positions", String.Empty, ULa, "1-n", false));
 				Entries.Add(new DcmDictionaryEntry("0040", "a136", "Referenced Frame Numbers", String.Empty, USa, "1-n", false));
 				Entries.Add(new DcmDictionaryEntry("0040", "a138", "Referenced Time Offsets", String.Empty, DSa, "1-n", false));
-				Entries.Add(new DcmDictionaryEntry("0040", "a13a", "Referenced Datetime", String.Empty, DTa, "1-n", false));
+				Entries.Add(new DcmDictionaryEntry("0040", "a13a", "Referenced DateTime", String.Empty, DTa, "1-n", false));
 				Entries.Add(new DcmDictionaryEntry("0040", "a160", "Text Value", String.Empty, UTa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0040", "a168", "Concept Code Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0040", "a170", "Purpose of Reference Code Sequence", String.Empty, SQa, "1", false));
@@ -1582,6 +1741,8 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0040", "a300", "Measured Value Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0040", "a301", "Numeric Value Qualifier Code Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0040", "a30a", "Numeric Value", String.Empty, DSa, "1-n", false));
+				Entries.Add(new DcmDictionaryEntry("0040", "a353", "Address - Trial", String.Empty, STa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0040", "a354", "Telephone Number - Trial", String.Empty, LOa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("0040", "a360", "Predecessor Documents Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0040", "a370", "Referenced Request Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0040", "a372", "Performed Procedure Code Sequence", String.Empty, SQa, "1", false));
@@ -1591,6 +1752,7 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0040", "a491", "Completion Flag", String.Empty, CSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0040", "a492", "Completion Flag Description", String.Empty, LOa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0040", "a493", "Verification Flag", String.Empty, CSa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0040", "a494", "Archive Requested", String.Empty, CSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0040", "a504", "Content Template Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0040", "a525", "Identical Documents Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0040", "a730", "Content Sequence", String.Empty, SQa, "1", false));
@@ -1610,6 +1772,21 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0042", "0011", "Encapsulated Document", String.Empty, OBa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0042", "0012", "MIME Type of Encapsulated Document", String.Empty, LOa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0042", "0013", "Source Instance Sequence", String.Empty, SQa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0042", "0014", "List of MIME Types", String.Empty, LOa, "1-n", false));
+				Entries.Add(new DcmDictionaryEntry("0044", "0001", "Product Package Identifier", String.Empty, STa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0044", "0002", "Substance Administration Approval", String.Empty, CSa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0044", "0003", "Approval Status Further Description", String.Empty, LTa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0044", "0004", "Approval Status DateTime", String.Empty, DTa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0044", "0007", "Product Type Code Sequence", String.Empty, SQa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0044", "0008", "Product Name", String.Empty, LOa, "1-n", false));
+				Entries.Add(new DcmDictionaryEntry("0044", "0009", "Product Description", String.Empty, LTa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0044", "000a", "Product Lot Identifier", String.Empty, LOa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0044", "000b", "Product Expiration DateTime", String.Empty, DTa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0044", "0010", "Substance Administration DateTime", String.Empty, DTa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0044", "0011", "Substance Administration Notes", String.Empty, LOa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0044", "0012", "Substance Administration Device ID", String.Empty, LOa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0044", "0013", "Product Parameter Sequence", String.Empty, SQa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0044", "0019", "Substance Administration Parameter Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0050", "0004", "Calibration Image", String.Empty, CSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0050", "0010", "Device Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0050", "0014", "Device Length", String.Empty, DSa, "1", false));
@@ -1695,8 +1872,8 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0054", "1323", "Scatter Fraction Factor", String.Empty, DSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0054", "1324", "Dead Time Factor", String.Empty, DSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0054", "1330", "Image Index", String.Empty, USa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0054", "1400", "Counts Included", String.Empty, CSa, "1-n", false));
-				Entries.Add(new DcmDictionaryEntry("0054", "1401", "Dead Time Correction Flag", String.Empty, CSa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0054", "1400", "Counts Included", String.Empty, CSa, "1-n", true));
+				Entries.Add(new DcmDictionaryEntry("0054", "1401", "Dead Time Correction Flag", String.Empty, CSa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("0060", "3000", "Histogram Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0060", "3002", "Histogram Number of Bins", String.Empty, USa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0060", "3004", "Histogram First Bin Value", String.Empty, USaSSa, "1", false));
@@ -1742,11 +1919,14 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0070", "0015", "Anchor Point Visibility", String.Empty, CSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0070", "0020", "Graphic Dimensions", String.Empty, USa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0070", "0021", "Number of Graphic Points", String.Empty, USa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0070", "0022", "Graphic Data", String.Empty, FLa, "2-2n", false));
+				Entries.Add(new DcmDictionaryEntry("0070", "0022", "Graphic Data", String.Empty, FLa, "2-n", false));
 				Entries.Add(new DcmDictionaryEntry("0070", "0023", "Graphic Type", String.Empty, CSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0070", "0024", "Graphic Filled", String.Empty, CSa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0070", "0040", "Image Rotation (Retired)", String.Empty, ISa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("0070", "0041", "Image Horizontal Flip", String.Empty, CSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0070", "0042", "Image Rotation", String.Empty, USa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0070", "0050", "Displayed Area Top Left Hand Corner (Trial)", String.Empty, USa, "2", true));
+				Entries.Add(new DcmDictionaryEntry("0070", "0051", "Displayed Area Bottom Right Hand Corner (Trial)", String.Empty, USa, "2", true));
 				Entries.Add(new DcmDictionaryEntry("0070", "0052", "Displayed Area Top Left Hand Corner", String.Empty, SLa, "2", false));
 				Entries.Add(new DcmDictionaryEntry("0070", "0053", "Displayed Area Bottom Right Hand Corner", String.Empty, SLa, "2", false));
 				Entries.Add(new DcmDictionaryEntry("0070", "005a", "Displayed Area Selection Sequence", String.Empty, SQa, "1", false));
@@ -1789,7 +1969,7 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0072", "0004", "Hanging Protocol Description", String.Empty, LOa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0072", "0006", "Hanging Protocol Level", String.Empty, CSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0072", "0008", "Hanging Protocol Creator", String.Empty, LOa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0072", "000a", "Hanging Protocol Creation Datetime", String.Empty, DTa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0072", "000a", "Hanging Protocol Creation DateTime", String.Empty, DTa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0072", "000c", "Hanging Protocol Definition Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0072", "000e", "Hanging Protocol User Identification Code Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0072", "0010", "Hanging Protocol User Group Name", String.Empty, LOa, "1", false));
@@ -1816,11 +1996,11 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0072", "0062", "Selector CS Value", String.Empty, CSa, "1-n", false));
 				Entries.Add(new DcmDictionaryEntry("0072", "0064", "Selector IS Value", String.Empty, ISa, "1-n", false));
 				Entries.Add(new DcmDictionaryEntry("0072", "0066", "Selector LO Value", String.Empty, LOa, "1-n", false));
-				Entries.Add(new DcmDictionaryEntry("0072", "0068", "Selector LT Value", String.Empty, LTa, "1-n", false));
+				Entries.Add(new DcmDictionaryEntry("0072", "0068", "Selector LT Value", String.Empty, LTa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0072", "006a", "Selector PN Value", String.Empty, PNa, "1-n", false));
 				Entries.Add(new DcmDictionaryEntry("0072", "006c", "Selector SH Value", String.Empty, SHa, "1-n", false));
-				Entries.Add(new DcmDictionaryEntry("0072", "006e", "Selector ST Value", String.Empty, STa, "1-n", false));
-				Entries.Add(new DcmDictionaryEntry("0072", "0070", "Selector UT Value", String.Empty, UTa, "1-n", false));
+				Entries.Add(new DcmDictionaryEntry("0072", "006e", "Selector ST Value", String.Empty, STa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0072", "0070", "Selector UT Value", String.Empty, UTa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0072", "0072", "Selector DS Value", String.Empty, DSa, "1-n", false));
 				Entries.Add(new DcmDictionaryEntry("0072", "0074", "Selector FD Value", String.Empty, FDa, "1-n", false));
 				Entries.Add(new DcmDictionaryEntry("0072", "0076", "Selector FL Value", String.Empty, FLa, "1-n", false));
@@ -1844,7 +2024,7 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0072", "0206", "Display Set Presentation Group Description", String.Empty, LOa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0072", "0208", "Partial Data Display Handling", String.Empty, CSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0072", "0210", "Synchronized Scrolling Sequence", String.Empty, SQa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0072", "0212", "Display Set Scrolling Group", String.Empty, USa, "2-2n", false));
+				Entries.Add(new DcmDictionaryEntry("0072", "0212", "Display Set Scrolling Group", String.Empty, USa, "2-n", false));
 				Entries.Add(new DcmDictionaryEntry("0072", "0214", "Navigation Indicator Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0072", "0216", "Navigation Display Set", String.Empty, USa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0072", "0218", "Reference Display Sets", String.Empty, USa, "1-n", false));
@@ -1883,13 +2063,57 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0072", "0716", "Show Acquisition Techniques Flag", String.Empty, CSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0072", "0717", "Display Set Horizontal Justification", String.Empty, CSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0072", "0718", "Display Set Vertical Justification", String.Empty, CSa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0074", "1000", "Unified Procedure Step State", String.Empty, CSa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0074", "1002", "UPS Progress Information Sequence", String.Empty, SQa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0074", "1004", "Unified Procedure Step Progress", String.Empty, DSa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0074", "1006", "Unified Procedure Step Progress Description", String.Empty, STa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0074", "1008", "Unified Procedure Step Communications URI Sequence", String.Empty, SQa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0074", "100a", "Contact URI", String.Empty, STa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0074", "100c", "Contact Display Name", String.Empty, LOa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0074", "100e", "Unified Procedure Step Discontinuation Reason Code Sequence", String.Empty, SQa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0074", "1020", "Beam Task Sequence", String.Empty, SQa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0074", "1022", "Beam Task Type", String.Empty, CSa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0074", "1024", "Beam Order Index", String.Empty, ISa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0074", "1030", "Delivery Verification Image Sequence", String.Empty, SQa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0074", "1032", "Verification Image Timing", String.Empty, CSa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0074", "1034", "Double Exposure Flag", String.Empty, CSa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0074", "1036", "Double Exposure Ordering", String.Empty, CSa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0074", "1038", "Double Exposure Meterset", String.Empty, DSa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0074", "103a", "Double Exposure Field Delta", String.Empty, DSa, "4", false));
+				Entries.Add(new DcmDictionaryEntry("0074", "1040", "Related Reference RT Image Sequence", String.Empty, SQa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0074", "1042", "General Machine Verification Sequence", String.Empty, SQa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0074", "1044", "Conventional Machine Verification Sequence", String.Empty, SQa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0074", "1046", "Ion Machine Verification Sequence", String.Empty, SQa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0074", "1048", "Failed Attributes Sequence", String.Empty, SQa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0074", "104a", "Overridden Attributes Sequence", String.Empty, SQa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0074", "104c", "Conventional Control Point Verification Sequence", String.Empty, SQa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0074", "104e", "Ion Control Point Verification Sequence", String.Empty, SQa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0074", "1050", "Attribute Occurrence Sequence", String.Empty, SQa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0074", "1052", "Attribute Occurrence Pointer", String.Empty, ATa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0074", "1054", "Attribute Item Selector", String.Empty, ULa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0074", "1056", "Attribute Occurrence Private Creator", String.Empty, LOa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0074", "1200", "Scheduled Procedure Step Priority", String.Empty, CSa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0074", "1202", "Worklist Label", String.Empty, LOa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0074", "1204", "Procedure Step Label", String.Empty, LOa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0074", "1210", "Scheduled Processing Parameters Sequence", String.Empty, SQa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0074", "1212", "Performed Processing Parameters Sequence", String.Empty, SQa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0074", "1216", "UPS Performed Procedure Sequence", String.Empty, SQa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0074", "1220", "Related Procedure Step Sequence", String.Empty, SQa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0074", "1222", "Procedure Step Relationship Type", String.Empty, LOa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0074", "1230", "Deletion Lock", String.Empty, LOa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0074", "1234", "Receiving AE", String.Empty, AEa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0074", "1236", "Requesting AE", String.Empty, AEa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0074", "1238", "Reason for Cancellation", String.Empty, LTa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0074", "1242", "SCP Status", String.Empty, CSa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0074", "1244", "Subscription List Status", String.Empty, CSa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0074", "1246", "UPS List Status", String.Empty, CSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0088", "0130", "Storage Media File-set ID", String.Empty, SHa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0088", "0140", "Storage Media File-set UID", String.Empty, UIa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0088", "0200", "Icon Image Sequence", String.Empty, SQa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0088", "0904", "Topic Title", String.Empty, LOa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0088", "0906", "Topic Subject", String.Empty, STa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0088", "0910", "Topic Author", String.Empty, LOa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0088", "0912", "Topic Keywords", String.Empty, LOa, "1-32", false));
+				Entries.Add(new DcmDictionaryEntry("0088", "0904", "Topic Title", String.Empty, LOa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0088", "0906", "Topic Subject", String.Empty, STa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0088", "0910", "Topic Author", String.Empty, LOa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("0088", "0912", "Topic Keywords", String.Empty, LOa, "1-32", true));
 				Entries.Add(new DcmDictionaryEntry("0100", "0410", "SOP Instance Status", String.Empty, CSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0100", "0420", "SOP Authorization Date and Time", String.Empty, DTa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0100", "0424", "SOP Authorization Comment", String.Empty, LTa, "1", false));
@@ -1914,10 +2138,17 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("0400", "0520", "Encrypted Content", String.Empty, OBa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0400", "0550", "Modified Attributes Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0400", "0561", "Original Attributes Sequence", String.Empty, SQa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("0400", "0562", "Attribute Modification Datetime", String.Empty, DTa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("0400", "0562", "Attribute Modification DateTime", String.Empty, DTa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0400", "0563", "Modifying System", String.Empty, LOa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0400", "0564", "Source of Previous Values", String.Empty, LOa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("0400", "0565", "Reason for the Attribute Modification", String.Empty, CSa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("1000", "xxx0", "Escape Triplet", String.Empty, USa, "3", true));
+				Entries.Add(new DcmDictionaryEntry("1000", "xxx1", "Run Length Triplet", String.Empty, USa, "3", true));
+				Entries.Add(new DcmDictionaryEntry("1000", "xxx2", "Huffman Table Size", String.Empty, USa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("1000", "xxx3", "Huffman Table Triplet", String.Empty, USa, "3", true));
+				Entries.Add(new DcmDictionaryEntry("1000", "xxx4", "Shift Table Size", String.Empty, USa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("1000", "xxx5", "Shift Table Triplet", String.Empty, USa, "3", true));
+				Entries.Add(new DcmDictionaryEntry("1010", "xxxx", "Zonal Map", String.Empty, USa, "1-n", true));
 				Entries.Add(new DcmDictionaryEntry("2000", "0010", "Number of Copies", String.Empty, ISa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("2000", "001e", "Printer Configuration Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("2000", "0020", "Print Priority", String.Empty, CSa, "1", false));
@@ -1938,7 +2169,7 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("2000", "00a4", "Other Media Available Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("2000", "00a8", "Supported Image Display Formats Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("2000", "0500", "Referenced Film Box Sequence", String.Empty, SQa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("2000", "0510", "Referenced Stored Print Sequence", String.Empty, SQa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("2000", "0510", "Referenced Stored Print Sequence", String.Empty, SQa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("2010", "0010", "Image Display Format", String.Empty, STa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("2010", "0030", "Annotation Display Format ID", String.Empty, CSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("2010", "0040", "Film Orientation", String.Empty, CSa, "1", false));
@@ -1965,7 +2196,7 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("2010", "0500", "Referenced Film Session Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("2010", "0510", "Referenced Image Box Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("2010", "0520", "Referenced Basic Annotation Box Sequence", String.Empty, SQa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("2020", "0010", "Image Position", String.Empty, USa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("2020", "0010", "Image Box Position", String.Empty, USa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("2020", "0020", "Polarity", String.Empty, CSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("2020", "0030", "Requested Image Size", String.Empty, DSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("2020", "0040", "Requested Decimate/Crop Behavior", String.Empty, CSa, "1", false));
@@ -1989,17 +2220,17 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("2040", "0082", "Overlay Background Density", String.Empty, CSa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("2040", "0090", "Overlay Mode", String.Empty, CSa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("2040", "0100", "Threshold Density", String.Empty, CSa, "1", true));
-				Entries.Add(new DcmDictionaryEntry("2040", "0500", "Referenced Image Box Sequence", String.Empty, SQa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("2040", "0500", "Referenced Image Box Sequence (Retired)", String.Empty, SQa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("2050", "0010", "Presentation LUT Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("2050", "0020", "Presentation LUT Shape", String.Empty, CSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("2050", "0500", "Referenced Presentation LUT Sequence", String.Empty, SQa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("2100", "0010", "Print Job ID", String.Empty, SHa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("2100", "0010", "Print Job ID", String.Empty, SHa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("2100", "0020", "Execution Status", String.Empty, CSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("2100", "0030", "Execution Status Info", String.Empty, CSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("2100", "0040", "Creation Date", String.Empty, DAa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("2100", "0050", "Creation Time", String.Empty, TMa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("2100", "0070", "Originator", String.Empty, AEa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("2100", "0140", "Destination AE", String.Empty, AEa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("2100", "0140", "Destination AE", String.Empty, AEa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("2100", "0160", "Owner ID", String.Empty, SHa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("2100", "0170", "Number of Films", String.Empty, ISa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("2100", "0500", "Referenced Print Job Sequence (Pull Stored Print)", String.Empty, SQa, "1", true));
@@ -2063,7 +2294,7 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("3004", "0006", "Dose Comment", String.Empty, LOa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("3004", "0008", "Normalization Point", String.Empty, DSa, "3", false));
 				Entries.Add(new DcmDictionaryEntry("3004", "000a", "Dose Summation Type", String.Empty, CSa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("3004", "000c", "Grid Frame Offset Vector", String.Empty, DSa, "2-2n", false));
+				Entries.Add(new DcmDictionaryEntry("3004", "000c", "Grid Frame Offset Vector", String.Empty, DSa, "2-n", false));
 				Entries.Add(new DcmDictionaryEntry("3004", "000e", "Dose Grid Scaling", String.Empty, DSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("3004", "0010", "RT Dose ROI Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("3004", "0012", "Dose Value", String.Empty, DSa, "1", false));
@@ -2121,6 +2352,9 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("3006", "00b0", "ROI Physical Properties Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("3006", "00b2", "ROI Physical Property", String.Empty, CSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("3006", "00b4", "ROI Physical Property Value", String.Empty, DSa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("3006", "00b6", "ROI Elemental Composition Sequence", String.Empty, SQa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("3006", "00b7", "ROI Elemental Composition Atomic Number", String.Empty, USa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("3006", "00b8", "ROI Elemental Composition Atomic Mass Fraction", String.Empty, FLa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("3006", "00c0", "Frame of Reference Relationship Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("3006", "00c2", "Related Frame of Reference UID", String.Empty, UIa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("3006", "00c4", "Frame of Reference Transformation Type", String.Empty, CSa, "1", false));
@@ -2289,7 +2523,7 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("300a", "00ba", "Source to Beam Limiting Device Distance", String.Empty, DSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("300a", "00bb", "Isocenter to Beam Limiting Device Distance", String.Empty, FLa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("300a", "00bc", "Number of Leaf/Jaw Pairs", String.Empty, ISa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("300a", "00be", "Leaf Position Boundaries", String.Empty, DSa, "3-3n", false));
+				Entries.Add(new DcmDictionaryEntry("300a", "00be", "Leaf Position Boundaries", String.Empty, DSa, "3-n", false));
 				Entries.Add(new DcmDictionaryEntry("300a", "00c0", "Beam Number", String.Empty, ISa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("300a", "00c2", "Beam Name", String.Empty, LOa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("300a", "00c3", "Beam Description", String.Empty, STa, "1", false));
@@ -2485,6 +2719,7 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("300a", "02e7", "Compensator Relative Stopping Power Ratio", String.Empty, FLa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("300a", "02e8", "Compensator Milling Tool Diameter", String.Empty, FLa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("300a", "02ea", "Ion Range Compensator Sequence", String.Empty, SQa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("300a", "02eb", "Compensator Description", String.Empty, LTa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("300a", "0302", "Radiation Mass Number", String.Empty, ISa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("300a", "0304", "Radiation Atomic Number", String.Empty, ISa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("300a", "0306", "Radiation Charge State", String.Empty, SSa, "1", false));
@@ -2548,6 +2783,12 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("300a", "0401", "Referenced Setup Image Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("300a", "0402", "Setup Image Comment", String.Empty, STa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("300a", "0410", "Motion Synchronization Sequence", String.Empty, SQa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("300a", "0412", "Control Point Orientation", String.Empty, FLa, "3", false));
+				Entries.Add(new DcmDictionaryEntry("300a", "0420", "General Accessory Sequence", String.Empty, SQa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("300a", "0421", "General Accessory ID", String.Empty, CSa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("300a", "0422", "General Accessory Description", String.Empty, STa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("300a", "0423", "General Accessory Type", String.Empty, SHa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("300a", "0424", "General Accessory Number", String.Empty, ISa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("300c", "0002", "Referenced RT Plan Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("300c", "0004", "Referenced Beam Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("300c", "0006", "Referenced Beam Number", String.Empty, ISa, "1", false));
@@ -2652,19 +2893,29 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("5600", "0020", "Spectroscopy Data", String.Empty, OFa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("60xx", "0010", "Overlay Rows", String.Empty, USa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("60xx", "0011", "Overlay Columns", String.Empty, USa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("60xx", "0012", "Overlay Planes", String.Empty, USa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("60xx", "0012", "Overlay Planes", String.Empty, USa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("60xx", "0015", "Number of Frames in Overlay", String.Empty, ISa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("60xx", "0022", "Overlay Description", String.Empty, LOa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("60xx", "0040", "Overlay Type", String.Empty, CSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("60xx", "0045", "Overlay Subtype", String.Empty, LOa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("60xx", "0050", "Overlay Origin", String.Empty, SSa, "2", false));
 				Entries.Add(new DcmDictionaryEntry("60xx", "0051", "Image Frame Origin", String.Empty, USa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("60xx", "0052", "Overlay Plane Origin", String.Empty, USa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("60xx", "0052", "Overlay Plane Origin", String.Empty, USa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("60xx", "0060", "Overlay Compression Code", String.Empty, CSa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("60xx", "0061", "Overlay Compression Originator", String.Empty, SHa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("60xx", "0062", "Overlay Compression Label", String.Empty, SHa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("60xx", "0063", "Overlay Compression Description", String.Empty, CSa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("60xx", "0066", "Overlay Compression Step Pointers", String.Empty, ATa, "1-n", true));
+				Entries.Add(new DcmDictionaryEntry("60xx", "0068", "Overlay Repeat Interval", String.Empty, USa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("60xx", "0069", "Overlay Bits Grouped", String.Empty, USa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("60xx", "0100", "Overlay Bits Allocated", String.Empty, USa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("60xx", "0102", "Overlay Bit Position", String.Empty, USa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("60xx", "0110", "Overlay Format", String.Empty, CSa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("60xx", "0200", "Overlay Location", String.Empty, USa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("60xx", "0800", "Overlay Code Label", String.Empty, CSa, "1-n", true));
+				Entries.Add(new DcmDictionaryEntry("60xx", "0802", "Overlay Number of Tables", String.Empty, USa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("60xx", "0803", "Overlay Code Table Location", String.Empty, ATa, "1-n", true));
+				Entries.Add(new DcmDictionaryEntry("60xx", "0804", "Overlay Bits For Code Word", String.Empty, USa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("60xx", "1001", "Overlay Activation Layer", String.Empty, CSa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("60xx", "1100", "Overlay Descriptor - Gray", String.Empty, USa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("60xx", "1101", "Overlay Descriptor - Red", String.Empty, USa, "1", true));
@@ -2681,12 +2932,19 @@ namespace Dicom.Data {
 				Entries.Add(new DcmDictionaryEntry("60xx", "3000", "Overlay Data", String.Empty, OBaOWa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("60xx", "4000", "Overlay Comments", String.Empty, LTa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("7fe0", "0010", "Pixel Data", String.Empty, OBaOWa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("7fe0", "0020", "Coefficients SDVN", String.Empty, OWa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("7fe0", "0030", "Coefficients SDHN", String.Empty, OWa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("7fe0", "0040", "Coefficients SDDN", String.Empty, OWa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("7fxx", "0010", "Variable Pixel Data", String.Empty, OBaOWa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("7fxx", "0011", "Variable Next Data Group", String.Empty, USa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("7fxx", "0020", "Variable Coefficients SDVN", String.Empty, OWa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("7fxx", "0030", "Variable Coefficients SDHN", String.Empty, OWa, "1", true));
+				Entries.Add(new DcmDictionaryEntry("7fxx", "0040", "Variable Coefficients SDDN", String.Empty, OWa, "1", true));
 				Entries.Add(new DcmDictionaryEntry("fffa", "fffa", "Digital Signatures Sequence", String.Empty, SQa, "1", false));
 				Entries.Add(new DcmDictionaryEntry("fffc", "fffc", "Data Set Trailing Padding", String.Empty, OBa, "1", false));
-				Entries.Add(new DcmDictionaryEntry("fffe", "e000", "Item", String.Empty, NONEa, "", false));
-				Entries.Add(new DcmDictionaryEntry("fffe", "e00d", "Item Delimitation Item", String.Empty, NONEa, "", false));
-				Entries.Add(new DcmDictionaryEntry("fffe", "e0dd", "Sequence Delimitation Item", String.Empty, NONEa, "", false));
-
+				Entries.Add(new DcmDictionaryEntry("fffe", "e000", "Item", String.Empty, NONEa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("fffe", "e00d", "Item Delimitation Item", String.Empty, NONEa, "1", false));
+				Entries.Add(new DcmDictionaryEntry("fffe", "e0dd", "Sequence Delimitation Item", String.Empty, NONEa, "1", false));
 				#endregion
 
 				foreach (DcmDictionaryEntry entry in Entries) {
@@ -2730,13 +2988,14 @@ namespace Dicom.Data {
 		/// <param name="filename"></param>
 		/// <param name="publicOnly"></param>
 		/// <param name="privateOnly"></param>
-		public static void ExportDictionary(string filename, bool publicOnly, bool privateOnly) {
+		public static void ExportDictionary(string filename, bool includePublic, bool includePrivate) {
 			StringBuilder sb = new StringBuilder();
-			privateOnly = publicOnly ? false : privateOnly;
 
 			lock (Lock) {
 				foreach (DcmDictionaryEntry entry in Entries) {
-					if ((publicOnly && entry.IsPrivate) || (privateOnly && !entry.IsPrivate))
+					if (entry.IsPrivate && !includePrivate)
+						continue;
+					if (!entry.IsPrivate && !includePublic)
 						continue;
 					string[] tag = entry.DisplayTag.ToLower().Split(',');
 					sb.Append(tag[0]);
@@ -2750,13 +3009,10 @@ namespace Dicom.Data {
 					sb.Append(entry.VM);
 					sb.Append(Seperator);
 					sb.Append(entry.Name);
-					if (entry.IsPrivate) {
-						sb.Append(Seperator);
-						sb.Append(entry.PrivateCreator);
-					} else if (entry.Retired) {
-						sb.Append(Seperator);
-						sb.Append(Retired);
-					}
+					sb.Append(Seperator);
+					sb.Append(Retired);
+					sb.Append(Seperator);
+					sb.Append(entry.PrivateCreator);
 					sb.AppendLine();
 				}
 			}
@@ -2778,7 +3034,7 @@ namespace Dicom.Data {
 							continue;
 
 						string[] fields = line.Split('\t');
-						if (fields.Length < 5)
+						if (fields.Length < 5 || fields.Length > 7)
 							continue;
 
 						string group = fields[0];
@@ -2794,12 +3050,16 @@ namespace Dicom.Data {
 						string name = fields[4];
 
 						bool retired = false;
-						string creator = String.Empty;
-						if (fields.Length == 6) {
+						if (fields.Length >= 6) {
 							if (fields[5] == Retired)
 								retired = true;
-							else
-								creator = fields[5];
+						}
+						
+						string creator = String.Empty;
+						if (fields.Length == 7) {
+							if (!String.IsNullOrEmpty(fields[6]))
+								creator = fields[6];
+							creator.Trim('\'');
 						}
 
 						Entries.Add(new DcmDictionaryEntry(group, element, name, creator, vrs, vm, retired));

@@ -35,7 +35,7 @@ namespace Dicom.Network.Server {
 			association.NegotiateAsyncOps = false;
 			LogID = association.CallingAE;
 			foreach (DcmPresContext pc in association.GetPresentationContexts()) {
-				if (pc.AbstractSyntax == DcmUIDs.Verification) {
+				if (pc.AbstractSyntax == DcmUIDs.VerificationSOPClass) {
 					if (pc.HasTransfer(DcmTS.ImplicitVRLittleEndian)) {
 						pc.SetResult(DcmPresContextResult.Accept, DcmTS.ImplicitVRLittleEndian);
 					}

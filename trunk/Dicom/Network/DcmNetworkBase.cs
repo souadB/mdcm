@@ -439,6 +439,14 @@ namespace Dicom.Network {
 			return _messageId++;
 		}
 
+		/// <summary>
+		/// A DICOM Application Entity (which includes the Upper Layer service-user) 
+		/// that desires to establish an association shall issue an A-ASSOCIATE request 
+		/// primitive. The called AE is identified by parameters of the request 
+		/// primitive. The requestor shall not issue any primitives except an A-ABORT 
+		/// request primitive until it receives an A-ASSOCIATE confirmation primitive.
+		/// </summary>
+		/// <param name="associate"></param>
 		protected void SendAssociateRequest(DcmAssociate associate) {
 			_assoc = associate;
 			Log.Info("{0} -> Association request:\n{1}", LogID, Associate.ToString());
@@ -446,30 +454,75 @@ namespace Dicom.Network {
 			SendRawPDU(pdu.Write());
 		}
 
+		/// <summary>
+		/// The called AE shall accept or reject the association by sending an A-ASSOCIATE 
+		/// response primitive with an appropriate Result parameter. The Upper layer 
+		/// service-provider shall issue an A-ASSOCIATE confirmation primitive having the 
+		/// same Result parameter. The Result Source parameter shall be assigned the 
+		/// symbolic value of “UL service-user.”
+		/// </summary>
+		/// <param name="associate"></param>
 		protected void SendAssociateAccept(DcmAssociate associate) {
 			Log.Info("{0} -> Association accept:\n{1}", LogID, Associate.ToString());
 			AAssociateAC pdu = new AAssociateAC(_assoc);
 			SendRawPDU(pdu.Write());
 		}
 
+		/// <summary>
+		/// The UL service-provider may not be capable of supporting the requested 
+		/// association. In this situation, it shall return an A-ASSOCIATE confirmation 
+		/// primitive to the requestor with an appropriate Result parameter (rejected). The 
+		/// Result Source parameter shall be appropriately assigned either the symbolic value 
+		/// of “UL service-provider (ACSE related function)” or “UL service-provider 
+		/// (Presentation related function).” The indication primitive shall not be issued. 
+		/// The association shall not be established.
+		/// </summary>
+		/// <param name="result"></param>
+		/// <param name="source"></param>
+		/// <param name="reason"></param>
 		protected void SendAssociateReject(DcmRejectResult result, DcmRejectSource source, DcmRejectReason reason) {
 			Log.Info("{0} -> Association reject [result: {1}; source: {2}; reason: {3}]", LogID, result, source, reason);
 			AAssociateRJ pdu = new AAssociateRJ(result, source, reason);
 			SendRawPDU(pdu.Write());
 		}
 
+		/// <summary>
+		/// The graceful release of an association between two AEs shall be performed 
+		/// through ACSE A-RELEASE request, indication, response, and confirmation 
+		/// primitives. The initiator of the service is hereafter called a requestor 
+		/// and the service-user which receives the A-RELEASE indication is hereafter 
+		/// called the acceptor. It shall be a confirmed service.
+		/// </summary>
 		protected void SendReleaseRequest() {
 			Log.Info("{0} -> Association release request", LogID);
 			AReleaseRQ pdu = new AReleaseRQ();
 			SendRawPDU(pdu.Write());
 		}
 
+		/// <summary>
+		/// The graceful release of an association between two AEs shall be performed 
+		/// through ACSE A-RELEASE request, indication, response, and confirmation 
+		/// primitives. The initiator of the service is hereafter called a requestor 
+		/// and the service-user which receives the A-RELEASE indication is hereafter 
+		/// called the acceptor. It shall be a confirmed service.
+		/// </summary>
 		protected void SendReleaseResponse() {
 			Log.Info("{0} -> Association release response", LogID);
 			AReleaseRP pdu = new AReleaseRP();
 			SendRawPDU(pdu.Write());
 		}
 
+		/// <summary>
+		/// The ACSE A-ABORT service shall be used by a requestor in either of the AEs 
+		/// to cause the abnormal release of the association. It shall be a non-confirmed 
+		/// service. However, because of the possibility of an A-ABORT service procedure 
+		/// collision, the delivery of the indication primitive is not guaranteed. Should
+		/// such a collision occur, both AEs are aware that the association has been 
+		/// terminated. The abort shall be performed through A-ABORT request and A-ABORT 
+		/// indication primitives.
+		/// </summary>
+		/// <param name="source"></param>
+		/// <param name="reason"></param>
 		protected void SendAbort(DcmAbortSource source, DcmAbortReason reason) {
 			Log.Info("{0} -> Abort [source: {1}; reason: {2}]", LogID, source, reason);
 			AAbort pdu = new AAbort(source, reason);
@@ -490,11 +543,55 @@ namespace Dicom.Network {
 			SendDimse(presentationID, command, null);
 		}
 
+		/// <summary>
+		/// The C-STORE service is used by a DIMSE-service-user to store a composite 
+		/// SOP Instance on a peer DIMSE-service-user. It is a confirmed service.
+		/// </summary>
+		/// <param name="presentationID">The Presentation Context ID identifies the
+		/// Presentation Context within the scope of a specific Association.</param>
+		/// <param name="messageID">This parameter identifies the operation. It is used 
+		/// to distinguish this operation from other notifications or operations that 
+		/// the DIMSE-service-provider may have in progress. No two identical values 
+		/// for the Message ID (0000,0110) shall be used for outstanding operations or 
+		/// notifications.</param>
+		/// <param name="affectedInstance">For the request/indication, this parameter 
+		/// specifies the SOP Instance to be stored. It may be included in the 
+		/// response/confirmation. If included in the response/confirmation, this 
+		/// parameter shall be equal to the value in the request/indication.</param>
+		/// <param name="priority">This parameter specifies the priority of the 
+		/// C-STORE operation. It shall be one of LOW, MEDIUM, or HIGH.</param>
+		/// <param name="dataset">The Data Set accompanying the C-STORE primitive 
+		/// contains the Attributes of the Composite SOP Instance to be stored.</param>
 		protected void SendCStoreRequest(byte presentationID, ushort messageID, DcmUID affectedInstance,
 			DcmPriority priority, DcmDataset dataset) {
 			SendCStoreRequest(presentationID, messageID, affectedInstance, priority, null, 0, dataset);
 		}
 
+		/// <summary>
+		/// The C-STORE service is used by a DIMSE-service-user to store a composite 
+		/// SOP Instance on a peer DIMSE-service-user. It is a confirmed service.
+		/// </summary>
+		/// <param name="presentationID">The Presentation Context ID identifies the
+		/// Presentation Context within the scope of a specific Association.</param>
+		/// <param name="messageID">This parameter identifies the operation. It is used 
+		/// to distinguish this operation from other notifications or operations that 
+		/// the DIMSE-service-provider may have in progress. No two identical values 
+		/// for the Message ID (0000,0110) shall be used for outstanding operations or 
+		/// notifications.</param>
+		/// <param name="affectedInstance">For the request/indication, this parameter 
+		/// specifies the SOP Instance to be stored. It may be included in the 
+		/// response/confirmation. If included in the response/confirmation, this 
+		/// parameter shall be equal to the value in the request/indication.</param>
+		/// <param name="priority">This parameter specifies the priority of the 
+		/// C-STORE operation. It shall be one of LOW, MEDIUM, or HIGH.</param>
+		/// <param name="moveAE">This parameter specifies the DICOM AE Title of the 
+		/// DICOM AE which invoked the C-MOVE operation from which this C-STORE 
+		/// sub-operation is being performed.</param>
+		/// <param name="moveMessageID">This parameter specifies the Message ID (0000,0110) 
+		/// of the C-MOVE request/indication primitive from which this C-STORE 
+		/// sub-operation is being performed.</param>
+		/// <param name="dataset">The Data Set accompanying the C-STORE primitive 
+		/// contains the Attributes of the Composite SOP Instance to be stored.</param>
 		protected void SendCStoreRequest(byte presentationID, ushort messageID, DcmUID affectedInstance, 
 			DcmPriority priority, string moveAE, ushort moveMessageID, DcmDataset dataset) {
 			DcmUID affectedClass = Associate.GetAbstractSyntax(presentationID);
@@ -502,7 +599,7 @@ namespace Dicom.Network {
 			DcmCommand command = CreateRequest(messageID, DcmCommandField.CStoreRequest, affectedClass, priority, true);
 			command.AffectedSOPInstanceUID = affectedInstance;
 			if (moveAE != null && moveAE != String.Empty) {
-				command.MoveOriginator = moveAE;
+				command.MoveOriginatorAE = moveAE;
 				command.MoveOriginatorMessageID = moveMessageID;
 			}
 
@@ -510,11 +607,55 @@ namespace Dicom.Network {
 			SendDimse(presentationID, command, dataset);
 		}
 
+		/// <summary>
+		/// The C-STORE service is used by a DIMSE-service-user to store a composite 
+		/// SOP Instance on a peer DIMSE-service-user. It is a confirmed service.
+		/// </summary>
+		/// <param name="presentationID">The Presentation Context ID identifies the
+		/// Presentation Context within the scope of a specific Association.</param>
+		/// <param name="messageID">This parameter identifies the operation. It is used 
+		/// to distinguish this operation from other notifications or operations that 
+		/// the DIMSE-service-provider may have in progress. No two identical values 
+		/// for the Message ID (0000,0110) shall be used for outstanding operations or 
+		/// notifications.</param>
+		/// <param name="affectedInstance">For the request/indication, this parameter 
+		/// specifies the SOP Instance to be stored. It may be included in the 
+		/// response/confirmation. If included in the response/confirmation, this 
+		/// parameter shall be equal to the value in the request/indication.</param>
+		/// <param name="priority">This parameter specifies the priority of the 
+		/// C-STORE operation. It shall be one of LOW, MEDIUM, or HIGH.</param>
+		/// <param name="dataset">The Data Set accompanying the C-STORE primitive 
+		/// contains the Attributes of the Composite SOP Instance to be stored.</param>
 		protected void SendCStoreRequest(byte presentationID, ushort messageID, DcmUID affectedInstance,
 			DcmPriority priority, Stream datastream) {
 			SendCStoreRequest(presentationID, messageID, affectedInstance, priority, null, 0, datastream);
 		}
 
+		/// <summary>
+		/// The C-STORE service is used by a DIMSE-service-user to store a composite 
+		/// SOP Instance on a peer DIMSE-service-user. It is a confirmed service.
+		/// </summary>
+		/// <param name="presentationID">The Presentation Context ID identifies the
+		/// Presentation Context within the scope of a specific Association.</param>
+		/// <param name="messageID">This parameter identifies the operation. It is used 
+		/// to distinguish this operation from other notifications or operations that 
+		/// the DIMSE-service-provider may have in progress. No two identical values 
+		/// for the Message ID (0000,0110) shall be used for outstanding operations or 
+		/// notifications.</param>
+		/// <param name="affectedInstance">For the request/indication, this parameter 
+		/// specifies the SOP Instance to be stored. It may be included in the 
+		/// response/confirmation. If included in the response/confirmation, this 
+		/// parameter shall be equal to the value in the request/indication.</param>
+		/// <param name="priority">This parameter specifies the priority of the 
+		/// C-STORE operation. It shall be one of LOW, MEDIUM, or HIGH.</param>
+		/// <param name="moveAE">This parameter specifies the DICOM AE Title of the 
+		/// DICOM AE which invoked the C-MOVE operation from which this C-STORE 
+		/// sub-operation is being performed.</param>
+		/// <param name="moveMessageID">This parameter specifies the Message ID (0000,0110) 
+		/// of the C-MOVE request/indication primitive from which this C-STORE 
+		/// sub-operation is being performed.</param>
+		/// <param name="datastream">The Data Set accompanying the C-STORE primitive 
+		/// contains the Attributes of the Composite SOP Instance to be stored.</param>
 		protected void SendCStoreRequest(byte presentationID, ushort messageID, DcmUID affectedInstance,
 			DcmPriority priority, string moveAE, ushort moveMessageID, Stream datastream) {
 			DcmUID affectedClass = Associate.GetAbstractSyntax(presentationID);
@@ -522,7 +663,7 @@ namespace Dicom.Network {
 			DcmCommand command = CreateRequest(messageID, DcmCommandField.CStoreRequest, affectedClass, priority, true);
 			command.AffectedSOPInstanceUID = affectedInstance;
 			if (moveAE != null && moveAE != String.Empty) {
-				command.MoveOriginator = moveAE;
+				command.MoveOriginatorAE = moveAE;
 				command.MoveOriginatorMessageID = moveMessageID;
 			}
 
@@ -574,10 +715,10 @@ namespace Dicom.Network {
 			DcmStatus status, ushort remain, ushort complete, ushort warning, ushort failure) {
 			DcmUID affectedClass = Associate.GetAbstractSyntax(presentationID);
 			DcmCommand command = CreateResponse(messageIdRespondedTo, DcmCommandField.CGetResponse, affectedClass, status, dataset != null);
-			command.RemainingSuboperations = remain;
-			command.CompletedSuboperations = complete;
-			command.WarningSuboperations = warning;
-			command.FailedSuboperations = failure;
+			command.NumberOfRemainingSuboperations = remain;
+			command.NumberOfCompletedSuboperations = complete;
+			command.NumberOfWarningSuboperations = warning;
+			command.NumberOfFailedSuboperations = failure;
 			Log.Info("{0} -> C-Get response [id: {1}; remain: {2}; complete: {3}; warning: {4}; failure: {5}]: {6}", 
 				LogID, messageIdRespondedTo, remain, complete, warning, failure, status);
 			SendDimse(presentationID, command, dataset);
@@ -587,7 +728,7 @@ namespace Dicom.Network {
 			String level = dataset.GetString(DcmTags.QueryRetrieveLevel, "UNKNOWN");
 			DcmUID affectedClass = Associate.GetAbstractSyntax(presentationID);
 			DcmCommand command = CreateRequest(messageID, DcmCommandField.CMoveRequest, affectedClass, priority, true);
-			command.MoveDestination = destinationAE;
+			command.MoveDestinationAE = destinationAE;
 			Log.Info("{0} -> C-Move request [pc: {1}; id: {2}; lvl: {3}]", LogID, presentationID, messageID, level);
 			SendDimse(presentationID, command, dataset);
 		}
@@ -601,10 +742,10 @@ namespace Dicom.Network {
 			ushort remain, ushort complete, ushort warning, ushort failure) {
 			DcmUID affectedClass = Associate.GetAbstractSyntax(presentationID);
 			DcmCommand command = CreateResponse(messageIdRespondedTo, DcmCommandField.CMoveResponse, affectedClass, status, dataset != null);
-			command.RemainingSuboperations = remain;
-			command.CompletedSuboperations = complete;
-			command.WarningSuboperations = warning;
-			command.FailedSuboperations = failure;
+			command.NumberOfRemainingSuboperations = remain;
+			command.NumberOfCompletedSuboperations = complete;
+			command.NumberOfWarningSuboperations = warning;
+			command.NumberOfFailedSuboperations = failure;
 			Log.Info("{0} -> C-Move response [id: {1}; remain: {2}; complete: {3}; warning: {4}; failure: {5}]: {6}",
 				LogID, messageIdRespondedTo, remain, complete, warning, failure, status);
 			SendDimse(presentationID, command, dataset);
@@ -613,7 +754,7 @@ namespace Dicom.Network {
 		protected void SendCCancelRequest(byte presentationID, ushort messageIdRespondedTo) {
 			DcmCommand command = new DcmCommand();
 			command.CommandField = DcmCommandField.CCancelRequest;
-			command.MessageIDRespondedTo = messageIdRespondedTo;
+			command.MessageIDBeingRespondedTo = messageIdRespondedTo;
 			command.HasDataset = false;
 			Log.Info("{0} -> C-Cancel request [pc: {1}; id: {2}]", LogID, presentationID, messageIdRespondedTo);
 			SendDimse(presentationID, command, null);
@@ -638,7 +779,7 @@ namespace Dicom.Network {
 			DcmCommand command = new DcmCommand();
 			command.AffectedSOPClassUID = affectedClass;
 			command.CommandField = DcmCommandField.NEventReportResponse;
-			command.MessageIDRespondedTo = messageIdRespondedTo;
+			command.MessageIDBeingRespondedTo = messageIdRespondedTo;
 			command.HasDataset = (dataset != null);
 			command.Status = status;
 			command.AffectedSOPInstanceUID = affectedInstance;
@@ -666,7 +807,7 @@ namespace Dicom.Network {
 			DcmCommand command = new DcmCommand();
 			command.AffectedSOPClassUID = affectedClass;
 			command.CommandField = DcmCommandField.NGetResponse;
-			command.MessageIDRespondedTo = messageIdRespondedTo;
+			command.MessageIDBeingRespondedTo = messageIdRespondedTo;
 			command.HasDataset = (dataset != null);
 			command.Status = status;
 			command.AffectedSOPInstanceUID = affectedInstance;
@@ -690,7 +831,7 @@ namespace Dicom.Network {
 			DcmCommand command = new DcmCommand();
 			command.AffectedSOPClassUID = affectedClass;
 			command.CommandField = DcmCommandField.NSetResponse;
-			command.MessageIDRespondedTo = messageIdRespondedTo;
+			command.MessageIDBeingRespondedTo = messageIdRespondedTo;
 			command.HasDataset = (dataset != null);
 			command.Status = status;
 			command.AffectedSOPInstanceUID = affectedInstance;
@@ -717,7 +858,7 @@ namespace Dicom.Network {
 			DcmCommand command = new DcmCommand();
 			command.AffectedSOPClassUID = affectedClass;
 			command.CommandField = DcmCommandField.NActionResponse;
-			command.MessageIDRespondedTo = messageIdRespondedTo;
+			command.MessageIDBeingRespondedTo = messageIdRespondedTo;
 			command.HasDataset = (dataset != null);
 			command.Status = status;
 			command.AffectedSOPInstanceUID = affectedInstance;
@@ -743,7 +884,7 @@ namespace Dicom.Network {
 			DcmCommand command = new DcmCommand();
 			command.AffectedSOPClassUID = affectedClass;
 			command.CommandField = DcmCommandField.NCreateResponse;
-			command.MessageIDRespondedTo = messageIdRespondedTo;
+			command.MessageIDBeingRespondedTo = messageIdRespondedTo;
 			command.HasDataset = (dataset != null);
 			command.Status = status;
 			command.AffectedSOPInstanceUID = affectedInstance;
@@ -766,7 +907,7 @@ namespace Dicom.Network {
 			DcmCommand command = new DcmCommand();
 			command.AffectedSOPClassUID = affectedClass;
 			command.CommandField = DcmCommandField.NDeleteResponse;
-			command.MessageIDRespondedTo = messageIdRespondedTo;
+			command.MessageIDBeingRespondedTo = messageIdRespondedTo;
 			command.HasDataset = false;
 			command.Status = status;
 			command.AffectedSOPInstanceUID = affectedInstance;
@@ -790,7 +931,7 @@ namespace Dicom.Network {
 			DcmCommand command = new DcmCommand();
 			command.AffectedSOPClassUID = affectedClass;
 			command.CommandField = commandField;
-			command.MessageIDRespondedTo = messageIdRespondedTo;
+			command.MessageIDBeingRespondedTo = messageIdRespondedTo;
 			command.HasDataset = hasDataset;
 			command.Status = status;
 			return command;
@@ -840,7 +981,11 @@ namespace Dicom.Network {
 				OnConnectionClosed();
 			}
 			catch (Exception e) {
+#if DEBUG
+				Log.Error("{0} -> Processing failure: {1}", LogID, e.ToString());
+#else
 				Log.Error("{0} -> Processing failure: {1}", LogID, e.Message);
+#endif
 				OnNetworkError(e);
 				OnConnectionClosed();
 			}
@@ -866,22 +1011,22 @@ namespace Dicom.Network {
 				_disableTimeout = false;
 				DateTime timeout = DateTime.Now.AddSeconds(DimseTimeout);
 				while (!_stop) {
-					if (_socket.Poll(500, SelectMode.SelectRead)) {
-						if (_socket.Available == 0) {
-							// connection closed
+					if (_socket.Poll(1000000, SelectMode.SelectRead)) {
+						if (_socket.Available == 0)
 							break;
-						}
 						ProcessNextPDU();
 						timeout = DateTime.Now.AddSeconds(DimseTimeout);
-					} else if (_disableTimeout) {
+					}
+					else if (_disableTimeout) {
 						timeout = DateTime.Now.AddSeconds(DimseTimeout);
-					} else if (DateTime.Now > timeout) {
+					}
+					else if (DateTime.Now > timeout) {
 						Log.Error("{0} -> DIMSE timeout after {1} seconds", LogID, DimseTimeout);
 						OnDimseTimeout();
 						_stop = true;
-					} else {
-						Thread.Sleep(100);
 					}
+					else if (!_socket.Connected)
+						break;
 				}
 				Log.Info("{0} -> Connection closed", LogID);
 				OnConnectionClosed();
@@ -895,7 +1040,11 @@ namespace Dicom.Network {
 				OnConnectionClosed();
 			}
 			catch (Exception e) {
+#if DEBUG
+				Log.Error("{0} -> Processing failure: {1}", LogID, e.ToString());
+#else
 				Log.Error("{0} -> Processing failure: {1}", LogID, e.Message);
+#endif
 				OnNetworkError(e);
 				Log.Info("{0} -> Connection closed", LogID);
 				OnConnectionClosed();
@@ -978,7 +1127,11 @@ namespace Dicom.Network {
 					throw new DcmNetworkException("Unknown PDU type");
 				}
 			} catch (Exception e) {
+#if DEBUG
+				Log.Error("{0} -> Error reading PDU [type: 0x{1:x2}]: {2}", LogID, raw.Type, e.ToString());
+#else
 				Log.Error("{0} -> Error reading PDU [type: 0x{1:x2}]: {2}", LogID, raw.Type, e.Message);
+#endif
 				OnNetworkError(e);
 				//String file = String.Format(@"{0}\Errors\{1}.pdu",
 				//    Dicom.Debug.GetStartDirectory(), DateTime.Now.Ticks);
@@ -1026,7 +1179,7 @@ namespace Dicom.Network {
 										ushort messageID = _dimse.Command.GetUInt16(DcmTags.MessageID, 1);
 										DcmPriority priority = (DcmPriority)_dimse.Command.GetUInt16(DcmTags.Priority, 0);
 										DcmUID affectedInstance = _dimse.Command.GetUID(DcmTags.AffectedSOPInstanceUID);
-										string moveAE = _dimse.Command.GetString(DcmTags.MoveOriginator, null);
+										string moveAE = _dimse.Command.GetString(DcmTags.MoveOriginatorApplicationEntityTitle, null);
 										ushort moveMessageID = _dimse.Command.GetUInt16(DcmTags.MoveOriginatorMessageID, 1);
 										OnPreReceiveCStoreRequest(pcid, messageID, affectedInstance, priority, 
 											moveAE, moveMessageID, out _dimse.DatasetFile);
@@ -1119,7 +1272,11 @@ namespace Dicom.Network {
 
 				return true;
 			} catch (Exception e) {
+#if DEBUG
+				Log.Error("{0} -> Error reading DIMSE: {1}", LogID, e.ToString());
+#else
 				Log.Error("{0} -> Error reading DIMSE: {1}", LogID, e.Message);
+#endif
 				_dimse.Abort();
 				_dimse = null;
 				return false;
@@ -1127,13 +1284,20 @@ namespace Dicom.Network {
 		}
 
 		private bool ProcessDimse(byte presentationID) {
+			if (!Associate.HasPresentationContextID(presentationID) ||
+				Associate.GetPresentationContextResult(presentationID) != DcmPresContextResult.Accept) {
+				Log.Error("{0} -> Received DIMSE for unaccepted Presentation Context ID [pcid: {1}]", LogID, presentationID);
+				SendAbort(DcmAbortSource.ServiceUser, DcmAbortReason.NotSpecified);
+				return true;
+			}
+
 			DcmCommandField commandField = _dimse.Command.CommandField;
 
 			if (commandField == DcmCommandField.CStoreRequest) {
 				ushort messageID = _dimse.Command.MessageID;
 				DcmPriority priority = _dimse.Command.Priority;
 				DcmUID affectedInstance = _dimse.Command.AffectedSOPInstanceUID;
-				string moveAE = _dimse.Command.MoveOriginator;
+				string moveAE = _dimse.Command.MoveOriginatorAE;
 				ushort moveMessageID = _dimse.Command.MoveOriginatorMessageID;
 				Log.Info("{0} <- C-Store request [pc: {1}; id: {2}]{3}", 
 					LogID, presentationID, messageID, (_dimse.DatasetFile != null ? " (stream)" : ""));
@@ -1146,7 +1310,7 @@ namespace Dicom.Network {
 			}
 
 			if (commandField == DcmCommandField.CStoreResponse) {
-				ushort messageIdRespondedTo = _dimse.Command.MessageIDRespondedTo;
+				ushort messageIdRespondedTo = _dimse.Command.MessageIDBeingRespondedTo;
 				DcmUID affectedInstance = _dimse.Command.AffectedSOPInstanceUID;
 				DcmStatus status = _dimse.Command.Status;
 				Log.Info("{0} <- C-Store response [id: {1}]: {2}", 
@@ -1165,7 +1329,7 @@ namespace Dicom.Network {
 			}
 
 			if (commandField == DcmCommandField.CEchoResponse) {
-				ushort messageIdRespondedTo = _dimse.Command.MessageIDRespondedTo;
+				ushort messageIdRespondedTo = _dimse.Command.MessageIDBeingRespondedTo;
 				DcmStatus status = _dimse.Command.Status;
 				Log.Info("{0} <- C-Echo response [{1}]: {2}", 
 					LogID, messageIdRespondedTo, status);
@@ -1184,7 +1348,7 @@ namespace Dicom.Network {
 			}
 
 			if (commandField == DcmCommandField.CFindResponse) {
-				ushort messageIdRespondedTo = _dimse.Command.MessageIDRespondedTo;
+				ushort messageIdRespondedTo = _dimse.Command.MessageIDBeingRespondedTo;
 				DcmStatus status = _dimse.Command.Status;
 				Log.Info("{0} <- C-Find response [id: {1}]: {2}", 
 					LogID, messageIdRespondedTo, status);
@@ -1203,12 +1367,12 @@ namespace Dicom.Network {
 			}
 
 			if (commandField == DcmCommandField.CGetResponse) {
-				ushort messageIdRespondedTo = _dimse.Command.MessageIDRespondedTo;
+				ushort messageIdRespondedTo = _dimse.Command.MessageIDBeingRespondedTo;
 				DcmStatus status = _dimse.Command.Status;
-				ushort remain = _dimse.Command.RemainingSuboperations;
-				ushort complete = _dimse.Command.CompletedSuboperations;
-				ushort warning = _dimse.Command.WarningSuboperations;
-				ushort failure = _dimse.Command.FailedSuboperations;
+				ushort remain = _dimse.Command.NumberOfRemainingSuboperations;
+				ushort complete = _dimse.Command.NumberOfCompletedSuboperations;
+				ushort warning = _dimse.Command.NumberOfWarningSuboperations;
+				ushort failure = _dimse.Command.NumberOfFailedSuboperations;
 				Log.Info("{0} <- C-Get response [id: {1}; remain: {2}; complete: {3}; warning: {4}; failure: {5}]: {6}",
 					LogID, messageIdRespondedTo, remain, complete, warning, failure, status);
 				OnReceiveCGetResponse(presentationID, messageIdRespondedTo, _dimse.Dataset, status, remain, complete, warning, failure);
@@ -1218,7 +1382,7 @@ namespace Dicom.Network {
 			if (commandField == DcmCommandField.CMoveRequest) {
 				ushort messageID = _dimse.Command.MessageID;
 				DcmPriority priority = _dimse.Command.Priority;
-				string destAE = _dimse.Command.MoveDestination;
+				string destAE = _dimse.Command.MoveDestinationAE;
 				String level = _dimse.Dataset.GetString(DcmTags.QueryRetrieveLevel, "UNKNOWN");
 				Log.Info("{0} <- C-Move request [pc: {1}; id: {2}; lvl: {3}]", 
 					LogID, presentationID, messageID, level);
@@ -1227,12 +1391,12 @@ namespace Dicom.Network {
 			}
 
 			if (commandField == DcmCommandField.CMoveResponse) {
-				ushort messageIdRespondedTo = _dimse.Command.MessageIDRespondedTo;
+				ushort messageIdRespondedTo = _dimse.Command.MessageIDBeingRespondedTo;
 				DcmStatus status = _dimse.Command.Status;
-				ushort remain = _dimse.Command.RemainingSuboperations;
-				ushort complete = _dimse.Command.CompletedSuboperations;
-				ushort warning = _dimse.Command.WarningSuboperations;
-				ushort failure = _dimse.Command.FailedSuboperations;
+				ushort remain = _dimse.Command.NumberOfRemainingSuboperations;
+				ushort complete = _dimse.Command.NumberOfCompletedSuboperations;
+				ushort warning = _dimse.Command.NumberOfWarningSuboperations;
+				ushort failure = _dimse.Command.NumberOfFailedSuboperations;
 				Log.Info("{0} <- C-Move response [id: {1}; remain: {2}; complete: {3}; warning: {4}; failure: {5}]: {6}",
 					LogID, messageIdRespondedTo, remain, complete, warning, failure, status);
 				OnReceiveCMoveResponse(presentationID, messageIdRespondedTo, _dimse.Dataset, status, remain, complete, warning, failure);
@@ -1240,7 +1404,7 @@ namespace Dicom.Network {
 			}
 
 			if (commandField == DcmCommandField.CCancelRequest) {
-				ushort messageIdRespondedTo = _dimse.Command.MessageIDRespondedTo;
+				ushort messageIdRespondedTo = _dimse.Command.MessageIDBeingRespondedTo;
 				Log.Info("{0} <- C-Cancel request [pc: {1}; id: {2}]", LogID, presentationID, messageIdRespondedTo);
 				OnReceiveCCancelRequest(presentationID, messageIdRespondedTo);
 				return true;
@@ -1258,7 +1422,7 @@ namespace Dicom.Network {
 			}
 
 			if (commandField == DcmCommandField.NEventReportResponse) {
-				ushort messageIdRespondedTo = _dimse.Command.MessageIDRespondedTo;
+				ushort messageIdRespondedTo = _dimse.Command.MessageIDBeingRespondedTo;
 				DcmUID affectedClass = _dimse.Command.AffectedSOPClassUID;
 				DcmUID affectedInstance = _dimse.Command.AffectedSOPInstanceUID;
 				ushort eventTypeID = _dimse.Command.EventTypeID;
@@ -1283,7 +1447,7 @@ namespace Dicom.Network {
 			}
 
 			if (commandField == DcmCommandField.NGetResponse) {
-				ushort messageIdRespondedTo = _dimse.Command.MessageIDRespondedTo;
+				ushort messageIdRespondedTo = _dimse.Command.MessageIDBeingRespondedTo;
 				DcmUID affectedClass = _dimse.Command.AffectedSOPClassUID;
 				DcmUID affectedInstance = _dimse.Command.AffectedSOPInstanceUID;
 				DcmStatus status = _dimse.Command.Status;
@@ -1304,7 +1468,7 @@ namespace Dicom.Network {
 			}
 
 			if (commandField == DcmCommandField.NSetResponse) {
-				ushort messageIdRespondedTo = _dimse.Command.MessageIDRespondedTo;
+				ushort messageIdRespondedTo = _dimse.Command.MessageIDBeingRespondedTo;
 				DcmUID affectedClass = _dimse.Command.AffectedSOPClassUID;
 				DcmUID affectedInstance = _dimse.Command.AffectedSOPInstanceUID;
 				DcmStatus status = _dimse.Command.Status;
@@ -1326,7 +1490,7 @@ namespace Dicom.Network {
 			}
 
 			if (commandField == DcmCommandField.NActionResponse) {
-				ushort messageIdRespondedTo = _dimse.Command.MessageIDRespondedTo;
+				ushort messageIdRespondedTo = _dimse.Command.MessageIDBeingRespondedTo;
 				DcmUID affectedClass = _dimse.Command.AffectedSOPClassUID;
 				DcmUID affectedInstance = _dimse.Command.AffectedSOPInstanceUID;
 				ushort actionTypeID = _dimse.Command.ActionTypeID;
@@ -1348,7 +1512,7 @@ namespace Dicom.Network {
 			}
 
 			if (commandField == DcmCommandField.NCreateResponse) {
-				ushort messageIdRespondedTo = _dimse.Command.MessageIDRespondedTo;
+				ushort messageIdRespondedTo = _dimse.Command.MessageIDBeingRespondedTo;
 				DcmUID affectedClass = _dimse.Command.AffectedSOPClassUID;
 				DcmUID affectedInstance = _dimse.Command.AffectedSOPInstanceUID;
 				DcmStatus status = _dimse.Command.Status;
@@ -1369,7 +1533,7 @@ namespace Dicom.Network {
 			}
 
 			if (commandField == DcmCommandField.NDeleteResponse) {
-				ushort messageIdRespondedTo = _dimse.Command.MessageIDRespondedTo;
+				ushort messageIdRespondedTo = _dimse.Command.MessageIDBeingRespondedTo;
 				DcmUID affectedClass = _dimse.Command.AffectedSOPClassUID;
 				DcmUID affectedInstance = _dimse.Command.AffectedSOPInstanceUID;
 				DcmStatus status = _dimse.Command.Status;
@@ -1391,7 +1555,11 @@ namespace Dicom.Network {
 				}
 			}
 			catch (Exception e) {
+#if DEBUG
+				Log.Error("{0} -> Error sending PDU [type: 0x{1:x2}]: {2}", LogID, pdu.Type, e.ToString());
+#else
 				Log.Error("{0} -> Error sending PDU [type: 0x{1:x2}]: {2}", LogID, pdu.Type, e.Message);
+#endif
 				OnNetworkError(e);
 			}
 		}
@@ -1402,7 +1570,7 @@ namespace Dicom.Network {
 
 				DcmTS ts = _assoc.GetAcceptedTransferSyntax(pcid);
 
-				if (ts != dataset.InternalTransferSyntax) {
+				if (dataset != null && ts != dataset.InternalTransferSyntax) {
 					if (ts.IsEncapsulated || dataset.InternalTransferSyntax.IsEncapsulated)
 						throw new DcmNetworkException("Unable to transcode encapsulated transfer syntax!");
 					dataset.ChangeTransferSyntax(ts, null);
@@ -1441,7 +1609,11 @@ namespace Dicom.Network {
 				return true;
 			}
 			catch (Exception e) {
+#if DEBUG
+				Log.Error("{0} -> Error sending DIMSE: {1}", LogID, e.ToString());
+#else
 				Log.Error("{0} -> Error sending DIMSE: {1}", LogID, e.Message);
+#endif
 				OnNetworkError(e);
 				return false;
 			}
@@ -1490,7 +1662,11 @@ namespace Dicom.Network {
 				return true;
 			}
 			catch (Exception e) {
+#if DEBUG
+				Log.Error("{0} -> Error sending DIMSE: {1}", LogID, e.ToString());
+#else
 				Log.Error("{0} -> Error sending DIMSE: {1}", LogID, e.Message);
+#endif
 				OnNetworkError(e);
 				return false;
 			}

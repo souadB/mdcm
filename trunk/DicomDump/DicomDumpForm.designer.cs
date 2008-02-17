@@ -38,6 +38,7 @@ namespace Dicom.Forms {
 			this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
 			this.toolStrip1 = new System.Windows.Forms.ToolStrip();
 			this.tsbOpenFile = new System.Windows.Forms.ToolStripButton();
+			this.tsbClose = new System.Windows.Forms.ToolStripButton();
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.tsbDictionary = new System.Windows.Forms.ToolStripButton();
 			this.tsbViewImage = new System.Windows.Forms.ToolStripButton();
@@ -47,7 +48,6 @@ namespace Dicom.Forms {
 			this.tsbPrev = new System.Windows.Forms.ToolStripButton();
 			this.tsbNext = new System.Windows.Forms.ToolStripButton();
 			this.lblCount = new System.Windows.Forms.ToolStripLabel();
-			this.tsbClose = new System.Windows.Forms.ToolStripButton();
 			this.toolStripContainer1.ContentPanel.SuspendLayout();
 			this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
 			this.toolStripContainer1.SuspendLayout();
@@ -106,7 +106,7 @@ namespace Dicom.Forms {
 			this.LengthColumn.SortOrder = System.Windows.Forms.SortOrder.None;
 			this.LengthColumn.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			this.LengthColumn.TooltipText = null;
-			this.LengthColumn.Width = 75;
+			this.LengthColumn.Width = 80;
 			// 
 			// ValueColumn
 			// 
@@ -197,7 +197,7 @@ namespace Dicom.Forms {
             this.lblCount});
 			this.toolStrip1.Location = new System.Drawing.Point(3, 0);
 			this.toolStrip1.Name = "toolStrip1";
-			this.toolStrip1.Size = new System.Drawing.Size(541, 25);
+			this.toolStrip1.Size = new System.Drawing.Size(510, 25);
 			this.toolStrip1.TabIndex = 0;
 			// 
 			// tsbOpenFile
@@ -208,6 +208,15 @@ namespace Dicom.Forms {
 			this.tsbOpenFile.Size = new System.Drawing.Size(72, 22);
 			this.tsbOpenFile.Text = "&Open File";
 			this.tsbOpenFile.Click += new System.EventHandler(this.tsbOpenFile_Click);
+			// 
+			// tsbClose
+			// 
+			this.tsbClose.Image = ((System.Drawing.Image)(resources.GetObject("tsbClose.Image")));
+			this.tsbClose.ImageTransparentColor = System.Drawing.Color.Black;
+			this.tsbClose.Name = "tsbClose";
+			this.tsbClose.Size = new System.Drawing.Size(53, 22);
+			this.tsbClose.Text = "Close";
+			this.tsbClose.Click += new System.EventHandler(this.OnClickClose);
 			// 
 			// toolStripSeparator1
 			// 
@@ -247,7 +256,7 @@ namespace Dicom.Forms {
 			// 
 			this.tsbExtractPixels.Enabled = false;
 			this.tsbExtractPixels.Name = "tsbExtractPixels";
-			this.tsbExtractPixels.Size = new System.Drawing.Size(160, 22);
+			this.tsbExtractPixels.Size = new System.Drawing.Size(171, 22);
 			this.tsbExtractPixels.Text = "Extract Pixel Data";
 			this.tsbExtractPixels.Click += new System.EventHandler(this.OnClickExtractPixels);
 			// 
@@ -282,15 +291,6 @@ namespace Dicom.Forms {
 			this.lblCount.Name = "lblCount";
 			this.lblCount.Size = new System.Drawing.Size(23, 22);
 			this.lblCount.Text = "0/0";
-			// 
-			// tsbClose
-			// 
-			this.tsbClose.Image = ((System.Drawing.Image)(resources.GetObject("tsbClose.Image")));
-			this.tsbClose.ImageTransparentColor = System.Drawing.Color.Black;
-			this.tsbClose.Name = "tsbClose";
-			this.tsbClose.Size = new System.Drawing.Size(53, 22);
-			this.tsbClose.Text = "Close";
-			this.tsbClose.Click += new System.EventHandler(this.OnClickClose);
 			// 
 			// DicomDumpForm
 			// 

@@ -77,73 +77,73 @@ namespace Dicom.Data {
 		public static DcmTS DeflatedExplicitVRLittleEndian = new DcmTS(DcmUIDs.DeflatedExplicitVRLittleEndian, false, true, false, false, true);
 
 		/// <summary>JPEG Baseline (Process 1)</summary>
-		public static DcmTS JPEGProcess1 = new DcmTS(DcmUIDs.JPEGProcess1, false, true, true, true, false);
+		public static DcmTS JPEGProcess1 = new DcmTS(DcmUIDs.JPEGBaselineProcess1, false, true, true, true, false);
 
 		/// <summary>JPEG Extended (Process 2 &amp; 4)</summary>
-		public static DcmTS JPEGProcess2_4 = new DcmTS(DcmUIDs.JPEGProcess2_4, false, true, true, true, false);
+		public static DcmTS JPEGProcess2_4 = new DcmTS(DcmUIDs.JPEGExtendedProcess2_4, false, true, true, true, false);
 
 		/// <summary>JPEG Extended (Process 3 &amp; 5) (Retired)</summary>
-		public static DcmTS JPEGProcess3_5Retired = new DcmTS(DcmUIDs.JPEGProcess3_5Retired, false, true, true, true, false);
+		public static DcmTS JPEGProcess3_5Retired = new DcmTS(DcmUIDs.JPEGExtendedProcess3_5RETIRED, false, true, true, true, false);
 
 		/// <summary>JPEG Spectral Selection, Non-Hierarchical (Process 6 &amp; 8) (Retired)</summary>
-		public static DcmTS JPEGProcess6_8Retired = new DcmTS(DcmUIDs.JPEGProcess6_8Retired, false, true, true, true, false);
+		public static DcmTS JPEGProcess6_8Retired = new DcmTS(DcmUIDs.JPEGSpectralSelectionNonHierarchicalProcess6_8RETIRED, false, true, true, true, false);
 
 		/// <summary>JPEG Spectral Selection, Non-Hierarchical (Process 7 &amp; 9) (Retired)</summary>
-		public static DcmTS JPEGProcess7_9Retired = new DcmTS(DcmUIDs.JPEGProcess7_9Retired, false, true, true, true, false);
+		public static DcmTS JPEGProcess7_9Retired = new DcmTS(DcmUIDs.JPEGSpectralSelectionNonHierarchicalProcess7_9RETIRED, false, true, true, true, false);
 
 		/// <summary>JPEG Full Progression, Non-Hierarchical (Process 10 &amp; 12) (Retired)</summary>
-		public static DcmTS JPEGProcess10_12Retired = new DcmTS(DcmUIDs.JPEGProcess10_12Retired, false, true, true, true, false);
+		public static DcmTS JPEGProcess10_12Retired = new DcmTS(DcmUIDs.JPEGFullProgressionNonHierarchicalProcess10_12RETIRED, false, true, true, true, false);
 
 		/// <summary>JPEG Full Progression, Non-Hierarchical (Process 11 &amp; 13) (Retired)</summary>
-		public static DcmTS JPEGProcess11_13Retired = new DcmTS(DcmUIDs.JPEGProcess11_13Retired, false, true, true, true, false);
+		public static DcmTS JPEGProcess11_13Retired = new DcmTS(DcmUIDs.JPEGFullProgressionNonHierarchicalProcess11_13RETIRED, false, true, true, true, false);
 
 		/// <summary>JPEG Lossless, Non-Hierarchical (Process 14)</summary>
-		public static DcmTS JPEGProcess14 = new DcmTS(DcmUIDs.JPEGProcess14, false, true, true, false, false);
+		public static DcmTS JPEGProcess14 = new DcmTS(DcmUIDs.JPEGLosslessNonHierarchicalProcess14, false, true, true, false, false);
 
 		/// <summary>JPEG Lossless, Non-Hierarchical (Process 15) (Retired)</summary>
-		public static DcmTS JPEGProcess15Retired = new DcmTS(DcmUIDs.JPEGProcess15Retired, false, true, true, false, false);
+		public static DcmTS JPEGProcess15Retired = new DcmTS(DcmUIDs.JPEGLosslessNonHierarchicalProcess15RETIRED, false, true, true, false, false);
 
 		/// <summary>JPEG Extended, Hierarchical (Process 16 &amp; 18) (Retired)</summary>
-		public static DcmTS JPEGProcess16_18Retired = new DcmTS(DcmUIDs.JPEGProcess16_18Retired, false, true, true, true, false);
+		public static DcmTS JPEGProcess16_18Retired = new DcmTS(DcmUIDs.JPEGExtendedHierarchicalProcess16_18RETIRED, false, true, true, true, false);
 
 		/// <summary>JPEG Extended, Hierarchical (Process 17 &amp; 19) (Retired)</summary>
-		public static DcmTS JPEGProcess17_19Retired = new DcmTS(DcmUIDs.JPEGProcess17_19Retired, false, true, true, true, false);
+		public static DcmTS JPEGProcess17_19Retired = new DcmTS(DcmUIDs.JPEGExtendedHierarchicalProcess17_19RETIRED, false, true, true, true, false);
 
 		/// <summary>JPEG Spectral Selection, Hierarchical (Process 20 &amp; 22) (Retired)</summary>
-		public static DcmTS JPEGProcess20_22Retired = new DcmTS(DcmUIDs.JPEGProcess20_22Retired, false, true, true, true, false);
+		public static DcmTS JPEGProcess20_22Retired = new DcmTS(DcmUIDs.JPEGSpectralSelectionHierarchicalProcess20_22RETIRED, false, true, true, true, false);
 
 		/// <summary>JPEG Spectral Selection, Hierarchical (Process 21 &amp; 23) (Retired)</summary>
-		public static DcmTS JPEGProcess21_23Retired = new DcmTS(DcmUIDs.JPEGProcess21_23Retired, false, true, true, true, false);
+		public static DcmTS JPEGProcess21_23Retired = new DcmTS(DcmUIDs.JPEGSpectralSelectionHierarchicalProcess21_23RETIRED, false, true, true, true, false);
 
 		/// <summary>JPEG Full Progression, Hierarchical (Process 24 &amp; 26) (Retired)</summary>
-		public static DcmTS JPEGProcess24_26Retired = new DcmTS(DcmUIDs.JPEGProcess24_26Retired, false, true, true, true, false);
+		public static DcmTS JPEGProcess24_26Retired = new DcmTS(DcmUIDs.JPEGFullProgressionHierarchicalProcess24_26RETIRED, false, true, true, true, false);
 
 		/// <summary>JPEG Full Progression, Hierarchical (Process 25 &amp; 27) (Retired)</summary>
-		public static DcmTS JPEGProcess25_27Retired = new DcmTS(DcmUIDs.JPEGProcess25_27Retired, false, true, true, true, false);
+		public static DcmTS JPEGProcess25_27Retired = new DcmTS(DcmUIDs.JPEGFullProgressionHierarchicalProcess25_27RETIRED, false, true, true, true, false);
 
 		/// <summary>JPEG Lossless, Hierarchical (Process 28) (Retired)</summary>
-		public static DcmTS JPEGProcess28Retired = new DcmTS(DcmUIDs.JPEGProcess28Retired, false, true, true, false, false);
+		public static DcmTS JPEGProcess28Retired = new DcmTS(DcmUIDs.JPEGLosslessHierarchicalProcess28RETIRED, false, true, true, false, false);
 
 		/// <summary>JPEG Lossless, Hierarchical (Process 29) (Retired)</summary>
-		public static DcmTS JPEGProcess29Retired = new DcmTS(DcmUIDs.JPEGProcess29Retired, false, true, true, false, false);
+		public static DcmTS JPEGProcess29Retired = new DcmTS(DcmUIDs.JPEGLosslessHierarchicalProcess29RETIRED, false, true, true, false, false);
 
 		/// <summary>JPEG Lossless, Non-Hierarchical, First-Order Prediction (Process 14 [Selection Value 1])</summary>
-		public static DcmTS JPEGProcess14SV1 = new DcmTS(DcmUIDs.JPEGProcess14SV1, false, true, true, false, false);
+		public static DcmTS JPEGProcess14SV1 = new DcmTS(DcmUIDs.JPEGLosslessProcess14SV1, false, true, true, false, false);
 
 		/// <summary>JPEG-LS Lossless Image Compression</summary>
-		public static DcmTS JPEGLSLossless = new DcmTS(DcmUIDs.JPEGLSLossless, false, true, true, false, false);
+		public static DcmTS JPEGLSLossless = new DcmTS(DcmUIDs.JPEGLSLosslessImageCompression, false, true, true, false, false);
 
 		/// <summary>JPEG-LS Lossy (Near-Lossless) Image Compression</summary>
-		public static DcmTS JPEGLSNearLossless = new DcmTS(DcmUIDs.JPEGLSNearLossless, false, true, true, true, false);
+		public static DcmTS JPEGLSNearLossless = new DcmTS(DcmUIDs.JPEGLSLossyNearLosslessImageCompression, false, true, true, true, false);
 
 		/// <summary>JPEG 2000 Lossless Image Compression</summary>
-		public static DcmTS JPEG2000Lossless = new DcmTS(DcmUIDs.JPEG2000Lossless, false, true, true, false, false);
+		public static DcmTS JPEG2000Lossless = new DcmTS(DcmUIDs.JPEG2000ImageCompressionLosslessOnly, false, true, true, false, false);
 
 		/// <summary>JPEG 2000 Lossy Image Compression</summary>
-		public static DcmTS JPEG2000Lossy = new DcmTS(DcmUIDs.JPEG2000Lossy, false, true, true, true, false);
+		public static DcmTS JPEG2000Lossy = new DcmTS(DcmUIDs.JPEG2000ImageCompression, false, true, true, true, false);
 
 		/// <summary>MPEG2 Main Profile @ Main Level</summary>
-		public static DcmTS MPEG2 = new DcmTS(DcmUIDs.MPEG2, false, true, true, true, false);
+		public static DcmTS MPEG2 = new DcmTS(DcmUIDs.MPEG2MainProfileMainLevel, false, true, true, true, false);
 
 		/// <summary>RLE Lossless</summary>
 		public static DcmTS RLELossless = new DcmTS(DcmUIDs.RLELossless, false, true, true, false, false);
