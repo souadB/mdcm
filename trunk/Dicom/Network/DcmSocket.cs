@@ -39,6 +39,17 @@ namespace Dicom.Network {
 	}
 
 	public abstract class DcmSocket : IDisposable {
+		#region Private Members
+		private ConnectionStats _localStats = new ConnectionStats();
+		private Stream _stream = null;
+		private int _throttleSpeed;
+		#endregion
+
+		#region Static
+		private static List<DcmSocket> _sockets = new List<DcmSocket>();
+		private static int _connections = 0;
+		private static ConnectionStats _globalStats = new ConnectionStats();
+
 		public static DcmSocket Create(DcmSocketType type) {
 			if (type == DcmSocketType.TLS)
 				return new DcmTlsSocket();
@@ -49,24 +60,6 @@ namespace Dicom.Network {
 			else
 				return null;
 		}
-
-		public abstract DcmSocketType Type { get; }
-		public abstract bool Blocking { get; set; }
-		public abstract bool Connected { get; }
-		public abstract int SendTimeout { get; set; }
-		public abstract int ReceiveTimeout { get; set; }
-		public abstract EndPoint LocalEndPoint { get; }
-		public abstract EndPoint RemoteEndPoint { get; }
-		public abstract int Available { get; }
-		public abstract DcmSocket Accept();
-		public abstract void Bind(EndPoint localEP);
-		public abstract void Close();
-		public abstract void Connect(EndPoint remoteEP);
-		public abstract void Reconnect();
-		public abstract void Listen(int backlog);
-		public abstract bool Poll(int microSeconds, SelectMode mode);
-		public abstract Stream GetInternalStream();
-		protected abstract bool IsIncomingConnection { get; }
 
 		protected static void RegisterSocket(DcmSocket socket) {
 			lock (_sockets) {
@@ -83,12 +76,6 @@ namespace Dicom.Network {
 				_connections = _sockets.Count;
 			}
 		}
-
-		private static List<DcmSocket> _sockets = new List<DcmSocket>();
-		private static int _connections = 0;
-		private static ConnectionStats _globalStats = new ConnectionStats();
-		private ConnectionStats _localStats = new ConnectionStats();
-		private Stream _stream = null;
 
 		public static int Connections {
 			get { return _connections; }
@@ -127,12 +114,33 @@ namespace Dicom.Network {
 		public static ConnectionStats GlobalStats {
 			get { return _globalStats; }
 		}
+		#endregion
 
+		#region Abstracts
+		public abstract DcmSocketType Type { get; }
+		public abstract bool Blocking { get; set; }
+		public abstract bool Connected { get; }
+		public abstract int ConnectTimeout { get; set; }
+		public abstract int SendTimeout { get; set; }
+		public abstract int ReceiveTimeout { get; set; }
+		public abstract EndPoint LocalEndPoint { get; }
+		public abstract EndPoint RemoteEndPoint { get; }
+		public abstract int Available { get; }
+		public abstract DcmSocket Accept();
+		public abstract void Bind(EndPoint localEP);
+		public abstract void Close();
+		public abstract void Connect(EndPoint remoteEP);
+		public abstract void Reconnect();
+		public abstract void Listen(int backlog);
+		public abstract bool Poll(int microSeconds, SelectMode mode);
+		public abstract Stream GetInternalStream();
+		protected abstract bool IsIncomingConnection { get; }
+		#endregion
+
+		#region Properties
 		public ConnectionStats LocalStats {
 			get { return _localStats; }
 		}
-
-		private int _throttleSpeed;
 
 		public int ThrottleSpeed {
 			get { return _throttleSpeed; }
@@ -144,7 +152,9 @@ namespace Dicom.Network {
 				}
 			}
 		}
+		#endregion
 
+		#region Methods
 		public Stream GetStream() {
 			if (_stream == null) {
 				Stream stream = GetInternalStream();
@@ -166,6 +176,7 @@ namespace Dicom.Network {
 			}
 			throw new Exception("Unable to resolve host!");
 		}
+		#endregion
 
 		#region IDisposable Members
 
@@ -183,15 +194,20 @@ namespace Dicom.Network {
 
 	#region TCP
 	public class DcmTcpSocket : DcmSocket {
+		private EndPoint _remoteEP;
+		private Socket _socket;
+		private bool _incoming;
+		private int _connectTimeout;
+
 		public DcmTcpSocket() {
-			_Socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-			_Socket.NoDelay = true;
+			_socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+			_socket.NoDelay = true;
 		}
 
 		private DcmTcpSocket(Socket socket) {
-			_Socket = socket;
-			_Socket.NoDelay = true;
-			_Incoming = true;
+			_socket = socket;
+			_socket.NoDelay = true;
+			_incoming = true;
 			RegisterSocket(this);
 		}
 
@@ -200,16 +216,16 @@ namespace Dicom.Network {
 		}
 
 		public override bool Blocking {
-			get { return _Socket.Blocking; }
-			set { _Socket.Blocking = value; }
+			get { return _socket.Blocking; }
+			set { _socket.Blocking = value; }
 		}
 
 		public override bool Connected {
 			get {
-				if (!_Socket.Connected)
+				if (!_socket.Connected)
 					return false;
 				try {
-					_Socket.Send(new byte[1], 0, 0);
+					_socket.Send(new byte[1], 0, 0);
 					return true;
 				}
 				catch (SocketException ex) {
@@ -220,89 +236,101 @@ namespace Dicom.Network {
 			}
 		}
 
+		public override int ConnectTimeout {
+			get { return _connectTimeout; }
+			set { _connectTimeout = value; }
+		}
+
 		public override int SendTimeout {
-			get { return _Socket.SendTimeout; }
-			set { _Socket.SendTimeout = value; }
+			get { return _socket.SendTimeout; }
+			set { _socket.SendTimeout = value; }
 		}
 
 		public override int ReceiveTimeout {
-			get { return _Socket.ReceiveTimeout; }
-			set { _Socket.ReceiveTimeout = value; }
+			get { return _socket.ReceiveTimeout; }
+			set { _socket.ReceiveTimeout = value; }
 		}
 
 		public override EndPoint LocalEndPoint {
-			get { return _Socket.LocalEndPoint; }
+			get { return _socket.LocalEndPoint; }
 		}
 
 		public override EndPoint RemoteEndPoint {
-			get { return _Socket.RemoteEndPoint; }
+			get { return _socket.RemoteEndPoint; }
 		}
 
 		public override int Available {
-			get { return _Socket.Available; }
+			get { return _socket.Available; }
 		}
 
 		public override DcmSocket Accept() {
-			Socket socket = _Socket.Accept();
+			Socket socket = _socket.Accept();
 			return new DcmTcpSocket(socket);
 		}
 
 		public override void Bind(EndPoint localEP) {
-			_Socket.Bind(localEP);
+			_socket.Bind(localEP);
 		}
 
 		public override void Close() {
-			if (_Socket != null) {
+			if (_socket != null) {
 				UnregisterSocket(this);
-				_Socket.Close();
-				_Socket = null;
+				_socket.Close();
+				_socket = null;
 			}
 		}
 
 		public override void Connect(EndPoint remoteEP) {
-			_Socket.Connect(remoteEP);
-			_RemoteEP = remoteEP;
+			if (_connectTimeout == 0) {
+				_socket.Connect(remoteEP);
+			} else {
+				IAsyncResult result = _socket.BeginConnect(remoteEP, null, null);
+				if (!result.AsyncWaitHandle.WaitOne(_connectTimeout, true))
+					throw new SocketException((int)SocketError.TimedOut);
+			}
+			_remoteEP = remoteEP;
 			RegisterSocket(this);
 		}
 
 		public override void Reconnect() {
 			Close();
-			Connect(_RemoteEP);
+			Connect(_remoteEP);
 		}
 
 		public override void Listen(int backlog) {
-			_Socket.Listen(backlog);
+			_socket.Listen(backlog);
 		}
 
 		public override bool Poll(int microSeconds, SelectMode mode) {
-			return _Socket.Poll(microSeconds, mode);
+			return _socket.Poll(microSeconds, mode);
 		}
 
 		public override Stream GetInternalStream() {
-			return new NetworkStream(_Socket);
+			return new NetworkStream(_socket);
 		}
 
 		protected override bool IsIncomingConnection {
-			get { return _Incoming; }
+			get { return _incoming; }
 		}
-
-		private EndPoint _RemoteEP;
-		private Socket _Socket;
-		private bool _Incoming;
 	}
 	#endregion
 
 	#region TLS
 	public class DcmTlsSocket : DcmSocket {
+		private bool _server;
+		private EndPoint _remoteEP;
+		private Socket _socket;
+		private int _connectTimeout;
+
 		public DcmTlsSocket() {
-			_Socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-			_Socket.NoDelay = true;
+			_socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+			_socket.NoDelay = true;
 		}
 
 		private DcmTlsSocket(Socket socket) {
-			_IsServer = true;
-			_Socket = socket;
-			_Socket.NoDelay = true;
+			_server = true;
+			_socket = socket;
+			_socket.NoDelay = true;
 			RegisterSocket(this);
 		}
 
@@ -311,16 +339,16 @@ namespace Dicom.Network {
 		}
 
 		public override bool Blocking {
-			get { return _Socket.Blocking; }
-			set { _Socket.Blocking = value; }
+			get { return _socket.Blocking; }
+			set { _socket.Blocking = value; }
 		}
 
 		public override bool Connected {
 			get {
-				if (!_Socket.Connected)
+				if (!_socket.Connected)
 					return false;
 				try {
-					_Socket.Send(new byte[1], 0, 0);
+					_socket.Send(new byte[1], 0, 0);
 					return true;
 				}
 				catch (SocketException ex) {
@@ -331,80 +359,87 @@ namespace Dicom.Network {
 			}
 		}
 
+		public override int ConnectTimeout {
+			get { return _connectTimeout; }
+			set { _connectTimeout = value; }
+		}
+
 		public override int SendTimeout {
-			get { return _Socket.SendTimeout; }
-			set { _Socket.SendTimeout = value; }
+			get { return _socket.SendTimeout; }
+			set { _socket.SendTimeout = value; }
 		}
 
 		public override int ReceiveTimeout {
-			get { return _Socket.ReceiveTimeout; }
-			set { _Socket.ReceiveTimeout = value; }
+			get { return _socket.ReceiveTimeout; }
+			set { _socket.ReceiveTimeout = value; }
 		}
 
 		public override EndPoint LocalEndPoint {
-			get { return _Socket.LocalEndPoint; }
+			get { return _socket.LocalEndPoint; }
 		}
 
 		public override EndPoint RemoteEndPoint {
-			get { return _Socket.RemoteEndPoint; }
+			get { return _socket.RemoteEndPoint; }
 		}
 
 		public override int Available {
-			get { return _Socket.Available; }
+			get { return _socket.Available; }
 		}
 
 		public override DcmSocket Accept() {
-			Socket socket = _Socket.Accept();
+			Socket socket = _socket.Accept();
 			return new DcmTlsSocket(socket);
 		}
 
 		public override void Bind(EndPoint localEP) {
-			_Socket.Bind(localEP);
+			_socket.Bind(localEP);
 		}
 
 		public override void Close() {
-			if (_Socket != null) {
+			if (_socket != null) {
 				UnregisterSocket(this);
-				_Socket.Close();
-				_Socket = null;
+				_socket.Close();
+				_socket = null;
 			}
 		}
 
 		public override void Connect(EndPoint remoteEP) {
-			_IsServer = false;
-			_Socket.Connect(remoteEP);
-			_RemoteEP = remoteEP;
+			_server = false;
+			if (_connectTimeout == 0) {
+				_socket.Connect(remoteEP);
+			} else {
+				IAsyncResult result = _socket.BeginConnect(remoteEP, null, null);
+				if (!result.AsyncWaitHandle.WaitOne(_connectTimeout, true))
+					throw new SocketException((int)SocketError.TimedOut);
+			}
+			_remoteEP = remoteEP;
 			RegisterSocket(this);
 		}
 
 		public override void Reconnect() {
 			Close();
-			Connect(_RemoteEP);
+			Connect(_remoteEP);
 		}
 
 		public override void Listen(int backlog) {
-			_IsServer = true;
-			_Socket.Listen(backlog);
+			_server = true;
+			_socket.Listen(backlog);
 		}
 
 		public override bool Poll(int microSeconds, SelectMode mode) {
-			return _Socket.Poll(microSeconds, mode);
+			return _socket.Poll(microSeconds, mode);
 		}
 
 		public override Stream GetInternalStream() {
-			if (_IsServer)
-				return new TlsServerStream(_Socket);
+			if (_server)
+				return new TlsServerStream(_socket);
 			else
-				return new TlsClientStream(_Socket);
+				return new TlsClientStream(_socket);
 		}
 
 		protected override bool IsIncomingConnection {
-			get { return _IsServer; }
+			get { return _server; }
 		}
-
-		private bool _IsServer;
-		private EndPoint _RemoteEP;
-		private Socket _Socket;
 	}
 	#endregion
 }
