@@ -8,8 +8,11 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
+using System.Runtime.InteropServices;
+
 using Dicom;
 using Dicom.Data;
+using Dicom.Imaging;
 using Dicom.Network;
 using Dicom.Network.Server;
 using Dicom.Utility;
@@ -25,6 +28,7 @@ namespace DicomPrintScp {
 		#region Private Members
 		private DcmFilmSession _session;
 		private List<DcmPrintJob> _jobs;
+		private DicomPrintConfig _config;
 		#endregion
 
 		#region Public Constructors
@@ -38,6 +42,13 @@ namespace DicomPrintScp {
 		protected override void OnReceiveAssociateRequest(DcmAssociate association) {
 			association.NegotiateAsyncOps = false;
 			LogID = association.CallingAE;
+
+			_config = Config.Instance.FindPrinter(association.CalledAE);
+			if (_config == null) {
+				SendAssociateReject(DcmRejectResult.Permanent, DcmRejectSource.ServiceUser, DcmRejectReason.CalledAENotRecognized);
+				return;
+			}
+
 			foreach (DcmPresContext pc in association.GetPresentationContexts()) {
 				if (pc.AbstractSyntax == DcmUIDs.VerificationSOPClass ||
 					pc.AbstractSyntax == DcmUIDs.BasicColorPrintManagementMetaSOPClass ||
@@ -198,7 +209,7 @@ namespace DicomPrintScp {
 				DcmDataset ds = new DcmDataset(DcmTS.ImplicitVRLittleEndian);
 				ds.AddElementWithValue(DcmTags.PrinterStatus, "NORMAL");
 				ds.AddElementWithValue(DcmTags.PrinterStatus, "NORMAL");
-				ds.AddElementWithValue(DcmTags.PrinterName, Config.Instance.PrinterSettings.PrinterName);
+				ds.AddElementWithValue(DcmTags.PrinterName, _config.PrinterName);
 				ds.AddElementWithValue(DcmTags.Manufacturer, "N/A");
 				ds.AddElementWithValue(DcmTags.ManufacturersModelName, "N/A");
 				ds.AddElementWithValue(DcmTags.DeviceSerialNumber, "N/A");
@@ -224,7 +235,7 @@ namespace DicomPrintScp {
 					job.ExecutionStatus = "DONE";
 					job.CreationDateTime = DateTime.Today;
 					job.PrintPriority = _session.PrintPriority;
-					job.PrinterName = Config.Instance.PrinterSettings.PrinterName;
+					job.PrinterName = _config.PrinterName;
 					job.Originator = Associate.CallingAE;
 				}
 
@@ -257,7 +268,7 @@ namespace DicomPrintScp {
 				return;
 			}
 
-			DcmPrintDocument document = new DcmPrintDocument(_session);
+			DcmPrintDocument document = new DcmPrintDocument(_config, _session);
 
 			if (requestedClass == DcmUIDs.BasicFilmSessionSOPClass && actionTypeID == 0x0001) {
 				foreach (DcmFilmBox box in _session.BasicFilmBoxes)
@@ -366,11 +377,13 @@ namespace DicomPrintScp {
 		private List<DcmFilmBox> _filmBoxes;
 		private int _current;
 		private PrintPreviewDialog _previewDialog;
+		private DicomPrintConfig _config;
 		#endregion
 
 		#region Public Constructors
-		public DcmPrintDocument(DcmFilmSession session) {
+		public DcmPrintDocument(DicomPrintConfig config, DcmFilmSession session) {
 			_session = session;
+			_config = config;
 			_filmBoxes = new List<DcmFilmBox>();
 		}
 		#endregion
@@ -388,13 +401,22 @@ namespace DicomPrintScp {
 			_current = 0;
 
 			PrintDocument document = new PrintDocument();
-			document.PrinterSettings = (PrinterSettings)Config.Instance.PrinterSettings.Clone();
+			document.PrinterSettings = _config.PrinterSettings;
 			document.PrinterSettings.Collate = true;
 			document.PrinterSettings.Copies = (short)_session.NumberOfCopies;
+			//document.DefaultPageSettings.Margins = new Margins(100, 100, 100, 100);
+			document.DefaultPageSettings.Margins = new Margins(25, 25, 25, 25);
 			document.QueryPageSettings += OnQueryPageSettings;
 			document.PrintPage += OnPrintPage;
 
-			if (Config.Instance.PreviewOnly) {
+			if (!String.IsNullOrEmpty(_config.PaperSource)) {
+				foreach (PaperSource source in document.PrinterSettings.PaperSources) {
+					if (source.SourceName == _config.PaperSource)
+						document.DefaultPageSettings.PaperSource = source;
+				}
+			}
+
+			if (_config.PreviewOnly) {
 				if (Application.OpenForms.Count > 0)
 					Application.OpenForms[0].BeginInvoke(new WaitCallback(PreviewProc), document);
 			} else {
@@ -426,23 +448,79 @@ namespace DicomPrintScp {
 			e.PageSettings.Landscape = (filmBox.FilmOrientation == "LANDSCAPE");
 		}
 
+		#region Thank You Dr. Dobb's!
+		[System.Runtime.InteropServices.DllImport("gdi32.dll")]
+		static extern int GetDeviceCaps(IntPtr hdc, DeviceCapsIndex index);
+
+		enum DeviceCapsIndex {
+			PhysicalOffsetX = 112,
+			PhysicalOffsetY = 113,
+		}
+
+		// Adjust MarginBounds rectangle when printing based
+		// on the physical characteristics of the printer
+		static Rectangle GetRealMarginBounds(PrintPageEventArgs e, bool preview) {
+			if (preview) return e.MarginBounds;
+
+			int cx = 0;
+			int cy = 0;
+			IntPtr hdc = e.Graphics.GetHdc();
+
+			try {
+				// Both of these come back as device units and are not
+				// scaled to 1/100th of an inch
+				cx = GetDeviceCaps(hdc, DeviceCapsIndex.PhysicalOffsetX);
+				cy = GetDeviceCaps(hdc, DeviceCapsIndex.PhysicalOffsetY);
+			} finally {
+				e.Graphics.ReleaseHdc(hdc);
+			}
+
+			// Create the real margin bounds by scaling the offset
+			// by the printer resolution and then rescaling it
+			// back to 1/100th of an inch
+			Rectangle marginBounds = e.MarginBounds;
+			int dpiX = (int)e.Graphics.DpiX;
+			int dpiY = (int)e.Graphics.DpiY;
+			marginBounds.Offset(-cx * 100 / dpiX, -cy * 100 / dpiY);
+			return marginBounds;
+		}
+
+		static Rectangle GetRealPageBounds(PrintPageEventArgs e, bool preview) {
+			// Return in units of 1/100th of an inch
+			if (preview) return e.PageBounds;
+
+			// Translate to units of 1/100th of an inch
+			RectangleF vpb = e.Graphics.VisibleClipBounds;
+			PointF[] bottomRight = { new PointF(vpb.Size.Width, vpb.Size.Height) };
+			e.Graphics.TransformPoints(CoordinateSpace.Device, CoordinateSpace.Page, bottomRight);
+			float dpiX = e.Graphics.DpiX;
+			float dpiY = e.Graphics.DpiY;
+			return new Rectangle(0, 0,
+								(int)(bottomRight[0].X * 100 / dpiX),
+								(int)(bottomRight[0].Y * 100 / dpiY));
+		}
+		#endregion
+
 		private void OnPrintPage(object sender, PrintPageEventArgs e) {
 			DcmFilmBox filmBox = _filmBoxes[_current];
 
-			if (filmBox.MagnificationType == "CUBIC")
-				e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-			else
-				e.Graphics.InterpolationMode = InterpolationMode.HighQualityBilinear;
+			//if (filmBox.MagnificationType == "CUBIC")
+			//    e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+			//else
+			//    e.Graphics.InterpolationMode = InterpolationMode.HighQualityBilinear;
 
-			// what is the correct way to calculate this???
-			double resX = e.PageSettings.Bounds.Width / e.Graphics.VisibleClipBounds.Width;
-			double resY = e.PageSettings.Bounds.Height / e.Graphics.VisibleClipBounds.Height;
+			e.Graphics.InterpolationMode = InterpolationMode.HighQualityBilinear;
 
-			Rectangle bounds = new Rectangle();
-			bounds.X = (int)(e.PageSettings.PrintableArea.X * resX);
-			bounds.Width = (int)(e.PageSettings.PrintableArea.Width * resX) - (bounds.X * 2);
-			bounds.Y = (int)(e.PageSettings.PrintableArea.Y * resY);
-			bounds.Height = (int)(e.PageSettings.PrintableArea.Height * resY) - (bounds.Y * 2);
+			int dpiX = e.PageSettings.PrinterResolution.X;
+			int dpiY = e.PageSettings.PrinterResolution.Y;
+
+			Rectangle bounds = GetRealPageBounds(e, _config.PreviewOnly);
+			bounds.X += (int)e.PageSettings.HardMarginX;
+			bounds.Width -= (int)e.PageSettings.HardMarginX * 2;
+			bounds.Y += (int)e.PageSettings.HardMarginY;
+			bounds.Height -= (int)e.PageSettings.HardMarginY * 2;
+
+			//Rectangle bounds = GetRealMarginBounds(e, _config.PreviewOnly);
 
 			string format = filmBox.ImageDisplayFormat;
 
@@ -470,13 +548,14 @@ namespace DicomPrintScp {
 								position.X = bounds.Left + (c * colSize);
 
 								if (imageBox < filmBox.BasicImageBoxes.Count)
-									DrawImageBox(filmBox.BasicImageBoxes[imageBox], e.Graphics, position, colSize, rowSize);
+									DrawImageBox(filmBox.BasicImageBoxes[imageBox], e.Graphics, position, colSize, rowSize, dpiX, dpiY);
 
 								imageBox++;
 							}
 						}
 					}
-					catch {
+					catch (Exception ex) {
+						Dicom.Debug.Log.Error(ex.Message);
 					}
 				}
 
@@ -501,7 +580,7 @@ namespace DicomPrintScp {
                             position.X = bounds.Left + (c * colSize);
 
 							if (imageBox < filmBox.BasicImageBoxes.Count)
-								DrawImageBox(filmBox.BasicImageBoxes[imageBox], e.Graphics, position, colSize, rowSize);
+								DrawImageBox(filmBox.BasicImageBoxes[imageBox], e.Graphics, position, colSize, rowSize, dpiX, dpiY);
 
 							imageBox++;
 						}
@@ -530,7 +609,7 @@ namespace DicomPrintScp {
                             position.X = bounds.Left + (c * colSize);
 
 							if (imageBox < filmBox.BasicImageBoxes.Count)
-								DrawImageBox(filmBox.BasicImageBoxes[imageBox], e.Graphics, position, colSize, rowSize);
+								DrawImageBox(filmBox.BasicImageBoxes[imageBox], e.Graphics, position, colSize, rowSize, dpiX, dpiY);
 
 							imageBox++;
 						}
@@ -546,7 +625,7 @@ namespace DicomPrintScp {
 				_current = 0;
 		}
 
-		private void DrawImageBox(DcmImageBox imageBox, Graphics graphics, Point position, int width, int height) {
+		private void DrawImageBox(DcmImageBox imageBox, Graphics graphics, Point position, int width, int height, int dpiX, int dpiY) {
 			DcmDataset dataset = imageBox.ImageSequence;
 			if (!dataset.Contains(DcmTags.PixelData))
 				return;
@@ -558,57 +637,65 @@ namespace DicomPrintScp {
 
 			if (pixelData.SamplesPerPixel == 3) {
 				pixelBuffer = new PinnedIntArray(pixelData.GetFrameDataS32(0));
+				bitmap = new Bitmap(pixelData.ImageWidth, pixelData.ImageHeight,
+					pixelData.ImageWidth * sizeof(int), PixelFormat.Format32bppRgb, pixelBuffer.Pointer);
 			} else {
-                pixelBuffer = new PinnedIntArray(pixelData.ImageWidth * pixelData.ImageHeight);
                 bool invert = (pixelData.PhotometricInterpretation == "MONOCHROME1");
 				if (imageBox.Polarity == "REVERSE")
 					invert = !invert;
 
-				if (pixelData.BitsAllocated == 8) {					
-					byte[] pixels = pixelData.GetFrameDataU8(0);
-					
-					int pixel = 0;
-					for (int y = 0; y < pixelData.ImageHeight; y++) {
-						for (int x = 0; x < pixelData.ImageWidth; x++) {
-							byte b = pixels[pixel];
-							if (invert) b = (byte)(255 - b);
-							pixelBuffer[pixel] = (b << 16) | (b << 8) | (b);
-							pixel++;
-						}
-					}
+				bitmap = new Bitmap(pixelData.ImageWidth, pixelData.ImageHeight, PixelFormat.Format8bppIndexed);
 
-					pixels = null;
+				if (invert)
+					LUT.Apply(bitmap, LUT.Monochrome1);
+				else
+					LUT.Apply(bitmap, LUT.Monochrome2);
+
+				BitmapData bmData = bitmap.LockBits(new Rectangle(0, 0, pixelData.ImageWidth, pixelData.ImageHeight),
+					ImageLockMode.ReadWrite, PixelFormat.Format8bppIndexed);
+				IntPtr Scan0 = bmData.Scan0;
+
+				byte[] pixelsOut = null;
+
+				if (pixelData.BitsAllocated == 8) {					
+					pixelsOut = pixelData.GetFrameDataU8(0);
 				} else {
                     ushort[] pixels = pixelData.GetFrameDataU16(0);
+					pixelsOut = new byte[pixels.Length];
 					double scale = 256.0 / 4096.0;
 
                     int pixel = 0;
                     for (int y = 0; y < pixelData.ImageHeight; y++) {
                         for (int x = 0; x < pixelData.ImageWidth; x++) {
-                            byte b = (byte)(pixels[pixel] * scale);
-							if (invert) b = (byte)(255 - b);
-                            pixelBuffer[pixel] = (b << 16) | (b << 8) | (b);
+							pixelsOut[pixel] = (byte)(pixels[pixel] * scale);
                             pixel++;
                         }
                     }
 
 					pixels = null;
 				}
+
+				IntPtr pos = Scan0;
+				for (int i = 0, c = pixelsOut.Length; i < c; i += bmData.Width) {
+					Marshal.Copy(pixelsOut, i, pos, bmData.Width);
+					pos = new IntPtr(pos.ToInt64() + bmData.Stride);
+				}
+
+				bitmap.UnlockBits(bmData);
 			}
 
-			bitmap = new Bitmap(pixelData.ImageWidth, pixelData.ImageHeight, 
-				pixelData.ImageWidth * sizeof(int), PixelFormat.Format32bppRgb, pixelBuffer.Pointer);
+			//bitmap.SetResolution(dpiX, dpiY);
 
 			int border = 3;
 
-			double factor = Math.Min((double)(height - (border * 2)) / (double)bitmap.Height,
-									 (double)(width - (border * 2)) / (double)bitmap.Width);
+			double factor = Math.Min((double)height / (double)bitmap.Height,
+									 (double)width / (double)bitmap.Width);
 
-			int drawWidth = (int)(bitmap.Width * factor);
-			int drawHeight = (int)(bitmap.Height * factor);
+			int drawWidth = (int)(bitmap.Width * factor) - (border * 2);
+			int drawHeight = (int)(bitmap.Height * factor) - (border * 2);
 
-			int drawX = Math.Max(position.X, position.X + ((width - drawWidth) / 2));
-			int drawY = Math.Max(position.Y, position.Y + ((height - drawHeight) / 2));
+			int drawX = position.X + ((width - drawWidth) / 2);
+			int drawY = position.Y + ((height - drawHeight) / 2);
 
 			graphics.DrawImage(bitmap, drawX, drawY, drawWidth, drawHeight);
 		}

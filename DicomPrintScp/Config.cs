@@ -8,31 +8,53 @@ using System.Xml.Serialization;
 
 namespace DicomPrintScp {
 	[Serializable]
+	public class DicomPrintConfig {
+		public string AETitle;
+		public PrinterSettings PrinterSettings;
+		public string PaperSource;
+		public bool PreviewOnly;
+
+		public DicomPrintConfig() {
+			AETitle = "PRINT_SCP";
+			PreviewOnly = false;
+
+			PrintDocument document = new PrintDocument();
+			PrinterSettings = document.PrinterSettings;
+			PaperSource = PrinterSettings.PaperSources[0].SourceName;
+		}
+
+		public string PrinterName {
+			get { return PrinterSettings.PrinterName; }
+		}
+	}
+
+	[Serializable]
 	public class Config {
 		public static Config Instance;
 		private static string ConfigPath = Path.Combine(Dicom.Debug.GetStartDirectory(), "printscp.cfg");
 
-		public string AETitle;
 		public int Port;
 		public int MaxPduSize;
 		public int SocketTimeout;
 		public int DimseTimeout;
 		public int ThrottleSpeed;
-		public PrinterSettings PrinterSettings;
-		public bool PreviewOnly;
+		public List<DicomPrintConfig> Printers;
 
 		public Config() {
-			AETitle = "PRINT_SCP";
 			Port = 104;
 			MaxPduSize = 65536;
 			SocketTimeout = 30;
 			DimseTimeout = 180;
 			ThrottleSpeed = 0;
-			PrinterSettings = null;
-			PreviewOnly = false;
+			Printers = new List<DicomPrintConfig>();
+		}
 
-			PrintDocument document = new PrintDocument();
-			PrinterSettings = (PrinterSettings)document.PrinterSettings.Clone();
+		public DicomPrintConfig FindPrinter(string aeTitle) {
+			foreach (DicomPrintConfig config in Printers) {
+				if (config.AETitle == aeTitle)
+					return config;
+			}
+			return null;
 		}
 
 		public static Config Load() {

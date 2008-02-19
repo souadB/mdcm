@@ -31,43 +31,44 @@ namespace DicomPrintScp {
 		private void LoadSettings() {
 			Config.Load();
 			nuDicomPort.Value = Config.Instance.Port;
-			tbAETitle.Text = Config.Instance.AETitle;
 			nuMaxPduSize.Value = Config.Instance.MaxPduSize;
 			nuSocketTo.Value = Config.Instance.SocketTimeout;
 			nuDimseTo.Value = Config.Instance.DimseTimeout;
 			nuThrottle.Value = Config.Instance.ThrottleSpeed;
-			cbPreviewOnly.Checked = Config.Instance.PreviewOnly;
 			cbAutoStart.Checked = AppUtility.IsAutoStartup("DICOM Print SCP");
+			RefreshPrinters();
 		}
 
 		private void SaveSettings() {
 			Config.Instance.Port = (int)nuDicomPort.Value;
-			Config.Instance.AETitle = tbAETitle.Text;
 			Config.Instance.MaxPduSize = (int)nuMaxPduSize.Value;
 			Config.Instance.SocketTimeout = (int)nuSocketTo.Value;
 			Config.Instance.DimseTimeout = (int)nuDimseTo.Value;
 			Config.Instance.ThrottleSpeed = (int)nuThrottle.Value;
-			Config.Instance.PreviewOnly = cbPreviewOnly.Checked;
 			Config.Save();
 
 			AppUtility.SetAutoStartup("DICOM Print SCP", cbAutoStart.Checked);
+			RefreshPrinters();
 		}
 
 		private void EnableControls(bool enabled) {
 			cbAutoStart.Enabled = enabled;
 			bttnPrinterSettings.Enabled = enabled;
-			cbPreviewOnly.Enabled = enabled;
 			gbDicomSettings.Enabled = enabled;
+			lvPrinters.Enabled = enabled;
+			bttnAddPrinter.Enabled = enabled;
+			bttnDeletePrinter.Enabled = enabled;
+			bttnPrinterSettings.Enabled = enabled;
 		}
 
 		private void ToggleService() {
 			if (_server == null) {
 				SaveSettings();
 
-				if (Config.Instance.PrinterSettings == null) {
-					MessageBox.Show(this, "Please configure your printer before starting the DICOM server.", "Configuration Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-					return;
-				}
+				//if (Config.Instance.PrinterSettings == null) {
+				//    MessageBox.Show(this, "Please configure your printer before starting the DICOM server.", "Configuration Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				//    return;
+				//}
 
 				EnableControls(false);
 				bttnStartStop.Text = "Stop";
@@ -93,8 +94,8 @@ namespace DicomPrintScp {
 		private void OnLoad(object sender, EventArgs e) {
 			LoadSettings();
 
-			if (Config.Instance.PrinterSettings == null)
-				OnClickPrinterSettings(sender, e);
+			//if (Config.Instance.PrinterSettings == null)
+			//    OnClickPrinterSettings(sender, e);
 
 			ToggleService();
 
@@ -131,15 +132,6 @@ namespace DicomPrintScp {
 			}
 		}
 
-		private void OnClickPrinterSettings(object sender, EventArgs e) {
-			PrintDialog pd = new PrintDialog();
-			if (Config.Instance.PrinterSettings != null)
-				pd.PrinterSettings = Config.Instance.PrinterSettings;
-			if (pd.ShowDialog(this) == DialogResult.OK) {
-				Config.Instance.PrinterSettings = pd.PrinterSettings;
-			}
-		}
-
 		private void OnClickNotifyMenuExit(object sender, EventArgs e) {
 			_closing = true;
 			Application.Exit();
@@ -148,6 +140,59 @@ namespace DicomPrintScp {
 		private void OnNotifyMenuOpen(object sender, EventArgs e) {
 			Show();
 			Focus();
+		}
+
+		private void RefreshPrinters() {
+			lvPrinters.BeginUpdate();
+
+			lvPrinters.Items.Clear();
+			foreach (DicomPrintConfig config in Config.Instance.Printers) {
+				ListViewItem lvi = new ListViewItem(config.AETitle);
+				lvi.SubItems.Add(config.PrinterName);
+				lvi.SubItems.Add(config.PaperSource);
+				lvi.SubItems.Add(config.PreviewOnly.ToString());
+				lvi.Tag = config;
+				lvPrinters.Items.Add(lvi);
+			}
+
+			lvPrinters.EndUpdate();
+		}
+
+		private void OnClickAddPrinter(object sender, EventArgs e) {
+			DicomPrintConfig config = new DicomPrintConfig();
+			PrinterSettingsForm psf = new PrinterSettingsForm(config);
+			if (psf.ShowDialog(this) == DialogResult.OK) {
+				Config.Instance.Printers.Add(config);
+				SaveSettings();
+			}
+		}
+		
+		private void OnClickPrinterSettings(object sender, EventArgs e) {
+			if (lvPrinters.SelectedItems.Count == 0)
+				return;
+
+			ListViewItem lvi = lvPrinters.SelectedItems[0];
+			DicomPrintConfig config = (DicomPrintConfig)lvi.Tag;
+			PrinterSettingsForm psf = new PrinterSettingsForm(config);
+			if (psf.ShowDialog(this) == DialogResult.OK) {
+				SaveSettings();
+			} else {
+				LoadSettings();
+			}
+		}
+
+		private void OnClickDeletePrinter(object sender, EventArgs e) {
+			if (lvPrinters.SelectedItems.Count == 0)
+				return;
+
+			if (MessageBox.Show(this, "Are you sure you want to delete the selected printer?", "Delete Printer", 
+				MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+				return;
+
+			ListViewItem lvi = lvPrinters.SelectedItems[0];
+			DicomPrintConfig config = (DicomPrintConfig)lvi.Tag;
+			Config.Instance.Printers.Remove(config);
+			SaveSettings();
 		}
 	}
 }
