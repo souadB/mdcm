@@ -4,11 +4,10 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing.Printing;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-
-using System.Runtime.InteropServices;
 
 using Dicom;
 using Dicom.Data;
@@ -268,11 +267,11 @@ namespace DicomPrintScp {
 				return;
 			}
 
-			DcmPrintDocument document = new DcmPrintDocument(_config, _session);
+			DcmPrintDocument document = new DcmPrintDocument(_config, _session.Clone());
 
 			if (requestedClass == DcmUIDs.BasicFilmSessionSOPClass && actionTypeID == 0x0001) {
 				foreach (DcmFilmBox box in _session.BasicFilmBoxes)
-					document.AddFilmBox(box);
+					document.AddFilmBox(box.Clone());
 			}
 			
 			else if (requestedClass == DcmUIDs.BasicFilmBoxSOPClass && actionTypeID == 0x0001) {
@@ -283,7 +282,7 @@ namespace DicomPrintScp {
 					return;
 				}
 
-				document.AddFilmBox(box);
+				document.AddFilmBox(box.Clone());
 			}
 
 			else {
