@@ -18,11 +18,14 @@ namespace DicomPrintScp {
 			tbAETitle.Text = _config.AETitle;
 			tbPrinterName.Text = _config.PrinterName;
 			cbPaperSource.Items.Clear();
+			cbPaperSource.Items.Add("Driver Select");
 			foreach (PaperSource source in _config.PrinterSettings.PaperSources) {
 				if (!String.IsNullOrEmpty(source.SourceName))
 					cbPaperSource.Items.Add(source.SourceName);
 			}
 			cbPaperSource.SelectedItem = _config.PaperSource;
+			if (cbPaperSource.SelectedIndex == -1)
+				cbPaperSource.SelectedIndex = 0;
 			cbPreviewOnly.Checked = _config.PreviewOnly;
 		}
 
@@ -36,6 +39,7 @@ namespace DicomPrintScp {
 				tbPrinterName.Text = _config.PrinterName;
 
 				cbPaperSource.Items.Clear();
+				cbPaperSource.Items.Add("Driver Select");
 				foreach (PaperSource source in _config.PrinterSettings.PaperSources) {
 					if (!String.IsNullOrEmpty(source.SourceName))
 						cbPaperSource.Items.Add(source.SourceName);
@@ -45,7 +49,10 @@ namespace DicomPrintScp {
 		}
 
 		private void OnSelectTray(object sender, EventArgs e) {
-			_config.PaperSource = cbPaperSource.Text;
+			if (cbPaperSource.SelectedIndex == 0)
+				_config.PaperSource = null;
+			else
+				_config.PaperSource = cbPaperSource.Text;
 		}
 
 		private void OnChangeAETitle(object sender, EventArgs e) {

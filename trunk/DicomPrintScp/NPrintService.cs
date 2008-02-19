@@ -398,48 +398,64 @@ namespace DicomPrintScp {
 		}
 
 		public void Print() {
-			_current = 0;
+			try {
+				_current = 0;
 
-			PrintDocument document = new PrintDocument();
-			document.PrinterSettings = _config.PrinterSettings;
-			document.PrinterSettings.Collate = true;
-			document.PrinterSettings.Copies = (short)_session.NumberOfCopies;
-			//document.DefaultPageSettings.Margins = new Margins(100, 100, 100, 100);
-			document.DefaultPageSettings.Margins = new Margins(25, 25, 25, 25);
-			document.QueryPageSettings += OnQueryPageSettings;
-			document.PrintPage += OnPrintPage;
+				PrintDocument document = new PrintDocument();
+				document.PrinterSettings = _config.PrinterSettings;
+				document.PrinterSettings.Collate = true;
+				document.PrinterSettings.Copies = (short)_session.NumberOfCopies;
+				//document.DefaultPageSettings.Margins = new Margins(100, 100, 100, 100);
+				document.DefaultPageSettings.Margins = new Margins(25, 25, 25, 25);
+				document.QueryPageSettings += OnQueryPageSettings;
+				document.PrintPage += OnPrintPage;
 
-			if (!String.IsNullOrEmpty(_config.PaperSource)) {
-				foreach (PaperSource source in document.PrinterSettings.PaperSources) {
-					if (source.SourceName == _config.PaperSource)
-						document.DefaultPageSettings.PaperSource = source;
+				if (!String.IsNullOrEmpty(_config.PaperSource)) {
+					foreach (PaperSource source in document.PrinterSettings.PaperSources) {
+						if (source.SourceName == _config.PaperSource)
+							document.DefaultPageSettings.PaperSource = source;
+					}
 				}
-			}
 
-			if (_config.PreviewOnly) {
-				if (Application.OpenForms.Count > 0)
-					Application.OpenForms[0].BeginInvoke(new WaitCallback(PreviewProc), document);
-			} else {
-				document.Print();
+				if (_config.PreviewOnly) {
+					if (Application.OpenForms.Count > 0)
+						Application.OpenForms[0].BeginInvoke(new WaitCallback(PreviewProc), document);
+				} else {
+					document.Print();
+				}
+			} catch (Exception ex) {
+#if DEBUG
+				Dicom.Debug.Log.Error("DICOM Print Error: " + ex.ToString());
+#else
+				Dicom.Debug.Log.Error("DICOM Print Error: " + ex.Message);
+#endif
 			}
 		}
 		#endregion
 
 		#region Private Methods
 		private void PreviewProc(object state) {
-			PrintDocument document = (PrintDocument)state;
+			try {
+				PrintDocument document = (PrintDocument)state;
 
-			_previewDialog = new PrintPreviewDialog();
-			_previewDialog.Text = "DICOM Print Preview";
-			_previewDialog.ShowInTaskbar = true;
-			_previewDialog.WindowState = FormWindowState.Maximized;
-			_previewDialog.Document = document;
-			_previewDialog.FormClosed += delegate(object sender, FormClosedEventArgs e) {
-				_previewDialog = null;
-			};
-			_previewDialog.Show(Application.OpenForms[0]);
-			_previewDialog.BringToFront();
-			_previewDialog.Focus();
+				_previewDialog = new PrintPreviewDialog();
+				_previewDialog.Text = "DICOM Print Preview";
+				_previewDialog.ShowInTaskbar = true;
+				_previewDialog.WindowState = FormWindowState.Maximized;
+				_previewDialog.Document = document;
+				_previewDialog.FormClosed += delegate(object sender, FormClosedEventArgs e) {
+					_previewDialog = null;
+				};
+				_previewDialog.Show(Application.OpenForms[0]);
+				_previewDialog.BringToFront();
+				_previewDialog.Focus();
+			} catch (Exception ex) {
+#if DEBUG
+				Dicom.Debug.Log.Error("DICOM Print Error: " + ex.ToString());
+#else
+				Dicom.Debug.Log.Error("DICOM Print Error: " + ex.Message);
+#endif
+			}
 		}
 
 		private void OnQueryPageSettings(object sender, QueryPageSettingsEventArgs e) {
@@ -555,7 +571,11 @@ namespace DicomPrintScp {
 						}
 					}
 					catch (Exception ex) {
-						Dicom.Debug.Log.Error(ex.Message);
+#if DEBUG
+						Dicom.Debug.Log.Error("DICOM Print Error: " + ex.ToString());
+#else
+						Dicom.Debug.Log.Error("DICOM Print Error: " + ex.Message);
+#endif
 					}
 				}
 
@@ -585,8 +605,12 @@ namespace DicomPrintScp {
 							imageBox++;
 						}
 					}
-				}
-				catch {
+				} catch (Exception ex) {
+#if DEBUG
+					Dicom.Debug.Log.Error("DICOM Print Error: " + ex.ToString());
+#else
+					Dicom.Debug.Log.Error("DICOM Print Error: " + ex.Message);
+#endif
 				}
 			}
 
@@ -614,8 +638,12 @@ namespace DicomPrintScp {
 							imageBox++;
 						}
 					}
-				}
-				catch {
+				} catch (Exception ex) {
+#if DEBUG
+					Dicom.Debug.Log.Error("DICOM Print Error: " + ex.ToString());
+#else
+					Dicom.Debug.Log.Error("DICOM Print Error: " + ex.Message);
+#endif
 				}
 			}
 
@@ -644,17 +672,6 @@ namespace DicomPrintScp {
 				if (imageBox.Polarity == "REVERSE")
 					invert = !invert;
 
-				bitmap = new Bitmap(pixelData.ImageWidth, pixelData.ImageHeight, PixelFormat.Format8bppIndexed);
-
-				if (invert)
-					LUT.Apply(bitmap, LUT.Monochrome1);
-				else
-					LUT.Apply(bitmap, LUT.Monochrome2);
-
-				BitmapData bmData = bitmap.LockBits(new Rectangle(0, 0, pixelData.ImageWidth, pixelData.ImageHeight),
-					ImageLockMode.ReadWrite, PixelFormat.Format8bppIndexed);
-				IntPtr Scan0 = bmData.Scan0;
-
 				byte[] pixelsOut = null;
 
 				if (pixelData.BitsAllocated == 8) {					
@@ -675,7 +692,17 @@ namespace DicomPrintScp {
 					pixels = null;
 				}
 
-				IntPtr pos = Scan0;
+				bitmap = new Bitmap(pixelData.ImageWidth, pixelData.ImageHeight, PixelFormat.Format8bppIndexed);
+
+				if (invert)
+					LUT.Apply(bitmap, LUT.Monochrome1);
+				else
+					LUT.Apply(bitmap, LUT.Monochrome2);
+
+				BitmapData bmData = bitmap.LockBits(new Rectangle(0, 0, pixelData.ImageWidth, pixelData.ImageHeight),
+					ImageLockMode.ReadWrite, PixelFormat.Format8bppIndexed);
+
+				IntPtr pos = bmData.Scan0;
 				for (int i = 0, c = pixelsOut.Length; i < c; i += bmData.Width) {
 					Marshal.Copy(pixelsOut, i, pos, bmData.Width);
 					pos = new IntPtr(pos.ToInt64() + bmData.Stride);

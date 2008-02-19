@@ -29,26 +29,42 @@ namespace DicomPrintScp {
 		}
 
 		private void LoadSettings() {
-			Config.Load();
-			nuDicomPort.Value = Config.Instance.Port;
-			nuMaxPduSize.Value = Config.Instance.MaxPduSize;
-			nuSocketTo.Value = Config.Instance.SocketTimeout;
-			nuDimseTo.Value = Config.Instance.DimseTimeout;
-			nuThrottle.Value = Config.Instance.ThrottleSpeed;
-			cbAutoStart.Checked = AppUtility.IsAutoStartup("DICOM Print SCP");
-			RefreshPrinters();
+			try {
+				Config.Load();
+				nuDicomPort.Value = Config.Instance.Port;
+				nuMaxPduSize.Value = Config.Instance.MaxPduSize;
+				nuSocketTo.Value = Config.Instance.SocketTimeout;
+				nuDimseTo.Value = Config.Instance.DimseTimeout;
+				nuThrottle.Value = Config.Instance.ThrottleSpeed;
+				cbAutoStart.Checked = AppUtility.IsAutoStartup("DICOM Print SCP");
+				RefreshPrinters();
+			} catch (Exception ex) {
+#if DEBUG
+				Dicom.Debug.Log.Error("Error: " + ex.ToString());
+#else
+				Dicom.Debug.Log.Error("Error: " + ex.Message);
+#endif
+			}
 		}
 
 		private void SaveSettings() {
-			Config.Instance.Port = (int)nuDicomPort.Value;
-			Config.Instance.MaxPduSize = (int)nuMaxPduSize.Value;
-			Config.Instance.SocketTimeout = (int)nuSocketTo.Value;
-			Config.Instance.DimseTimeout = (int)nuDimseTo.Value;
-			Config.Instance.ThrottleSpeed = (int)nuThrottle.Value;
-			Config.Save();
+			try {
+				Config.Instance.Port = (int)nuDicomPort.Value;
+				Config.Instance.MaxPduSize = (int)nuMaxPduSize.Value;
+				Config.Instance.SocketTimeout = (int)nuSocketTo.Value;
+				Config.Instance.DimseTimeout = (int)nuDimseTo.Value;
+				Config.Instance.ThrottleSpeed = (int)nuThrottle.Value;
+				Config.Save();
 
-			AppUtility.SetAutoStartup("DICOM Print SCP", cbAutoStart.Checked);
-			RefreshPrinters();
+				AppUtility.SetAutoStartup("DICOM Print SCP", cbAutoStart.Checked);
+				RefreshPrinters();
+			} catch (Exception ex) {
+#if DEBUG
+				Dicom.Debug.Log.Error("Error: " + ex.ToString());
+#else
+				Dicom.Debug.Log.Error("Error: " + ex.Message);
+#endif
+			}
 		}
 
 		private void EnableControls(bool enabled) {
@@ -65,10 +81,10 @@ namespace DicomPrintScp {
 			if (_server == null) {
 				SaveSettings();
 
-				//if (Config.Instance.PrinterSettings == null) {
-				//    MessageBox.Show(this, "Please configure your printer before starting the DICOM server.", "Configuration Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				//    return;
-				//}
+				if (Config.Instance.Printers.Count == 0) {
+					MessageBox.Show(this, "Please configure your printer before starting the DICOM server.", "Configuration Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+					return;
+				}
 
 				EnableControls(false);
 				bttnStartStop.Text = "Stop";
@@ -94,12 +110,13 @@ namespace DicomPrintScp {
 		private void OnLoad(object sender, EventArgs e) {
 			LoadSettings();
 
-			//if (Config.Instance.PrinterSettings == null)
-			//    OnClickPrinterSettings(sender, e);
+			if (Config.Instance.Printers.Count == 0)
+			    OnClickAddPrinter(sender, e);
 
-			ToggleService();
-
-			Hide();
+			if (Config.Instance.Printers.Count > 0) {
+				ToggleService();
+				Hide();
+			}
 		}
 
 		private void OnDicomLogClicked(object sender, LinkLabelLinkClickedEventArgs e) {
@@ -154,6 +171,8 @@ namespace DicomPrintScp {
 				lvi.Tag = config;
 				lvPrinters.Items.Add(lvi);
 			}
+
+			lvPrinters.Sort();
 
 			lvPrinters.EndUpdate();
 		}
