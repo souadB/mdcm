@@ -62,7 +62,7 @@ namespace Dicom.Codec {
 				ts == DcmTS.ExplicitVRBigEndian)
 				return true;
 			if (_codecs == null)
-				RegisterCodecs();
+				return false;
 			return _codecs.ContainsKey(ts);
 		}
 
@@ -74,6 +74,13 @@ namespace Dicom.Codec {
 				return (IDcmCodec)Activator.CreateInstance(cType);
 			}
 			throw new DcmCodecException("No registered codec for transfer syntax!");
+		}
+
+		public static void RegisterCodec(DcmTS ts, Type type) {
+			if (_codecs == null)
+				_codecs = new Dictionary<DcmTS, Type>();
+			if (type.IsDefined(typeof(DicomCodecAttribute), false))
+				_codecs.Add(ts, type);
 		}
 
 		public static void RegisterCodecs() {

@@ -12,6 +12,7 @@ using System.Xml.Serialization;
 
 using Dicom.Data;
 using Dicom.Forms;
+using Dicom.Jpeg;
 using Dicom.Network;
 using Dicom.Network.Client;
 
@@ -36,24 +37,34 @@ namespace DicomScu {
 			InitializeLog();
 
 			ConfigPath = Path.Combine(Dicom.Debug.GetStartDirectory(), "dicomscu.xml");
-			
-			TransferSyntaxDescriptions = new string[7];
-			TransferSyntaxDescriptions[0] = "Automatic";
-			TransferSyntaxDescriptions[1] = "JPEG 2000 Lossless (no codec)";
-			TransferSyntaxDescriptions[2] = "JPEG Lossless P14 SV1 (no codec)";
-			TransferSyntaxDescriptions[3] = "RLE Lossless";
-			TransferSyntaxDescriptions[4] = "Explicit VR Little Endian";
-			TransferSyntaxDescriptions[5] = "Implicit VR Little Endian";
-			TransferSyntaxDescriptions[6] = "Explicit VR Big Endian";
 
-			TransferSyntaxes = new DcmTS[7];
-			TransferSyntaxes[0] = null;
-			TransferSyntaxes[1] = DcmTS.JPEG2000Lossless;
-			TransferSyntaxes[2] = DcmTS.JPEGProcess14SV1;
-			TransferSyntaxes[3] = DcmTS.RLELossless;
-			TransferSyntaxes[4] = DcmTS.ExplicitVRLittleEndian;
-			TransferSyntaxes[5] = DcmTS.ImplicitVRLittleEndian;
-			TransferSyntaxes[6] = DcmTS.ExplicitVRBigEndian;
+			int i = 0;
+			
+			TransferSyntaxDescriptions = new string[10];
+			TransferSyntaxDescriptions[i++] = "Automatic";
+			TransferSyntaxDescriptions[i++] = "JPEG 2000 Lossless (no codec)";
+			TransferSyntaxDescriptions[i++] = "JPEG Baseline P1 (8-bit) [.50]";
+			TransferSyntaxDescriptions[i++] = "JPEG Extended P4 (12-bit) [.51]";
+			TransferSyntaxDescriptions[i++] = "JPEG Lossless P14 [.57]";
+			TransferSyntaxDescriptions[i++] = "JPEG Lossless P14 SV1 [.70]";
+			TransferSyntaxDescriptions[i++] = "RLE Lossless";
+			TransferSyntaxDescriptions[i++] = "Explicit VR Little Endian";
+			TransferSyntaxDescriptions[i++] = "Implicit VR Little Endian";
+			TransferSyntaxDescriptions[i++] = "Explicit VR Big Endian";
+
+			i = 0;
+
+			TransferSyntaxes = new DcmTS[10];
+			TransferSyntaxes[i++] = null;
+			TransferSyntaxes[i++] = DcmTS.JPEG2000Lossless;
+			TransferSyntaxes[i++] = DcmTS.JPEGProcess1;
+			TransferSyntaxes[i++] = DcmTS.JPEGProcess2_4;
+			TransferSyntaxes[i++] = DcmTS.JPEGProcess14;
+			TransferSyntaxes[i++] = DcmTS.JPEGProcess14SV1;
+			TransferSyntaxes[i++] = DcmTS.RLELossless;
+			TransferSyntaxes[i++] = DcmTS.ExplicitVRLittleEndian;
+			TransferSyntaxes[i++] = DcmTS.ImplicitVRLittleEndian;
+			TransferSyntaxes[i++] = DcmTS.ExplicitVRBigEndian;
 
 			foreach (string tx in TransferSyntaxDescriptions) {
 				cbTransferSyntax.Items.Add(tx);
@@ -91,6 +102,7 @@ namespace DicomScu {
 			Config.MaxPdu = (uint)nuMaxPdu.Value;
 			Config.Timeout = (int)nuTimeout.Value;
 			Config.TransferSyntax = cbTransferSyntax.SelectedIndex;
+			Config.Quality = (int)nuQuality.Value;
 			Config.UseTls = cbUseTls.Checked;
 			XmlSerializer serializer = new XmlSerializer(Config.GetType());
 			using (FileStream fs = new FileStream(ConfigPath, FileMode.Create)) {
@@ -125,6 +137,7 @@ namespace DicomScu {
 			nuMaxPdu.Value = Config.MaxPdu;
 			nuTimeout.Value = Config.Timeout;
 			cbTransferSyntax.SelectedIndex = Config.TransferSyntax;
+			nuQuality.Value = Config.Quality;
 			cbUseTls.Checked = Config.UseTls;
 		}
 
@@ -231,6 +244,14 @@ namespace DicomScu {
 			scu.DimseTimeout = Config.Timeout;
 			scu.SerializedPresentationContexts = true;
 			scu.PreferredTransferSyntax = TransferSyntaxes[Config.TransferSyntax];
+
+			if (scu.PreferredTransferSyntax == DcmTS.JPEGProcess1 ||
+				scu.PreferredTransferSyntax == DcmTS.JPEGProcess2_4) {
+				DcmJpegParameters param = new DcmJpegParameters();
+				param.Quality = Config.Quality;
+				scu.PreferredSyntaxParams = param;
+			}
+
 			scu.OnCStoreResponse = delegate(CStoreClient client, CStoreInfo info, DcmStatus status) {
 				Invoke(new CStoreCallback(UpdateSendInfo), client, info, status);
 			};
@@ -265,6 +286,7 @@ namespace DicomScu {
 		public uint MaxPdu = 16384;
 		public int Timeout = 30;
 		public int TransferSyntax = 0;
+		public int Quality = 90;
 		public bool UseTls = false;
 	}
 }

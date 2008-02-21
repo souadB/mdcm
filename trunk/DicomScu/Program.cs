@@ -9,7 +9,8 @@ namespace DicomScu {
 		/// </summary>
 		[STAThread]
 		static void Main() {
-			//Dicom.Codec.ExtDicomCodec.Initialize();
+			Dicom.Codec.DcmRleCodec.Register();
+			Dicom.Jpeg.DcmJpegCodec.Register();
 
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);

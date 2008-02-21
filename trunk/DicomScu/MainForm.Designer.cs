@@ -59,6 +59,8 @@
 			this.tabPage4 = new System.Windows.Forms.TabPage();
 			this.tabStatus = new System.Windows.Forms.TabPage();
 			this.rtbLog = new System.Windows.Forms.RichTextBox();
+			this.nuQuality = new System.Windows.Forms.NumericUpDown();
+			this.label8 = new System.Windows.Forms.Label();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
 			this.groupBox1.SuspendLayout();
@@ -67,6 +69,7 @@
 			((System.ComponentModel.ISupportInitialize)(this.nuRemotePort)).BeginInit();
 			this.tabPage2.SuspendLayout();
 			this.tabStatus.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.nuQuality)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// tabControl1
@@ -91,13 +94,15 @@
 			this.tabPage1.Location = new System.Drawing.Point(4, 22);
 			this.tabPage1.Name = "tabPage1";
 			this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage1.Size = new System.Drawing.Size(534, 360);
+			this.tabPage1.Size = new System.Drawing.Size(584, 360);
 			this.tabPage1.TabIndex = 0;
 			this.tabPage1.Text = "Network Settings";
 			this.tabPage1.UseVisualStyleBackColor = true;
 			// 
 			// groupBox1
 			// 
+			this.groupBox1.Controls.Add(this.label8);
+			this.groupBox1.Controls.Add(this.nuQuality);
 			this.groupBox1.Controls.Add(this.label7);
 			this.groupBox1.Controls.Add(this.nuMaxPdu);
 			this.groupBox1.Controls.Add(this.label6);
@@ -116,7 +121,7 @@
 			this.groupBox1.Controls.Add(this.label1);
 			this.groupBox1.Location = new System.Drawing.Point(6, 6);
 			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.Size = new System.Drawing.Size(437, 266);
+			this.groupBox1.Size = new System.Drawing.Size(437, 273);
 			this.groupBox1.TabIndex = 0;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "DICOM Network";
@@ -203,7 +208,7 @@
 			// 
 			// bttnTest
 			// 
-			this.bttnTest.Location = new System.Drawing.Point(236, 205);
+			this.bttnTest.Location = new System.Drawing.Point(236, 231);
 			this.bttnTest.Name = "bttnTest";
 			this.bttnTest.Size = new System.Drawing.Size(75, 23);
 			this.bttnTest.TabIndex = 5;
@@ -214,7 +219,7 @@
 			// cbUseTls
 			// 
 			this.cbUseTls.AutoSize = true;
-			this.cbUseTls.Location = new System.Drawing.Point(161, 209);
+			this.cbUseTls.Location = new System.Drawing.Point(161, 235);
 			this.cbUseTls.Name = "cbUseTls";
 			this.cbUseTls.Size = new System.Drawing.Size(46, 17);
 			this.cbUseTls.TabIndex = 4;
@@ -416,7 +421,7 @@
 			this.tabPage3.Location = new System.Drawing.Point(4, 22);
 			this.tabPage3.Name = "tabPage3";
 			this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage3.Size = new System.Drawing.Size(534, 360);
+			this.tabPage3.Size = new System.Drawing.Size(584, 360);
 			this.tabPage3.TabIndex = 2;
 			this.tabPage3.Text = "C-Find";
 			this.tabPage3.UseVisualStyleBackColor = true;
@@ -426,7 +431,7 @@
 			this.tabPage4.Location = new System.Drawing.Point(4, 22);
 			this.tabPage4.Name = "tabPage4";
 			this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage4.Size = new System.Drawing.Size(534, 360);
+			this.tabPage4.Size = new System.Drawing.Size(584, 360);
 			this.tabPage4.TabIndex = 3;
 			this.tabPage4.Text = "C-Move";
 			this.tabPage4.UseVisualStyleBackColor = true;
@@ -437,7 +442,7 @@
 			this.tabStatus.Location = new System.Drawing.Point(4, 22);
 			this.tabStatus.Name = "tabStatus";
 			this.tabStatus.Padding = new System.Windows.Forms.Padding(3);
-			this.tabStatus.Size = new System.Drawing.Size(534, 360);
+			this.tabStatus.Size = new System.Drawing.Size(584, 360);
 			this.tabStatus.TabIndex = 4;
 			this.tabStatus.Text = "Status";
 			this.tabStatus.UseVisualStyleBackColor = true;
@@ -451,9 +456,30 @@
 			this.rtbLog.Location = new System.Drawing.Point(3, 3);
 			this.rtbLog.Name = "rtbLog";
 			this.rtbLog.ReadOnly = true;
-			this.rtbLog.Size = new System.Drawing.Size(528, 354);
+			this.rtbLog.Size = new System.Drawing.Size(578, 354);
 			this.rtbLog.TabIndex = 0;
 			this.rtbLog.Text = "";
+			// 
+			// nuQuality
+			// 
+			this.nuQuality.Location = new System.Drawing.Point(161, 205);
+			this.nuQuality.Name = "nuQuality";
+			this.nuQuality.Size = new System.Drawing.Size(150, 20);
+			this.nuQuality.TabIndex = 14;
+			this.nuQuality.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+			// 
+			// label8
+			// 
+			this.label8.AutoSize = true;
+			this.label8.Location = new System.Drawing.Point(113, 207);
+			this.label8.Name = "label8";
+			this.label8.Size = new System.Drawing.Size(42, 13);
+			this.label8.TabIndex = 15;
+			this.label8.Text = "Quality:";
 			// 
 			// MainForm
 			// 
@@ -472,6 +498,7 @@
 			((System.ComponentModel.ISupportInitialize)(this.nuRemotePort)).EndInit();
 			this.tabPage2.ResumeLayout(false);
 			this.tabStatus.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.nuQuality)).EndInit();
 			this.ResumeLayout(false);
 
 		}
@@ -512,6 +539,8 @@
 		private System.Windows.Forms.Label label6;
 		private System.Windows.Forms.Label label7;
 		private System.Windows.Forms.NumericUpDown nuMaxPdu;
+		private System.Windows.Forms.Label label8;
+		private System.Windows.Forms.NumericUpDown nuQuality;
 	}
 }
 
