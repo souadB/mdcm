@@ -76,6 +76,10 @@
     <Compile Include="RichTextBoxTarget.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Dicom.Jpeg\Dicom.Jpeg.vcproj">
+      <Project>{409A1D49-CFE8-488C-A0D8-D8D322B2244E}</Project>
+      <Name>Dicom.Jpeg</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Dicom\Dicom.csproj">
       <Project>{1EFC91C4-EEF8-4AE4-B512-24C00CA46D59}</Project>
       <Name>Dicom</Name>

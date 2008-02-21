@@ -29,7 +29,11 @@ using Dicom.IO;
 namespace Dicom.Data {
 	public class DcmPixelData {
 		#region Private Members
+		private string _imageType;
 		private DcmTS _transferSyntax;
+		private bool _lossy;
+		private string _lossyMethod;
+		private string _lossyRatio;
 		private int _frames;
 		private ushort _width;
 		private ushort _height;
@@ -56,6 +60,9 @@ namespace Dicom.Data {
 
 		public DcmPixelData(DcmTS ts, DcmPixelData old) {
 			_transferSyntax = ts;
+			_lossy = old.IsLossy;
+			_lossyMethod = old.LossyCompressionMethod;
+			_lossyRatio = old._lossyRatio;
 			_frames = 0;
 			_width = old.ImageWidth;
 			_height = old.ImageHeight;
@@ -74,6 +81,9 @@ namespace Dicom.Data {
 
 		public DcmPixelData(DcmDataset dataset) {
 			_transferSyntax = dataset.InternalTransferSyntax;
+			_lossy = dataset.GetString(DcmTags.LossyImageCompression, "00") != "00";
+			_lossyMethod = dataset.GetString(DcmTags.LossyImageCompressionMethod, String.Empty);
+			_lossyRatio = dataset.GetString(DcmTags.LossyImageCompressionRatio, String.Empty);
 			_frames = dataset.GetInt32(DcmTags.NumberOfFrames, 1);
 			_width = dataset.GetUInt16(DcmTags.Columns, 0);
 			_height = dataset.GetUInt16(DcmTags.Rows, 0);
@@ -102,8 +112,28 @@ namespace Dicom.Data {
 		#endregion
 
 		#region Public Properties
+		public string ImageType {
+			get { return _imageType; }
+			set { _imageType = value; }
+		}
+
 		public DcmTS TransferSyntax {
 			get { return _transferSyntax; }
+		}
+
+		public bool IsLossy {
+			get { return _lossy; }
+			set { _lossy = value; }
+		}
+
+		public string LossyCompressionMethod {
+			get { return _lossyMethod; }
+			set { _lossyMethod = value; }
+		}
+
+		public string LossyCompressionRatio {
+			get { return _lossyRatio; }
+			set { _lossyRatio = value; }
 		}
 
 		public int NumberOfFrames {
@@ -550,7 +580,24 @@ namespace Dicom.Data {
 		#endregion
 
 		#region Dataset Methods
+		public void Unload() {
+			_pixelDataItem.Unload();
+		}
+
 		public void UpdateDataset(DcmDataset dataset) {
+			if (_lossy) {
+				DcmCodeString cs = dataset.GetCS(DcmTags.ImageType);
+				string[] values = cs.GetValues();
+				values[0] = "DERIVED";
+				cs.SetValues(values);
+
+				dataset.AddElementWithValue(DcmTags.SOPInstanceUID, DcmUID.Generate());
+
+				// FIXME: append existing values
+				dataset.AddElementWithValue(DcmTags.LossyImageCompression, "01");
+				dataset.AddElementWithValue(DcmTags.LossyImageCompressionMethod, _lossyMethod);
+				dataset.AddElementWithValue(DcmTags.LossyImageCompressionRatio, _lossyRatio);
+			}
 			dataset.AddElementWithValue(DcmTags.NumberOfFrames, _frames);
 			dataset.AddElementWithValue(DcmTags.Columns, _width);
 			dataset.AddElementWithValue(DcmTags.Rows, _height);

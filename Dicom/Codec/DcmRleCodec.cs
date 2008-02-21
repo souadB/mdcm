@@ -72,6 +72,10 @@ namespace Dicom.Codec {
 			return new DcmRleCodecParameters();
 		}
 
+		public static void Register() {
+			DicomCodec.RegisterCodec(DcmTS.RLELossless, typeof(DcmRleCodec));
+		}
+
 		#region Encode
 		private class RLEEncoder {
 			#region Private Members

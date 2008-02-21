@@ -31,6 +31,16 @@ using Dicom.Data;
 using Dicom.Network;
 
 namespace Dicom.Network.Client {
+	internal class SyntaxParams {
+		public SyntaxParams(DcmTS ts, DcmCodecParameters codecParams) {
+			TransferSyntax = ts;
+			Params = codecParams;
+		}
+
+		public DcmTS TransferSyntax;
+		public DcmCodecParameters Params;
+	}
+
 	public class CStoreInfo {
 		#region Public Constructor
 		public CStoreInfo(string fileName) {
@@ -131,12 +141,12 @@ namespace Dicom.Network.Client {
 			return ts == _originalTransferSyntax;
 		}
 
-		internal DcmDataset GetDataset(DcmTS ts) {
+		internal DcmDataset GetDataset(DcmTS ts, DcmCodecParameters codecParams) {
 			lock (_loadLock) {
 				if (ts != _transferSyntax)
 					_dataset = null;
 				if (_dataset == null)
-					Preload(ts);
+					Preload(new SyntaxParams(ts, codecParams));
 				return _dataset;
 			}
 		}
@@ -158,7 +168,8 @@ namespace Dicom.Network.Client {
 
 		#region Private Methods
 		internal void Preload(object state) {
-			DcmTS ts = (DcmTS)state;
+			SyntaxParams param = (SyntaxParams)state;
+			DcmTS ts = param.TransferSyntax;
 			lock (_loadLock) {
 				if (ts != _transferSyntax) {
 					_dataset = null;
@@ -174,7 +185,7 @@ namespace Dicom.Network.Client {
 						_dataset = ff.Dataset;
 
 						if (_dataset.InternalTransferSyntax != ts) {
-							_dataset.ChangeTransferSyntax(ts, null);
+							_dataset.ChangeTransferSyntax(ts, param.Params);
 						}
 						_transferSyntax = _dataset.InternalTransferSyntax;
 					}
@@ -217,6 +228,7 @@ namespace Dicom.Network.Client {
 		#region Private Members
 		private List<CStoreInfo> _images = new List<CStoreInfo>();
 		private DcmTS _preferredTransferSyntax;
+		private DcmCodecParameters _preferedSyntaxParams;
 		private bool _serialPresContexts;
 		private int _linger = 0;
 		private Dictionary<DcmUID, List<DcmTS>> _presContextMap = new Dictionary<DcmUID, List<DcmTS>>();
@@ -237,6 +249,11 @@ namespace Dicom.Network.Client {
 		public DcmTS PreferredTransferSyntax {
 			get { return _preferredTransferSyntax; }
 			set { _preferredTransferSyntax = value; }
+		}
+
+		public DcmCodecParameters PreferredSyntaxParams {
+			get { return _preferedSyntaxParams; }
+			set { _preferedSyntaxParams = value; }
 		}
 
 		public bool SerializedPresentationContexts {
@@ -361,7 +378,10 @@ namespace Dicom.Network.Client {
 								continue;
 							DcmPresContextResult result = Associate.GetPresentationContextResult(pcid);
 							if (result == DcmPresContextResult.Accept) {
-								info.Preload(tx);
+								DcmCodecParameters codecParams = null;
+								if (tx == _preferredTransferSyntax)
+									codecParams = _preferedSyntaxParams;
+								info.Preload(new SyntaxParams(tx, codecParams));
 								PreloadNextCStoreRequest();
 								ushort messageID = NextMessageID();
 								if (info.CanStream(tx)) {
@@ -369,15 +389,22 @@ namespace Dicom.Network.Client {
 									SendCStoreRequest(pcid, messageID, info.SOPInstanceUID, Priority, stream);
 									return;
 								} else {
-									DcmDataset ds = info.GetDataset(tx);
+									codecParams = null;
+									if (tx == _preferredTransferSyntax)
+										codecParams = _preferedSyntaxParams;
+									DcmDataset ds = info.GetDataset(tx, codecParams);
 									if (ds != null) {
 										SendCStoreRequest(pcid, messageID, info.SOPInstanceUID, Priority, ds);
 										return;
 									} else {
 										Log.Error("{0} -> C-Store unable to transcode image:\n\tclass: {1}\n\told: {2}\n\tnew: {3}\n\treason: {4}\n\tcodecs: {5} - {6}", 
 											LogID, info.SOPClassUID.Description, info.TransferSyntax, tx,
-											(info.Error == null) ? "Unknown" : info.Error.Message,
-											DicomCodec.HasCodec(info.TransferSyntax), DicomCodec.HasCodec(tx));
+#if DEBUG
+											(info.Error == null) ? "Unknown" : info.Error.ToString(),
+#else
+ 											(info.Error == null) ? "Unknown" : info.Error.Message,
+#endif
+ DicomCodec.HasCodec(info.TransferSyntax), DicomCodec.HasCodec(tx));
 									}
 								}								
 							}
@@ -454,7 +481,10 @@ namespace Dicom.Network.Client {
 					if (tx == null)
 						return;
 					if (!info.CanStream(tx)) {
-						ThreadPool.QueueUserWorkItem(info.Preload, tx);
+						DcmCodecParameters codecParams = null;
+						if (tx == _preferredTransferSyntax)
+							codecParams = _preferedSyntaxParams;
+						ThreadPool.QueueUserWorkItem(info.Preload, new SyntaxParams(tx, codecParams));
 					}
 				}
 			}
