@@ -13,6 +13,7 @@ using System.Xml.Serialization;
 using Dicom.Data;
 using Dicom.Forms;
 using Dicom.Jpeg;
+using Dicom.Jpeg2000;
 using Dicom.Network;
 using Dicom.Network.Client;
 
@@ -40,9 +41,10 @@ namespace DicomScu {
 
 			int i = 0;
 			
-			TransferSyntaxDescriptions = new string[10];
+			TransferSyntaxDescriptions = new string[11];
 			TransferSyntaxDescriptions[i++] = "Automatic";
-			TransferSyntaxDescriptions[i++] = "JPEG 2000 Lossless (no codec)";
+			TransferSyntaxDescriptions[i++] = "JPEG 2000 Lossy";
+			TransferSyntaxDescriptions[i++] = "JPEG 2000 Lossless";
 			TransferSyntaxDescriptions[i++] = "JPEG Baseline P1 (8-bit) [.50]";
 			TransferSyntaxDescriptions[i++] = "JPEG Extended P4 (12-bit) [.51]";
 			TransferSyntaxDescriptions[i++] = "JPEG Lossless P14 [.57]";
@@ -54,8 +56,9 @@ namespace DicomScu {
 
 			i = 0;
 
-			TransferSyntaxes = new DcmTS[10];
+			TransferSyntaxes = new DcmTS[11];
 			TransferSyntaxes[i++] = null;
+			TransferSyntaxes[i++] = DcmTS.JPEG2000Lossy;
 			TransferSyntaxes[i++] = DcmTS.JPEG2000Lossless;
 			TransferSyntaxes[i++] = DcmTS.JPEGProcess1;
 			TransferSyntaxes[i++] = DcmTS.JPEGProcess2_4;
@@ -249,6 +252,11 @@ namespace DicomScu {
 				scu.PreferredTransferSyntax == DcmTS.JPEGProcess2_4) {
 				DcmJpegParameters param = new DcmJpegParameters();
 				param.Quality = Config.Quality;
+				scu.PreferredSyntaxParams = param;
+			}
+			else if (scu.PreferredTransferSyntax == DcmTS.JPEG2000Lossy) {
+				DcmJpeg2000Parameters param = new DcmJpeg2000Parameters();
+				param.Rate = Config.Quality;
 				scu.PreferredSyntaxParams = param;
 			}
 

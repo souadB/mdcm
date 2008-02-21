@@ -28,6 +28,8 @@
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.label8 = new System.Windows.Forms.Label();
+			this.nuQuality = new System.Windows.Forms.NumericUpDown();
 			this.label7 = new System.Windows.Forms.Label();
 			this.nuMaxPdu = new System.Windows.Forms.NumericUpDown();
 			this.label6 = new System.Windows.Forms.Label();
@@ -59,17 +61,15 @@
 			this.tabPage4 = new System.Windows.Forms.TabPage();
 			this.tabStatus = new System.Windows.Forms.TabPage();
 			this.rtbLog = new System.Windows.Forms.RichTextBox();
-			this.nuQuality = new System.Windows.Forms.NumericUpDown();
-			this.label8 = new System.Windows.Forms.Label();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
 			this.groupBox1.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.nuQuality)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.nuMaxPdu)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.nuTimeout)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.nuRemotePort)).BeginInit();
 			this.tabPage2.SuspendLayout();
 			this.tabStatus.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.nuQuality)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// tabControl1
@@ -125,6 +125,27 @@
 			this.groupBox1.TabIndex = 0;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "DICOM Network";
+			// 
+			// label8
+			// 
+			this.label8.AutoSize = true;
+			this.label8.Location = new System.Drawing.Point(88, 207);
+			this.label8.Name = "label8";
+			this.label8.Size = new System.Drawing.Size(67, 13);
+			this.label8.TabIndex = 15;
+			this.label8.Text = "Quality/Rate";
+			// 
+			// nuQuality
+			// 
+			this.nuQuality.Location = new System.Drawing.Point(161, 205);
+			this.nuQuality.Name = "nuQuality";
+			this.nuQuality.Size = new System.Drawing.Size(150, 20);
+			this.nuQuality.TabIndex = 14;
+			this.nuQuality.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
 			// 
 			// label7
 			// 
@@ -460,27 +481,6 @@
 			this.rtbLog.TabIndex = 0;
 			this.rtbLog.Text = "";
 			// 
-			// nuQuality
-			// 
-			this.nuQuality.Location = new System.Drawing.Point(161, 205);
-			this.nuQuality.Name = "nuQuality";
-			this.nuQuality.Size = new System.Drawing.Size(150, 20);
-			this.nuQuality.TabIndex = 14;
-			this.nuQuality.Value = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-			// 
-			// label8
-			// 
-			this.label8.AutoSize = true;
-			this.label8.Location = new System.Drawing.Point(113, 207);
-			this.label8.Name = "label8";
-			this.label8.Size = new System.Drawing.Size(42, 13);
-			this.label8.TabIndex = 15;
-			this.label8.Text = "Quality:";
-			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -493,12 +493,12 @@
 			this.tabPage1.ResumeLayout(false);
 			this.groupBox1.ResumeLayout(false);
 			this.groupBox1.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.nuQuality)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.nuMaxPdu)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.nuTimeout)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.nuRemotePort)).EndInit();
 			this.tabPage2.ResumeLayout(false);
 			this.tabStatus.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)(this.nuQuality)).EndInit();
 			this.ResumeLayout(false);
 
 		}
