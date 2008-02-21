@@ -11,6 +11,7 @@ namespace DicomScu {
 		static void Main() {
 			Dicom.Codec.DcmRleCodec.Register();
 			Dicom.Jpeg.DcmJpegCodec.Register();
+			Dicom.Jpeg2000.DcmJpeg2000Codec.Register();
 
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);

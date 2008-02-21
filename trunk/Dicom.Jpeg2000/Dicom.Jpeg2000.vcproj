@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="Dicom.Jpeg"
-	ProjectGUID="{409A1D49-CFE8-488C-A0D8-D8D322B2244E}"
-	RootNamespace="DicomJpeg"
+	Name="Dicom.Jpeg2000"
+	ProjectGUID="{B389F627-F243-4B7E-8A04-90E1071B2754}"
+	RootNamespace="DicomJpeg2000"
 	Keyword="ManagedCProj"
 	TargetFrameworkVersion="196613"
 	>
@@ -21,7 +21,7 @@
 			OutputDirectory="$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
-			CharacterSet="0"
+			CharacterSet="1"
 			ManagedExtensions="1"
 			>
 			<Tool
@@ -91,7 +91,7 @@
 			OutputDirectory="$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
-			CharacterSet="0"
+			CharacterSet="1"
 			ManagedExtensions="1"
 			WholeProgramOptimization="1"
 			>
@@ -169,23 +169,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\DcmJpegCodec.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Jpeg12Codec.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Jpeg16Codec.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Jpeg8Codec.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\JpegCodec.i"
+				RelativePath=".\DcmJpeg2000Codec.cpp"
 				>
 			</File>
 		</Filter>
@@ -195,15 +179,7 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\DcmJpegCodec.h"
-				>
-			</File>
-			<File
-				RelativePath=".\DcmJpegParameters.h"
-				>
-			</File>
-			<File
-				RelativePath=".\JpegCodec.h"
+				RelativePath=".\DcmJpeg2000Codec.h"
 				>
 			</File>
 		</Filter>
