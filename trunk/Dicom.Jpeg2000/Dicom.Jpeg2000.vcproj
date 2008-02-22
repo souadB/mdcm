@@ -6,7 +6,7 @@
 	ProjectGUID="{B389F627-F243-4B7E-8A04-90E1071B2754}"
 	RootNamespace="DicomJpeg2000"
 	Keyword="ManagedCProj"
-	TargetFrameworkVersion="196613"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -63,6 +63,7 @@
 				GenerateDebugInformation="true"
 				AssemblyDebug="1"
 				TargetMachine="1"
+				KeyFile="..\Dicom\Dicom.snk"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -132,6 +133,7 @@
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
 				TargetMachine="1"
+				KeyFile="..\Dicom\Dicom.snk"
 			/>
 			<Tool
 				Name="VCALinkTool"

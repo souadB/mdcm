@@ -111,12 +111,12 @@ void DcmJpeg2000Codec::Encode(DcmDataset^ dataset, DcmPixelData^ oldPixelData, D
 			for (; r < jparams->RateLevels->Length; r++) {
 				if (jparams->RateLevels[r] > jparams->Rate) {
 					eparams.tcp_numlayers++;
-					eparams.tcp_rates[r] = jparams->RateLevels[r];
+					eparams.tcp_rates[r] = (float)jparams->RateLevels[r];
 				} else
 					break;
 			}
 			eparams.tcp_numlayers++;
-			eparams.tcp_rates[r] = jparams->Rate;
+			eparams.tcp_rates[r] = (float)jparams->Rate;
 		} else {
 			eparams.tcp_rates[0] = 0;
 			eparams.tcp_numlayers = 1;
@@ -357,6 +357,7 @@ void DcmJpeg2000Codec::Decode(DcmDataset^ dataset, DcmPixelData^ oldPixelData, D
 					throw gcnew DcmCodecException("JPEG 2000 module only supports Bytes Allocated == 8 or 16!");
 			}
 
+			oldPixelData->Unload();
 			newPixelData->AddFrame(destArray);
 		}
 		finally {

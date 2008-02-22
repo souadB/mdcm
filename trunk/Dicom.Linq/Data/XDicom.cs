@@ -19,8 +19,6 @@
 // Author:
 //    Colby Dillion (colby.dillion@gmail.com)
 
-#if DOTNET35
-
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -193,5 +191,3 @@ namespace Dicom.Data {
 		}
 	}
 }
-
-#endif

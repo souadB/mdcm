@@ -404,7 +404,7 @@ namespace Dicom.Network.Client {
 #else
  											(info.Error == null) ? "Unknown" : info.Error.Message,
 #endif
- DicomCodec.HasCodec(info.TransferSyntax), DicomCodec.HasCodec(tx));
+											DicomCodec.HasCodec(info.TransferSyntax), DicomCodec.HasCodec(tx));
 									}
 								}								
 							}
