@@ -25,8 +25,6 @@
 // References:
 //     http://aurora.regenstrief.org/xhl7/
 
-#if DOTNET35
-
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -198,5 +196,3 @@ namespace Dicom.HL7 {
 		}
 	}
 }
-
-#endif

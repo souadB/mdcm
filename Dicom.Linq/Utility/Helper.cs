@@ -19,8 +19,6 @@
 // Author:
 //    Colby Dillion (colby.dillion@gmail.com)
 
-#if DOTNET35
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,6 +40,14 @@ namespace Dicom.Utility {
 	}
 
 	public static class StringHelper {
+		public static bool Wildcard(this string str, string pattern) {
+			return Dicom.Utility.Wildcard.Match(pattern, str);
+		}
+
+		public static bool Wildcard(this string str, string pattern, bool caseSensitive) {
+			return Dicom.Utility.Wildcard.Match(pattern, str, caseSensitive);
+		}
+
 		public static string MD5(this string str) {
 			return StringUtility.MD5(str);
 		}
@@ -63,5 +69,3 @@ namespace Dicom.Utility {
 		}
 	}
 }
-
-#endif
