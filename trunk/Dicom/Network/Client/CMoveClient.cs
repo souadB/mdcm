@@ -30,6 +30,9 @@ namespace Dicom.Network.Client {
 	public class CMoveQuery {
 		#region Private Members
 		private DcmQueryRetrieveLevel _queryLevel;
+		private string _patientId;
+		private string _studyUid;
+		private string _seriesUid;
 		private string _instanceUid;
 		private object _userState;
 		#endregion
@@ -43,9 +46,34 @@ namespace Dicom.Network.Client {
 			_queryLevel = level;
 		}
 
-		public CMoveQuery(DcmQueryRetrieveLevel level, string instance) {
+		public CMoveQuery(DcmQueryRetrieveLevel level, string uid) {
 			_queryLevel = level;
-			_instanceUid = instance;
+			if (_queryLevel == DcmQueryRetrieveLevel.Patient)
+				_patientId = uid;
+			else if (_queryLevel == DcmQueryRetrieveLevel.Study)
+				_studyUid = uid;
+			else if (_queryLevel == DcmQueryRetrieveLevel.Series)
+				_seriesUid = uid;
+			else
+				_instanceUid = uid;
+		}
+
+		public CMoveQuery(string studyUid) {
+			_queryLevel = DcmQueryRetrieveLevel.Study;
+			_studyUid = studyUid;
+		}
+
+		public CMoveQuery(string studyUid, string seriesUid) {
+			_queryLevel = DcmQueryRetrieveLevel.Series;
+			_studyUid = studyUid;
+			_seriesUid = seriesUid;
+		}
+
+		public CMoveQuery(string studyUid, string seriesUid, string instUid) {
+			_queryLevel = DcmQueryRetrieveLevel.Instance;
+			_studyUid = studyUid;
+			_seriesUid = seriesUid;
+			_instanceUid = instUid;
 		}
 		#endregion
 
@@ -55,9 +83,36 @@ namespace Dicom.Network.Client {
 			set { _queryLevel = value; }
 		}
 
-		public string InstanceUID {
+		public string PatientID {
+			get { return _patientId; }
+			set { _patientId = value; }
+		}
+
+		public string StudyInstanceUID {
+			get { return _studyUid; }
+			set {
+				_studyUid = value;
+				if (_queryLevel < DcmQueryRetrieveLevel.Study)
+					_queryLevel = DcmQueryRetrieveLevel.Study;
+			}
+		}
+
+		public string SeriesInstanceUID {
+			get { return _seriesUid; }
+			set {
+				_seriesUid = value;
+				if (_queryLevel < DcmQueryRetrieveLevel.Series)
+					_queryLevel = DcmQueryRetrieveLevel.Series;
+			}
+		}
+
+		public string SOPInstanceUID {
 			get { return _instanceUid; }
-			set { _instanceUid = value; }
+			set {
+				_instanceUid = value;
+				if (_queryLevel < DcmQueryRetrieveLevel.Instance)
+					_queryLevel = DcmQueryRetrieveLevel.Instance;
+			}
 		}
 
 		public object UserState {
@@ -66,6 +121,8 @@ namespace Dicom.Network.Client {
 		}
 		#endregion
 	}
+
+	public delegate void CMoveResponseDelegate(CMoveQuery query, DcmDataset dataset, DcmStatus status, ushort remain, ushort complete, ushort warning, ushort failure);
 
 	public sealed class CMoveClient : DcmClientBase  {
 		#region Private Members
@@ -87,7 +144,6 @@ namespace Dicom.Network.Client {
 		#endregion
 
 		#region Public Properties
-		public delegate void CMoveResponseDelegate(CMoveQuery query, DcmDataset dataset, DcmStatus status, ushort remain, ushort complete, ushort warning, ushort failure);
 		public CMoveResponseDelegate OnCMoveResponse;
 
 		public string DestinationAE {
@@ -135,19 +191,25 @@ namespace Dicom.Network.Client {
 					switch (query.QueryRetrieveLevel) {
 					case DcmQueryRetrieveLevel.Patient:
 						dataset.AddElementWithValue(DcmTags.QueryRetrieveLevel, "PATIENT");
-						dataset.AddElementWithValue(DcmTags.PatientID, query.InstanceUID);
+						dataset.AddElementWithValue(DcmTags.PatientID, query.PatientID);
 						break;
 					case DcmQueryRetrieveLevel.Study:
 						dataset.AddElementWithValue(DcmTags.QueryRetrieveLevel, "STUDY");
-						dataset.AddElementWithValue(DcmTags.StudyInstanceUID, query.InstanceUID);
+						dataset.AddElementWithValue(DcmTags.PatientID, query.PatientID);
+						dataset.AddElementWithValue(DcmTags.StudyInstanceUID, query.StudyInstanceUID);
 						break;
 					case DcmQueryRetrieveLevel.Series:
 						dataset.AddElementWithValue(DcmTags.QueryRetrieveLevel, "SERIES");
-						dataset.AddElementWithValue(DcmTags.SeriesInstanceUID, query.InstanceUID);
+						dataset.AddElementWithValue(DcmTags.PatientID, query.PatientID);
+						dataset.AddElementWithValue(DcmTags.StudyInstanceUID, query.StudyInstanceUID);
+						dataset.AddElementWithValue(DcmTags.SeriesInstanceUID, query.SeriesInstanceUID);
 						break;
 					case DcmQueryRetrieveLevel.Instance:
 						dataset.AddElementWithValue(DcmTags.QueryRetrieveLevel, "INSTANCE");
-						dataset.AddElementWithValue(DcmTags.SOPInstanceUID, query.InstanceUID);
+						dataset.AddElementWithValue(DcmTags.PatientID, query.PatientID);
+						dataset.AddElementWithValue(DcmTags.StudyInstanceUID, query.StudyInstanceUID);
+						dataset.AddElementWithValue(DcmTags.SeriesInstanceUID, query.SeriesInstanceUID);
+						dataset.AddElementWithValue(DcmTags.SOPInstanceUID, query.SOPInstanceUID);
 						break;
 					default:
 						break;
