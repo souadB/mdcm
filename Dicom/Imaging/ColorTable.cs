@@ -4,7 +4,7 @@ using System.Drawing.Imaging;
 using System.IO;
 
 namespace Dicom.Imaging {
-	public static class LUT {
+	public static class ColorTable {
 		#region LUT
 		public static Color[] Monochrome1 = InitGrayscaleLUT(true);
 		public static Color[] Monochrome2 = InitGrayscaleLUT(false);

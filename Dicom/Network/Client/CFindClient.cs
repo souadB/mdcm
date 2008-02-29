@@ -61,8 +61,19 @@ namespace Dicom.Network.Client {
 	}
 
 	public class CFindResponse {
+		#region Protected Members
+		protected DcmDataset _dataset;
+		#endregion
+
+		#region Public Properties
+		public DcmDataset Dataset {
+			get { return _dataset; }
+		}
+		#endregion
+
 		#region Public Members
 		public virtual void FromDataset(DcmDataset dataset) {
+			_dataset = dataset;
 			dataset.LoadDicomFields(this);
 		}
 		#endregion
@@ -122,6 +133,7 @@ namespace Dicom.Network.Client {
 		private string _patientName;
 		private DcmDateRange _studyDate;
 		private DcmDateRange _studyTime;
+		private string _studyId;
 		private string _accessionNumber;
 		private string _studyInstanceUid;
 		private string _modalitiesInStudy;
@@ -160,6 +172,12 @@ namespace Dicom.Network.Client {
 			set { _studyTime = value; }
 		}
 
+		[DicomField(DcmConstTags.StudyID, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
+		public string StudyID {
+			get { return _studyId; }
+			set { _studyId = value; }
+		}
+
 		[DicomField(DcmConstTags.AccessionNumber, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
 		public string AccessionNumber {
 			get { return _accessionNumber; }
@@ -187,6 +205,7 @@ namespace Dicom.Network.Client {
 
 		#region Protected Members
 		protected override void AdditionalMembers(DcmDataset dataset) {
+			dataset.AddElement(DcmTags.Modality, DcmVR.CS);
 			dataset.AddElement(DcmTags.PatientsBirthDate, DcmVR.DA);
 			dataset.AddElement(DcmTags.PatientsSex, DcmVR.CS);
 			//dataset.AddElement(DcmTags.SpecificCharacterSet, DcmVR.CS);
@@ -202,8 +221,10 @@ namespace Dicom.Network.Client {
 		private string _patientName;
 		private DateTime _patientBirthDate;
 		private string _patientSex;
+		private string _studyId;
 		private string _accessionNumber;
 		private string _studyInstanceUid;
+		private string _modality;
 		private string _modalitiesInStudy;
 		private string _studyDescription;
 		private DateTime _studyDate;
@@ -249,6 +270,12 @@ namespace Dicom.Network.Client {
 			set { _studyTime = value; }
 		}
 
+		[DicomField(DcmConstTags.StudyID, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
+		public string StudyID {
+			get { return _studyId; }
+			set { _studyId = value; }
+		}
+
 		[DicomField(DcmConstTags.AccessionNumber, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
 		public string AccessionNumber {
 			get { return _accessionNumber; }
@@ -259,6 +286,12 @@ namespace Dicom.Network.Client {
 		public string StudyInstanceUID {
 			get { return _studyInstanceUid; }
 			set { _studyInstanceUid = value; }
+		}
+
+		[DicomField(DcmConstTags.Modality, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
+		public string Modality {
+			get { return _modality; }
+			set { _modality = value; }
 		}
 
 		[DicomField(DcmConstTags.ModalitiesInStudy, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
@@ -367,7 +400,7 @@ namespace Dicom.Network.Client {
 
 	public sealed class CFindWorklistResponse : CFindResponse {
 		#region Public Properties
-		public DcmDataset Dataset { get; internal set; }
+		//public DcmDataset Dataset { get; internal set; }
 
 		// Patient Identification
 		[DicomField(0x0010, 0x0010, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
@@ -466,7 +499,7 @@ namespace Dicom.Network.Client {
 		#region Protected Members
 		public override void FromDataset(DcmDataset dataset) {
 			//dataset.Dump();
-			Dataset = dataset;
+			_dataset = dataset;
 			dataset.LoadDicomFields(this);
 			if (dataset.Contains(DcmTags.ScheduledProcedureStepSequence)) {
 				DcmItemSequence sq = dataset.GetSQ(DcmTags.ScheduledProcedureStepSequence);
@@ -535,7 +568,7 @@ namespace Dicom.Network.Client {
 			DcmAssociate associate = new DcmAssociate();
 
 			byte pcid = associate.AddPresentationContext(FindSopClassUID);
-			associate.AddTransferSyntax(pcid, DcmTS.ExplicitVRLittleEndian);
+			//associate.AddTransferSyntax(pcid, DcmTS.ExplicitVRLittleEndian);
 			associate.AddTransferSyntax(pcid, DcmTS.ImplicitVRLittleEndian);
 
 			associate.CalledAE = CalledAE;

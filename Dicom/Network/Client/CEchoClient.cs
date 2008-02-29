@@ -42,7 +42,6 @@ namespace Dicom.Network.Client {
 			DcmAssociate associate = new DcmAssociate();
 
 			byte pcid = associate.AddPresentationContext(DcmUIDs.VerificationSOPClass);
-			associate.AddTransferSyntax(pcid, DcmTS.ExplicitVRLittleEndian);
 			associate.AddTransferSyntax(pcid, DcmTS.ImplicitVRLittleEndian);
 
 			associate.CalledAE = CalledAE;

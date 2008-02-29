@@ -104,6 +104,29 @@ namespace Dicom.Utility {
 		}
 	}
 
+	public static class DateUtility {
+		private static DateTime SqlMinDate = new DateTime(1900, 01, 01);
+		private static DateTime SqlMaxDate = new DateTime(2079, 06, 06);
+
+		public static DateTime ClipSqlDate(DateTime date) {
+			if (date < SqlMinDate)
+				return SqlMinDate;
+			if (date > SqlMaxDate)
+				return SqlMaxDate;
+			return date;
+		}
+
+		public static DateTime? ClipSqlDate(DateTime? date) {
+			if (date == null)
+				return null;
+			if (date < SqlMinDate)
+				return SqlMinDate;
+			if (date > SqlMaxDate)
+				return SqlMaxDate;
+			return date;
+		}
+	}
+
 	public static class MiscUtility {
 		public static void Swap(ref int i1, ref int i2) {
 			int it = i1;

@@ -75,7 +75,7 @@
     <Compile Include="Codec\DcmCodecParameters.cs" />
     <Compile Include="Codec\DicomCodec.cs" />
     <Compile Include="Codec\DcmRleCodec.cs" />
-    <Compile Include="Imaging\LUT.cs" />
+    <Compile Include="Imaging\ColorTable.cs" />
     <Compile Include="Network\DcmCommand.cs" />
     <Compile Include="Data\DcmDataException.cs" />
     <Compile Include="Data\DcmDataset.cs" />

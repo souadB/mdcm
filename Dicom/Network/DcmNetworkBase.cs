@@ -1004,7 +1004,7 @@ namespace Dicom.Network {
 					else if (_disableTimeout) {
 						timeout = DateTime.Now.AddSeconds(DimseTimeout);
 					}
-					else if (DateTime.Now > timeout) {
+					else if (DimseTimeout != 0 && DateTime.Now > timeout) {
 						Log.Error("{0} -> DIMSE timeout after {1} seconds", LogID, DimseTimeout);
 						OnDimseTimeout();
 						_stop = true;
