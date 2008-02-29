@@ -694,9 +694,9 @@ namespace DicomPrintScp {
 				bitmap = new Bitmap(pixelData.ImageWidth, pixelData.ImageHeight, PixelFormat.Format8bppIndexed);
 
 				if (invert)
-					LUT.Apply(bitmap, LUT.Monochrome1);
+					ColorTable.Apply(bitmap, ColorTable.Monochrome1);
 				else
-					LUT.Apply(bitmap, LUT.Monochrome2);
+					ColorTable.Apply(bitmap, ColorTable.Monochrome2);
 
 				BitmapData bmData = bitmap.LockBits(new Rectangle(0, 0, pixelData.ImageWidth, pixelData.ImageHeight),
 					ImageLockMode.ReadWrite, PixelFormat.Format8bppIndexed);
