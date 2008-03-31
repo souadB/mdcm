@@ -52,7 +52,7 @@ namespace Dicom.Data {
 		public override string ToString() {
 			if (Type == UidType.Unknown)
 				return UID;
-			return "==" + Description;
+			return Description;
 		}
 
 		public override bool Equals(object obj) {

@@ -146,6 +146,8 @@ namespace Dicom.Data {
 		}
 
 		public static string SerializeList(List<DcmMatch> matches) {
+			if (matches == null)
+				matches = new List<DcmMatch>();
 			StringWriter writer = new StringWriter();
 			XmlSerializer serializer = new XmlSerializer(typeof(List<DcmMatch>));
 			serializer.Serialize(writer, matches);
@@ -154,7 +156,7 @@ namespace Dicom.Data {
 
 		public static List<DcmMatch> DeserializeList(string data) {
 			if (String.IsNullOrEmpty(data))
-				return null;
+				return new List<DcmMatch>();
 			StringReader reader = new StringReader(data);
 			XmlSerializer serializer = new XmlSerializer(typeof(List<DcmMatch>));
 			return (List<DcmMatch>)serializer.Deserialize(reader);

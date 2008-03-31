@@ -26,6 +26,7 @@ using System.IO;
 using System.Text;
 
 using Dicom.Data;
+using Dicom.Utility;
 
 using NLog;
 using NLog.Config;
@@ -50,6 +51,25 @@ namespace Dicom
 			set {
 				_log = value;
 			}
+		}
+
+		public static void InitializeSyslogLogger(bool console) {
+			LoggingConfiguration config = new LoggingConfiguration();
+
+			SyslogTarget st = new SyslogTarget();
+			config.AddTarget("Syslog", st);
+
+			config.LoggingRules.Add(new LoggingRule("*", LogLevel.Debug, st));
+
+			if (console) {
+				ColoredConsoleTarget ct = new ColoredConsoleTarget();
+				ct.Layout = "${message}";
+				config.AddTarget("Console", ct);
+
+				config.LoggingRules.Add(new LoggingRule("*", LogLevel.Debug, ct));
+			}
+
+			LogManager.Configuration = config;
 		}
 
 		public static void InitializeConsoleDebugLogger() {

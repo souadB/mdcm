@@ -56,7 +56,7 @@ namespace Dicom.Network {
 		}
 	}
 
-	internal class DcmDimseInfo {
+	internal class DcmDimseInfo : IDisposable {
 		public DcmCommand Command;
 		public DcmDataset Dataset;
 		public ChunkStream CommandData;
@@ -99,6 +99,11 @@ namespace Dicom.Network {
 			if (DatasetFile != null)
 				if (File.Exists(DatasetFile))
 					File.Delete(DatasetFile);
+		}
+
+		public void Dispose() {
+			Abort();
+			GC.SuppressFinalize(this);
 		}
 	}
 
@@ -1039,6 +1044,7 @@ namespace Dicom.Network {
 				try { _socket.Close(); } catch { }
 				_socket = null;
 				_isRunning = false;
+				_dimse = null;
 			}
 		}
 

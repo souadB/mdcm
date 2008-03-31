@@ -30,6 +30,18 @@ using Dicom.Utility;
 namespace Dicom.Network {
 	[Serializable]
 	public class DcmAssociateProfile : XmlSerializable<DcmAssociateProfile> {
+		public DcmAssociateProfile() {
+			Name = "DICOM Associate Profile";
+			Description = String.Empty;
+			Notes = String.Empty;
+			CalledAE = "*";
+			CallingAE = "*";
+			RemoteImplUID = "*";
+			RemoteVersion = "*";
+			TransferSyntaxes = new List<string>();
+			AbstractSyntaxes = new List<string>();
+		}
+
 		public string Name { get; set; }
 		public string Description { get; set; }
 		public string Notes { get; set; }
@@ -41,6 +53,14 @@ namespace Dicom.Network {
 
 		public List<string> TransferSyntaxes { get; set; }
 		public List<string> AbstractSyntaxes { get; set; }
+
+		public bool Supports(DcmTS tx) {
+			return TransferSyntaxes.Contains(tx.UID.UID);
+		}
+
+		public bool Supports(DcmUID ax) {
+			return AbstractSyntaxes.Contains(ax.UID);
+		}
 
 		private int GetWeight(bool matchImplementation) {
 			int weight = 0;
@@ -104,7 +124,6 @@ namespace Dicom.Network {
 			SupportedTransferSyntaxes.Add(DcmTS.RLELossless.UID.UID);
 			SupportedTransferSyntaxes.Add(DcmTS.ExplicitVRLittleEndian.UID.UID);
 			SupportedTransferSyntaxes.Add(DcmTS.ImplicitVRLittleEndian.UID.UID);
-			SupportedTransferSyntaxes.Add(DcmTS.ExplicitVRBigEndian.UID.UID);
 
 			SupportedStorageSyntaxes = new List<string>();
 			SupportedStorageSyntaxes.Add(DcmUIDs.VerificationSOPClass.UID);
