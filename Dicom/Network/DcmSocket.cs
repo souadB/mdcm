@@ -42,6 +42,7 @@ namespace Dicom.Network {
 		#region Private Members
 		private ConnectionStats _localStats = new ConnectionStats();
 		private Stream _stream = null;
+		private HookStream _hookStream = null;
 		private int _throttleSpeed;
 		#endregion
 
@@ -155,6 +156,10 @@ namespace Dicom.Network {
 		#endregion
 
 		#region Methods
+		public void Hook(HookStream stream) {
+			_hookStream = stream;
+		}
+
 		public Stream GetStream() {
 			if (_stream == null) {
 				Stream stream = GetInternalStream();
@@ -162,7 +167,11 @@ namespace Dicom.Network {
 				mstream.AttachStats(GlobalStats);
 				mstream.AttachStats(LocalStats);
 				_stream = new ThrottleStream(mstream, _throttleSpeed);
+				if (_hookStream != null)
+					_hookStream.Hook(_stream);
 			}
+			if (_hookStream != null)
+				return _hookStream;
 			return _stream;
 		}
 

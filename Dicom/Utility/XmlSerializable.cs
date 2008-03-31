@@ -39,6 +39,14 @@ namespace Dicom.Utility {
 			}
 		}
 
+		public string SaveToString() {
+			XmlSerializer serializer = new XmlSerializer(this.GetType());
+			using (StringWriter sw = new StringWriter()) {
+				serializer.Serialize(sw, this);
+				return sw.ToString();
+			}
+		}
+
 		public static T Load(string filename) {
 			if (!File.Exists(filename)) {
 				return default(T);
@@ -46,6 +54,16 @@ namespace Dicom.Utility {
 			XmlSerializer serializer = new XmlSerializer(typeof(T));
 			using (FileStream fs = File.OpenRead(filename)) {
 				return (T)serializer.Deserialize(fs);
+			}
+		}
+
+		public static T LoadFromString(string data) {
+			if (String.IsNullOrEmpty(data)) {
+				return default(T);
+			}
+			XmlSerializer serializer = new XmlSerializer(typeof(T));
+			using (StringReader sr = new StringReader(data)) {
+				return (T)serializer.Deserialize(sr);
 			}
 		}
 	}

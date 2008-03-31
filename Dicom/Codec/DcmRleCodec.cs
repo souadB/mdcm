@@ -166,7 +166,7 @@ namespace Dicom.Codec {
 					while (_bufferPos > 0) {
 						int count = Math.Min(128, _bufferPos);
 						_stream.WriteByte((byte)(count - 1));
-						MoveBuffer(_bufferPos);
+						MoveBuffer(count);
 					}
 
 					_prevByte = b;

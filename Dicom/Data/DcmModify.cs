@@ -34,6 +34,9 @@ namespace Dicom.Data {
 		Map,
 		Split,
 		Regex,
+		Prefix,
+		Append,
+		Format,
 		UserOp1,
 		UserOp2,
 		UserOp3,
@@ -122,6 +125,8 @@ namespace Dicom.Data {
 		}
 
 		public static string SerializeList(List<DcmModify> modifiers) {
+			if (modifiers == null)
+				modifiers = new List<DcmModify>();
 			StringWriter writer = new StringWriter();
 			XmlSerializer serializer = new XmlSerializer(typeof(List<DcmModify>));
 			serializer.Serialize(writer, modifiers);
@@ -130,13 +135,15 @@ namespace Dicom.Data {
 
 		public static List<DcmModify> DeserializeList(string data) {
 			if (String.IsNullOrEmpty(data))
-				return null;
+				return new List<DcmModify>();
 			StringReader reader = new StringReader(data);
 			XmlSerializer serializer = new XmlSerializer(typeof(List<DcmModify>));
 			return (List<DcmModify>)serializer.Deserialize(reader);
 		}
 
 		public override string ToString() {
+			StringBuilder sb = new StringBuilder();
+
 			return String.Format("'{0}' {1} '{2}'->'{3}'", _mask, _op, _input, _output);
 		}
 		#endregion
@@ -198,6 +205,21 @@ namespace Dicom.Data {
 
 				if (_op == DicomModifyOp.Regex) {
 					elem.SetValueString(Regex.Replace(value, _input, _output));
+					return;
+				}
+
+				if (_op == DicomModifyOp.Prefix) {
+					elem.SetValueString(_input + value);
+					return;
+				}
+
+				if (_op == DicomModifyOp.Append) {
+					elem.SetValueString(value + _input);
+					return;
+				}
+
+				if (_op == DicomModifyOp.Format) {
+					elem.SetValueString(String.Format(_output, value));
 					return;
 				}
 			}
