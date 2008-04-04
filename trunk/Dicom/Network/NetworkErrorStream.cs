@@ -64,6 +64,7 @@ namespace Dicom.Network {
 			}
 			else if (_errorClose && DateTime.Now > _errorTime) {
 				InternalSocket.Close();
+				throw new SocketException((int)SocketError.ConnectionReset);
 			}
 			int read = base.Read(buffer, offset, count);
 			if (_errorGarbage && DateTime.Now > _errorTime && FlipCoin()) {
@@ -87,8 +88,10 @@ namespace Dicom.Network {
 						throw new SocketException((int)SocketError.TimedOut);
 					}
 				}
-				else if (_errorClose && DateTime.Now > _errorTime)
+				else if (_errorClose && DateTime.Now > _errorTime) {
 					InternalSocket.Close();
+					throw new SocketException((int)SocketError.ConnectionReset);
+				}
 				else if (_errorGarbage && DateTime.Now > _errorTime && FlipCoin()) {
 					if (buffer.Length == count)
 						_random.NextBytes(buffer);
