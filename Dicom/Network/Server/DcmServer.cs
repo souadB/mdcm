@@ -94,9 +94,9 @@ namespace Dicom.Network.Server {
 			try {
 				List<DcmSocket> sockets = new List<DcmSocket>();
 				List<T> clients = new List<T>();
-								
+
 				while (!_stop) {
-					if (socket.Poll(500, SelectMode.SelectRead)) {
+					if (socket.Poll(1000000, SelectMode.SelectRead)) {
 						try {
 							DcmSocket client = socket.Accept();
 

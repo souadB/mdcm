@@ -239,7 +239,7 @@ namespace Dicom.Network {
 				count -= size;
 				Throttle(size);
 				size = _baseStream.Read(buffer, offset, size);
-				if (size == 0)
+				if (size <= 0)
 					break;
 				offset += size;
 				read += size;
@@ -360,7 +360,6 @@ namespace Dicom.Network {
 		/// </summary>
 		protected void Reset() {
 			_byteCount = 0;
-			_bufferSize = 0;
 			_start = CurrentMilliseconds;
 		}
 		#endregion

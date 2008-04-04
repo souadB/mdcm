@@ -158,6 +158,8 @@ namespace Dicom.Network {
 		#region Methods
 		public void Hook(HookStream stream) {
 			_hookStream = stream;
+			if (_stream != null)
+				_hookStream.Hook(stream);
 		}
 
 		public Stream GetStream() {

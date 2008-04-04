@@ -235,11 +235,13 @@ namespace Dicom.Network {
 
 		#region Protected Methods
 		protected void InitializeNetwork(DcmSocket socket) {
-			socket.SendTimeout = _socketTimeout * 1000;
-			socket.ReceiveTimeout = _socketTimeout * 1000;
-			socket.ThrottleSpeed = _throttle;
-
 			_socket = socket;
+			_socket.SendTimeout = _socketTimeout * 1000;
+			_socket.ReceiveTimeout = _socketTimeout * 1000;
+			_socket.ThrottleSpeed = _throttle;
+
+			OnInitializeNetwork();
+
 			_network = _socket.GetStream();
 			_stop = false;
 			_isRunning = true;
@@ -261,6 +263,9 @@ namespace Dicom.Network {
 					_thread.Join();
 				_thread = null;	
 			}
+		}
+
+		protected virtual void OnInitializeNetwork() {
 		}
 
 		protected virtual void OnConnected() {
@@ -958,6 +963,8 @@ namespace Dicom.Network {
 				if (_socketType == DcmSocketType.TLS)
 					Log.Info("{0} -> Authenticating SSL/TLS for server: {1}", LogID, _socket.RemoteEndPoint);
 
+				OnInitializeNetwork();
+
 				_network = _socket.GetStream();
 				success = true;
 			}
@@ -1024,7 +1031,7 @@ namespace Dicom.Network {
 				if (e.SocketErrorCode == SocketError.TimedOut)
 					Log.Error("{0} -> Network timeout after {1} seconds", LogID, SocketTimeout);
 				else
-					Log.Error("{0} -> Network error: {2}", LogID, e.Message);
+					Log.Error("{0} -> Network error: {1}", LogID, e.Message);
 				OnNetworkError(e);
 				OnConnectionClosed();
 			}
@@ -1116,6 +1123,8 @@ namespace Dicom.Network {
 				default:
 					throw new DcmNetworkException("Unknown PDU type");
 				}
+			} catch (SocketException) {
+				throw;
 			} catch (Exception e) {
 #if DEBUG
 				Log.Error("{0} -> Error reading PDU [type: 0x{1:x2}]: {2}", LogID, raw.Type, e.ToString());
