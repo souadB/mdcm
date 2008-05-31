@@ -141,13 +141,14 @@ namespace Dicom.IO {
 		private ByteBuffer CurrentBuffer(DicomReadOptions options) {
 			if (_isFile) {
 				bool delayLoad = false;
-				if (_len >= 1024 && Flags.IsSet(options, DicomReadOptions.DeferLoadingLargeElements))
-					delayLoad = true;
-				else if (Flags.IsSet(options, DicomReadOptions.DeferLoadingPixelData) && _tag == DcmTags.PixelData)
-					delayLoad = true;
-				else if (Flags.IsSet(options, DicomReadOptions.DeferLoadingPixelData) && _fragment != null && 
-					_fragment.Tag == DcmTags.PixelData)
-					delayLoad = true;
+				if (_len >= 1024) {
+					if (Flags.IsSet(options, DicomReadOptions.DeferLoadingLargeElements))
+						delayLoad = true;
+					else if (Flags.IsSet(options, DicomReadOptions.DeferLoadingPixelData) && _tag == DcmTags.PixelData)
+						delayLoad = true;
+					else if (Flags.IsSet(options, DicomReadOptions.DeferLoadingPixelData) && _fragment != null && _fragment.Tag == DcmTags.PixelData)
+						delayLoad = true;
+				}
 
 				if (delayLoad) {
 					FileStream fs = (FileStream)_stream;

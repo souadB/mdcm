@@ -53,7 +53,7 @@ namespace Dicom.Data {
 		public static DcmModifyCallback UserOp4Callback;
 
 		#region Private Members
-		private DcmTagMask _mask;
+		private string _mask;
 		private DicomModifyOp _op;
 		private string _input;
 		private string _output;
@@ -63,15 +63,15 @@ namespace Dicom.Data {
 		public DcmModify() {
 		}
 
-		public DcmModify(DcmTag tag, DicomModifyOp op, string input, string output) {
-			_mask = new DcmTagMask(tag.ToString());
+		public DcmModify(DcmTagMask mask, DicomModifyOp op, string input, string output) {
+			_mask = mask.ToString();
 			_op = op;
 			_input = input;
 			_output = output;
 		}
 
 		public DcmModify(string mask, DicomModifyOp op, string input, string output) {
-			_mask = new DcmTagMask(mask);
+			_mask = mask;
 			_op = op;
 			_input = input;
 			_output = output;
@@ -79,7 +79,7 @@ namespace Dicom.Data {
 		#endregion
 
 		#region Public Properties
-		public DcmTagMask Mask {
+		public string DicomMask {
 			get { return _mask; }
 			set { _mask = value; }
 		}
@@ -102,11 +102,11 @@ namespace Dicom.Data {
 
 		#region Public Methods
 		public void Modify(DcmDataset dataset) {
-			List<DcmTag> tags = new List<DcmTag>();
-			tags.AddRange(dataset.GetMaskedTags(_mask));
-			foreach (DcmTag tag in tags) {
+			DcmTagMask mask = DcmTagMask.Parse(_mask);
+			if (mask == null)
+				return;
+			foreach (DcmTag tag in dataset.GetMaskedTags(mask))
 				Apply(dataset, tag);
-			}
 		}
 
 		public static string Serialize(DcmModify modify) {
@@ -141,10 +141,59 @@ namespace Dicom.Data {
 			return (List<DcmModify>)serializer.Deserialize(reader);
 		}
 
-		public override string ToString() {
-			StringBuilder sb = new StringBuilder();
+		public static void RunAll(IList<DcmModify> modifiers, DcmDataset dataset) {
+			foreach (DcmModify modify in modifiers)
+				modify.Modify(dataset);
+		}
 
-			return String.Format("'{0}' {1} '{2}'->'{3}'", _mask, _op, _input, _output);
+		public override string ToString() {
+			bool enableInput = true;
+			bool enableOutput = true;
+
+			switch (_op) {
+				case DicomModifyOp.Remove:
+					enableInput = false;
+					enableOutput = false;
+					break;
+				case DicomModifyOp.AddOrReplace:
+					enableInput = false;
+					break;
+				case DicomModifyOp.Prefix:
+					enableInput = false;
+					break;
+				case DicomModifyOp.Append:
+					enableInput = false;
+					break;
+				case DicomModifyOp.Format:
+					enableInput = false;
+					break;
+				default:
+					break;
+			}
+
+			DcmTagMask mask = DcmTagMask.Parse(_mask);
+			if (mask == null)
+				return "Invalid DICOM Modify Mask";
+
+			DcmTag tag = mask.Tag;
+			if (tag == null)
+				return "Invalid DICOM Modify Tag";
+
+			string name = String.Empty;
+			if (mask.IsFullMask)
+				name = String.Format("{0} {1}", tag, tag.Entry.Name);
+			else
+				name = String.Format("[{0}] User Mask", _mask);
+
+			StringBuilder sb = new StringBuilder();
+			sb.AppendFormat("'{0}' {1}", name, _op);
+			if (enableInput && enableOutput)
+				sb.AppendFormat(" '{0}' -> '{1}'", _input, _output);
+			else if (enableInput)
+				sb.AppendFormat(" '{0}'", _input);
+			else if (enableOutput)
+				sb.AppendFormat(" '{0}'", _output);
+			return sb.ToString();
 		}
 		#endregion
 

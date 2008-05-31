@@ -234,6 +234,7 @@ namespace Dicom.Network.Client {
 		private Dictionary<DcmUID, List<DcmTS>> _presContextMap = new Dictionary<DcmUID, List<DcmTS>>();
 		private object _lock = new object();
 		private ManualResetEvent _mreStore = new ManualResetEvent(false);
+		private bool _cancel = false;
 		#endregion
 
 		#region Public Constructor
@@ -287,6 +288,12 @@ namespace Dicom.Network.Client {
 					_presContextMap[info.SOPClassUID].Add(info.TransferSyntax);
 				}
 			}
+		}
+
+		public void Cancel(bool wait) {
+			_cancel = true;
+			if (wait && !IsClosed)
+				Wait();
 		}
 		#endregion
 
@@ -362,7 +369,7 @@ namespace Dicom.Network.Client {
 		private void SendNextCStoreRequest() {
 			DateTime linger = DateTime.Now.AddSeconds(Linger + 1);
 			while (linger > DateTime.Now) {
-				while (_images.Count > 0) {
+				while (_images.Count > 0 && !_cancel) {
 					CStoreInfo info = _images[0];
 					if (Associate.FindAbstractSyntax(info.SOPClassUID) == 0) {
 						//cycle association

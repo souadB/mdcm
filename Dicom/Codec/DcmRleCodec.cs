@@ -19,6 +19,9 @@
 // Author:
 //    Colby Dillion (colby.dillion@gmail.com)
 //
+// Credits:
+//    Includes patches from ClearCanvas project (TODO: CC License)
+//
 // Note:  This file may contain code using a license that has not been 
 //        verified to be compatible with the licensing of this software.  
 //
@@ -80,10 +83,10 @@ namespace Dicom.Codec {
 		private class RLEEncoder {
 			#region Private Members
 			private int _count;
-			private uint[] _offsets;
-			private MemoryStream _stream;
-			private BinaryWriter _writer;
-			private byte[] _buffer;
+			private readonly uint[] _offsets;
+			private readonly MemoryStream _stream;
+			private readonly BinaryWriter _writer;
+			private readonly byte[] _buffer;
 
 			private int _prevByte;
 			private int _repeatCount;
@@ -128,42 +131,50 @@ namespace Dicom.Codec {
 			}
 
 			public void Encode(byte b) {
-				if (b == _prevByte)
+				if (b == _prevByte) {
 					_repeatCount++;
-				else {
-					switch (_repeatCount) {
-					case 0:
-						break;
-					case 1: {
-							_buffer[_bufferPos++] = (byte)_prevByte;
-							break;
-						}
-					case 2: {
-							_buffer[_bufferPos++] = (byte)_prevByte;
-							_buffer[_bufferPos++] = (byte)_prevByte;
-							break;
-						}
-					default: {
-							while (_bufferPos > 0) {
-								int count = Math.Min(128, _bufferPos);
-								_stream.WriteByte((byte)(count - 1));
-								MoveBuffer(_bufferPos);
-							}
 
-							while (_repeatCount > 0) {
-								int count = Math.Min(_repeatCount, 128);
-								_stream.WriteByte((byte)(257 - count));
-								_stream.WriteByte((byte)_prevByte);
-								_repeatCount -= count;
-							}
-
-							_repeatCount = 0;
-							_bufferPos = 0;
-							break;
+					if (_repeatCount > 2 && _bufferPos > 0) {
+						// We're starting a run, flush out the buffer
+						while (_bufferPos > 0) {
+							int count = Math.Min(128, _bufferPos);
+							_stream.WriteByte((byte)(count - 1));
+							MoveBuffer(count);
 						}
 					}
+					else if (_repeatCount > 128) {
+						int count = Math.Min(_repeatCount, 128);
+						_stream.WriteByte((byte)(257 - count));
+						_stream.WriteByte((byte)_prevByte);
+						_repeatCount -= count;
+					}
+				}
+				else {
+					switch (_repeatCount) {
+						case 0:
+							break;
+						case 1: {
+								_buffer[_bufferPos++] = (byte)_prevByte;
+								break;
+							}
+						case 2: {
+								_buffer[_bufferPos++] = (byte)_prevByte;
+								_buffer[_bufferPos++] = (byte)_prevByte;
+								break;
+							}
+						default: {
+								while (_repeatCount > 0) {
+									int count = Math.Min(_repeatCount, 128);
+									_stream.WriteByte((byte)(257 - count));
+									_stream.WriteByte((byte)_prevByte);
+									_repeatCount -= count;
+								}
 
-					while (_bufferPos > 0) {
+								break;
+							}
+					}
+
+					while (_bufferPos > 128) {
 						int count = Math.Min(128, _bufferPos);
 						_stream.WriteByte((byte)(count - 1));
 						MoveBuffer(count);
@@ -174,11 +185,10 @@ namespace Dicom.Codec {
 				}
 			}
 
-			public void Encode(byte[] data) {
-				int count = data.Length;
-				for (int i = 0; i < count; i++) {
-					Encode(data[i]);
-				}
+			public void MakeEvenLength() {
+				// Make even length
+				if (_stream.Length % 2 == 1)
+					_stream.WriteByte(0);
 			}
 
 			public void Flush() {
@@ -192,7 +202,7 @@ namespace Dicom.Codec {
 				while (_bufferPos > 0) {
 					int count = Math.Min(128, _bufferPos);
 					_stream.WriteByte((byte)(count - 1));
-					MoveBuffer(_bufferPos);
+					MoveBuffer(count);
 				}
 
 				if (_repeatCount >= 2) {
@@ -237,7 +247,6 @@ namespace Dicom.Codec {
 
 			int pixelCount = oldPixelData.ImageWidth * oldPixelData.ImageHeight;
 			int numberOfSegments = oldPixelData.BytesAllocated * oldPixelData.SamplesPerPixel;
-			int segmentLength = (pixelCount & 1) == 1 ? pixelCount + 1 : pixelCount;
 
 			for (int i = 0; i < oldPixelData.NumberOfFrames; i++) {
 				RLEEncoder encoder = new RLEEncoder();
@@ -249,12 +258,12 @@ namespace Dicom.Codec {
 					int sample = s / oldPixelData.BytesAllocated;
 					int sabyte = s % oldPixelData.BytesAllocated;
 
-					int pos = 0;
-					int offset = 0;
+					int pos;
+					int offset;
 
 					if (newPixelData.PlanarConfiguration == 0) {
 						pos = sample * oldPixelData.BytesAllocated;
-						offset = oldPixelData.SamplesPerPixel * oldPixelData.BytesAllocated;
+						offset = numberOfSegments;
 					}
 					else {
 						pos = sample * oldPixelData.BytesAllocated * pixelCount;
@@ -266,11 +275,16 @@ namespace Dicom.Codec {
 					else
 						pos += oldPixelData.BytesAllocated - sabyte - 1;
 
-					for (int p = 0; p < segmentLength; p++) {
+					for (int p = 0; p < pixelCount; p++) {
+						if (pos >= frameData.Length)
+							throw new DicomCodecException("");
 						encoder.Encode(frameData[pos]);
 						pos += offset;
 					}
+					encoder.Flush();
 				}
+
+				encoder.MakeEvenLength();
 
 				newPixelData.AddFrame(encoder.GetBuffer());
 			}
@@ -286,15 +300,21 @@ namespace Dicom.Codec {
 			#endregion
 
 			#region Public Constructors
-			public RLEDecoder(byte[] data) {
-				MemoryStream stream = new MemoryStream(data);
+			public RLEDecoder(IList<ByteBuffer> data) {
+				int size = 0;
+				foreach (ByteBuffer frag in data)
+					size += frag.Length;
+				MemoryStream stream = new MemoryStream(size);
+				foreach (ByteBuffer frag in data)
+					frag.CopyTo(stream);
 				BinaryReader reader = EndianBinaryReader.Create(stream, Endian.Little);
 				_count = (int)reader.ReadUInt32();
 				_offsets = new int[15];
 				for (int i = 0; i < 15; i++) {
 					_offsets[i] = reader.ReadInt32();
 				}
-				_data = data;
+				_data = new byte[stream.Length - 64]; // take off 64 bytes for the offsets
+				stream.Read(_data, 0, _data.Length);
 			}
 			#endregion
 
@@ -320,16 +340,26 @@ namespace Dicom.Codec {
 					int n = rleData[i++];
 					if ((n & 0x80) != 0) {
 						int c = 257 - n;
+						if (i >= end)
+							throw new DicomCodecException("RLE Segement unexpectedly wrong.");
 						byte b = rleData[i++];
-						while (c-- > 0)
+						while (c-- > 0) {
+							if (pos >= buffer.Length)
+								throw new DicomCodecException("RLE segment unexpectedly too long.  Ignoring data.");
 							buffer[pos++] = b;
+						}
 					}
 					else {
+						if (n == 0 && i == end) // Single padding char
+							return;
 						int c = (n & 0x7F) + 1;
 						if ((i + c) >= end) {
 							c = offset + count - i;
 						}
-						Buffer.BlockCopy(rleData, i, buffer, pos, c);
+						if (i > rleData.Length || pos + c > buffer.Length)
+							throw new DicomCodecException("Invalid formatted RLE data.  RLE segment unexpectedly too long.");
+
+						Array.Copy(rleData, i, buffer, pos, c);
 						pos += c;
 						i += c;
 					}
@@ -339,7 +369,7 @@ namespace Dicom.Codec {
 
 			#region Private Members
 			private int GetSegmentOffset(int segment) {
-				return _offsets[segment];
+				return _offsets[segment] - 64;
 			}
 
 			private int GetSegmentLength(int segment) {
@@ -369,11 +399,11 @@ namespace Dicom.Codec {
 			byte[] frameData = new byte[oldPixelData.UncompressedFrameSize];
 
 			for (int i = 0; i < oldPixelData.NumberOfFrames; i++) {
-				byte[] rleData = oldPixelData.GetFrameDataU8(i);
+				IList<ByteBuffer> rleData = oldPixelData.GetFrameFragments(i);
 				RLEDecoder decoder = new RLEDecoder(rleData);
 
 				if (decoder.NumberOfSegments != numberOfSegments)
-					throw new DcmCodecException("Unexpected number of RLE segments!");
+					throw new DicomCodecException("Unexpected number of RLE segments!");
 
 				for (int s = 0; s < numberOfSegments; s++) {
 					decoder.DecodeSegment(s, segment);
@@ -381,8 +411,8 @@ namespace Dicom.Codec {
 					int sample = s / oldPixelData.BytesAllocated;
 					int sabyte = s % oldPixelData.BytesAllocated;
 
-					int pos = 0;
-					int offset = 0;
+					int pos;
+					int offset;
 
 					if (newPixelData.PlanarConfiguration == 0) {
 						pos = sample * oldPixelData.BytesAllocated;

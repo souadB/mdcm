@@ -68,7 +68,7 @@ void DcmJpeg2000Codec::Encode(DcmDataset^ dataset, DcmPixelData^ oldPixelData, D
 	if ((oldPixelData->PhotometricInterpretation == "YBR_FULL_422")    ||
 		(oldPixelData->PhotometricInterpretation == "YBR_PARTIAL_422") ||
 		(oldPixelData->PhotometricInterpretation == "YBR_PARTIAL_420"))
-		throw gcnew DcmCodecException(String::Format("Photometric Interpretation '{0}' not supported by JPEG 2000 encoder",
+		throw gcnew DicomCodecException(String::Format("Photometric Interpretation '{0}' not supported by JPEG 2000 encoder",
 														oldPixelData->PhotometricInterpretation));
 
 	DcmJpeg2000Parameters^ jparams = (DcmJpeg2000Parameters^)parameters;
@@ -198,7 +198,7 @@ void DcmJpeg2000Codec::Encode(DcmDataset^ dataset, DcmPixelData^ oldPixelData, D
 					}
 				}
 				else
-					throw gcnew DcmCodecException("JPEG 2000 codec only supports Bits Allocated == 8 or 16");
+					throw gcnew DicomCodecException("JPEG 2000 codec only supports Bits Allocated == 8 or 16");
 			}
 
 			opj_setup_encoder(cinfo, &eparams, image);
@@ -211,7 +211,7 @@ void DcmJpeg2000Codec::Encode(DcmDataset^ dataset, DcmPixelData^ oldPixelData, D
 				Marshal::Copy((IntPtr)cio->buffer, cbuf, 0, clen);
 				newPixelData->AddFrame(cbuf);
 			} else
-				throw gcnew DcmCodecException("Unable to JPEG 2000 encode image");
+				throw gcnew DicomCodecException("Unable to JPEG 2000 encode image");
 
 			if (oldPixelData->PhotometricInterpretation == "RGB" && jparams->AllowMCT) {
 				if (jparams->UpdatePhotometricInterpretation) {
@@ -295,7 +295,7 @@ void DcmJpeg2000Codec::Decode(DcmDataset^ dataset, DcmPixelData^ oldPixelData, D
 			image = opj_decode(dinfo, cio);
 
 			if (image == nullptr)
-				throw gcnew DcmCodecException("Error in JPEG 2000 code stream!");
+				throw gcnew DicomCodecException("Error in JPEG 2000 code stream!");
 
 			for (int c = 0; c < image->numcomps; c++) {
 				opj_image_comp_t* comp = &image->comps[c];
@@ -354,7 +354,7 @@ void DcmJpeg2000Codec::Decode(DcmDataset^ dataset, DcmPixelData^ oldPixelData, D
 					}
 				}
 				else
-					throw gcnew DcmCodecException("JPEG 2000 module only supports Bytes Allocated == 8 or 16!");
+					throw gcnew DicomCodecException("JPEG 2000 module only supports Bytes Allocated == 8 or 16!");
 			}
 
 			oldPixelData->Unload();

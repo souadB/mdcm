@@ -39,6 +39,10 @@ namespace Dicom
 
 	public static class Debug
 	{
+		static Debug() {
+			GetStartDirectory();
+		}
+
 		private static Logger _log;
 
 		public static Logger Log {
@@ -54,9 +58,13 @@ namespace Dicom
 		}
 
 		public static void InitializeSyslogLogger(bool console) {
+			InitializeSyslogLogger(514, console);
+		}
+		public static void InitializeSyslogLogger(int port, bool console) {
 			LoggingConfiguration config = new LoggingConfiguration();
 
 			SyslogTarget st = new SyslogTarget();
+			st.Port = port;
 			config.AddTarget("Syslog", st);
 
 			config.LoggingRules.Add(new LoggingRule("*", LogLevel.Debug, st));
@@ -94,6 +102,19 @@ namespace Dicom
 				}
 			}
 			return _startdir;
+		}
+
+		public static string GetCallingFunction() {
+			try {
+				StackTrace trace = new StackTrace(true);
+				for (int i = 2; i < trace.FrameCount;) {
+					StackFrame frame = trace.GetFrame(i);
+					return String.Format("{0}() at {1}:{2}", frame.GetMethod().Name, frame.GetFileName(), frame.GetFileLineNumber());
+				}
+			}
+			catch {
+			}
+			return "[unable to trace stack]";
 		}
 	}
 }

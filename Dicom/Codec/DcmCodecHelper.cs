@@ -51,10 +51,10 @@ namespace Dicom.Codec {
 				Buffer.BlockCopy(buffer, 0, pixelData, 0, numValues);
 			}
 			else if (bytesAllocated == 2) {
-				throw new DcmCodecException(String.Format("BitsAllocated={0} is not supported!", bitsAllocated));
+				throw new DicomCodecException(String.Format("BitsAllocated={0} is not supported!", bitsAllocated));
 			}
 			else
-				throw new DcmCodecException(String.Format("BitsAllocated={0} is not supported!", bitsAllocated));
+				throw new DicomCodecException(String.Format("BitsAllocated={0} is not supported!", bitsAllocated));
 		}
 
 		public static void DumpFrameToDisk(DcmDataset data, int frame, string file) {

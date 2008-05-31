@@ -120,6 +120,7 @@ namespace Dicom.Network {
 		#region Abstracts
 		public abstract DcmSocketType Type { get; }
 		public abstract bool Blocking { get; set; }
+		public abstract bool NoDelay { get; set; }
 		public abstract bool Connected { get; }
 		public abstract int ConnectTimeout { get; set; }
 		public abstract int SendTimeout { get; set; }
@@ -231,6 +232,11 @@ namespace Dicom.Network {
 			set { _socket.Blocking = value; }
 		}
 
+		public override bool NoDelay {
+			get { return _socket.NoDelay; }
+			set { _socket.NoDelay = value; }
+		}
+
 		public override bool Connected {
 			get {
 				if (!_socket.Connected)
@@ -292,7 +298,7 @@ namespace Dicom.Network {
 		}
 
 		public override void Connect(EndPoint remoteEP) {
-			if (_connectTimeout == 0) {
+			if (_connectTimeout == 0 || true) {
 				_socket.Connect(remoteEP);
 			} else {
 				IAsyncResult result = _socket.BeginConnect(remoteEP, null, null);
@@ -352,6 +358,11 @@ namespace Dicom.Network {
 		public override bool Blocking {
 			get { return _socket.Blocking; }
 			set { _socket.Blocking = value; }
+		}
+
+		public override bool NoDelay {
+			get { return _socket.NoDelay; }
+			set { _socket.NoDelay = value; }
 		}
 
 		public override bool Connected {
@@ -416,7 +427,7 @@ namespace Dicom.Network {
 
 		public override void Connect(EndPoint remoteEP) {
 			_server = false;
-			if (_connectTimeout == 0) {
+			if (_connectTimeout == 0 || true) {
 				_socket.Connect(remoteEP);
 			} else {
 				IAsyncResult result = _socket.BeginConnect(remoteEP, null, null);

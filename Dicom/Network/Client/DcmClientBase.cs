@@ -89,6 +89,12 @@ namespace Dicom.Network.Client {
 		#endregion
 
 		#region Public Methods
+		public void ForceClose() {
+			_closedOnError = true;
+			if (Socket != null)
+				Socket.Close();
+		}
+
 		public void Close() {
 			InternalClose(true);
 		}

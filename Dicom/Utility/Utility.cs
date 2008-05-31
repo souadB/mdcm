@@ -65,7 +65,7 @@ namespace Dicom.Utility {
 		/// <returns>MD5 hash as string</returns>
 		public static string MD5(byte[] buffer) {
 			MD5 md5 = new MD5CryptoServiceProvider();
-			return BitConverter.ToString(md5.ComputeHash(buffer));
+			return BitConverter.ToString(md5.ComputeHash(buffer)).Replace("-", "");
 		}
 
 		/// <summary>
@@ -75,7 +75,7 @@ namespace Dicom.Utility {
 		/// <returns>SHA1 hash as string</returns>
 		public static string SHA1(byte[] buffer) {
 			SHA1 sha1 = new SHA1CryptoServiceProvider();
-			return BitConverter.ToString(sha1.ComputeHash(buffer));
+			return BitConverter.ToString(sha1.ComputeHash(buffer)).Replace("-", "");
 		}
 	}
 
@@ -124,6 +124,58 @@ namespace Dicom.Utility {
 			if (date > SqlMaxDate)
 				return SqlMaxDate;
 			return date;
+		}
+
+		public const int SecondsInMinute = 60;
+
+		public const int MinutesInHour = 60;
+		public const int SecondsInHour = MinutesInHour * SecondsInMinute;
+
+		public const int HoursInDay = 24;
+		public const int MinutesInDay = HoursInDay * SecondsInHour;
+		public const int SecondsInDay = MinutesInDay * SecondsInMinute;
+
+		public const int DaysInWeek = 7;
+		public const int HoursInWeek = DaysInWeek * HoursInDay;
+		public const int MinutesInWeek = HoursInWeek * MinutesInHour;
+		public const int SecondsInWeek = MinutesInWeek * SecondsInMinute;
+
+		public static string ETA(DateTime expire) {
+			int seconds = expire.Subtract(DateTime.Now).Seconds;
+			if (seconds < 1)
+				return String.Empty;
+			if (seconds >= SecondsInWeek) {
+				int weeks = seconds / SecondsInWeek;
+				seconds %= SecondsInWeek;
+				int days = seconds / SecondsInDay;
+				if (days > 0)
+					return String.Format("{0}w {1}d", weeks, days);
+				return String.Format("{0}w", weeks);
+			}
+			if (seconds >= SecondsInDay) {
+				int days = seconds / SecondsInDay;
+				seconds %= SecondsInDay;
+				int hours = seconds / SecondsInHour;
+				if (hours > 0)
+					return String.Format("{0}d {1}h", days, hours);
+				return String.Format("{0}d", days);
+			}
+			if (seconds >= SecondsInHour) {
+				int hours = seconds / SecondsInHour;
+				seconds %= SecondsInHour;
+				int minutes = seconds / SecondsInMinute;
+				if (minutes > 0)
+					return String.Format("{0}h {1}m", hours, minutes);
+				return String.Format("{0}h", hours);
+			}
+			if (seconds >= SecondsInMinute) {
+				int minutes = seconds / SecondsInMinute;
+				seconds %= SecondsInMinute;
+				if (seconds > 0)
+					return String.Format("{0}m {1}s", minutes, seconds);
+				return String.Format("{0}m", minutes);
+			}
+			return String.Format("{0}s", seconds);
 		}
 	}
 

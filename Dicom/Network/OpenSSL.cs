@@ -455,14 +455,19 @@ namespace Dicom.Network {
 		#endregion
 	}
 
-	public class OpenSslNative {
+	public static class OpenSslNative {
 		const string DLL_SSL = "libssl32.dll";
 		const string DLL_EAY = "libeay32.dll";
 
 		#region Initialization
 		static OpenSslNative() {
-			SSL_load_error_strings();
-			SSL_library_init();
+			try {
+				SSL_load_error_strings();
+				SSL_library_init();
+			}
+			catch {
+				throw new Exception("OpenSSL initialization failed!  Check that the OpenSSL DLL files are in your path.");
+			}
 		}
 		#endregion
 

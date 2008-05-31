@@ -27,6 +27,12 @@ namespace Dicom.IO {
 	/// File Segment
 	/// </summary>
 	public class FileSegment {
+		#region Private Members
+		private string _fileName;
+		private long _position;
+		private long _length;
+		#endregion
+
 		#region Public Constructors
 		/// <summary>
 		/// Initializes a new instance of the <see cref="FileSegment"/> class.
@@ -46,20 +52,29 @@ namespace Dicom.IO {
 		/// Gets or sets the name of the file.
 		/// </summary>
 		/// <value>The name of the file.</value>
-		public string FileName { get; private set; }
+		public string FileName {
+			get { return _fileName; }
+			private set { _fileName = value; }
+		}
 
 		/// <summary>
 		/// Gets or sets the segment position.
 		/// </summary>
 		/// <value>The segment position.</value>
-		public long Position { get; private set; }
+		public long Position {
+			get { return _position; }
+			private set { _position = value; }
+		}
 
 
 		/// <summary>
 		/// Gets or sets the segment length.
 		/// </summary>
 		/// <value>The segment length.</value>
-		public long Length { get; private set; }
+		public long Length {
+			get { return _length; }
+			private set { _length = value; }
+		}
 		#endregion
 
 		#region Public Methods

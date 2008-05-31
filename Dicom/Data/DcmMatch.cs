@@ -127,7 +127,9 @@ namespace Dicom.Data {
 
 		public override string ToString() {
 			DcmTag tag = DcmTag.Parse(_tag);
-			return string.Format("'{0}' {1} '{2}'", tag.Entry, _op, _value);
+			if (tag == null)
+				return "Invalid DICOM Match Rule";
+			return string.Format("'{0} {1}' {2} '{3}'", tag, tag.Entry.Name, _op, _value);
 		}
 
 		public static string Serialize(DcmMatch match) {
@@ -160,6 +162,13 @@ namespace Dicom.Data {
 			StringReader reader = new StringReader(data);
 			XmlSerializer serializer = new XmlSerializer(typeof(List<DcmMatch>));
 			return (List<DcmMatch>)serializer.Deserialize(reader);
+		}
+
+		public static bool MatchAll(IList<DcmMatch> matches, DcmDataset dataset) {
+			foreach (DcmMatch match in matches)
+				if (!match.Match(dataset))
+					return false;
+			return true;
 		}
 		#endregion
 	}

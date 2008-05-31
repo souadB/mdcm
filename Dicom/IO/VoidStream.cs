@@ -50,23 +50,23 @@ namespace Dicom.IO {
 
 		public override long Position {
 			get {
-				throw new Exception("The method or operation is not implemented.");
+				throw new NotSupportedException();
 			}
 			set {
-				throw new Exception("The method or operation is not implemented.");
+				throw new NotSupportedException();
 			}
 		}
 
 		public override int Read(byte[] buffer, int offset, int count) {
-			throw new Exception("The method or operation is not implemented.");
+			throw new NotSupportedException();
 		}
 
 		public override long Seek(long offset, SeekOrigin origin) {
-			throw new Exception("The method or operation is not implemented.");
+			throw new NotSupportedException();
 		}
 
 		public override void SetLength(long value) {
-			throw new Exception("The method or operation is not implemented.");
+			throw new NotSupportedException();
 		}
 
 		public override void Write(byte[] buffer, int offset, int count) {
