@@ -73,7 +73,7 @@ namespace Dicom.Codec {
 			if (_codecs.TryGetValue(ts, out cType)) {
 				return (IDcmCodec)Activator.CreateInstance(cType);
 			}
-			throw new DcmCodecException("No registered codec for transfer syntax!");
+			throw new DicomCodecException("No registered codec for transfer syntax!");
 		}
 
 		public static void RegisterCodec(DcmTS ts, Type type) {

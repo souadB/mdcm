@@ -15229,11 +15229,14 @@ namespace Dicom.Data {
 		#endregion
 
 		#region Public Constructor
+		private DcmTagMask() {
+		}
+
 		public DcmTagMask(string mask) {
 			mask = mask.Trim('(', ')');
 			mask = mask.Replace(",", "").ToLower();
 
-			StringBuilder sb = new StringBuilder();
+			StringBuilder sb = new StringBuilder(mask);
 			sb.Replace('x', '0');
 			_c = uint.Parse(sb.ToString(), System.Globalization.NumberStyles.HexNumber);
 
@@ -15267,6 +15270,15 @@ namespace Dicom.Data {
 		#endregion
 
 		#region Public Members
+		public static DcmTagMask Parse(string mask) {
+			try {
+				return new DcmTagMask(mask);
+			}
+			catch {
+				return null;
+			}
+		}
+
 		public bool IsMatch(DcmTag tag) {
 			return (tag.Card & Mask) == Card;
 		}
@@ -15276,6 +15288,8 @@ namespace Dicom.Data {
 			string card = _c.ToString("X8");
 			uint mask = 0xF0000000;
 			for (int i = 0; i < 8; i++) {
+				if (i == 4)
+					tag += ',';
 				if ((_m & mask) != 0)
 					tag += card[i];
 				else

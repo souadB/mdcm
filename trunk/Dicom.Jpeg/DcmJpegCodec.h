@@ -68,7 +68,7 @@ public:
 		if (bits == 8)
 			return gcnew Jpeg8Codec(JpegMode::Baseline, 0, 0);
 		else
-			throw gcnew DcmCodecException(String::Format("Unable to create JPEG codec for bits stored == {0}", bits));
+			throw gcnew DicomCodecException(String::Format("Unable to create JPEG codec for bits stored == {0}", bits));
 	}
 };
 
@@ -83,7 +83,7 @@ public:
 		if (bits == 12)
 			return gcnew Jpeg12Codec(JpegMode::Sequential, 0, 0);
 		else
-			throw gcnew DcmCodecException(String::Format("Unable to create JPEG codec for bits stored == {0}", bits));
+			throw gcnew DicomCodecException(String::Format("Unable to create JPEG codec for bits stored == {0}", bits));
 	}
 };
 
@@ -102,7 +102,7 @@ public:
 		else if (bits >= 8)
 			return gcnew Jpeg8Codec(JpegMode::Lossless, jparams->Predictor, jparams->PointTransform);
 		else
-			throw gcnew DcmCodecException(String::Format("Unable to create JPEG codec for bits stored == {0}", bits));
+			throw gcnew DicomCodecException(String::Format("Unable to create JPEG codec for bits stored == {0}", bits));
 	}
 };
 
@@ -121,7 +121,7 @@ public:
 		else if (bits >= 8)
 			return gcnew Jpeg8Codec(JpegMode::Lossless, 1, jparams->PointTransform);
 		else
-			throw gcnew DcmCodecException(String::Format("Unable to create JPEG codec for bits stored == {0}", bits));
+			throw gcnew DicomCodecException(String::Format("Unable to create JPEG codec for bits stored == {0}", bits));
 	}
 };
 

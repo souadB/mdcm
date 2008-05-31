@@ -42,10 +42,29 @@ namespace Dicom.Network {
 	}
 
 	public class DcmDimseProgress {
+		#region Private Members
+		private int _bytesTransfered;
+		private int _estimatedCommandLength;
+		private int _estimatedDatasetLength;
+		#endregion
+
+		#region Public Properties
 		public readonly DateTime Started = DateTime.Now;
-		public int BytesTransfered { get; internal set; }
-		public int EstimatedCommandLength { get; internal set; }
-		public int EstimatedDatasetLength { get; internal set; }
+
+		public int BytesTransfered {
+			get { return _bytesTransfered; }
+			internal set { _bytesTransfered = value; }
+		}
+
+		public int EstimatedCommandLength {
+			get { return _estimatedCommandLength; }
+			internal set { _estimatedCommandLength = value; }
+		}
+
+		public int EstimatedDatasetLength {
+			get { return _estimatedDatasetLength; }
+			internal set { _estimatedDatasetLength = value; }
+		}
 
 		public int EstimatedBytesTotal {
 			get { return EstimatedCommandLength + EstimatedDatasetLength; }
@@ -54,9 +73,11 @@ namespace Dicom.Network {
 		public TimeSpan TimeElapsed {
 			get { return DateTime.Now.Subtract(Started); }
 		}
+		#endregion
 	}
 
 	internal class DcmDimseInfo : IDisposable {
+		#region Members
 		public DcmCommand Command;
 		public DcmDataset Dataset;
 		public ChunkStream CommandData;
@@ -68,7 +89,9 @@ namespace Dicom.Network {
 		public FileStream DatasetFileStream;
 		public Stream DatasetStream;
 		public bool IsNewDimse;
+		#endregion
 
+		#region Methods
 		public DcmDimseInfo() {
 			Progress = new DcmDimseProgress();
 			IsNewDimse = true;
@@ -105,6 +128,7 @@ namespace Dicom.Network {
 			Abort();
 			GC.SuppressFinalize(this);
 		}
+		#endregion
 	}
 
 	public abstract class DcmNetworkBase {
@@ -1290,6 +1314,12 @@ namespace Dicom.Network {
 				return true;
 			}
 
+			if (_dimse.Command == null) {
+				Log.Error("{0} -> Unable to process DIMSE; Command DataSet not received.", LogID);
+				SendAbort(DcmAbortSource.ServiceUser, DcmAbortReason.NotSpecified);
+				return true;
+			}
+
 			DcmCommandField commandField = _dimse.Command.CommandField;
 
 			if (commandField == DcmCommandField.CStoreRequest) {
@@ -1652,8 +1682,8 @@ namespace Dicom.Network {
 						pdustream.Write(datastream);
 					}
 
-					// flush last pdu
-					pdustream.Flush(true);
+					// last pdu is automatically flushed when streaming
+					//pdustream.Flush(true);
 
 					OnSendDimse(pcid, command, null, progress);
 				}

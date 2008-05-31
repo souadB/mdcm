@@ -30,6 +30,19 @@ using Dicom.Utility;
 namespace Dicom.Network {
 	[Serializable]
 	public class DcmAssociateProfile : XmlSerializable<DcmAssociateProfile> {
+		#region Private Members
+		private string _name;
+		private string _description;
+		private string _notes;
+		private string _calledAe;
+		private string _callingAe;
+		private string _remoteImplUid;
+		private string _remoteVersion;
+		private List<string> _transfer;
+		private List<string> _abstract;
+		#endregion
+
+		#region Constructor
 		public DcmAssociateProfile() {
 			Name = "DICOM Associate Profile";
 			Description = String.Empty;
@@ -41,19 +54,56 @@ namespace Dicom.Network {
 			TransferSyntaxes = new List<string>();
 			AbstractSyntaxes = new List<string>();
 		}
+		#endregion
 
-		public string Name { get; set; }
-		public string Description { get; set; }
-		public string Notes { get; set; }
+		#region Public Properties
+		public string Name {
+			get { return _name; }
+			set { _name = value; }
+		}
 
-		public string CalledAE { get; set; }
-		public string CallingAE { get; set; }
-		public string RemoteImplUID { get; set; }
-		public string RemoteVersion { get; set; }
+		public string Description {
+			get { return _description; }
+			set { _description = value; }
+		}
 
-		public List<string> TransferSyntaxes { get; set; }
-		public List<string> AbstractSyntaxes { get; set; }
+		public string Notes {
+			get { return _notes; }
+			set { _notes = value; }
+		}
 
+		public string CalledAE {
+			get { return _calledAe; }
+			set { _calledAe = value; }
+		}
+
+		public string CallingAE {
+			get { return _callingAe; }
+			set { _callingAe = value; }
+		}
+
+		public string RemoteImplUID {
+			get { return _remoteImplUid; }
+			set { _remoteImplUid = value; }
+		}
+
+		public string RemoteVersion {
+			get { return _remoteVersion; }
+			set { _remoteVersion = value; }
+		}
+
+		public List<string> TransferSyntaxes {
+			get { return _transfer; }
+			set { _transfer = value; }
+		}
+
+		public List<string> AbstractSyntaxes {
+			get { return _abstract; }
+			set { _abstract = value; }
+		}
+		#endregion
+
+		#region Methods
 		public bool Supports(DcmTS tx) {
 			return TransferSyntaxes.Contains(tx.UID.UID);
 		}
@@ -110,6 +160,7 @@ namespace Dicom.Network {
 				}
 			}
 		}
+		#endregion
 
 		#region Static
 		public static DcmAssociateProfile GenericStorage;

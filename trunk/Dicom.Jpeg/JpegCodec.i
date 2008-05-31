@@ -210,7 +210,7 @@ namespace IJGVERS {
 void JPEGCODEC::Encode(DcmPixelData^ oldPixelData, DcmPixelData^ newPixelData, DcmJpegParameters^ params, int frame) {
 	if ((oldPixelData->PhotometricInterpretation == "YBR_ICT")         ||
 		(oldPixelData->PhotometricInterpretation == "YBR_RCT"))
-		throw gcnew DcmCodecException(String::Format("Photometric Interpretation '{0}' not supported by JPEG encoder!",
+		throw gcnew DicomCodecException(String::Format("Photometric Interpretation '{0}' not supported by JPEG encoder!",
 														oldPixelData->PhotometricInterpretation));
 
 	array<unsigned char>^ frameData = oldPixelData->GetFrameDataU8(frame);
@@ -432,27 +432,23 @@ void JPEGCODEC::Decode(DcmPixelData^ oldPixelData, DcmPixelData^ newPixelData, D
 	dinfo.src = (jpeg_source_mgr*)&src.pub;
 
 	if (jpeg_read_header(&dinfo, TRUE) == JPEG_SUSPENDED)
-		throw gcnew DcmCodecException(gcnew String("Unable to decompress JPEG. Reason: Suspended"));
-
-	if (dinfo.output_components > 1 && params->ConvertColorspaceToRGB) {
-		if ((dinfo.out_color_space == JCS_YCbCr || dinfo.out_color_space == JCS_RGB) && oldPixelData->IsSigned)
-			throw gcnew DcmCodecException("JPEG codec unable to perform colorspace conversion on signed pixel data");
-
-		if (dinfo.out_color_space == JCS_YCbCr) {
+		throw gcnew DicomCodecException(gcnew String("Unable to decompress JPEG. Reason: Suspended"));
+	
+	if (params->ConvertColorspaceToRGB) { 
+		if (dinfo.out_color_space == JCS_YCbCr || dinfo.out_color_space == JCS_RGB) { 
+			if (oldPixelData->IsSigned) 
+				throw gcnew DicomCodecException(gcnew String("JPEG codec unable to perform colorspace conversion on signed pixel data")); 
 			dinfo.jpeg_color_space = JCS_YCbCr;
 			dinfo.out_color_space = JCS_RGB;
+			newPixelData->PhotometricInterpretation = "RGB";
 		}
-		else if (dinfo.out_color_space == JCS_RGB) {
-			dinfo.jpeg_color_space = JCS_YCbCr;
-		}
-		else {
-			dinfo.jpeg_color_space = JCS_UNKNOWN;
-			dinfo.out_color_space = JCS_UNKNOWN;
-		}
-	} else {
-		dinfo.jpeg_color_space = JCS_UNKNOWN;
-		dinfo.out_color_space = JCS_UNKNOWN;
+	} else { 
+		dinfo.jpeg_color_space = JCS_UNKNOWN; 
+		dinfo.out_color_space = JCS_UNKNOWN; 
 	}
+
+	if (oldPixelData->SamplesPerPixel >= 3)
+		newPixelData->PlanarConfiguration = 0;
 
 	jpeg_calc_output_dimensions(&dinfo);
 

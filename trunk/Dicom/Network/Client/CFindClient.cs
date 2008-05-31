@@ -79,6 +79,107 @@ namespace Dicom.Network.Client {
 		#endregion
 	}
 
+	public class CFindClient<Tq, Tr> : DcmClientBase
+		where Tq : CFindQuery
+		where Tr : CFindResponse {
+		#region Private Members
+		private DcmUID _findSopClass;
+		private Queue<Tq> _queries;
+		private Tq _current;
+		#endregion
+
+		#region Public Constructor
+		public CFindClient() : base() {
+			LogID = "C-Find SCU";
+			CallingAE = "FIND_SCU";
+			CalledAE = "FIND_SCP";
+			_queries = new Queue<Tq>();
+			_findSopClass = DcmUIDs.StudyRootQueryRetrieveInformationModelFIND;
+			_current = null;
+		}
+		#endregion
+
+		#region Public Properties
+		public delegate void CFindResponseDelegate(Tq query, Tr result);
+		public CFindResponseDelegate OnCFindResponse;
+
+		public delegate void CFindCompleteDelegate(Tq query);
+		public CFindCompleteDelegate OnCFindComplete;
+
+		public DcmUID FindSopClassUID {
+			get { return _findSopClass; }
+			set { _findSopClass = value; }
+		}
+
+		public Queue<Tq> FindQueries {
+			get { return _queries; }
+			set { _queries = value; }
+		}
+		#endregion
+
+		#region Public Members
+		public void AddQuery(Tq query) {
+			_queries.Enqueue(query);
+		}
+		#endregion
+
+		#region Protected Overrides
+		protected override void OnConnected() {
+			DcmAssociate associate = new DcmAssociate();
+
+			byte pcid = associate.AddPresentationContext(FindSopClassUID);
+			//associate.AddTransferSyntax(pcid, DcmTS.ExplicitVRLittleEndian);
+			associate.AddTransferSyntax(pcid, DcmTS.ImplicitVRLittleEndian);
+
+			associate.CalledAE = CalledAE;
+			associate.CallingAE = CallingAE;
+			associate.MaximumPduLength = MaxPduSize;
+
+			SendAssociateRequest(associate);
+		}
+
+		private void PerformQueryOrRelease() {
+			if (FindQueries.Count > 0) {
+				Tq query = FindQueries.Dequeue();
+				_current = query;
+				byte pcid = Associate.FindAbstractSyntax(FindSopClassUID);
+				if (Associate.GetPresentationContextResult(pcid) == DcmPresContextResult.Accept) {
+					DcmDataset dataset = query.ToDataset(Associate.GetAcceptedTransferSyntax(pcid));
+					SendCFindRequest(pcid, NextMessageID(), Priority, dataset);
+				}
+				else {
+					Log.Info("{0} <- Presentation context rejected: {1}", LogID, Associate.GetPresentationContextResult(pcid));
+					SendReleaseRequest();
+				}
+			}
+			else {
+				SendReleaseRequest();
+			}
+		}
+
+		protected override void OnReceiveAssociateAccept(DcmAssociate association) {
+			PerformQueryOrRelease();
+		}
+
+		protected override void OnReceiveCFindResponse(byte presentationID, ushort messageID, DcmDataset dataset, DcmStatus status) {
+			if (status.State != DcmState.Pending) {
+				if (OnCFindComplete != null) {
+					OnCFindComplete(_current);
+				}
+				PerformQueryOrRelease();
+			}
+			else if (dataset != null) {
+				if (OnCFindResponse != null) {
+					Tr result = Activator.CreateInstance<Tr>();
+					result.FromDataset(dataset);
+					OnCFindResponse(_current, result);
+				}
+			}
+		}
+		#endregion
+	}
+
+	#region Patient
 	public sealed class CFindPatientQuery : CFindQuery {
 		#region Private Members
 		private string _patientId;
@@ -92,7 +193,7 @@ namespace Dicom.Network.Client {
 		#endregion
 
 		#region Public Properties
-		[DicomField(DcmConstTags.PatientID, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)] 
+		[DicomField(DcmConstTags.PatientID, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
 		public string PatientID {
 			get { return _patientId; }
 			set { _patientId = value; }
@@ -127,6 +228,13 @@ namespace Dicom.Network.Client {
 		#endregion
 	}
 
+	public sealed class CFindPatientClient : CFindClient<CFindPatientQuery, CFindPatientResponse> {
+		public CFindPatientClient() : base() {
+		}
+	}
+	#endregion
+
+	#region Study
 	public sealed class CFindStudyQuery : CFindQuery {
 		#region Private Members
 		private string _patientId;
@@ -320,35 +428,71 @@ namespace Dicom.Network.Client {
 		#endregion
 	}
 
+	public sealed class CFindStudyClient : CFindClient<CFindStudyQuery, CFindStudyResponse> {
+		public CFindStudyClient() : base() {
+			FindSopClassUID = DcmUIDs.StudyRootQueryRetrieveInformationModelFIND;
+		}
+	}
+	#endregion
+
+	#region Worklist
+#if DOTNET35
 	public sealed class CFindWorklistQuery : CFindQuery {
-		#region Public Constructors
+	#region Private Members
+		private string _patientId;
+		private string _patientName;
+		private string _accessionNumber;
+		private string _modality;
+		private DcmDateRange _scheduledStartDate;
+		private string _requestedProcedureID;
+		#endregion
+
+	#region Public Constructors
 		public CFindWorklistQuery() {
 			QueryRetrieveLevel = DcmQueryRetrieveLevel.Worklist;
 			ScheduledProcedureStepStartDate = new DcmDateRange();
 		}
 		#endregion
 
-		#region Public Properties
+	#region Public Properties
 		[DicomField(0x0010, 0x0010, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
-		public string PatientsName { get; set; }
-		
+		public string PatientsName {
+			get { return _patientName; }
+			set { _patientName = value; }
+		}
+
 		[DicomField(0x0010, 0x0020, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
-		public string PatientID { get; set; }
+		public string PatientID {
+			get { return _patientId; }
+			set { _patientId = value; }
+		}
 
 		[DicomField(0x0008, 0x0050, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
-		public string AccessionNumber { get; set; }
+		public string AccessionNumber {
+			get { return _accessionNumber; }
+			set { _accessionNumber = value; }
+		}
 
 		//[DicomField(0x0008, 0x0060, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
-		public string Modality { get; set; }
+		public string Modality {
+			get { return _modality; }
+			set { _modality = value; }
+		}
 
 		//[DicomField(0x0040, 0x0002, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
-		public DcmDateRange ScheduledProcedureStepStartDate { get; set; }
+		public DcmDateRange ScheduledProcedureStepStartDate {
+			get { return _scheduledStartDate; }
+			set { _scheduledStartDate = value; }
+		}
 
 		[DicomField(0x0040, 0x1001, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
-		public string RequestedProcedureID { get; set; }
+		public string RequestedProcedureID {
+			get { return _requestedProcedureID; }
+			set { _requestedProcedureID = value; }
+		}
 		#endregion
 
-		#region Protected Members
+	#region Protected Members
 		protected override void AdditionalMembers(DcmDataset dataset) {
 			dataset.AddElement(DcmTags.PatientsBirthDate);
 			dataset.AddElement(DcmTags.PatientsSex);
@@ -399,15 +543,15 @@ namespace Dicom.Network.Client {
 	}
 
 	public sealed class CFindWorklistResponse : CFindResponse {
-		#region Public Properties
+	#region Public Properties
 		//public DcmDataset Dataset { get; internal set; }
 
 		// Patient Identification
 		[DicomField(0x0010, 0x0010, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
 		public string PatientsName { get; set; }
-		
+
 		[DicomField(0x0010, 0x0020, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
-		public string PatientID { get; set; }		
+		public string PatientID { get; set; }
 
 		// Patient Demographic
 		[DicomField(0x0010, 0x0030, DefaultValue = DicomFieldDefault.MinValue, CreateEmptyElement = true)]
@@ -437,17 +581,17 @@ namespace Dicom.Network.Client {
 		// Visit Identification		
 		[DicomField(0x0008, 0x0080, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
 		public string InstitutionName { get; set; }
-		
+
 		[DicomField(0x0038, 0x0010, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
 		public string AdmissionID { get; set; }
 
 		// Imaging Service Request
 		[DicomField(0x0008, 0x0050, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
 		public string AccessionNumber { get; set; }
-		
+
 		[DicomField(0x0008, 0x0090, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
 		public string ReferringPhysicianName { get; set; }
-		
+
 		[DicomField(0x0008, 0x1080, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
 		public string AdmittingDiagnosisDescription { get; set; }
 
@@ -457,15 +601,15 @@ namespace Dicom.Network.Client {
 		// Requested Procedure		
 		[DicomField(0x0020, 0x000D, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
 		public string StudyInstanceUID { get; set; }
-		
+
 		[DicomField(0x0032, 0x1060, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
 		public string RequestedProcedureDescription { get; set; }
 
 		[DicomField(0x0040, 0x1001, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
 		public string RequestedProcedureID { get; set; }
-		
+
 		[DicomField(0x0040, 0x1002, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
-		public string ReasonForTheRequestedProcedure { get; set; }		
+		public string ReasonForTheRequestedProcedure { get; set; }
 
 		[DicomField(0x0040, 0x1003, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
 		public string RequestedProcedurePriority { get; set; }
@@ -473,7 +617,7 @@ namespace Dicom.Network.Client {
 		// Scheduled Procedure Step Sequence
 		[DicomField(0x0008, 0x0060, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
 		public string Modality { get; set; }
-		
+
 		[DicomField(0x0040, 0x0001, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
 		public string ScheduledStationAETitle { get; set; }
 
@@ -491,12 +635,12 @@ namespace Dicom.Network.Client {
 
 		[DicomField(0x0040, 0x0009, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
 		public string ScheduledProcedureStepID { get; set; }
-		
+
 		[DicomField(0x0040, 0x0011, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
-		public string ScheduledProcedureStepLocation { get; set; }		
+		public string ScheduledProcedureStepLocation { get; set; }
 		#endregion
 
-		#region Protected Members
+	#region Protected Members
 		public override void FromDataset(DcmDataset dataset) {
 			//dataset.Dump();
 			_dataset = dataset;
@@ -519,120 +663,11 @@ namespace Dicom.Network.Client {
 		#endregion
 	}
 
-	public class CFindClient<Tq, Tr> : DcmClientBase
-		where Tq : CFindQuery
-		where Tr : CFindResponse {
-		#region Private Members
-		private DcmUID _findSopClass;
-		private Queue<Tq> _queries;
-		private Tq _current;
-		#endregion
-
-		#region Public Constructor
-		public CFindClient() : base() {
-			LogID = "C-Find SCU";
-			CallingAE = "FIND_SCU";
-			CalledAE = "FIND_SCP";
-			_queries = new Queue<Tq>();
-			_findSopClass = DcmUIDs.StudyRootQueryRetrieveInformationModelFIND;
-			_current = null;
-		}
-		#endregion
-
-		#region Public Properties
-		public delegate void CFindResponseDelegate(Tq query, Tr result);
-		public CFindResponseDelegate OnCFindResponse;
-
-		public delegate void CFindCompleteDelegate(Tq query);
-		public CFindCompleteDelegate OnCFindComplete;
-
-		public DcmUID FindSopClassUID {
-			get { return _findSopClass; }
-			set { _findSopClass = value; }
-		}
-
-		public Queue<Tq> FindQueries {
-			get { return _queries; }
-			set { _queries = value; }
-		}
-		#endregion
-
-		#region Public Members
-		public void AddQuery(Tq query) {
-			_queries.Enqueue(query);
-		}
-		#endregion
-
-		#region Protected Overrides
-		protected override void OnConnected() {
-			DcmAssociate associate = new DcmAssociate();
-
-			byte pcid = associate.AddPresentationContext(FindSopClassUID);
-			//associate.AddTransferSyntax(pcid, DcmTS.ExplicitVRLittleEndian);
-			associate.AddTransferSyntax(pcid, DcmTS.ImplicitVRLittleEndian);
-
-			associate.CalledAE = CalledAE;
-			associate.CallingAE = CallingAE;
-			associate.MaximumPduLength = MaxPduSize;
-
-			SendAssociateRequest(associate);
-		}
-
-		private void PerformQueryOrRelease() {
-			if (FindQueries.Count > 0) {
-				Tq query = FindQueries.Dequeue();
-				_current = query;
-				byte pcid = Associate.FindAbstractSyntax(FindSopClassUID);
-				if (Associate.GetPresentationContextResult(pcid) == DcmPresContextResult.Accept) {
-					DcmDataset dataset = query.ToDataset(Associate.GetAcceptedTransferSyntax(pcid));
-					SendCFindRequest(pcid, NextMessageID(), Priority, dataset);
-				}
-				else {
-					Log.Info("{0} <- Presentation context rejected: {1}", LogID, Associate.GetPresentationContextResult(pcid));
-					SendReleaseRequest();
-				}
-			}
-			else {
-				SendReleaseRequest();
-			}
-		}
-
-		protected override void OnReceiveAssociateAccept(DcmAssociate association) {
-			PerformQueryOrRelease();
-		}
-
-		protected override void OnReceiveCFindResponse(byte presentationID, ushort messageID, DcmDataset dataset, DcmStatus status) {
-			if (status.State != DcmState.Pending) {
-				if (OnCFindComplete != null) {
-					OnCFindComplete(_current);
-				}
-				PerformQueryOrRelease();
-			}
-			else if (dataset != null) {
-				if (OnCFindResponse != null) {
-					Tr result = Activator.CreateInstance<Tr>();
-					result.FromDataset(dataset);
-					OnCFindResponse(_current, result);
-				}
-			}
-		}
-		#endregion
-	}
-
-	public sealed class CFindPatientClient : CFindClient<CFindPatientQuery, CFindPatientResponse> {
-		public CFindPatientClient() : base() {
-		}
-	}
-
-	public sealed class CFindStudyClient : CFindClient<CFindStudyQuery, CFindStudyResponse> {
-		public CFindStudyClient() : base() {
-			FindSopClassUID = DcmUIDs.StudyRootQueryRetrieveInformationModelFIND;
-		}
-	}
-
 	public sealed class CFindWorklistClient : CFindClient<CFindWorklistQuery, CFindWorklistResponse> {
 		public CFindWorklistClient() : base() {
 			FindSopClassUID = DcmUIDs.ModalityWorklistInformationModelFIND;
 		}
 	}
+#endif
+	#endregion
 }

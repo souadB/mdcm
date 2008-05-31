@@ -291,8 +291,8 @@ namespace Dicom.Data {
 			if (frame < 0 || frame >= NumberOfFrames)
 				throw new IndexOutOfRangeException("Requested frame out of range!");
 
-			if (BitsAllocated == 8 && PixelDataElement.VR == DcmVR.OW && PixelDataElement.Endian == Endian.Little) {
-				PixelDataElement.SelectByteOrder(Endian.Big);
+			if (BitsAllocated == 8 && PixelDataItem.VR == DcmVR.OW && PixelDataItem.Endian == Endian.Little) {
+				PixelDataItem.SelectByteOrder(Endian.Big);
 			}
 
 			if (IsFragmented) {

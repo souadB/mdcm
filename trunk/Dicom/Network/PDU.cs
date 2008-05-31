@@ -109,10 +109,19 @@ namespace Dicom.Network {
 		/// </summary>
 		/// <param name="s">Output stream</param>
 		public void WritePDU(Stream s) {
-			BinaryWriter bw = EndianBinaryWriter.Create(s, Endian.Big);
-			bw.Write((byte)_type);
-			bw.Write((byte)0);
-			bw.Write((uint)_ms.Length);
+			byte[] buffer = new byte[6];
+
+			unchecked {
+				buffer[0] = _type;
+
+				uint length = (uint)_ms.Length;
+				buffer[2] = (byte)((length & 0xff000000U) >> 24);
+				buffer[3] = (byte)((length & 0x00ff0000U) >> 16);
+				buffer[4] = (byte)((length & 0x0000ff00U) >> 8);
+				buffer[5] = (byte)((length & 0x000000ffU));
+			}
+
+			s.Write(buffer, 0, 6);
 			_ms.WriteTo(s);
 			s.Flush();
 		}

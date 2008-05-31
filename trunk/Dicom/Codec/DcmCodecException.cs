@@ -27,12 +27,12 @@ namespace Dicom.Codec {
 	/// <summary>
 	/// DICOM Codec Exception
 	/// </summary>
-	public class DcmCodecException : Exception {
+	public class DicomCodecException : Exception {
 		/// <summary>
-		/// Initializes a new instance of the <see cref="DcmCodecException"/> class.
+		/// Initializes a new instance of the <see cref="DicomCodecException"/> class.
 		/// </summary>
 		/// <param name="msg">Exception message</param>
-		public DcmCodecException(String msg) : base(msg) {
+		public DicomCodecException(String msg) : base(msg) {
 		}
 	}
 }

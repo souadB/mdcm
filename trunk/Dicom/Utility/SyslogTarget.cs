@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 
 using NLog;
 using NLog.Targets;
@@ -111,6 +113,105 @@ namespace Dicom.Utility {
 				_socket.SendTo(buffer, _endpoint);
 			}
 			catch {
+			}
+		}
+	}
+
+	public class SyslogServer {
+		private int _port;
+		private bool _stop;
+		private Thread _thread;
+		private Logger _log;
+
+		public SyslogServer(Logger logTarget) : this(514, logTarget) {
+		}
+
+		public SyslogServer(int listenPort, Logger logTarget) {
+			_port = listenPort;
+			_log = logTarget;
+		}
+
+		public void Start() {
+			if (_thread == null) {
+				_stop = false;
+				_thread = new Thread(ServerProc);
+				_thread.IsBackground = true;
+				_thread.Start();
+			}
+		}
+
+		public void Stop() {
+			if (_thread != null) {
+				_stop = true;
+				//_thread.Join();
+				_thread = null;
+			}
+		}
+
+		private void ServerProc() {
+			Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+			EndPoint remoteEP = new IPEndPoint(IPAddress.Any, IPEndPoint.MinPort);
+			char[] splitChars = new char[] { '>' };
+
+			try {
+				byte[] buffer = new byte[4096];
+
+				socket.Bind(new IPEndPoint(IPAddress.Any, _port));
+
+				while (!_stop) {
+					if (!socket.Poll(50000, SelectMode.SelectRead))
+						continue;
+
+					try {
+						int count = socket.ReceiveFrom(buffer, ref remoteEP);
+
+						string message = Encoding.ASCII.GetString(buffer, 0, count);
+						string[] parts = message.Split(splitChars,  2);
+
+						SyslogFacility facility = SyslogFacility.User;
+						SyslogLevel level = SyslogLevel.Information;
+
+						if (parts.Length == 2) {
+							int code = int.Parse(parts[0].TrimStart('<'));
+							facility = (SyslogFacility)(code / 8);
+							level = (SyslogLevel)(code - ((int)facility * 8));
+							message = parts[1];
+						}
+
+						switch (level) {
+							case SyslogLevel.Emergency:
+							case SyslogLevel.Alert:
+								_log.Log(LogLevel.Fatal, message);
+								break;
+							case SyslogLevel.Critical:
+							case SyslogLevel.Error:
+								_log.Log(LogLevel.Error, message);
+								break;
+							case SyslogLevel.Warning:
+								_log.Log(LogLevel.Warn, message);
+								break;
+							case SyslogLevel.Debug:
+								_log.Log(LogLevel.Debug, message);
+								break;
+							case SyslogLevel.Notice:
+							case SyslogLevel.Information:
+							default:
+								_log.Log(LogLevel.Info, message);
+								break;
+						}
+					}
+					catch {
+					}
+				}
+			}
+			catch {
+			}
+			finally {
+				try {
+					socket.Close();
+				}
+				catch {
+				}
 			}
 		}
 	}
