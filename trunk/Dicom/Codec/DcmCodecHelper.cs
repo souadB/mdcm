@@ -28,13 +28,13 @@ using Dicom.Data;
 
 namespace Dicom.Codec {
 	public static class DcmCodecHelper {
-		public static void TogglePlanarConfiguration(byte[] pixelData, int numValues, int bitsAllocated, 
-			int samplesPerPixel, int oldPlanerConfiguration) {
+		public static void ChangePlanarConfiguration(byte[] pixelData, int numValues, int bitsAllocated, 
+			int samplesPerPixel, int oldPlanarConfiguration) {
 			int bytesAllocated = bitsAllocated / 8;
 			int numPixels = numValues / samplesPerPixel;
 			if (bytesAllocated == 1) {
 				byte[] buffer = new byte[pixelData.Length];
-				if (oldPlanerConfiguration == 1) {
+				if (oldPlanarConfiguration == 1) {
 					for (int n = 0; n < numPixels; n++) {
 						for (int s = 0; s < samplesPerPixel; s++) {
 							buffer[n * samplesPerPixel + s] = pixelData[n + numPixels * s];

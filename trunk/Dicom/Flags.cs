@@ -44,22 +44,22 @@ namespace Dicom {
 
 	[Flags]
 	public enum DicomDumpOptions {
-		None,
-		ShortenLongValues,
-		Restrict80CharactersPerLine,
-		KeepGroupLengthElements,
+		None = 0x00000000,
+		ShortenLongValues = 0x00000001,
+		Restrict80CharactersPerLine = 0x00000002,
+		KeepGroupLengthElements = 0x00000004,
 		Default = DicomDumpOptions.ShortenLongValues | DicomDumpOptions.Restrict80CharactersPerLine
 	}
 
 	[Flags]
 	public enum DicomReadOptions {
-		None,
-		KeepGroupLengths,
-		UseDictionaryForExplicitUN,
-		AllowSeekingForContext,
-		DeferLoadingLargeElements,
-		DeferLoadingPixelData,
-		ForcePrivateCreatorToLO,
+		None = 0x00000000,
+		KeepGroupLengths = 0x00000001,
+		UseDictionaryForExplicitUN = 0x00000002,
+		AllowSeekingForContext = 0x00000004,
+		DeferLoadingLargeElements = 0x00000008,
+		DeferLoadingPixelData = 0x00000010,
+		ForcePrivateCreatorToLO = 0x00000020,
 		Default = DicomReadOptions.UseDictionaryForExplicitUN | 
 				  DicomReadOptions.AllowSeekingForContext | 
 				  DicomReadOptions.DeferLoadingLargeElements | 
@@ -69,19 +69,19 @@ namespace Dicom {
 
 	[Flags]
 	public enum DicomWriteOptions {
-		None,
-		CalculateGroupLengths,
-		ExplicitLengthSequence,
-		ExplicitLengthSequenceItem,
-		WriteFragmentOffsetTable,
+		None = 0x00000000,
+		CalculateGroupLengths = 0x00000001,
+		ExplicitLengthSequence = 0x00000002,
+		ExplicitLengthSequenceItem = 0x00000004,
+		WriteFragmentOffsetTable = 0x00000008,
 		Default = DicomWriteOptions.CalculateGroupLengths | DicomWriteOptions.WriteFragmentOffsetTable
 	}
 
 	[Flags]
 	public enum XDicomOptions {
-		None,
-		Comments,
-		IncludePixelData,
+		None = 0x00000000,
+		Comments = 0x00000001,
+		IncludePixelData = 0x00000002,
 		Default = XDicomOptions.Comments
 	}
 }

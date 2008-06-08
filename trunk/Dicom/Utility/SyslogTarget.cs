@@ -45,6 +45,7 @@ namespace Dicom.Utility {
 	public class SyslogTarget : TargetWithLayout {
 		private int _port;
 		private string _host;
+		private string _identity;
 		private IPEndPoint _endpoint;
 		private Socket _socket;
 		private SyslogFacility _facility;
@@ -52,6 +53,7 @@ namespace Dicom.Utility {
 		public SyslogTarget() {
 			Host = "127.0.0.1";
 			Port = 514;
+			Identity = Environment.MachineName.Replace(' ', '_');
 			Facility = SyslogFacility.User;
 			Layout = "${message}";
 			_socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
@@ -65,6 +67,11 @@ namespace Dicom.Utility {
 		public int Port {
 			get { return _port; }
 			set { _port = value; }
+		}
+
+		public string Identity {
+			get { return _identity; }
+			set { _identity = value; }
 		}
 
 		public SyslogFacility Facility {
@@ -106,7 +113,13 @@ namespace Dicom.Utility {
 
 			int priority = (facility * 8) + level;
 
-			string message = String.Format("<{0}>{1}", priority, CompiledLayout.GetFormattedMessage(logEvent));
+			string time = null;
+			if (logEvent.TimeStamp.Day < 10)
+				time = logEvent.TimeStamp.ToString("MMM  d HH:mm:ss");
+			else
+				time = logEvent.TimeStamp.ToString("MMM dd HH:mm:ss");
+
+			string message = String.Format("<{0}>{1} {2} {3}", priority, time, _identity, CompiledLayout.GetFormattedMessage(logEvent));
 			byte[] buffer = Encoding.ASCII.GetBytes(message);
 
 			try {
@@ -151,7 +164,8 @@ namespace Dicom.Utility {
 		private void ServerProc() {
 			Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 			EndPoint remoteEP = new IPEndPoint(IPAddress.Any, IPEndPoint.MinPort);
-			char[] splitChars = new char[] { '>' };
+			char[] splitChars1 = new char[] { '>' };
+			char[] splitChars2 = new char[] { ' ' };
 
 			try {
 				byte[] buffer = new byte[4096];
@@ -166,7 +180,7 @@ namespace Dicom.Utility {
 						int count = socket.ReceiveFrom(buffer, ref remoteEP);
 
 						string message = Encoding.ASCII.GetString(buffer, 0, count);
-						string[] parts = message.Split(splitChars,  2);
+						string[] parts = message.Split(splitChars1,  2);
 
 						SyslogFacility facility = SyslogFacility.User;
 						SyslogLevel level = SyslogLevel.Information;
@@ -177,6 +191,12 @@ namespace Dicom.Utility {
 							level = (SyslogLevel)(code - ((int)facility * 8));
 							message = parts[1];
 						}
+
+						message = message.Substring(16);
+						parts = message.Split(splitChars2, 2);
+
+						if (parts.Length == 2)
+							message = parts[1];
 
 						switch (level) {
 							case SyslogLevel.Emergency:

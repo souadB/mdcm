@@ -54,6 +54,8 @@ public:
 	virtual IJpegCodec^ GetCodec(int bits, DcmJpegParameters^ jparams) = 0;
 
 	static void Register();
+
+	static int ScanJpegForBitDepth(DcmPixelData^ pixelData);
 };
 
 
@@ -68,7 +70,7 @@ public:
 		if (bits == 8)
 			return gcnew Jpeg8Codec(JpegMode::Baseline, 0, 0);
 		else
-			throw gcnew DicomCodecException(String::Format("Unable to create JPEG codec for bits stored == {0}", bits));
+			throw gcnew DicomCodecException(String::Format("Unable to create JPEG Process 1 codec for bits stored == {0}", bits));
 	}
 };
 
@@ -83,7 +85,7 @@ public:
 		if (bits == 12)
 			return gcnew Jpeg12Codec(JpegMode::Sequential, 0, 0);
 		else
-			throw gcnew DicomCodecException(String::Format("Unable to create JPEG codec for bits stored == {0}", bits));
+			throw gcnew DicomCodecException(String::Format("Unable to create JPEG Process 4 codec for bits stored == {0}", bits));
 	}
 };
 
@@ -95,14 +97,14 @@ public:
 	}
 
 	virtual IJpegCodec^ GetCodec(int bits, DcmJpegParameters^ jparams) override {
-		if (bits == 16)
-			return gcnew Jpeg16Codec(JpegMode::Lossless, jparams->Predictor, jparams->PointTransform);
-		else if (bits >= 12)
-			return gcnew Jpeg12Codec(JpegMode::Lossless, jparams->Predictor, jparams->PointTransform);
-		else if (bits >= 8)
+		if (bits <= 8)
 			return gcnew Jpeg8Codec(JpegMode::Lossless, jparams->Predictor, jparams->PointTransform);
+		else if (bits <= 12)
+			return gcnew Jpeg12Codec(JpegMode::Lossless, jparams->Predictor, jparams->PointTransform);
+		else if (bits <= 16)
+			return gcnew Jpeg16Codec(JpegMode::Lossless, jparams->Predictor, jparams->PointTransform);
 		else
-			throw gcnew DicomCodecException(String::Format("Unable to create JPEG codec for bits stored == {0}", bits));
+			throw gcnew DicomCodecException(String::Format("Unable to create JPEG Process 14 codec for bits stored == {0}", bits));
 	}
 };
 
@@ -114,14 +116,14 @@ public:
 	}
 
 	virtual IJpegCodec^ GetCodec(int bits, DcmJpegParameters^ jparams) override {
-		if (bits == 16)
-			return gcnew Jpeg16Codec(JpegMode::Lossless, 1, jparams->PointTransform);
-		else if (bits >= 12)
-			return gcnew Jpeg12Codec(JpegMode::Lossless, 1, jparams->PointTransform);
-		else if (bits >= 8)
+		if (bits <= 8)
 			return gcnew Jpeg8Codec(JpegMode::Lossless, 1, jparams->PointTransform);
+		else if (bits <= 12)
+			return gcnew Jpeg12Codec(JpegMode::Lossless, 1, jparams->PointTransform);
+		else if (bits <= 16)
+			return gcnew Jpeg16Codec(JpegMode::Lossless, 1, jparams->PointTransform);
 		else
-			throw gcnew DicomCodecException(String::Format("Unable to create JPEG codec for bits stored == {0}", bits));
+			throw gcnew DicomCodecException(String::Format("Unable to create JPEG Process 14 [SV1] codec for bits stored == {0}", bits));
 	}
 };
 
