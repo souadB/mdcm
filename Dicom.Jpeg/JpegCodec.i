@@ -225,7 +225,7 @@ void JPEGCODEC::Encode(DcmPixelData^ oldPixelData, DcmPixelData^ newPixelData, D
 	try {
 		if (oldPixelData->IsPlanar && oldPixelData->SamplesPerPixel > 1) {
 			newPixelData->PlanarConfiguration = 0;
-			DcmCodecHelper::TogglePlanarConfiguration(frameData, frameData->Length / oldPixelData->BytesAllocated, 
+			DcmCodecHelper::ChangePlanarConfiguration(frameData, frameData->Length / oldPixelData->BytesAllocated, 
 				oldPixelData->BitsAllocated, oldPixelData->SamplesPerPixel, 1);
 		}
 
@@ -236,11 +236,6 @@ void JPEGCODEC::Encode(DcmPixelData^ oldPixelData, DcmPixelData^ newPixelData, D
 		jerr.pub.output_message = IJGVERS::OutputMessage;
 
 		jpeg_create_compress(&cinfo);
-
-		// initialize client_data
-		//GCHandle^ thisHdl = GCHandle::Alloc(this, GCHandleType::Pinned);
-		//IntPtr thisPtr = thisHdl->AddrOfPinnedObject();
-		//cinfo.client_data = (void*)thisPtr;
 		cinfo.client_data = nullptr;
 		
 		JPEGCODEC::This = this;
@@ -320,6 +315,13 @@ void JPEGCODEC::Encode(DcmPixelData^ oldPixelData, DcmPixelData^ newPixelData, D
 
 		jpeg_finish_compress(&cinfo);
 		jpeg_destroy_compress(&cinfo);
+
+		if (oldPixelData->PhotometricInterpretation == "RGB" && cinfo.jpeg_color_space == JCS_YCbCr) {
+			if (params->SampleFactor == JpegSampleFactor::SF422)
+				newPixelData->PhotometricInterpretation = "YBR_FULL_422";
+			else
+				newPixelData->PhotometricInterpretation = "YBR_FULL";
+		}
 
 		newPixelData->AddFrame(MemoryBuffer->ToArray());
 	} finally {
@@ -433,43 +435,47 @@ void JPEGCODEC::Decode(DcmPixelData^ oldPixelData, DcmPixelData^ newPixelData, D
 
 	if (jpeg_read_header(&dinfo, TRUE) == JPEG_SUSPENDED)
 		throw gcnew DicomCodecException(gcnew String("Unable to decompress JPEG. Reason: Suspended"));
+		
+	if (newPixelData->PhotometricInterpretation == "YBR_FULL_422" || newPixelData->PhotometricInterpretation == "YBR_PARTIAL_422")
+		newPixelData->PhotometricInterpretation = "YBR_FULL";
+	else
+		newPixelData->PhotometricInterpretation = oldPixelData->PhotometricInterpretation;
 	
-	if (params->ConvertColorspaceToRGB) { 
-		if (dinfo.out_color_space == JCS_YCbCr || dinfo.out_color_space == JCS_RGB) { 
-			if (oldPixelData->IsSigned) 
-				throw gcnew DicomCodecException(gcnew String("JPEG codec unable to perform colorspace conversion on signed pixel data")); 
-			dinfo.jpeg_color_space = JCS_YCbCr;
-			dinfo.out_color_space = JCS_RGB;
-			newPixelData->PhotometricInterpretation = "RGB";
-		}
+	if (params->ConvertColorspaceToRGB && (dinfo.out_color_space == JCS_YCbCr || dinfo.out_color_space == JCS_RGB)) { 
+		if (oldPixelData->IsSigned) 
+			throw gcnew DicomCodecException(gcnew String("JPEG codec unable to perform colorspace conversion on signed pixel data")); 
+		dinfo.jpeg_color_space = JCS_YCbCr;
+		dinfo.out_color_space = JCS_RGB;
+		newPixelData->PhotometricInterpretation = "RGB";
+		newPixelData->PlanarConfiguration = 0;
 	} else { 
 		dinfo.jpeg_color_space = JCS_UNKNOWN; 
 		dinfo.out_color_space = JCS_UNKNOWN; 
 	}
-
-	if (oldPixelData->SamplesPerPixel >= 3)
-		newPixelData->PlanarConfiguration = 0;
+	
+	if (newPixelData->PhotometricInterpretation == "YBR_FULL")
+		newPixelData->PlanarConfiguration = 1;
 
 	jpeg_calc_output_dimensions(&dinfo);
-
-	int bufsize = dinfo.output_width * dinfo.output_components;
-	size_t rowsize = bufsize * sizeof(JSAMPLE);
-	int outsize = (int)(rowsize * dinfo.output_height);
-
 	jpeg_start_decompress(&dinfo);
 
-	MemoryStream^ stream = gcnew MemoryStream(outsize);
-	array<unsigned char>^ rowbuf = gcnew array<unsigned char>(rowsize);
-	pin_ptr<unsigned char> rowpin = &rowbuf[0];
-	unsigned char* rowptr = rowpin;
+	int rowSize = dinfo.output_width * dinfo.output_components * sizeof(JSAMPLE);
+	int frameSize = rowSize * dinfo.output_height;
+	array<unsigned char>^ frameBuffer = gcnew array<unsigned char>(frameSize);
+	pin_ptr<unsigned char> framePin = &frameBuffer[0];
+	unsigned char* framePtr = framePin;
 
 	while (dinfo.output_scanline < dinfo.output_height) {
-		jpeg_read_scanlines(&dinfo, (JSAMPARRAY)&rowptr, 1);
-		stream->Write(rowbuf, 0, rowbuf->Length);
+		int rows = jpeg_read_scanlines(&dinfo, (JSAMPARRAY)&framePtr, dinfo.output_height - dinfo.output_scanline);
+		framePtr += rows * rowSize;
 	}
 
 	oldPixelData->Unload();
-	newPixelData->AddFrame(stream->GetBuffer());
+	
+	if (newPixelData->IsPlanar)
+		DcmCodecHelper::ChangePlanarConfiguration(frameBuffer, frameSize / newPixelData->BytesAllocated, newPixelData->BitsAllocated, newPixelData->SamplesPerPixel, 0);
+
+	newPixelData->AddFrame(frameBuffer);
 
 	jpeg_destroy_decompress(&dinfo);
 }

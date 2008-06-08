@@ -89,11 +89,11 @@ namespace Dicom.Data {
 			_height = dataset.GetUInt16(DcmTags.Rows, 0);
 			_bitsStored = dataset.GetUInt16(DcmTags.BitsStored, 0);
 			_bitsAllocated = dataset.GetUInt16(DcmTags.BitsAllocated, 0);
-			_highBit = dataset.GetUInt16(DcmTags.HighBit, (ushort)(_bitsAllocated - _bitsStored));
+			_highBit = dataset.GetUInt16(DcmTags.HighBit, (ushort)(_bitsStored - 1));
 			_samplesPerPixel = dataset.GetUInt16(DcmTags.SamplesPerPixel, 0);
 			_pixelRepresentation = dataset.GetUInt16(DcmTags.PixelRepresentation, 0);
 			_planarConfiguration = dataset.GetUInt16(DcmTags.PlanarConfiguration, 0);
-			_photometricInterpretation = dataset.GetString(DcmTags.PhotometricInterpretation, "");
+			_photometricInterpretation = dataset.GetString(DcmTags.PhotometricInterpretation, String.Empty);
 			_rescaleSlope = dataset.GetDouble(DcmTags.RescaleSlope, 1.0);
 			_rescaleIntercept = dataset.GetDouble(DcmTags.RescaleIntercept, 0.0);
 			_pixelDataItem = dataset.GetItem(DcmTags.PixelData);
@@ -617,6 +617,21 @@ namespace Dicom.Data {
 			dataset.AddItem(_pixelDataItem);
 		}
 		#endregion
+
+		public override string ToString() {
+			StringBuilder sb = new StringBuilder();
+			sb.AppendFormat("Pixel Data (VR={0}): {1}\n", PixelDataItem.VR.VR, TransferSyntax);
+			sb.AppendFormat("    Photometric Interpretation: {0}\n", PhotometricInterpretation);
+			sb.AppendFormat("    Bits Allocated: {0};  Stored: {1};  High: {2};  Signed: {3}\n", BitsAllocated, BitsStored, HighBit, IsSigned);
+			sb.AppendFormat("    Width: {0};  Height: {1};  Frames: {2}\n", ImageWidth, ImageHeight, NumberOfFrames);
+			if (SamplesPerPixel > 1)
+				sb.AppendFormat("    Samples/Pixel: {0};  Planar: {1}\n", SamplesPerPixel, IsPlanar);
+			else
+				sb.AppendFormat("    Rescale Slope: {0};  Intercept: {1}\n", RescaleSlope, RescaleIntercept);
+			if (IsLossy)
+				sb.AppendFormat("    Lossy: {0} ({1})\n", LossyCompressionMethod, LossyCompressionRatio);
+			return sb.ToString();
+		}
 		#endregion
 
 		#region Protected Members

@@ -165,9 +165,11 @@ namespace Dicom.Data {
 		}
 
 		public static bool MatchAll(IList<DcmMatch> matches, DcmDataset dataset) {
-			foreach (DcmMatch match in matches)
-				if (!match.Match(dataset))
+			foreach (DcmMatch match in matches) {
+				if (!match.Match(dataset)) {
 					return false;
+				}
+			}
 			return true;
 		}
 		#endregion

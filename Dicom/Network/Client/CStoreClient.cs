@@ -235,6 +235,7 @@ namespace Dicom.Network.Client {
 		private object _lock = new object();
 		private ManualResetEvent _mreStore = new ManualResetEvent(false);
 		private bool _cancel = false;
+		private bool _offerExplicit = false;
 		#endregion
 
 		#region Public Constructor
@@ -260,6 +261,11 @@ namespace Dicom.Network.Client {
 		public bool SerializedPresentationContexts {
 			get { return _serialPresContexts; }
 			set { _serialPresContexts = value; }
+		}
+
+		public bool OfferExplicitSyntax {
+			get { return _offerExplicit; }
+			set { _offerExplicit = value; }
 		}
 
 		public int Linger {
@@ -308,6 +314,8 @@ namespace Dicom.Network.Client {
 							_presContextMap[uid].Remove(_preferredTransferSyntax);
 						_presContextMap[uid].Insert(0, _preferredTransferSyntax);
 					}
+					if (_offerExplicit && !_presContextMap[uid].Contains(DcmTS.ExplicitVRLittleEndian))
+						_presContextMap[uid].Add(DcmTS.ExplicitVRLittleEndian);
 					if (!_presContextMap[uid].Contains(DcmTS.ImplicitVRLittleEndian))
 						_presContextMap[uid].Add(DcmTS.ImplicitVRLittleEndian);
 				}

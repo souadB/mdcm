@@ -196,7 +196,7 @@ JMESSAGE(JWRN_HUFF_BAD_CODE, "Corrupt JPEG data: bad Huffman code")
 JMESSAGE(JWRN_JFIF_MAJOR, "Warning: unknown JFIF revision number 0.00")
 JMESSAGE(JWRN_JPEG_EOF, "Premature end of JPEG file")
 JMESSAGE(JWRN_MUST_DOWNSCALE,
-	 "Must downscale data from 0 bits to 0")
+	 "Must downscale data from %d bits to %d")
 JMESSAGE(JWRN_MUST_RESYNC,
 	 "Corrupt JPEG data: found marker 0x00 instead of RST0")
 JMESSAGE(JWRN_NOT_SEQUENTIAL, "Invalid SOS parameters for sequential JPEG")

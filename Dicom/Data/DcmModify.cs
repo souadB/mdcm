@@ -142,8 +142,9 @@ namespace Dicom.Data {
 		}
 
 		public static void RunAll(IList<DcmModify> modifiers, DcmDataset dataset) {
-			foreach (DcmModify modify in modifiers)
+			foreach (DcmModify modify in modifiers) {
 				modify.Modify(dataset);
+			}
 		}
 
 		public override string ToString() {
@@ -231,12 +232,13 @@ namespace Dicom.Data {
 
 				DcmElement elem = dataset.GetElement(tag);
 
-				if (elem == null) {
-					if (_op == DicomModifyOp.AddOrReplace) {
-						dataset.AddElementWithValueString(tag, _output);
-					}
+				if (_op == DicomModifyOp.AddOrReplace) {
+					dataset.AddElementWithValueString(tag, _output);
 					return;
 				}
+
+				if (elem == null)
+					return;
 
 				string value = elem.GetValueString();
 
