@@ -22,99 +22,82 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading;
 
 using Dicom;
 using Dicom.Codec;
 using Dicom.Data;
 using Dicom.Network;
+using Dicom.Utility;
 
 namespace Dicom.Network.Client {
-	internal class SyntaxParams {
-		public SyntaxParams(DcmTS ts, DcmCodecParameters codecParams) {
-			TransferSyntax = ts;
-			Params = codecParams;
-		}
-
-		public DcmTS TransferSyntax;
-		public DcmCodecParameters Params;
-	}
-
-	public class CStoreInfo {
-		#region Public Constructor
-		public CStoreInfo(string fileName) {
-			FileName = fileName;
-			LoadFields();
-		}
-
-		public CStoreInfo(string fileName, object userState) {
-			FileName = fileName;
-			UserState = userState;
-			LoadFields();
-		}
-		#endregion
-
+	/// <summary>
+	/// C-Store Request Information
+	/// </summary>
+	public class CStoreRequestInfo : IPreloadable<CStoreClient> {
 		#region Private Members
-		private static DcmTag StopTag = new DcmTag(0x0010, 0x0041);
-
-		private object _loadLock = new object();
+		private bool _loaded;
+		private string _fileName;
 		private DcmTS _transferSyntax;
 		private DcmTS _originalTransferSyntax;
 		private DcmDataset _dataset;
 		private Exception _exception;
 		private object _userState;
-		private DcmStatus _status = DcmStatus.Pending;
+		private DcmStatus _status;
+		private DcmUID _sopClass;
+		private DcmUID _sopInst;
 		#endregion
 
-		#region Public Members
-		[DicomField(DcmConstTags.SOPClassUID, DefaultValue = DicomFieldDefault.Default)]
-		public readonly DcmUID SOPClassUID;
+		#region Public Constructors
+		public CStoreRequestInfo(string fileName) : this(fileName, null) {
+		}
 
-		[DicomField(DcmConstTags.SOPInstanceUID, DefaultValue = DicomFieldDefault.Default)]
-		public readonly DcmUID SOPInstanceUID;
+		public CStoreRequestInfo(string fileName, object userModel) {
+			try {
+				_fileName = fileName;
+				if (!File.Exists(fileName))
+					throw new FileNotFoundException("Unable to load DICOM file!", fileName);
 
-		[DicomField(DcmConstTags.StudyDate, DefaultValue = DicomFieldDefault.Default)]
-		public readonly DateTime StudyDate;
+				DcmTag stopTag = (userModel != null) ? DcmTags.PixelData : DcmFileMetaInfo.StopTag;
+				DicomFileFormat ff = new DicomFileFormat();
+				ff.Load(fileName, stopTag, DicomReadOptions.Default);
+				_transferSyntax = ff.FileMetaInfo.TransferSyntax;
+				_originalTransferSyntax = _transferSyntax;
+				_sopClass = ff.FileMetaInfo.MediaStorageSOPClassUID;
+				_sopInst = ff.FileMetaInfo.MediaStorageSOPInstanceUID;
+				if (userModel != null) {
+					ff.Dataset.LoadDicomFields(userModel);
+					_userState = userModel;
+				}
+				_status = DcmStatus.Pending;
+			}
+			catch (Exception e) {
+				_status = DcmStatus.ProcessingFailure;
+				_exception = e;
+				throw;
+			}
+		}
+		#endregion
 
-		[DicomField(DcmConstTags.AccessionNumber, DefaultValue = DicomFieldDefault.Default)]
-		public readonly string AccessionNumber;
+		#region Public Properties
+		public bool IsLoaded {
+			get { return _loaded; }
+		}
 
-		[DicomField(DcmConstTags.Modality, DefaultValue = DicomFieldDefault.Default)]
-		public readonly string Modality;
+		public string FileName {
+			get { return _fileName; }
+		}
 
-		[DicomField(DcmConstTags.StudyDescription, DefaultValue = DicomFieldDefault.Default)]
-		public readonly string StudyDescription;
+		public DcmUID SOPClassUID {
+			get { return _sopClass; }
+		}
 
-		[DicomField(DcmConstTags.StudyInstanceUID, DefaultValue = DicomFieldDefault.Default)]
-		public readonly DcmUID StudyInstanceUID;
-
-		[DicomField(DcmConstTags.SeriesInstanceUID, DefaultValue = DicomFieldDefault.Default)]
-		public readonly DcmUID SeriesInstanceUID;
-
-		[DicomField(DcmConstTags.StudyID, DefaultValue = DicomFieldDefault.Default)]
-		public readonly string StudyID;
-
-		[DicomField(DcmConstTags.PatientsName, DefaultValue = DicomFieldDefault.Default)]
-		public readonly string PatientsName;
-		
-		[DicomField(DcmConstTags.PatientID, DefaultValue = DicomFieldDefault.Default)]
-		public readonly string PatientID;
-
-		[DicomField(DcmConstTags.PatientsBirthDate, DefaultValue = DicomFieldDefault.Default)]
-		public readonly DateTime PatientsBirthDate;
-
-		[DicomField(DcmConstTags.PatientsSex, DefaultValue = DicomFieldDefault.Default)]
-		public readonly string PatientsSex;
-
-		public readonly string FileName;
+		public DcmUID SOPInstanceUID {
+			get { return _sopInst; }
+		}
 
 		public DcmTS TransferSyntax {
 			get { return _transferSyntax; }
-		}
-
-		internal bool IsLoaded {
-			get { return _dataset != null; }
 		}
 
 		public bool HasError {
@@ -137,156 +120,298 @@ namespace Dicom.Network.Client {
 		#endregion
 
 		#region Public Methods
-		internal bool CanStream(DcmTS ts) {
-			return ts == _originalTransferSyntax;
-		}
+		/// <summary>
+		/// Loads the DICOM file and changes the transfer syntax if needed. (Internal)
+		/// </summary>
+		/// <param name="client">C-Store Client</param>
+		public void Load(CStoreClient client) {
+			if (_loaded)
+				return;
 
-		internal DcmDataset GetDataset(DcmTS ts, DcmCodecParameters codecParams) {
-			lock (_loadLock) {
-				if (ts != _transferSyntax)
-					_dataset = null;
-				if (_dataset == null)
-					Preload(new SyntaxParams(ts, codecParams));
-				return _dataset;
-			}
-		}
+			try {
+				DcmTS tx = null;
 
-		internal Stream GetStream(DcmTS ts) {
-			lock (_loadLock) {
-				Unload();
-				if (CanStream(ts))
-					return DicomFileFormat.GetDatasetStream(FileName);
-				else
-					return null;
-			}
-		}
-
-		internal object LoadLock {
-			get { return _loadLock; }
-		}
-		#endregion
-
-		#region Private Methods
-		internal void Preload(object state) {
-			SyntaxParams param = (SyntaxParams)state;
-			DcmTS ts = param.TransferSyntax;
-			lock (_loadLock) {
-				if (ts != _transferSyntax) {
-					_dataset = null;
-					_exception = null;
-					_transferSyntax = _originalTransferSyntax;
+				foreach (DcmPresContext pc in client.Associate.GetPresentationContexts()) {
+					if (pc.Result == DcmPresContextResult.Accept && pc.AbstractSyntax == _sopClass) {
+						tx = pc.AcceptedTransferSyntax;
+						break;
+					}
 				}
-				if (ts == _originalTransferSyntax)
+
+				if (tx == null)
+					throw new DcmNetworkException("No accepted presentation contexts for abstract syntax: " + _sopClass.Description);
+
+				// Possible to stream from file?
+				if (!client.DisableFileStreaming && tx == TransferSyntax)
 					return;
-				if (_dataset == null && _exception == null) {
-					try {
-						DicomFileFormat ff = new DicomFileFormat();
-						ff.Load(FileName, DicomReadOptions.Default);
-						_dataset = ff.Dataset;
 
-						if (_dataset.InternalTransferSyntax != ts) {
-							_dataset.ChangeTransferSyntax(ts, param.Params);
+				DcmCodecParameters codecParams = null;
+				if (tx == client.PreferredTransferSyntax)
+					codecParams = client.PreferredTransferSyntaxParams;
+
+				DicomFileFormat ff = new DicomFileFormat();
+				ff.Load(FileName, DicomReadOptions.Default);
+
+				if (_originalTransferSyntax != tx) {
+					if (_originalTransferSyntax.IsEncapsulated) {
+						// Dataset is compressed... decompress
+						try {
+							ff.ChangeTransferSytnax(DcmTS.ExplicitVRLittleEndian, null);
 						}
-						_transferSyntax = _dataset.InternalTransferSyntax;
+						catch {
+							client.Log.Error("{0} -> Unable to change transfer syntax:\n\tclass: {1}\n\told: {2}\n\tnew: {3}\n\treason: {4}\n\tcodecs: {5} - {6}",
+								client.LogID, SOPClassUID.Description, _originalTransferSyntax, DcmTS.ExplicitVRLittleEndian,
+#if DEBUG
+								HasError ? "Unknown" : Error.ToString(),
+#else
+								HasError ? "Unknown" : Error.Message,
+#endif
+								DicomCodec.HasCodec(_originalTransferSyntax), DicomCodec.HasCodec(DcmTS.ExplicitVRLittleEndian));
+							throw;
+						}
 					}
-					catch (Exception e) {
-						_dataset = null;
-						_exception = e;
-						_transferSyntax = _originalTransferSyntax;
+
+					if (tx.IsEncapsulated) {
+						// Dataset needs to be compressed
+						try {
+							ff.ChangeTransferSytnax(tx, codecParams);
+						}
+						catch {
+							client.Log.Error("{0} -> Unable to change transfer syntax:\n\tclass: {1}\n\told: {2}\n\tnew: {3}\n\treason: {4}\n\tcodecs: {5} - {6}",
+								client.LogID, SOPClassUID.Description, ff.Dataset.InternalTransferSyntax, tx,
+#if DEBUG
+								HasError ? "Unknown" : Error.ToString(),
+#else
+								HasError ? "Unknown" : Error.Message,
+#endif
+								DicomCodec.HasCodec(ff.Dataset.InternalTransferSyntax), DicomCodec.HasCodec(tx));
+							throw;
+						}
 					}
 				}
-			}
-		}
 
-		internal void Unload() {
-			lock (_loadLock) {
+				_dataset = ff.Dataset;
+				_transferSyntax = tx;
+			}
+			catch (Exception e) {
 				_dataset = null;
 				_transferSyntax = _originalTransferSyntax;
+				_status = DcmStatus.ProcessingFailure;
+				_exception = e;
+			}
+			finally {
+				_loaded = true;
 			}
 		}
 
-		private void LoadFields() {
-			lock (_loadLock) {
-				try {
-					DicomFileFormat ff = new DicomFileFormat();
-					ff.Load(FileName, StopTag, DicomReadOptions.Default);
-					ff.Dataset.LoadDicomFields(this);
-					_transferSyntax = ff.Dataset.InternalTransferSyntax;
-					_originalTransferSyntax = _transferSyntax;
-				}
-				catch (Exception e) {
-					_exception = e;
+		/// <summary>
+		/// Unloads dataset from memory. (Internal)
+		/// </summary>
+		public void Unload() {
+			_dataset = null;
+			_transferSyntax = _originalTransferSyntax;
+			_loaded = false;
+		}
+
+		/// <summary>
+		/// Unloads the dataset and clears any errors. (Internal)
+		/// </summary>
+		public void Reset() {
+			Unload();
+			_status = DcmStatus.Pending;
+			_exception = null;
+		}
+
+		internal bool Send(CStoreClient client) {
+			Load(client);
+
+			if (HasError) {
+				if (client.Associate.FindAbstractSyntax(SOPClassUID) == 0) {
+					client.Reassociate();
+					return false;
 				}
 			}
+
+			if (client.OnCStoreRequestBegin != null)
+				client.OnCStoreRequestBegin(client, this);
+
+			if (HasError) {
+				if (client.OnCStoreRequestFailed != null)
+					client.OnCStoreRequestFailed(client, this);
+				return false;
+			}
+
+			byte pcid = client.Associate.FindAbstractSyntaxWithTransferSyntax(SOPClassUID, TransferSyntax);
+
+			if (pcid == 0) {
+				client.Log.Info("{0} -> C-Store request failed: No accepted presentation context for {1}", client.LogID, SOPClassUID.Description);
+				Status = DcmStatus.SOPClassNotSupported;
+				if (client.OnCStoreRequestFailed != null)
+					client.OnCStoreRequestFailed(client, this);
+				return false;
+			}
+
+			if (_dataset != null) {
+				client.SendCStoreRequest(pcid, SOPInstanceUID, _dataset);
+			}
+			else {
+				using (Stream s = DicomFileFormat.GetDatasetStream(FileName)) {
+					client.SendCStoreRequest(pcid, SOPInstanceUID, s);
+				}
+			}
+
+			if (client.OnCStoreRequestComplete != null)
+				client.OnCStoreRequestComplete(client, this);
+
+			return true;
 		}
 		#endregion
 	}
 
-	public delegate void CStoreCallback(CStoreClient client, CStoreInfo info, DcmStatus status);
+	public delegate void CStoreClientCallback(CStoreClient client);
+	public delegate void CStoreRequestCallback(CStoreClient client, CStoreRequestInfo info);
+	public delegate void CStoreRequestProgressCallback(CStoreClient client, CStoreRequestInfo info, DcmDimseProgress progress);
 
-	public sealed class CStoreClient : DcmClientBase {
+	/// <summary>
+	/// DICOM C-Store SCU
+	/// </summary>
+	public class CStoreClient : DcmClientBase {
 		#region Private Members
-		private List<CStoreInfo> _images = new List<CStoreInfo>();
+		private int _preloadCount = 1;
+		private PreloadQueue<CStoreRequestInfo, CStoreClient> _sendQueue;
+		private CStoreRequestInfo _current;
 		private DcmTS _preferredTransferSyntax;
 		private DcmCodecParameters _preferedSyntaxParams;
-		private bool _serialPresContexts;
+		private bool _disableFileStream = false;
+		private bool _serialPresContexts = false;
 		private int _linger = 0;
 		private Dictionary<DcmUID, List<DcmTS>> _presContextMap = new Dictionary<DcmUID, List<DcmTS>>();
 		private object _lock = new object();
-		private ManualResetEvent _mreStore = new ManualResetEvent(false);
 		private bool _cancel = false;
 		private bool _offerExplicit = false;
 		#endregion
 
-		#region Public Constructor
+		#region Public Constructors
 		public CStoreClient() : base() {
 			CallingAE = "STORE_SCU";
 			CalledAE = "STORE_SCP";
+			_sendQueue = new PreloadQueue<CStoreRequestInfo, CStoreClient>(this);
 		}
 		#endregion
 
-		#region Public Members
-		public CStoreCallback OnCStoreResponse;
+		#region Public Properties
+		public CStoreRequestCallback OnCStoreRequestBegin;
+		public CStoreRequestCallback OnCStoreRequestFailed;
+		public CStoreRequestProgressCallback OnCStoreRequestProgress;
+		public CStoreRequestCallback OnCStoreRequestComplete;
+		public CStoreRequestCallback OnCStoreResponseReceived;
 
+		public CStoreClientCallback OnCStoreComplete;
+		public CStoreClientCallback OnCStoreClosed;
+
+		/// <summary>
+		/// First transfer syntax proposed in association.  Used if accepted.
+		/// </summary>
 		public DcmTS PreferredTransferSyntax {
 			get { return _preferredTransferSyntax; }
 			set { _preferredTransferSyntax = value; }
 		}
 
-		public DcmCodecParameters PreferredSyntaxParams {
+		/// <summary>
+		/// Codec parameters for the preferred transfer syntax.
+		/// </summary>
+		public DcmCodecParameters PreferredTransferSyntaxParams {
 			get { return _preferedSyntaxParams; }
 			set { _preferedSyntaxParams = value; }
 		}
 
+		/// <summary>
+		/// Create a unique presentation context for each combination of abstract and transfer syntaxes.
+		/// </summary>
 		public bool SerializedPresentationContexts {
 			get { return _serialPresContexts; }
 			set { _serialPresContexts = value; }
 		}
 
+		/// <summary>
+		/// Set to true to force DICOM datasets to be loaded into memory.
+		/// </summary>
+		public bool DisableFileStreaming {
+			get { return _disableFileStream; }
+			set { _disableFileStream = value; }
+		}
+
+		/// <summary>
+		/// Propose Explicit VR Little Endian for all presentation contexts
+		/// </summary>
 		public bool OfferExplicitSyntax {
 			get { return _offerExplicit; }
 			set { _offerExplicit = value; }
 		}
 
+		/// <summary>
+		/// Number of requests to keep preloaded in memory.
+		/// </summary>
+		public int PreloadCount {
+			get { return _preloadCount; }
+			set { _preloadCount = value; }
+		}
+
+		/// <summary>
+		/// Time to keep association alive after sending last image in queue.
+		/// </summary>
 		public int Linger {
 			get { return _linger; }
 			set { _linger = value; }
 		}
 
-		public void Add(string FileName) {
-			if (!File.Exists(FileName))
-				return;
-			CStoreInfo info = new CStoreInfo(FileName);
-			Add(info);
+		/// <summary>
+		/// Number of pending DICOM files to be sent.
+		/// </summary>
+		public int PendingCount {
+			get {
+				if (_current != null)
+					return _sendQueue.Count + 1;
+				return _sendQueue.Count;
+			}
+		}
+		#endregion
+
+		#region Public Methods
+		/// <summary>
+		/// Enqueues a file to be transfered to the remote DICOM node.
+		/// </summary>
+		/// <param name="fileName">File containing DICOM dataset.</param>
+		/// <returns>C-Store Request Information</returns>
+		public CStoreRequestInfo AddFile(string fileName) {
+			return AddFile(fileName, null);
 		}
 
-		public void Add(CStoreInfo info) {
+		/// <summary>
+		/// Enqueues a file to be transfered to the remote DICOM node.
+		/// </summary>
+		/// <param name="fileName">File containing DICOM dataset.</param>
+		/// <param name="userModel">
+		/// User class containing one or more properties marked with a <see cref="Dicom.Data.DicomFieldAttribute"/>.
+		/// This object will be stored in the UserState property of the CStoreRequestInfo object.
+		/// </param>
+		/// <returns>C-Store Request Information</returns>
+		public CStoreRequestInfo AddFile(string fileName, object userModel) {
+			CStoreRequestInfo info = new CStoreRequestInfo(fileName, userModel);
+			AddFile(info);
+			return info;
+		}
+
+		/// <summary>
+		/// Enqueues a file to be transfered to the remote DICOM node.
+		/// </summary>
+		/// <param name="info">C-Store Request Information</param>
+		public void AddFile(CStoreRequestInfo info) {
+			if (info.HasError)
+				return;
+
 			lock (_lock) {
-				foreach (CStoreInfo nfo in _images) {
-					if (nfo.FileName == info.FileName)
-						return;
-				}
-				_images.Add(info);
+				_sendQueue.Enqueue(info);
 				if (!_presContextMap.ContainsKey(info.SOPClassUID)) {
 					_presContextMap.Add(info.SOPClassUID, new List<DcmTS>());
 				}
@@ -294,34 +419,50 @@ namespace Dicom.Network.Client {
 					_presContextMap[info.SOPClassUID].Add(info.TransferSyntax);
 				}
 			}
+
+			if (Linger > 0 && IsClosed && CanReconnect && !ClosedOnError)
+				Reconnect();
 		}
 
+		/// <summary>
+		/// Cancels all pending C-Store requests and releases the association.
+		/// 
+		/// Call Reconnect() to resume transfer.
+		/// </summary>
+		/// <param name="wait">
+		/// If true the command will wait for the current C-Store operation to complete 
+		/// and the association to be released.
+		/// </param>
 		public void Cancel(bool wait) {
 			_cancel = true;
-			if (wait && !IsClosed)
-				Wait();
+			if (!IsClosed) {
+				if (wait)
+					Wait();
+				else
+					Close();
+			}
 		}
 		#endregion
 
-		#region Protected Overrides
+		#region Protected Methods
 		protected override void OnConnected() {
-			if (_images.Count > 0) {
+			if (PendingCount > 0) {
 				DcmAssociate associate = new DcmAssociate();
 
-				foreach (DcmUID uid in _presContextMap.Keys) {
-					if (_preferredTransferSyntax != null) {
-						if (!_presContextMap[uid].Contains(_preferredTransferSyntax))
-							_presContextMap[uid].Remove(_preferredTransferSyntax);
-						_presContextMap[uid].Insert(0, _preferredTransferSyntax);
+				lock (_lock) {
+					foreach (DcmUID uid in _presContextMap.Keys) {
+						if (_preferredTransferSyntax != null) {
+							if (!_presContextMap[uid].Contains(_preferredTransferSyntax))
+								_presContextMap[uid].Remove(_preferredTransferSyntax);
+							_presContextMap[uid].Insert(0, _preferredTransferSyntax);
+						}
+						if (_offerExplicit && !_presContextMap[uid].Contains(DcmTS.ExplicitVRLittleEndian))
+							_presContextMap[uid].Add(DcmTS.ExplicitVRLittleEndian);
+						if (!_presContextMap[uid].Contains(DcmTS.ImplicitVRLittleEndian))
+							_presContextMap[uid].Add(DcmTS.ImplicitVRLittleEndian);
 					}
-					if (_offerExplicit && !_presContextMap[uid].Contains(DcmTS.ExplicitVRLittleEndian))
-						_presContextMap[uid].Add(DcmTS.ExplicitVRLittleEndian);
-					if (!_presContextMap[uid].Contains(DcmTS.ImplicitVRLittleEndian))
-						_presContextMap[uid].Add(DcmTS.ImplicitVRLittleEndian);
-				}
 
-				if (SerializedPresentationContexts) {
-					lock (_lock) {
+					if (SerializedPresentationContexts) {
 						foreach (DcmUID uid in _presContextMap.Keys) {
 							foreach (DcmTS ts in _presContextMap[uid]) {
 								byte pcid = associate.AddPresentationContext(uid);
@@ -329,8 +470,7 @@ namespace Dicom.Network.Client {
 							}
 						}
 					}
-				} else {
-					lock (_lock) {
+					else {
 						foreach (DcmUID uid in _presContextMap.Keys) {
 							byte pcid = associate.AddOrGetPresentationContext(uid);
 							foreach (DcmTS ts in _presContextMap[uid]) {
@@ -338,23 +478,38 @@ namespace Dicom.Network.Client {
 							}
 						}
 					}
-				}				
+				}
 
 				associate.CalledAE = CalledAE;
 				associate.CallingAE = CallingAE;
 				associate.MaximumPduLength = MaxPduSize;
 
 				SendAssociateRequest(associate);
-			} else {
+			}
+			else {
 				Close();
 			}
 		}
 
 		protected override void OnConnectionClosed() {
-			if (!ClosedOnError) {
-				if (_images.Count > 0)
-					Reconnect();
+			if (_current != null) {
+				_current.Reset();
+				AddFile(_current);
+				_current = null;
 			}
+
+			if (!ClosedOnError && !_cancel) {
+				if (PendingCount > 0) {
+					Reconnect();
+					return;
+				}
+
+				if (OnCStoreComplete != null)
+					OnCStoreComplete(this);
+			}
+
+			if (OnCStoreClosed != null)
+				OnCStoreClosed(this);
 		}
 
 		protected override void OnReceiveAssociateAccept(DcmAssociate association) {
@@ -362,147 +517,53 @@ namespace Dicom.Network.Client {
 		}
 
 		protected override void OnReceiveReleaseResponse() {
-			InternalClose(_images.Count == 0);
+			InternalClose(PendingCount == 0);
 		}
 
 		protected override void OnReceiveCStoreResponse(byte presentationID, ushort messageIdRespondedTo, DcmUID affectedInstance, DcmStatus status) {
-			_images[0].Status = status;
-			if (OnCStoreResponse != null)
-				OnCStoreResponse(this, _images[0], status);
-			lock (_lock)
-				_images.RemoveAt(0);
+			_current.Status = status;
+			if (OnCStoreResponseReceived != null)
+				OnCStoreResponseReceived(this, _current);
+			_current = null;
 			SendNextCStoreRequest();
+		}
+
+		protected override void OnSendDimseProgress(byte pcid, DcmCommand command, DcmDataset dataset, DcmDimseProgress progress) {
+			if (OnCStoreRequestProgress != null && _current != null)
+				OnCStoreRequestProgress(this, _current, progress);
 		}
 
 		private void SendNextCStoreRequest() {
 			DateTime linger = DateTime.Now.AddSeconds(Linger + 1);
-			while (linger > DateTime.Now) {
-				while (_images.Count > 0 && !_cancel) {
-					CStoreInfo info = _images[0];
-					if (Associate.FindAbstractSyntax(info.SOPClassUID) == 0) {
-						//cycle association
-						info.Unload();
-						SendReleaseRequest();
+			while (linger > DateTime.Now && !_cancel) {
+				while (PendingCount > 0 && !_cancel) {
+					_current = _sendQueue.Dequeue();
+					_sendQueue.Preload(_preloadCount);
+					if (_current.Send(this)) {
+						_current.Unload();
 						return;
-					} else {
-						List<DcmTS> tried = new List<DcmTS>();
-						DcmTS tx = SelectBestTransferSyntax(info);
-						while (tx != null) {
-							byte pcid = Associate.FindAbstractSyntaxWithTransferSyntax(info.SOPClassUID, tx);
-							if (pcid == 0)
-								continue;
-							DcmPresContextResult result = Associate.GetPresentationContextResult(pcid);
-							if (result == DcmPresContextResult.Accept) {
-								DcmCodecParameters codecParams = null;
-								if (tx == _preferredTransferSyntax)
-									codecParams = _preferedSyntaxParams;
-								info.Preload(new SyntaxParams(tx, codecParams));
-								PreloadNextCStoreRequest();
-								ushort messageID = NextMessageID();
-								if (info.CanStream(tx)) {
-									Stream stream = info.GetStream(tx);
-									SendCStoreRequest(pcid, messageID, info.SOPInstanceUID, Priority, stream);
-									return;
-								} else {
-									codecParams = null;
-									if (tx == _preferredTransferSyntax)
-										codecParams = _preferedSyntaxParams;
-									DcmDataset ds = info.GetDataset(tx, codecParams);
-									if (ds != null) {
-										SendCStoreRequest(pcid, messageID, info.SOPInstanceUID, Priority, ds);
-										return;
-									} else {
-										Log.Error("{0} -> C-Store unable to transcode image:\n\tclass: {1}\n\told: {2}\n\tnew: {3}\n\treason: {4}\n\tcodecs: {5} - {6}", 
-											LogID, info.SOPClassUID.Description, info.TransferSyntax, tx,
-#if DEBUG
-											(info.Error == null) ? "Unknown" : info.Error.ToString(),
-#else
- 											(info.Error == null) ? "Unknown" : info.Error.Message,
-#endif
-											DicomCodec.HasCodec(info.TransferSyntax), DicomCodec.HasCodec(tx));
-									}
-								}								
-							}
-							info.Unload();
-							tried.Add(tx);
-							tx = SelectAlternateTransferSyntax(info, tried);
-						}
 					}
-					Log.Info("{0} -> C-Store request failed: No acceptable presentation context for {1}", LogID, info.SOPClassUID.Description);
-					info.Status = DcmStatus.SOPClassNotSupported;
-					if (OnCStoreResponse != null)
-						OnCStoreResponse(this, info, DcmStatus.SOPClassNotSupported);
-					lock (_lock)
-						_images.RemoveAt(0);
+					_current.Unload();
+
 					linger = DateTime.Now.AddSeconds(Linger + 1);
 				}
-				Thread.Sleep(500);
+				Thread.Sleep(100);
 			}
 			SendReleaseRequest();
 		}
+		#endregion
 
-		private DcmTS SelectBestTransferSyntax(CStoreInfo info) {
-			lock (info.LoadLock) {
-				if (_preferredTransferSyntax != null) {
-					byte pcid = Associate.FindAbstractSyntaxWithTransferSyntax(info.SOPClassUID, _preferredTransferSyntax);
-					if (pcid != 0) {
-						if (_preferredTransferSyntax.IsEncapsulated && !info.TransferSyntax.IsEncapsulated)
-							return _preferredTransferSyntax;
-
-						if (!_preferredTransferSyntax.IsEncapsulated)
-							return _preferredTransferSyntax;
-					}
-				}
-
-				if (info.TransferSyntax.IsEncapsulated) {
-					byte pcid = Associate.FindAbstractSyntaxWithTransferSyntax(info.SOPClassUID, info.TransferSyntax);
-					if (pcid != 0 && Associate.GetPresentationContextResult(pcid) == DcmPresContextResult.Accept)
-						return info.TransferSyntax;
-				}
-							
-				foreach (DcmTS tx in _presContextMap[info.SOPClassUID]) {
-					if (info.TransferSyntax.IsEncapsulated && tx.IsEncapsulated)
-						continue;
-					byte pcid = Associate.FindAbstractSyntaxWithTransferSyntax(info.SOPClassUID, tx);
-					if (pcid != 0 && Associate.GetPresentationContextResult(pcid) == DcmPresContextResult.Accept)
-						return tx;
-				}
-			}
-
-			return null;
+		#region Internal Methods
+		internal void Reassociate() {
+			SendReleaseRequest();
 		}
 
-		private DcmTS SelectAlternateTransferSyntax(CStoreInfo info, List<DcmTS> tried) {
-			lock (info.LoadLock) {
-				foreach (DcmTS tx in _presContextMap[info.SOPClassUID]) {
-					if (tried.Contains(tx))
-						continue;
-					if (info.TransferSyntax != tx && info.TransferSyntax.IsEncapsulated && tx.IsEncapsulated)
-						continue;
-					byte pcid = Associate.FindAbstractSyntaxWithTransferSyntax(info.SOPClassUID, tx);
-					if (pcid != 0 && Associate.GetPresentationContextResult(pcid) == DcmPresContextResult.Accept)
-						return tx;
-				}
-			}
-
-			return null;
+		internal void SendCStoreRequest(byte pcid, DcmUID instUid, Stream stream) {
+			SendCStoreRequest(pcid, NextMessageID(), instUid, Priority, stream);
 		}
 
-		private void PreloadNextCStoreRequest() {
-			lock (_lock) {
-				if (_images.Count > 1) {
-					CStoreInfo info = _images[1];
-					DcmTS tx = SelectBestTransferSyntax(info);
-					if (tx == null)
-						return;
-					if (!info.CanStream(tx)) {
-						DcmCodecParameters codecParams = null;
-						if (tx == _preferredTransferSyntax)
-							codecParams = _preferedSyntaxParams;
-						ThreadPool.QueueUserWorkItem(info.Preload, new SyntaxParams(tx, codecParams));
-					}
-				}
-			}
+		internal void SendCStoreRequest(byte pcid, DcmUID instUid, DcmDataset dataset) {
+			SendCStoreRequest(pcid, NextMessageID(), instUid, Priority, dataset);
 		}
 		#endregion
 	}

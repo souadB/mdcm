@@ -56,11 +56,11 @@
 			this.colSendSopClass = new System.Windows.Forms.ColumnHeader();
 			this.colSendTransfer = new System.Windows.Forms.ColumnHeader();
 			this.colSendStatus = new System.Windows.Forms.ColumnHeader();
-			this.statusImageList = new System.Windows.Forms.ImageList(this.components);
 			this.tabPage3 = new System.Windows.Forms.TabPage();
 			this.tabPage4 = new System.Windows.Forms.TabPage();
 			this.tabStatus = new System.Windows.Forms.TabPage();
 			this.rtbLog = new System.Windows.Forms.RichTextBox();
+			this.statusImageList = new System.Windows.Forms.ImageList(this.components);
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
 			this.groupBox1.SuspendLayout();
@@ -429,14 +429,6 @@
 			this.colSendStatus.Text = "Status";
 			this.colSendStatus.Width = 72;
 			// 
-			// statusImageList
-			// 
-			this.statusImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("statusImageList.ImageStream")));
-			this.statusImageList.TransparentColor = System.Drawing.Color.Magenta;
-			this.statusImageList.Images.SetKeyName(0, "Input.bmp");
-			this.statusImageList.Images.SetKeyName(1, "OK.bmp");
-			this.statusImageList.Images.SetKeyName(2, "Critical.bmp");
-			// 
 			// tabPage3
 			// 
 			this.tabPage3.Location = new System.Drawing.Point(4, 22);
@@ -480,6 +472,14 @@
 			this.rtbLog.Size = new System.Drawing.Size(578, 354);
 			this.rtbLog.TabIndex = 0;
 			this.rtbLog.Text = "";
+			// 
+			// statusImageList
+			// 
+			this.statusImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("statusImageList.ImageStream")));
+			this.statusImageList.TransparentColor = System.Drawing.Color.Magenta;
+			this.statusImageList.Images.SetKeyName(0, "Input.bmp");
+			this.statusImageList.Images.SetKeyName(1, "OK.bmp");
+			this.statusImageList.Images.SetKeyName(2, "Critical.bmp");
 			// 
 			// MainForm
 			// 
@@ -528,7 +528,6 @@
 		private System.Windows.Forms.ColumnHeader colSendFile;
 		private System.Windows.Forms.ColumnHeader colSendSopClass;
 		private System.Windows.Forms.ColumnHeader colSendTransfer;
-		private System.Windows.Forms.ImageList statusImageList;
 		private System.Windows.Forms.TabPage tabStatus;
 		private System.Windows.Forms.RichTextBox rtbLog;
 		private System.Windows.Forms.Button bttnSendClear;
@@ -541,6 +540,7 @@
 		private System.Windows.Forms.NumericUpDown nuMaxPdu;
 		private System.Windows.Forms.Label label8;
 		private System.Windows.Forms.NumericUpDown nuQuality;
+		private System.Windows.Forms.ImageList statusImageList;
 	}
 }
 

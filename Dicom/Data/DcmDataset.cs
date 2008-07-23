@@ -881,6 +881,8 @@ namespace Dicom.Data {
 							return (elem as DcmUniqueIdentifier).GetTS();
 						} else if (vtype == typeof(DcmDateRange) && elem.GetType().IsSubclassOf(typeof(DcmDateElementBase))) {
 							return (elem as DcmDateElementBase).GetDateTimeRange();
+						} else if (vtype == typeof(Int32)) {
+							return Convert.ToInt32(elem.GetValueString(), 10);
 						} else if (vtype == typeof(object)) {
 							return elem.GetValueObject();
 						} else
