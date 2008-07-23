@@ -190,7 +190,7 @@ namespace DicomScu {
 			if (fd.ShowDialog(this) == DialogResult.OK) {
 				foreach (string filename in fd.FileNames) {
 					try {
-						CStoreInfo info = new CStoreInfo(filename);
+						CStoreRequestInfo info = new CStoreRequestInfo(filename);
 
 						ListViewItem item = new ListViewItem(filename, 0);
 						item.SubItems.Add(info.SOPClassUID.Description);
@@ -226,7 +226,7 @@ namespace DicomScu {
 			bttnSendClear.Enabled = state;
 		}
 
-		private void UpdateSendInfo(CStoreClient client, CStoreInfo info, DcmStatus status) {
+		private void UpdateSendInfo(CStoreClient client, CStoreRequestInfo info) {
 			ListViewItem lvi = (ListViewItem)info.UserState;
 			lvi.ImageIndex = (info.Status == DcmStatus.Success) ? 1 : 2;
 			lvi.SubItems[3].Text = info.Status.Description;
@@ -252,24 +252,24 @@ namespace DicomScu {
 				scu.PreferredTransferSyntax == DcmTS.JPEGProcess2_4) {
 				DcmJpegParameters param = new DcmJpegParameters();
 				param.Quality = Config.Quality;
-				scu.PreferredSyntaxParams = param;
+				scu.PreferredTransferSyntaxParams = param;
 			}
 			else if (scu.PreferredTransferSyntax == DcmTS.JPEG2000Lossy) {
 				DcmJpeg2000Parameters param = new DcmJpeg2000Parameters();
 				param.Rate = Config.Quality;
-				scu.PreferredSyntaxParams = param;
+				scu.PreferredTransferSyntaxParams = param;
 			}
 
-			scu.OnCStoreResponse = delegate(CStoreClient client, CStoreInfo info, DcmStatus status) {
-				Invoke(new CStoreCallback(UpdateSendInfo), client, info, status);
+			scu.OnCStoreResponseReceived = delegate(CStoreClient client, CStoreRequestInfo info) {
+				Invoke(new CStoreRequestCallback(UpdateSendInfo), client, info);
 			};
 
 			foreach (ListViewItem lvi in lvSendImages.Items) {
 				lvi.ImageIndex = 0;
 				lvi.SubItems[3].Text = "Pending";
 
-				CStoreInfo info = (CStoreInfo)lvi.Tag;
-				scu.Add(info);
+				CStoreRequestInfo info = (CStoreRequestInfo)lvi.Tag;
+				scu.AddFile(info);
 			}
 
 			ThreadPool.QueueUserWorkItem(new WaitCallback(RunDicomSend), scu);

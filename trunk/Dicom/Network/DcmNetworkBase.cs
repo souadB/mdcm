@@ -206,6 +206,10 @@ namespace Dicom.Network {
 			get { return _socketType; }
 		}
 
+		public bool CanReconnect {
+			get { return !String.IsNullOrEmpty(_host) && _port != 0; }
+		}
+
 		public int ThrottleSpeed {
 			get { return _throttle; }
 			set {
