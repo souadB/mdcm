@@ -1,4 +1,4 @@
-// mDCM: A C# DICOM library
+﻿// mDCM: A C# DICOM library
 //
 // Copyright (c) 2006-2008  Colby Dillion
 //

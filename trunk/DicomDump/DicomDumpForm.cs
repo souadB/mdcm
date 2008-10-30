@@ -102,12 +102,16 @@ namespace Dicom.Forms {
 			treeDump.Model = LoadFileFormat(ff);
 			treeDump.ExpandAll();
 
-			if (success && ff.Dataset.Contains(DcmTags.PixelData)) {
-				tsbViewImage.Enabled = false;
-				tsbExtractPixels.Enabled = true;
+			if (success) {
+				if (ff.Dataset.Contains(DcmTags.PixelData)) {
+					tsbViewImage.Enabled = false;
+					tsbExtractPixels.Enabled = true;
+				}
+				tsbSaveTS.Enabled = true;
 			} else {
 				tsbViewImage.Enabled = false;
 				tsbExtractPixels.Enabled = false;
+				tsbSaveTS.Enabled = false;
 			}
 
 			return success;
@@ -117,6 +121,7 @@ namespace Dicom.Forms {
 			treeDump.Model = null;
 			tsbViewImage.Enabled = false;
 			tsbExtractPixels.Enabled = false;
+			tsbSaveTS.Enabled = false;
 
 			GC.Collect();
 			GC.WaitForPendingFinalizers();
@@ -445,6 +450,7 @@ namespace Dicom.Forms {
 					tsbNext.Enabled = false;
 					tsbPrev.Enabled = false;
 					lblCount.Text = "0/0";
+					treeDump.Model = new TreeModel();
 				} else {
 					if (_selected >= _files.Count)
 						_selected = _files.Count - 1;
@@ -453,6 +459,24 @@ namespace Dicom.Forms {
 			}
 			catch {
 				Close();
+			}
+		}
+
+		private void OnClickSaveWithTransferSyntax(object sender, EventArgs e) {
+			if (_selected == -1)
+				return;
+
+			TransferSyntaxForm tsForm = new TransferSyntaxForm();
+			if (tsForm.ShowDialog(this) == DialogResult.OK) {
+				SaveFileDialog sfd = new SaveFileDialog();
+				sfd.RestoreDirectory = true;
+				if (sfd.ShowDialog(this) == DialogResult.OK) {
+					DicomFileFormat ff = new DicomFileFormat();
+					ff.Load(_files[_selected], DicomReadOptions.Default);
+					if (tsForm.SelectedTransferSyntax != null)
+						ff.ChangeTransferSytnax(tsForm.SelectedTransferSyntax, null);
+					ff.Save(sfd.FileName, DicomWriteOptions.Default);
+				}
 			}
 		}
 	}

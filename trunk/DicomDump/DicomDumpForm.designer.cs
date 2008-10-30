@@ -44,6 +44,7 @@ namespace Dicom.Forms {
 			this.tsbViewImage = new System.Windows.Forms.ToolStripButton();
 			this.tsbAdvanced = new System.Windows.Forms.ToolStripDropDownButton();
 			this.tsbExtractPixels = new System.Windows.Forms.ToolStripMenuItem();
+			this.tsbSaveTS = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
 			this.tsbPrev = new System.Windows.Forms.ToolStripButton();
 			this.tsbNext = new System.Windows.Forms.ToolStripButton();
@@ -197,7 +198,7 @@ namespace Dicom.Forms {
             this.lblCount});
 			this.toolStrip1.Location = new System.Drawing.Point(3, 0);
 			this.toolStrip1.Name = "toolStrip1";
-			this.toolStrip1.Size = new System.Drawing.Size(510, 25);
+			this.toolStrip1.Size = new System.Drawing.Size(571, 25);
 			this.toolStrip1.TabIndex = 0;
 			// 
 			// tsbOpenFile
@@ -205,7 +206,7 @@ namespace Dicom.Forms {
 			this.tsbOpenFile.Image = ((System.Drawing.Image)(resources.GetObject("tsbOpenFile.Image")));
 			this.tsbOpenFile.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.tsbOpenFile.Name = "tsbOpenFile";
-			this.tsbOpenFile.Size = new System.Drawing.Size(72, 22);
+			this.tsbOpenFile.Size = new System.Drawing.Size(77, 22);
 			this.tsbOpenFile.Text = "&Open File";
 			this.tsbOpenFile.Click += new System.EventHandler(this.tsbOpenFile_Click);
 			// 
@@ -214,7 +215,7 @@ namespace Dicom.Forms {
 			this.tsbClose.Image = ((System.Drawing.Image)(resources.GetObject("tsbClose.Image")));
 			this.tsbClose.ImageTransparentColor = System.Drawing.Color.Black;
 			this.tsbClose.Name = "tsbClose";
-			this.tsbClose.Size = new System.Drawing.Size(53, 22);
+			this.tsbClose.Size = new System.Drawing.Size(56, 22);
 			this.tsbClose.Text = "Close";
 			this.tsbClose.Click += new System.EventHandler(this.OnClickClose);
 			// 
@@ -228,7 +229,7 @@ namespace Dicom.Forms {
 			this.tsbDictionary.Image = ((System.Drawing.Image)(resources.GetObject("tsbDictionary.Image")));
 			this.tsbDictionary.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.tsbDictionary.Name = "tsbDictionary";
-			this.tsbDictionary.Size = new System.Drawing.Size(75, 22);
+			this.tsbDictionary.Size = new System.Drawing.Size(81, 22);
 			this.tsbDictionary.Text = "Dictionary";
 			this.tsbDictionary.Click += new System.EventHandler(this.tsbDictionary_Click);
 			// 
@@ -238,27 +239,36 @@ namespace Dicom.Forms {
 			this.tsbViewImage.Image = ((System.Drawing.Image)(resources.GetObject("tsbViewImage.Image")));
 			this.tsbViewImage.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.tsbViewImage.Name = "tsbViewImage";
-			this.tsbViewImage.Size = new System.Drawing.Size(82, 22);
+			this.tsbViewImage.Size = new System.Drawing.Size(88, 22);
 			this.tsbViewImage.Text = "View Image";
 			this.tsbViewImage.Click += new System.EventHandler(this.OnViewImage);
 			// 
 			// tsbAdvanced
 			// 
 			this.tsbAdvanced.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsbExtractPixels});
+            this.tsbExtractPixels,
+            this.tsbSaveTS});
 			this.tsbAdvanced.Image = ((System.Drawing.Image)(resources.GetObject("tsbAdvanced.Image")));
 			this.tsbAdvanced.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.tsbAdvanced.Name = "tsbAdvanced";
-			this.tsbAdvanced.Size = new System.Drawing.Size(84, 22);
+			this.tsbAdvanced.Size = new System.Drawing.Size(89, 22);
 			this.tsbAdvanced.Text = "Advanced";
 			// 
 			// tsbExtractPixels
 			// 
 			this.tsbExtractPixels.Enabled = false;
 			this.tsbExtractPixels.Name = "tsbExtractPixels";
-			this.tsbExtractPixels.Size = new System.Drawing.Size(171, 22);
+			this.tsbExtractPixels.Size = new System.Drawing.Size(198, 22);
 			this.tsbExtractPixels.Text = "Extract Pixel Data";
 			this.tsbExtractPixels.Click += new System.EventHandler(this.OnClickExtractPixels);
+			// 
+			// tsbSaveTS
+			// 
+			this.tsbSaveTS.Enabled = false;
+			this.tsbSaveTS.Name = "tsbSaveTS";
+			this.tsbSaveTS.Size = new System.Drawing.Size(198, 22);
+			this.tsbSaveTS.Text = "Save /w Transfer Syntax";
+			this.tsbSaveTS.Click += new System.EventHandler(this.OnClickSaveWithTransferSyntax);
 			// 
 			// toolStripSeparator2
 			// 
@@ -271,7 +281,7 @@ namespace Dicom.Forms {
 			this.tsbPrev.Image = ((System.Drawing.Image)(resources.GetObject("tsbPrev.Image")));
 			this.tsbPrev.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.tsbPrev.Name = "tsbPrev";
-			this.tsbPrev.Size = new System.Drawing.Size(49, 22);
+			this.tsbPrev.Size = new System.Drawing.Size(50, 22);
 			this.tsbPrev.Text = "Prev";
 			this.tsbPrev.Click += new System.EventHandler(this.OnClickPrev);
 			// 
@@ -281,7 +291,7 @@ namespace Dicom.Forms {
 			this.tsbNext.Image = ((System.Drawing.Image)(resources.GetObject("tsbNext.Image")));
 			this.tsbNext.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.tsbNext.Name = "tsbNext";
-			this.tsbNext.Size = new System.Drawing.Size(50, 22);
+			this.tsbNext.Size = new System.Drawing.Size(51, 22);
 			this.tsbNext.Text = "Next";
 			this.tsbNext.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage;
 			this.tsbNext.Click += new System.EventHandler(this.OnClickNext);
@@ -289,7 +299,7 @@ namespace Dicom.Forms {
 			// lblCount
 			// 
 			this.lblCount.Name = "lblCount";
-			this.lblCount.Size = new System.Drawing.Size(23, 22);
+			this.lblCount.Size = new System.Drawing.Size(24, 22);
 			this.lblCount.Text = "0/0";
 			// 
 			// DicomDumpForm
@@ -301,6 +311,7 @@ namespace Dicom.Forms {
 			this.Name = "DicomDumpForm";
 			this.Text = "DICOM Dump";
 			this.Shown += new System.EventHandler(this.OnFormShown);
+			this.Click += new System.EventHandler(this.OnClickSaveWithTransferSyntax);
 			this.toolStripContainer1.ContentPanel.ResumeLayout(false);
 			this.toolStripContainer1.TopToolStripPanel.ResumeLayout(false);
 			this.toolStripContainer1.TopToolStripPanel.PerformLayout();
@@ -338,6 +349,7 @@ namespace Dicom.Forms {
         private System.Windows.Forms.ToolStripMenuItem tsbExtractPixels;
 		private System.Windows.Forms.ToolStripButton tsbDictionary;
 		private System.Windows.Forms.ToolStripButton tsbClose;
+		private System.Windows.Forms.ToolStripMenuItem tsbSaveTS;
 
 	}
 }

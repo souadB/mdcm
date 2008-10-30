@@ -70,30 +70,36 @@ namespace Dicom.IO {
 			if (bytesToSwap == 2) { SwapBytes2(bytes); return; }
 			if (bytesToSwap == 4) { SwapBytes4(bytes); return; }
 			//if (bytesToSwap == 8) { Swap8(); return; }
-			int l = bytes.Length - (bytes.Length % bytesToSwap);
-			for (int i = 0; i < l; i += bytesToSwap) {
-				Array.Reverse(bytes, i, bytesToSwap);
+			unchecked {
+				int l = bytes.Length - (bytes.Length % bytesToSwap);
+				for (int i = 0; i < l; i += bytesToSwap) {
+					Array.Reverse(bytes, i, bytesToSwap);
+				}
 			}
 		}
 		public static void SwapBytes2(byte[] bytes) {
-			byte b;
-			int l = bytes.Length - (bytes.Length % 2);
-			for (int i = 0; i < l; i += 2) {
-				b = bytes[i + 1];
-				bytes[i + 1] = bytes[i];
-				bytes[i] = b;
+			unchecked {
+				byte b;
+				int l = bytes.Length - (bytes.Length % 2);
+				for (int i = 0; i < l; i += 2) {
+					b = bytes[i + 1];
+					bytes[i + 1] = bytes[i];
+					bytes[i] = b;
+				}
 			}
 		}
 		public static void SwapBytes4(byte[] bytes) {
-			byte b;
-			int l = bytes.Length - (bytes.Length % 4);
-			for (int i = 0; i < l; i += 4) {
-				b = bytes[i + 3];
-				bytes[i + 3] = bytes[i];
-				bytes[i] = b;
-				b = bytes[i + 2];
-				bytes[i + 2] = bytes[i + 1];
-				bytes[i + 1] = b;
+			unchecked {
+				byte b;
+				int l = bytes.Length - (bytes.Length % 4);
+				for (int i = 0; i < l; i += 4) {
+					b = bytes[i + 3];
+					bytes[i + 3] = bytes[i];
+					bytes[i] = b;
+					b = bytes[i + 2];
+					bytes[i + 2] = bytes[i + 1];
+					bytes[i + 1] = b;
+				}
 			}
 		}
 		public static void SwapBytes8(byte[] bytes) {

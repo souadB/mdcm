@@ -251,10 +251,10 @@ void JPEGCODEC::Encode(DcmPixelData^ oldPixelData, DcmPixelData^ newPixelData, D
 		cinfo.image_height = oldPixelData->ImageHeight;
 		cinfo.input_components = oldPixelData->SamplesPerPixel;
 		cinfo.in_color_space = IJGVERS::getJpegColorSpace(oldPixelData->PhotometricInterpretation);
-		cinfo.optimize_coding = true;
-		cinfo.smoothing_factor = params->SmoothingFactor;
 
 		jpeg_set_defaults(&cinfo);
+
+		cinfo.optimize_coding = true;
 
 		if (Mode == JpegMode::Baseline || Mode == JpegMode::Sequential) {
 			jpeg_set_quality(&cinfo, params->Quality, 0);
@@ -270,31 +270,40 @@ void JPEGCODEC::Encode(DcmPixelData^ oldPixelData, DcmPixelData^ newPixelData, D
 		else {
 			jpeg_simple_lossless(&cinfo, Predictor, PointTransform);
 		}
+		
+		cinfo.smoothing_factor = params->SmoothingFactor;
 
-		// initialize sampling factors
-		if (cinfo.jpeg_color_space == JCS_YCbCr && params->SampleFactor != JpegSampleFactor::Unknown) {
-			switch(params->SampleFactor) {
-			  case JpegSampleFactor::SF444: /* 4:4:4 sampling (no subsampling) */
-				cinfo.comp_info[0].h_samp_factor = 1;
-				cinfo.comp_info[0].v_samp_factor = 1;
-				break;
-			  case JpegSampleFactor::SF422: /* 4:2:2 sampling (horizontal subsampling of chroma components) */
-				cinfo.comp_info[0].h_samp_factor = 2;
-				cinfo.comp_info[0].v_samp_factor = 1;
-				break;
-			//case JpegSampleFactor::SF411: /* 4:1:1 sampling (horizontal and vertical subsampling of chroma components) */
-			//	cinfo.comp_info[0].h_samp_factor = 2;
-			//	cinfo.comp_info[0].v_samp_factor = 2;
-			//	break;
-			}
-		}
-		else {
-			if (params->SampleFactor == JpegSampleFactor::Unknown)
-				jpeg_set_colorspace(&cinfo, cinfo.in_color_space);
-
-			// JPEG color space is not YCbCr, disable subsampling.
+		if (Mode == JpegMode::Lossless) {
+			jpeg_set_colorspace(&cinfo, cinfo.in_color_space);
 			cinfo.comp_info[0].h_samp_factor = 1;
 			cinfo.comp_info[0].v_samp_factor = 1;
+		}
+		else {
+			// initialize sampling factors
+			if (cinfo.jpeg_color_space == JCS_YCbCr && params->SampleFactor != JpegSampleFactor::Unknown) {
+				switch(params->SampleFactor) {
+				  case JpegSampleFactor::SF444: /* 4:4:4 sampling (no subsampling) */
+					cinfo.comp_info[0].h_samp_factor = 1;
+					cinfo.comp_info[0].v_samp_factor = 1;
+					break;
+				  case JpegSampleFactor::SF422: /* 4:2:2 sampling (horizontal subsampling of chroma components) */
+					cinfo.comp_info[0].h_samp_factor = 2;
+					cinfo.comp_info[0].v_samp_factor = 1;
+					break;
+				//case JpegSampleFactor::SF411: /* 4:1:1 sampling (horizontal and vertical subsampling of chroma components) */
+				//	cinfo.comp_info[0].h_samp_factor = 2;
+				//	cinfo.comp_info[0].v_samp_factor = 2;
+				//	break;
+				}
+			}
+			else {
+				if (params->SampleFactor == JpegSampleFactor::Unknown)
+					jpeg_set_colorspace(&cinfo, cinfo.in_color_space);
+
+				// JPEG color space is not YCbCr, disable subsampling.
+				cinfo.comp_info[0].h_samp_factor = 1;
+				cinfo.comp_info[0].v_samp_factor = 1;
+			}
 		}
 
 		// all other components are set to 1x1
@@ -434,7 +443,7 @@ void JPEGCODEC::Decode(DcmPixelData^ oldPixelData, DcmPixelData^ newPixelData, D
 	dinfo.src = (jpeg_source_mgr*)&src.pub;
 
 	if (jpeg_read_header(&dinfo, TRUE) == JPEG_SUSPENDED)
-		throw gcnew DicomCodecException(gcnew String("Unable to decompress JPEG. Reason: Suspended"));
+		throw gcnew DicomCodecException(gcnew String("Unable to decompress JPEG: Suspended"));
 		
 	if (newPixelData->PhotometricInterpretation == "YBR_FULL_422" || newPixelData->PhotometricInterpretation == "YBR_PARTIAL_422")
 		newPixelData->PhotometricInterpretation = "YBR_FULL";
@@ -478,4 +487,47 @@ void JPEGCODEC::Decode(DcmPixelData^ oldPixelData, DcmPixelData^ newPixelData, D
 	newPixelData->AddFrame(frameBuffer);
 
 	jpeg_destroy_decompress(&dinfo);
+}
+
+int JPEGCODEC::ScanHeaderForPrecision(DcmPixelData^ pixelData) {
+	array<unsigned char>^ jpegData = pixelData->GetFrameDataU8(0);
+	pin_ptr<unsigned char> jpegPin = &jpegData[0];
+	unsigned char* jpegPtr = jpegPin;
+	unsigned int jpegSize = jpegData->Length;
+	
+	jpeg_decompress_struct dinfo;
+	memset(&dinfo, 0, sizeof(dinfo));
+
+	IJGVERS::SourceManagerStruct src;
+	memset(&src, 0, sizeof(IJGVERS::SourceManagerStruct));
+	src.pub.init_source       = IJGVERS::initSource;
+	src.pub.fill_input_buffer = IJGVERS::fillInputBuffer;
+	src.pub.skip_input_data   = IJGVERS::skipInputData;
+	src.pub.resync_to_restart = jpeg_resync_to_restart;
+	src.pub.term_source       = IJGVERS::termSource;
+	src.pub.bytes_in_buffer   = 0;
+	src.pub.next_input_byte   = NULL;
+	src.skip_bytes            = 0;
+	src.next_buffer           = jpegPin;
+	src.next_buffer_size      = (unsigned int*)jpegSize;
+
+    IJGVERS::ErrorStruct jerr;
+	memset(&jerr, 0, sizeof(IJGVERS::ErrorStruct));
+	dinfo.err = jpeg_std_error(&jerr.pub);
+	jerr.pub.error_exit = IJGVERS::ErrorExit;
+	jerr.pub.output_message = IJGVERS::OutputMessage;
+
+	jpeg_create_decompress(&dinfo);
+	dinfo.src = (jpeg_source_mgr*)&src.pub;
+
+	if (jpeg_read_header(&dinfo, TRUE) == JPEG_SUSPENDED) {
+		jpeg_destroy_decompress(&dinfo);
+		throw gcnew DicomCodecException(gcnew String("Unable to read JPEG header: Suspended"));
+	}
+
+	//pixelData->Unload();
+
+	jpeg_destroy_decompress(&dinfo);
+
+	return dinfo.data_precision;
 }

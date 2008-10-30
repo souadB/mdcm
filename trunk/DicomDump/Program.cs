@@ -16,7 +16,9 @@ namespace DicomDump {
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 
-			//Dicom.Codec.ExtDicomCodec.Initialize();
+			Dicom.Codec.DcmRleCodec.Register();
+			Dicom.Jpeg.DcmJpegCodec.Register();
+			Dicom.Jpeg2000.DcmJpeg2000Codec.Register();
 
 			if (File.Exists("dicom.dic"))
 				DcmDictionary.ImportDictionary("dicom.dic");

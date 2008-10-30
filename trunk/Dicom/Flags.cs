@@ -60,6 +60,7 @@ namespace Dicom {
 		DeferLoadingLargeElements = 0x00000008,
 		DeferLoadingPixelData = 0x00000010,
 		ForcePrivateCreatorToLO = 0x00000020,
+		FileMetaInfoOnly = 0x00000040,
 		Default = DicomReadOptions.UseDictionaryForExplicitUN | 
 				  DicomReadOptions.AllowSeekingForContext | 
 				  DicomReadOptions.DeferLoadingLargeElements | 

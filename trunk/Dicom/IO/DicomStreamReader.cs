@@ -37,7 +37,10 @@ namespace Dicom.IO {
 		UnknownError,
 
 		/// <summary>More data is needed to complete dataset</summary>
-		NeedMoreData
+		NeedMoreData,
+
+		/// <summary>Found the tag we were looking for (internal)</summary>
+		SuccessEndRead
 	}
 
 	/// <summary>
@@ -62,6 +65,7 @@ namespace Dicom.IO {
 		private DcmVR _vr = null;
 		private uint _len = UndefinedLength;
 		private long _pos = 0;
+		private long _offset = 0;
 
 		private long _bytes = 0;
 		private long _read = 0;
@@ -136,6 +140,14 @@ namespace Dicom.IO {
 		public uint BytesNeeded {
 			get { return _need; }
 		}
+
+		/// <summary>
+		/// Offset of this stream relative to a parent stream.
+		/// </summary>
+		public long PositionOffset {
+			get { return _offset; }
+			set { _offset = value; }
+		}
 		#endregion
 
 		private ByteBuffer CurrentBuffer(DicomReadOptions options) {
@@ -184,237 +196,32 @@ namespace Dicom.IO {
 				_remain = _stream.Length - _stream.Position;
 
 				while (_remain > 0) {
-					if (_tag == null) {
-						if (_remain >= 4) {
-							_pos = _stream.Position;
-							ushort g = _reader.ReadUInt16();
-							ushort e = _reader.ReadUInt16();
-							if (DcmTag.IsPrivateGroup(g) && e > 0x00ff) {
-								uint card = DcmTag.GetCard(g, e);
-								if ((card & _privateCreatorCard) != _privateCreatorCard) {
-									_privateCreatorCard = card & 0xffffff00;
-									DcmTag pct = DcmTag.GetPrivateCreatorTag(g, e);
-									DcmDataset ds = _dataset;
-									if (_sds.Count > 0 && _sds.Count == _sqs.Count) {
-										ds = _sds.Peek();
-										if (!ds.Contains(pct))
-											ds = _dataset;
-									}
-									_privateCreatorId = ds.GetString(pct, String.Empty);
-								}
-								_tag = new DcmTag(g, e, _privateCreatorId);
-							} else {
-								_tag = new DcmTag(g, e);
-
-								if (g == 0xfffe) {
-									if (_tag == DcmTags.Item ||
-										_tag == DcmTags.ItemDelimitationItem ||
-										_tag == DcmTags.SequenceDelimitationItem)
-										_vr = DcmVR.NONE;
-								}
-							}
-							_remain -= 4;
-							_bytes += 4;
-							_read += 4;
-						} else {
-							return NeedMoreData(4);
-						}
-					}
-
-					if (_tag >= stopAtTag)
+					DicomReadStatus status = ParseTag(stopAtTag, options);
+					if (status == DicomReadStatus.SuccessEndRead)
 						return DicomReadStatus.Success;
+					if (status != DicomReadStatus.Success)
+						return status;
 
-					if (_vr == null) {
-						if (_syntax.IsExplicitVR) {
-							if (_remain >= 2) {
-								_vr = DcmVRs.Lookup(_reader.ReadChars(2));
-								_remain -= 2;
-								_bytes += 2;
-								_read += 2;
-							} else {
-								return NeedMoreData(2);
-							}
-						} else {
-							if (_tag.Element == 0x0000)
-								_vr = DcmVR.UL;
-							else if (Flags.IsSet(options, DicomReadOptions.ForcePrivateCreatorToLO) &&
-								_tag.IsPrivate && _tag.Element <= 0x00ff)
-								_vr = DcmVR.UN;
-							else
-								_vr = _tag.Entry.DefaultVR;
-						}
+					status = ParseVR(options);
+					if (status != DicomReadStatus.Success)
+						return status;
 
-						if (_vr == DcmVR.UN) {
-							if (_tag.Element == 0x0000)
-								_vr = DcmVR.UL; // is this needed?
-							else if (_tag.IsPrivate) {
-								if (_tag.Element <= 0x00ff) {
-									// private creator id
-								} else if (_stream.CanSeek && Flags.IsSet(options, DicomReadOptions.AllowSeekingForContext)) {
-									// attempt to identify private sequence
-									long pos = _stream.Position;
-									if (_syntax.IsExplicitVR) {
-										if (_remain >= 2)
-											_reader.ReadUInt16();
-										else {
-											_vr = null;
-											_stream.Position = pos;
-											return NeedMoreData(2);
-										}
-									}
-
-									uint l = 0;
-									if (_remain >= 4) {
-										l = _reader.ReadUInt32();
-										if (l == UndefinedLength)
-											_vr = DcmVR.SQ;
-									} else {
-										_vr = null;
-										_stream.Position = pos;
-										return NeedMoreData(4);
-									}
-
-									if (l != 0 && _vr == DcmVR.UN) {
-										if (_remain >= 4) {
-											ushort g = _reader.ReadUInt16();
-											ushort e = _reader.ReadUInt16();
-											DcmTag tag = new DcmTag(g, e);
-											if (tag == DcmTags.Item || tag == DcmTags.SequenceDelimitationItem)
-												_vr = DcmVR.SQ;
-										} else {
-											_vr = null;
-											_stream.Position = pos;
-											return NeedMoreData(4);
-										}
-									}
-
-									_stream.Position = pos;
-								}
-							} else if (!_syntax.IsExplicitVR || Flags.IsSet(options, DicomReadOptions.UseDictionaryForExplicitUN))
-								_vr = _tag.Entry.DefaultVR;
-						}
-					}
-
-					if (_len == UndefinedLength) {
-						if (_syntax.IsExplicitVR) {
-							if (_tag == DcmTags.Item ||
-								_tag == DcmTags.ItemDelimitationItem ||
-								_tag == DcmTags.SequenceDelimitationItem) {
-								if (_remain >= 4) {
-									_len = _reader.ReadUInt32();
-									_remain -= 4;
-									_bytes += 4;
-									_read += 4;
-								} else {
-									return NeedMoreData(4);
-								}
-							} else {
-								if (_vr.Is16BitLengthField) {
-									if (_remain >= 2) {
-										_len = (uint)_reader.ReadUInt16();
-										_remain -= 2;
-										_bytes += 2;
-										_read += 2;
-									} else {
-										return NeedMoreData(2);
-									}
-								} else {
-									if (_remain >= 6) {
-										_reader.ReadByte();
-										_reader.ReadByte();
-										_len = _reader.ReadUInt32();
-										_remain -= 6;
-										_bytes += 6;
-										_read += 6;
-									} else {
-										return NeedMoreData(6);
-									}
-								}
-							}
-						} else {
-							if (_remain >= 4) {
-								_len = _reader.ReadUInt32();
-								_remain -= 4;
-								_bytes += 4;
-								_read += 4;
-							} else {
-								return NeedMoreData(4);
-							}
-						}
-
-						if (_len != UndefinedLength) {
-							if (_vr != DcmVR.SQ && !(_tag.Equals(DcmTags.Item) && _fragment == null))
-								_bytes += _len;
-						}
-					}
+					status = ParseLength(options);
+					if (status != DicomReadStatus.Success)
+						return status;
 
 					// handle UN private creator id
 					if (_vr == DcmVR.UN && _tag.IsPrivate && _tag.Element <= 0x00ff)
 						_vr = DcmVR.LO;
 
 					if (_fragment != null) {
-						if (_tag == DcmTags.Item) {
-							if (_remain >= _len) {
-								ByteBuffer data = CurrentBuffer(options);
-								_remain -= _len;
-								_read += _len;
-
-								if (!_fragment.HasOffsetTable)
-									_fragment.SetOffsetTable(data);
-								else
-									_fragment.AddFragment(data);
-
-							} else {
-								return NeedMoreData(_remain - _len);
-							}
-						} else if (_tag == DcmTags.SequenceDelimitationItem) {
-							_dataset.AddItem(_fragment);
-							_fragment = null;
-						} else {
-							// unexpected tag
-							return DicomReadStatus.UnknownError;
-						}
+						InsertFragmentItem(options);
 					}
 					else if (_sqs.Count > 0 &&
 								(_tag == DcmTags.Item ||
 								 _tag == DcmTags.ItemDelimitationItem ||
-								 _tag == DcmTags.SequenceDelimitationItem))
-					{
-						if (_tag.Equals(DcmTags.Item)) {
-							if (_len != UndefinedLength && _len > _remain)
-								return NeedMoreData(_remain - _len);
-
-							if (_sds.Count > _sqs.Count)
-								_sds.Pop();
-
-							DcmDataset ds = new DcmDataset(_pos + 8, _len, TransferSyntax);
-							DcmItemSequenceItem si = new DcmItemSequenceItem(_pos, _len);
-							si.Dataset = ds;
-							_sqs.Peek().AddSequenceItem(si);
-
-							if (_len != UndefinedLength) {
-								ByteBuffer data = new ByteBuffer(_endian);
-								data.CopyFrom(_stream, (int)_len);
-								_remain -= _len;
-								_read += _len;
-
-								DicomStreamReader idsr = new DicomStreamReader(data.Stream);
-								idsr.Dataset = ds;
-								DicomReadStatus status = idsr.Read(null, options);
-								if (status != DicomReadStatus.Success)
-									return status;
-							}
-							else {
-								_sds.Push(ds);
-							}
-						}
-						else if (_tag == DcmTags.ItemDelimitationItem) {
-							if (_sds.Count == _sqs.Count) _sds.Pop();
-						}
-						else if (_tag == DcmTags.SequenceDelimitationItem) {
-							if (_sds.Count == _sqs.Count) _sds.Pop();
-							_dataset.AddItem(_sqs.Pop());
-						}
+								 _tag == DcmTags.SequenceDelimitationItem)) {
+						InsertSequenceItem(options);
 					}
 					else {
 						if (_sqs.Count > 0) {
@@ -423,9 +230,10 @@ namespace Dicom.IO {
 								long end = sq.StreamPosition + 8 + sq.StreamLength;
 								if (_syntax.IsExplicitVR)
 									end += 2 + 2;
-								if (_stream.Position >= end) {
-									if (_sds.Count == _sqs.Count) _sds.Pop();
-									_dataset.AddItem(_sqs.Pop());
+								if ((_stream.Position - _offset) >= end) {
+									if (_sds.Count == _sqs.Count)
+										_sds.Pop();
+									_sqs.Pop();
 								}
 							}
 						}
@@ -433,43 +241,29 @@ namespace Dicom.IO {
 						if (_len == UndefinedLength) {
 							if (_vr == DcmVR.SQ) {
 								DcmItemSequence sq = new DcmItemSequence(_tag, _pos, _len, _endian);
+								InsertDatasetItem(sq, options);
 								_sqs.Push(sq);
-							} else {
-								_fragment = new DcmFragmentSequence(_tag, _vr, _pos, _endian);
 							}
-						} else {
+							else {
+								_fragment = new DcmFragmentSequence(_tag, _vr, _pos, _endian);
+								InsertDatasetItem(_fragment, options);
+							}
+						}
+						else {
 							if (_vr == DcmVR.SQ) {
 								DcmItemSequence sq = new DcmItemSequence(_tag, _pos, _len, _endian);
+								InsertDatasetItem(sq, options);
 								_sqs.Push(sq);
-							} else {
+							}
+							else {
 								if (_remain >= _len) {
 									DcmElement elem = DcmElement.Create(_tag, _vr, _pos, _endian, CurrentBuffer(options));
 									_remain -= _len;
 									_read += _len;
 
-									if (_sds.Count > 0 && _sds.Count == _sqs.Count) {
-										DcmDataset ds = _sds.Peek();
-
-										if (_tag.Element == 0x0000) {
-											if (Flags.IsSet(options, DicomReadOptions.KeepGroupLengths))
-												ds.AddItem(elem);
-										} else
-											ds.AddItem(elem);
-
-										if (ds.StreamLength != UndefinedLength) {
-											long end = ds.StreamPosition + ds.StreamLength;
-											if (_stream.Position >= end) {
-												_sds.Pop();
-											}
-										}
-									} else {
-										if (_tag.Element == 0x0000) {
-											if (Flags.IsSet(options, DicomReadOptions.KeepGroupLengths))
-												_dataset.AddItem(elem);
-										} else
-											_dataset.AddItem(elem);
-									}
-								} else {
+									InsertDatasetItem(elem, options);
+								}
+								else {
 									return NeedMoreData(_len - _remain);
 								}
 							}
@@ -480,10 +274,300 @@ namespace Dicom.IO {
 					_vr = null;
 					_len = UndefinedLength;
 				}
+
 				return DicomReadStatus.Success;
-			} catch (EndOfStreamException) {
+			}
+			catch (EndOfStreamException) {
 				// should never happen
 				return DicomReadStatus.UnknownError;
+			}
+		}
+
+		private DicomReadStatus ParseTag(DcmTag stopAtTag, DicomReadOptions options) {
+			if (_tag == null) {
+				if (_remain >= 4) {
+					_pos = _stream.Position + _offset;
+					ushort g = _reader.ReadUInt16();
+					if (Flags.IsSet(options, DicomReadOptions.FileMetaInfoOnly) && g != 0x0002) {
+						_stream.Seek(-2, SeekOrigin.Current);
+						return DicomReadStatus.SuccessEndRead;
+					}
+					ushort e = _reader.ReadUInt16();
+					if (DcmTag.IsPrivateGroup(g) && e > 0x00ff) {
+						uint card = DcmTag.GetCard(g, e);
+						if ((card & _privateCreatorCard) != _privateCreatorCard) {
+							_privateCreatorCard = card & 0xffffff00;
+							DcmTag pct = DcmTag.GetPrivateCreatorTag(g, e);
+							DcmDataset ds = _dataset;
+							if (_sds.Count > 0 && _sds.Count == _sqs.Count) {
+								ds = _sds.Peek();
+								if (!ds.Contains(pct))
+									ds = _dataset;
+							}
+							_privateCreatorId = ds.GetString(pct, String.Empty);
+						}
+						_tag = new DcmTag(g, e, _privateCreatorId);
+					}
+					else {
+						_tag = new DcmTag(g, e);
+
+						if (g == 0xfffe) {
+							if (_tag == DcmTags.Item ||
+								_tag == DcmTags.ItemDelimitationItem ||
+								_tag == DcmTags.SequenceDelimitationItem)
+								_vr = DcmVR.NONE;
+						}
+					}
+					_remain -= 4;
+					_bytes += 4;
+					_read += 4;
+				}
+				else {
+					return NeedMoreData(4);
+				}
+			}
+
+			if (_tag >= stopAtTag)
+				return DicomReadStatus.SuccessEndRead;
+
+			return DicomReadStatus.Success;
+		}
+
+		private DicomReadStatus ParseVR(DicomReadOptions options) {
+			if (_vr == null) {
+				if (_syntax.IsExplicitVR) {
+					if (_remain >= 2) {
+						_vr = DcmVRs.Lookup(_reader.ReadChars(2));
+						_remain -= 2;
+						_bytes += 2;
+						_read += 2;
+					}
+					else {
+						return NeedMoreData(2);
+					}
+				}
+				else {
+					if (_tag.Element == 0x0000)
+						_vr = DcmVR.UL;
+					else if (Flags.IsSet(options, DicomReadOptions.ForcePrivateCreatorToLO) &&
+						_tag.IsPrivate && _tag.Element <= 0x00ff)
+						_vr = DcmVR.UN;
+					else
+						_vr = _tag.Entry.DefaultVR;
+				}
+
+				if (_vr == DcmVR.UN) {
+					if (_tag.Element == 0x0000)
+						_vr = DcmVR.UL; // is this needed?
+					else if (_tag.IsPrivate) {
+						if (_tag.Element <= 0x00ff) {
+							// private creator id
+						}
+						else if (_stream.CanSeek && Flags.IsSet(options, DicomReadOptions.AllowSeekingForContext)) {
+							// attempt to identify private sequence
+							long pos = _stream.Position;
+							if (_syntax.IsExplicitVR) {
+								if (_remain >= 2)
+									_reader.ReadUInt16();
+								else {
+									_vr = null;
+									_stream.Position = pos;
+									return NeedMoreData(2);
+								}
+							}
+
+							uint l = 0;
+							if (_remain >= 4) {
+								l = _reader.ReadUInt32();
+								if (l == UndefinedLength)
+									_vr = DcmVR.SQ;
+							}
+							else {
+								_vr = null;
+								_stream.Position = pos;
+								return NeedMoreData(4);
+							}
+
+							if (l != 0 && _vr == DcmVR.UN) {
+								if (_remain >= 4) {
+									ushort g = _reader.ReadUInt16();
+									ushort e = _reader.ReadUInt16();
+									DcmTag tag = new DcmTag(g, e);
+									if (tag == DcmTags.Item || tag == DcmTags.SequenceDelimitationItem)
+										_vr = DcmVR.SQ;
+								}
+								else {
+									_vr = null;
+									_stream.Position = pos;
+									return NeedMoreData(4);
+								}
+							}
+
+							_stream.Position = pos;
+						}
+					}
+					else if (!_syntax.IsExplicitVR || Flags.IsSet(options, DicomReadOptions.UseDictionaryForExplicitUN))
+						_vr = _tag.Entry.DefaultVR;
+				}
+			}
+			return DicomReadStatus.Success;
+		}
+
+		private DicomReadStatus ParseLength(DicomReadOptions options) {
+			if (_len == UndefinedLength) {
+				if (_syntax.IsExplicitVR) {
+					if (_tag == DcmTags.Item ||
+						_tag == DcmTags.ItemDelimitationItem ||
+						_tag == DcmTags.SequenceDelimitationItem) {
+						if (_remain >= 4) {
+							_len = _reader.ReadUInt32();
+							_remain -= 4;
+							_bytes += 4;
+							_read += 4;
+						}
+						else {
+							return NeedMoreData(4);
+						}
+					}
+					else {
+						if (_vr.Is16BitLengthField) {
+							if (_remain >= 2) {
+								_len = (uint)_reader.ReadUInt16();
+								_remain -= 2;
+								_bytes += 2;
+								_read += 2;
+							}
+							else {
+								return NeedMoreData(2);
+							}
+						}
+						else {
+							if (_remain >= 6) {
+								_reader.ReadByte();
+								_reader.ReadByte();
+								_len = _reader.ReadUInt32();
+								_remain -= 6;
+								_bytes += 6;
+								_read += 6;
+							}
+							else {
+								return NeedMoreData(6);
+							}
+						}
+					}
+				}
+				else {
+					if (_remain >= 4) {
+						_len = _reader.ReadUInt32();
+						_remain -= 4;
+						_bytes += 4;
+						_read += 4;
+					}
+					else {
+						return NeedMoreData(4);
+					}
+				}
+
+				if (_len != UndefinedLength) {
+					if (_vr != DcmVR.SQ && !(_tag.Equals(DcmTags.Item) && _fragment == null))
+						_bytes += _len;
+				}
+			}
+			return DicomReadStatus.Success;
+		}
+
+		private DicomReadStatus InsertFragmentItem(DicomReadOptions options) {
+			if (_tag == DcmTags.Item) {
+				if (_remain >= _len) {
+					ByteBuffer data = CurrentBuffer(options);
+					_remain -= _len;
+					_read += _len;
+
+					if (!_fragment.HasOffsetTable)
+						_fragment.SetOffsetTable(data);
+					else
+						_fragment.AddFragment(data);
+
+				}
+				else {
+					return NeedMoreData(_remain - _len);
+				}
+			}
+			else if (_tag == DcmTags.SequenceDelimitationItem) {
+				_fragment = null;
+			}
+			else {
+				// unexpected tag
+				return DicomReadStatus.UnknownError;
+			}
+			return DicomReadStatus.Success;
+		}
+
+		private DicomReadStatus InsertSequenceItem(DicomReadOptions options) {
+			if (_tag.Equals(DcmTags.Item)) {
+				if (_len != UndefinedLength && _len > _remain)
+					return NeedMoreData(_remain - _len);
+
+				if (_sds.Count > _sqs.Count)
+					_sds.Pop();
+
+				DcmDataset ds = new DcmDataset(_pos + 8, _len, TransferSyntax);
+				DcmItemSequenceItem si = new DcmItemSequenceItem(_pos, _len);
+				si.Dataset = ds;
+				_sqs.Peek().AddSequenceItem(si);
+
+				if (_len != UndefinedLength) {
+					SegmentStream ss = new SegmentStream(_stream, _stream.Position, _len);
+					_remain -= _len;
+					_read += _len;
+
+					DicomStreamReader idsr = new DicomStreamReader(ss);
+					idsr.Dataset = ds;
+					idsr.PositionOffset = ds.StreamPosition;
+					DicomReadStatus status = idsr.Read(null, options);
+					if (status != DicomReadStatus.Success)
+						return status;
+				}
+				else {
+					_sds.Push(ds);
+				}
+			}
+			else if (_tag == DcmTags.ItemDelimitationItem) {
+				if (_sds.Count == _sqs.Count)
+					_sds.Pop();
+			}
+			else if (_tag == DcmTags.SequenceDelimitationItem) {
+				if (_sds.Count == _sqs.Count)
+					_sds.Pop();
+				_sqs.Pop();
+			}
+			return DicomReadStatus.Success;
+		}
+
+		private void InsertDatasetItem(DcmItem item, DicomReadOptions options) {
+			if (_sds.Count > 0 && _sds.Count == _sqs.Count) {
+				DcmDataset ds = _sds.Peek();
+
+				if (_tag.Element == 0x0000) {
+					if (Flags.IsSet(options, DicomReadOptions.KeepGroupLengths))
+						ds.AddItem(item);
+				}
+				else
+					ds.AddItem(item);
+
+				if (ds.StreamLength != UndefinedLength) {
+					long end = ds.StreamPosition + ds.StreamLength;
+					if ((_stream.Position - _offset) >= end)
+						_sds.Pop();
+				}
+			}
+			else {
+				if (_tag.Element == 0x0000) {
+					if (Flags.IsSet(options, DicomReadOptions.KeepGroupLengths))
+						_dataset.AddItem(item);
+				}
+				else
+					_dataset.AddItem(item);
 			}
 		}
 	}

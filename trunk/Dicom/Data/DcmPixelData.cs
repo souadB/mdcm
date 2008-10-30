@@ -291,10 +291,6 @@ namespace Dicom.Data {
 			if (frame < 0 || frame >= NumberOfFrames)
 				throw new IndexOutOfRangeException("Requested frame out of range!");
 
-			if (BitsAllocated == 8 && PixelDataItem.VR == DcmVR.OW && PixelDataItem.Endian == Endian.Little) {
-				PixelDataItem.SelectByteOrder(Endian.Big);
-			}
-
 			if (IsFragmented) {
 				List<ByteBuffer> fragments = GetFrameFragments(frame);
 
@@ -320,6 +316,10 @@ namespace Dicom.Data {
 				byte[] buffer = new byte[size];
 				ByteBuffer data = PixelDataElement.ByteBuffer;
 				Buffer.BlockCopy(data.ToBytes(), offset, buffer, 0, size);
+				if (BytesAllocated > 1 && data.Endian != Endian.LocalMachine)
+					Endian.SwapBytes(BytesAllocated, buffer);
+				else if (PixelDataItem.VR == DcmVR.OW && data.Endian == Endian.Big)
+					Endian.SwapBytes(2, buffer);
 				return buffer;
 			}
 		}
@@ -574,6 +574,10 @@ namespace Dicom.Data {
 				}
 			}
 			else {
+				if (BytesAllocated > 1 && TransferSyntax.Endian != Endian.LocalMachine)
+					Endian.SwapBytes(BytesAllocated, data);
+				else if (BytesAllocated == 1 && PixelDataItem.VR == DcmVR.OW && TransferSyntax.Endian == Endian.Big)
+					Endian.SwapBytes(2, data);
 				PixelDataElement.ByteBuffer.Append(data, 0, data.Length);
 			}
 		}
@@ -648,12 +652,10 @@ namespace Dicom.Data {
 				_pixelDataItem = new DcmFragmentSequence(DcmTags.PixelData, DcmVR.OB);
 			}
 			else {
-				if (_bitsAllocated > 8 && _bitsAllocated <= 16) {
-					_pixelDataItem = new DcmOtherByte(DcmTags.PixelData);
-				}
-				else {
+				if (!TransferSyntax.IsExplicitVR || (_bitsAllocated > 8 && _bitsAllocated <= 16))
 					_pixelDataItem = new DcmOtherWord(DcmTags.PixelData);
-				}
+				else
+					_pixelDataItem = new DcmOtherByte(DcmTags.PixelData);
 			}
 		}
 		#endregion

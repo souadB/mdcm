@@ -26,6 +26,7 @@ using System.Text;
 
 using Dicom.Codec;
 using Dicom.IO;
+using Dicom.Utility;
 
 namespace Dicom.Data {
 	/// <summary>
@@ -99,7 +100,7 @@ namespace Dicom.Data {
 				DicomStreamReader dsr = new DicomStreamReader(fs);
 				DcmFileMetaInfo metainfo = new DcmFileMetaInfo();
 				dsr.Dataset = metainfo;
-				dsr.Read(DcmFileMetaInfo.StopTag, DicomReadOptions.Default);
+				dsr.Read(DcmFileMetaInfo.StopTag, DicomReadOptions.Default | DicomReadOptions.FileMetaInfoOnly);
 				return metainfo;
 			}
 		}
@@ -127,7 +128,13 @@ namespace Dicom.Data {
 
 				_metainfo = new DcmFileMetaInfo();
 				dsr.Dataset = _metainfo;
-				dsr.Read(DcmFileMetaInfo.StopTag, options);
+				dsr.Read(DcmFileMetaInfo.StopTag, options | DicomReadOptions.FileMetaInfoOnly);
+
+				if (_metainfo.TransferSyntax.IsDeflate) {
+					MemoryStream ms = StreamUtility.Deflate(fs, false);
+					dsr = new DicomStreamReader(ms);
+				}
+
 				_dataset = new DcmDataset(_metainfo.TransferSyntax);
 				dsr.Dataset = _dataset;
 				dsr.Read(stopTag, options);
@@ -154,7 +161,7 @@ namespace Dicom.Data {
 			DicomStreamReader dsr = new DicomStreamReader(fs);
 			DcmFileMetaInfo metainfo = new DcmFileMetaInfo();
 			dsr.Dataset = metainfo;
-			if (dsr.Read(DcmFileMetaInfo.StopTag, DicomReadOptions.Default) == DicomReadStatus.Success && fs.Position < fs.Length) {
+			if (dsr.Read(DcmFileMetaInfo.StopTag, DicomReadOptions.Default | DicomReadOptions.FileMetaInfoOnly) == DicomReadStatus.Success && fs.Position < fs.Length) {
 				fs.Seek(-4, SeekOrigin.Current);
 				return fs;
 			}

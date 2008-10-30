@@ -22,6 +22,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Text;
 
 using Dicom.Data;
@@ -71,9 +72,13 @@ namespace Dicom.IO {
 			get { return _syntax; }
 			set {
 				_syntax = value;
-				if (_endian != _syntax.Endian || _writer == null) {
+				if (_endian != _syntax.Endian || _writer == null || _syntax.IsDeflate) {
 					_endian = _syntax.Endian;
-					_writer = EndianBinaryWriter.Create(_stream, _endian);
+					if (_syntax.IsDeflate)
+						_writer = EndianBinaryWriter.Create(
+							new DeflateStream(_stream, CompressionMode.Compress), _endian);
+					else
+						_writer = EndianBinaryWriter.Create(_stream, _endian);
 				}
 			}
 		}
