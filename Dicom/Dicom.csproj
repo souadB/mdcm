@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{1EFC91C4-EEF8-4AE4-B512-24C00CA46D59}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -65,7 +65,7 @@
     <OutputPath>bin\x86\Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG;OPENSSL</DefineConstants>
     <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
@@ -111,6 +111,7 @@
     <Compile Include="Codec\DicomCodec.cs" />
     <Compile Include="Codec\DcmRleCodec.cs" />
     <Compile Include="Imaging\ColorTable.cs" />
+    <Compile Include="IO\SegmentStream.cs" />
     <Compile Include="Network\Client\CStoreClient.cs" />
     <Compile Include="Network\DcmCommand.cs" />
     <Compile Include="Data\DcmDataException.cs" />

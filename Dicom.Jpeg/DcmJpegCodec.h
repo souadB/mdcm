@@ -54,8 +54,6 @@ public:
 	virtual IJpegCodec^ GetCodec(int bits, DcmJpegParameters^ jparams) = 0;
 
 	static void Register();
-
-	static int ScanJpegForBitDepth(DcmPixelData^ pixelData);
 };
 
 

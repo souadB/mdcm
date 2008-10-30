@@ -54,5 +54,5 @@ extern "C" {
 
 #include "JpegCodec.i"
 
-} // Codec
+} // Jpeg
 } // Dicom

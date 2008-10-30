@@ -104,23 +104,22 @@ void DcmJpeg2000Codec::Encode(DcmDataset^ dataset, DcmPixelData^ oldPixelData, D
 		opj_set_default_encoder_parameters(&eparams);
 		eparams.cp_disto_alloc = 1;
 
-		if (newPixelData->TransferSyntax == DcmTS::JPEG2000Lossy && jparams->Irreversible) {
+		if (newPixelData->TransferSyntax == DcmTS::JPEG2000Lossy && jparams->Irreversible)
 			eparams.irreversible = 1;
 
-			int r = 0;
-			for (; r < jparams->RateLevels->Length; r++) {
-				if (jparams->RateLevels[r] > jparams->Rate) {
-					eparams.tcp_numlayers++;
-					eparams.tcp_rates[r] = (float)jparams->RateLevels[r];
-				} else
-					break;
-			}
-			eparams.tcp_numlayers++;
-			eparams.tcp_rates[r] = (float)jparams->Rate;
-		} else {
-			eparams.tcp_rates[0] = 0;
-			eparams.tcp_numlayers = 1;
+		int r = 0;
+		for (; r < jparams->RateLevels->Length; r++) {
+			if (jparams->RateLevels[r] > jparams->Rate) {
+				eparams.tcp_numlayers++;
+				eparams.tcp_rates[r] = (float)jparams->RateLevels[r];
+			} else
+				break;
 		}
+		eparams.tcp_numlayers++;
+		eparams.tcp_rates[r] = (float)jparams->Rate;
+
+		if (newPixelData->TransferSyntax == DcmTS::JPEG2000Lossless && jparams->Rate > 0)
+			eparams.tcp_rates[eparams.tcp_numlayers++] = 0;
 
 		if (oldPixelData->PhotometricInterpretation == "RGB" && jparams->AllowMCT)
 			eparams.tcp_mct = 1;
@@ -215,10 +214,10 @@ void DcmJpeg2000Codec::Encode(DcmDataset^ dataset, DcmPixelData^ oldPixelData, D
 
 			if (oldPixelData->PhotometricInterpretation == "RGB" && jparams->AllowMCT) {
 				if (jparams->UpdatePhotometricInterpretation) {
-					if (newPixelData->TransferSyntax == DcmTS::JPEG2000Lossless)
-						newPixelData->PhotometricInterpretation = "YBR_RCT";
-					else
+					if (newPixelData->TransferSyntax == DcmTS::JPEG2000Lossy && jparams->Irreversible)
 						newPixelData->PhotometricInterpretation = "YBR_ICT";
+					else
+						newPixelData->PhotometricInterpretation = "YBR_RCT";
 				}
 			}
 
@@ -258,6 +257,12 @@ void DcmJpeg2000Codec::Decode(DcmDataset^ dataset, DcmPixelData^ oldPixelData, D
 	if (newPixelData->PhotometricInterpretation == "YBR_RCT" || newPixelData->PhotometricInterpretation == "YBR_ICT")
 		newPixelData->PhotometricInterpretation = "RGB";
 
+	if (newPixelData->PhotometricInterpretation == "YBR_FULL_422" || newPixelData->PhotometricInterpretation == "YBR_PARTIAL_422")
+		newPixelData->PhotometricInterpretation = "YBR_FULL";
+	
+	if (newPixelData->PhotometricInterpretation == "YBR_FULL")
+		newPixelData->PlanarConfiguration = 1;
+
 	for (int frame = 0; frame < oldPixelData->NumberOfFrames; frame++) {
 		array<unsigned char>^ jpegArray = oldPixelData->GetFrameDataU8(frame);
 		pin_ptr<unsigned char> jpegPin = &jpegArray[0];
@@ -294,6 +299,8 @@ void DcmJpeg2000Codec::Decode(DcmDataset^ dataset, DcmPixelData^ oldPixelData, D
 			cio = opj_cio_open((opj_common_ptr)dinfo, jpegData, (int)jpegDataSize);
 			image = opj_decode(dinfo, cio);
 
+			oldPixelData->Unload();
+
 			if (image == nullptr)
 				throw gcnew DicomCodecException("Error in JPEG 2000 code stream!");
 
@@ -303,7 +310,7 @@ void DcmJpeg2000Codec::Decode(DcmDataset^ dataset, DcmPixelData^ oldPixelData, D
 				int pos = 0;
 				int offset = 0;
 
-				if (oldPixelData->IsPlanar) {
+				if (newPixelData->IsPlanar) {
 					pos = c * pixelCount;
 					offset = 1;
 				}
@@ -312,9 +319,9 @@ void DcmJpeg2000Codec::Decode(DcmDataset^ dataset, DcmPixelData^ oldPixelData, D
 					offset = image->numcomps;
 				}
 
-				if (oldPixelData->BytesAllocated == 1) {
-					if (oldPixelData->IsSigned) {
-						unsigned char signBit = 1 << oldPixelData->HighBit;
+				if (newPixelData->BytesAllocated == 1) {
+					if (newPixelData->IsSigned) {
+						unsigned char signBit = 1 << newPixelData->HighBit;
 						unsigned char maskBit = 0xFF ^ signBit;
 						for (int p = 0; p < pixelCount; p++) {
 							int i = comp->data[p];
@@ -332,11 +339,11 @@ void DcmJpeg2000Codec::Decode(DcmDataset^ dataset, DcmPixelData^ oldPixelData, D
 						}
 					}
 				}
-				else if (oldPixelData->BytesAllocated == 2) {
-					unsigned short signBit = 1 << oldPixelData->HighBit;
+				else if (newPixelData->BytesAllocated == 2) {
+					unsigned short signBit = 1 << newPixelData->HighBit;
 					unsigned short maskBit = 0xFFFF ^ signBit;
 					unsigned short* destData16 = (unsigned short*)destData;
-					if (oldPixelData->IsSigned) {
+					if (newPixelData->IsSigned) {
 						for (int p = 0; p < pixelCount; p++) {
 							int i = comp->data[p];
 							if (i < 0)
@@ -357,7 +364,6 @@ void DcmJpeg2000Codec::Decode(DcmDataset^ dataset, DcmPixelData^ oldPixelData, D
 					throw gcnew DicomCodecException("JPEG 2000 module only supports Bytes Allocated == 8 or 16!");
 			}
 
-			oldPixelData->Unload();
 			newPixelData->AddFrame(destArray);
 		}
 		finally {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -21,6 +22,30 @@ namespace Dicom.Utility {
 				read = src.Read(buffer, 0, buffer.Length);
 				dst.Write(buffer, 0, read);
 			} while (read == buffer.Length);
+		}
+
+		/// <summary>
+		/// Compresses or decompressed a stream using the Deflate algorithm
+		/// </summary>
+		/// <param name="src">Source stream</param>
+		/// <param name="compress">Compress or decompress</param>
+		/// <returns>Output stream</returns>
+		public static MemoryStream Deflate(Stream src, bool compress) {
+			MemoryStream ms = new MemoryStream();
+			Deflate(src, ms, compress);
+			ms.Seek(0, SeekOrigin.Begin);
+			return ms;
+		}
+
+		/// <summary>
+		/// Compresses or decompressed a stream using the Deflate algorithm
+		/// </summary>
+		/// <param name="src">Source stream</param>
+		/// <param name="dst">Destination stream</param>
+		/// <param name="compress">Compress or decompress</param>
+		public static void Deflate(Stream src, Stream dst, bool compress) {
+			DeflateStream ds = new DeflateStream(src, compress ? CompressionMode.Compress : CompressionMode.Decompress);
+			Copy(ds, dst);
 		}
 	}
 

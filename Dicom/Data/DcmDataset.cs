@@ -733,59 +733,34 @@ namespace Dicom.Data {
 			if (oldTransferSyntax == newTransferSyntax)
 				return;
 
-			if (oldTransferSyntax.IsEncapsulated && newTransferSyntax.IsEncapsulated)
+			if (oldTransferSyntax.IsEncapsulated && newTransferSyntax.IsEncapsulated) {
 				ChangeTransferSyntax(DcmTS.ExplicitVRLittleEndian, null);
-
-			DcmPixelData oldPixelData = null;
-			DcmPixelData newPixelData = null;
-
-			if (oldTransferSyntax.IsEncapsulated) {
-				IDcmCodec codec = DicomCodec.GetCodec(oldTransferSyntax);
-				oldPixelData = new DcmPixelData(this);
-				newPixelData = new DcmPixelData(newTransferSyntax, oldPixelData);
-				codec.Decode(this, oldPixelData, newPixelData, parameters);
-				newPixelData.UpdateDataset(this);
-				SetInternalTransferSyntax(newTransferSyntax);
-			}
-			else if (newTransferSyntax.IsEncapsulated) {
-				IDcmCodec codec = DicomCodec.GetCodec(newTransferSyntax);
-				oldPixelData = new DcmPixelData(this);
-				newPixelData = new DcmPixelData(newTransferSyntax, oldPixelData);
-				codec.Encode(this, oldPixelData, newPixelData, parameters);
-				newPixelData.UpdateDataset(this);
-				SetInternalTransferSyntax(newTransferSyntax);
-			}
-			else {
-				SetInternalTransferSyntax(newTransferSyntax);
+				oldTransferSyntax = DcmTS.ExplicitVRLittleEndian;
 			}
 
-			if (Contains(DcmTags.PixelData) && !newTransferSyntax.IsExplicitVR && GetVR(DcmTags.PixelData) != DcmVR.OW) {
-				DcmOtherWord ow = new DcmOtherWord(DcmTags.PixelData);
-				if (newPixelData == null)
-					newPixelData = new DcmPixelData(this);
-				if (newPixelData.BitsAllocated == 16) {
-					for (int i = 0; i < newPixelData.NumberOfFrames; i++) {
-						ushort[] data = newPixelData.GetFrameDataU16(i);
-						for (int n = 0; n < data.Length; n++) {
-							ow.ByteBuffer.Writer.Write(data[n]);
-						}
-					}
-					if (oldTransferSyntax.Endian == Endian.Big)
-						ow.ByteBuffer.Swap2();
+			if (Contains(DcmTags.PixelData)) {
+				DcmPixelData oldPixelData = new DcmPixelData(this);
+				DcmPixelData newPixelData = new DcmPixelData(newTransferSyntax, oldPixelData);
+
+				if (oldTransferSyntax.IsEncapsulated) {
+					IDcmCodec codec = DicomCodec.GetCodec(oldTransferSyntax);
+					codec.Decode(this, oldPixelData, newPixelData, parameters);
 				}
-				else if (newPixelData.BitsAllocated == 8) {
-					for (int i = 0; i < newPixelData.NumberOfFrames; i++) {
-						byte[] data = newPixelData.GetFrameDataU8(i);
-						ow.ByteBuffer.Writer.Write(data);
-					}
-					ow.ByteBuffer.Swap2();
+				else if (newTransferSyntax.IsEncapsulated) {
+					IDcmCodec codec = DicomCodec.GetCodec(newTransferSyntax);
+					codec.Encode(this, oldPixelData, newPixelData, parameters);
 				}
 				else {
-					throw new DcmDataException(
-						String.Format("Unable to convert pixel data to OW:  bits allocated = {0}", newPixelData.BitsAllocated));
+					for (int i = 0; i < oldPixelData.NumberOfFrames; i++) {
+						byte[] data = oldPixelData.GetFrameDataU8(i);
+						newPixelData.AddFrame(data);
+					}
 				}
-				AddItem(ow);
+				
+				newPixelData.UpdateDataset(this);
 			}
+
+			SetInternalTransferSyntax(newTransferSyntax);
 		}
 
 		internal void SetInternalTransferSyntax(DcmTS ts) {

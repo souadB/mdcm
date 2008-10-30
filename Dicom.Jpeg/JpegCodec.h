@@ -50,6 +50,8 @@ public:
 	virtual void Decode(DcmPixelData^ oldPixelData, DcmPixelData^ newPixelData, DcmJpegParameters^ params, int frame) abstract;
 
 internal:
+	virtual int ScanHeaderForPrecision(DcmPixelData^ pixelData) abstract;
+
 	MemoryStream^ MemoryBuffer;
 	array<unsigned char>^ DataBuffer;
 	unsigned char* DataPtr;
@@ -66,6 +68,8 @@ public:
 	virtual void Decode(DcmPixelData^ oldPixelData, DcmPixelData^ newPixelData, DcmJpegParameters^ params, int frame) override;
 
 internal:
+	virtual int ScanHeaderForPrecision(DcmPixelData^ pixelData) override;
+
 	[ThreadStatic]
 	static Jpeg16Codec^ This;
 };
@@ -77,6 +81,8 @@ public:
 	virtual void Decode(DcmPixelData^ oldPixelData, DcmPixelData^ newPixelData, DcmJpegParameters^ params, int frame) override;
 
 internal:
+	virtual int ScanHeaderForPrecision(DcmPixelData^ pixelData) override;
+
 	[ThreadStatic]
 	static Jpeg12Codec^ This;
 };
@@ -88,6 +94,8 @@ public:
 	virtual void Decode(DcmPixelData^ oldPixelData, DcmPixelData^ newPixelData, DcmJpegParameters^ params, int frame) override;
 
 internal:
+	virtual int ScanHeaderForPrecision(DcmPixelData^ pixelData) override;
+
 	[ThreadStatic]
 	static Jpeg8Codec^ This;
 };

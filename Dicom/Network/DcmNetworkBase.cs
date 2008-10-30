@@ -29,6 +29,7 @@ using System.Threading;
 
 using Dicom.Data;
 using Dicom.IO;
+using Dicom.Utility;
 
 using NLog;
 
@@ -1260,20 +1261,28 @@ namespace Dicom.Network {
 							_dimse.Dataset = new DcmDataset(ts);
 						}
 
-						if (_dimse.DatasetReader == null) {
-							_dimse.DatasetReader = new DicomStreamReader(_dimse.DatasetStream);
-							_dimse.DatasetReader.Dataset = _dimse.Dataset;
-						}
-						
-						_dimse.Progress.BytesTransfered += pdv.Value.Length;
+						if (!_dimse.Dataset.InternalTransferSyntax.IsDeflate || pdv.IsLastFragment) {
+							if (_dimse.DatasetReader == null) {
+								if (_dimse.Dataset.InternalTransferSyntax.IsDeflate) {
+									// DicomStreamReader needs a seekable stream
+									MemoryStream ms = StreamUtility.Deflate(_dimse.DatasetStream, false);
+									_dimse.DatasetReader = new DicomStreamReader(ms);
+								}
+								else
+									_dimse.DatasetReader = new DicomStreamReader(_dimse.DatasetStream);
+								_dimse.DatasetReader.Dataset = _dimse.Dataset;
+							}
 
-						long remaining = _dimse.DatasetReader.BytesRemaining + pdv.Value.Length;
-						if (remaining >= _dimse.DatasetReader.BytesNeeded || pdv.IsLastFragment) {
-							_dimse.DatasetReader.Read(null, DicomReadOptions.Default |
-															DicomReadOptions.DeferLoadingLargeElements |
-															DicomReadOptions.DeferLoadingPixelData);
+							_dimse.Progress.BytesTransfered += pdv.Value.Length;
 
-							_dimse.Progress.EstimatedDatasetLength = (int)_dimse.DatasetReader.BytesEstimated;
+							long remaining = _dimse.DatasetReader.BytesRemaining + pdv.Value.Length;
+							if (remaining >= _dimse.DatasetReader.BytesNeeded || pdv.IsLastFragment) {
+								_dimse.DatasetReader.Read(null, DicomReadOptions.Default |
+																DicomReadOptions.DeferLoadingLargeElements |
+																DicomReadOptions.DeferLoadingPixelData);
+
+								_dimse.Progress.EstimatedDatasetLength = (int)_dimse.DatasetReader.BytesEstimated;
+							}
 						}
 
 						if (pdv.IsLastFragment) {

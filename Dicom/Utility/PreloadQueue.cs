@@ -20,6 +20,7 @@
 //    Colby Dillion (colby.dillion@gmail.com)
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -29,7 +30,7 @@ namespace Dicom.Utility {
 		void Load(Tstate state);
 	}
 
-	public class PreloadQueue<Titem, Tstate> where Titem : IPreloadable<Tstate> {
+	public class PreloadQueue<Titem, Tstate> : IEnumerable<Titem> where Titem : IPreloadable<Tstate> {
 		#region Private Members
 		private Queue<Titem> _queue;
 		private object _queueLock;
@@ -59,7 +60,7 @@ namespace Dicom.Utility {
 			Titem item = default(Titem);
 			lock (_queueLock) {
 				if (_queue.Count == 0)
-					throw new InvalidOperationException("Load queue empty");
+					throw new ArgumentOutOfRangeException();
 				item = _queue.Dequeue();				
 			}
 			if (!item.IsLoaded) {
@@ -74,6 +75,21 @@ namespace Dicom.Utility {
 		public void Enqueue(Titem item) {
 			lock (_queueLock) {
 				_queue.Enqueue(item);
+			}
+		}
+
+		public void Enqueue(ICollection<Titem> items) {
+			lock (_queueLock) {
+				foreach (Titem item in items) {
+					_queue.Enqueue(item);
+				}
+			}
+		}
+
+		public void UnloadTo(IList<Titem> destination) {
+			lock (_queueLock) {
+				while (_queue.Count > 0)
+					destination.Add(_queue.Dequeue());
 			}
 		}
 
@@ -93,6 +109,41 @@ namespace Dicom.Utility {
 						ThreadPool.QueueUserWorkItem(PreloadProc, item);
 				}
 			}
+		}
+
+		public void Sort() {
+			lock (_queueLock) {
+				List<Titem> list = new List<Titem>();
+				UnloadTo(list);
+				list.Sort();
+				Enqueue(list);
+			}
+		}
+
+		public void Sort(IComparer<Titem> comparer) {
+			lock (_queueLock) {
+				List<Titem> list = new List<Titem>();
+				UnloadTo(list);
+				list.Sort(comparer);
+				Enqueue(list);
+			}
+		}
+
+		public void Sort(Comparison<Titem> comparison) {
+			lock (_queueLock) {
+				List<Titem> list = new List<Titem>();
+				UnloadTo(list);
+				list.Sort(comparison);
+				Enqueue(list);
+			}
+		}
+
+		public IEnumerator<Titem> GetEnumerator() {
+			return _queue.GetEnumerator();
+		}
+
+		IEnumerator IEnumerable.GetEnumerator() {
+			return _queue.GetEnumerator();
 		}
 		#endregion
 
