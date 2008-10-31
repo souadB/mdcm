@@ -37,6 +37,8 @@ namespace Dicom.IO {
 		}
 
 		public override bool Equals(object obj) {
+			if (obj == null)
+				return false;
 			if (obj is Endian)
 				return this == (Endian)obj;
 			return false;
@@ -53,14 +55,12 @@ namespace Dicom.IO {
 		}
 
 		public static bool operator ==(Endian e1, Endian e2) {
-			if ((object)e1 == null) e1 = Endian.LocalMachine;
-			if ((object)e2 == null) e2 = Endian.LocalMachine;
+			if ((object)e1 == null || (object)e2 == null)
+				return false;
 			return e1._isBigEndian == e2._isBigEndian;
 		}
 		public static bool operator !=(Endian e1, Endian e2) {
-			if ((object)e1 == null) e1 = Endian.LocalMachine;
-			if ((object)e2 == null) e2 = Endian.LocalMachine;
-			return e1._isBigEndian != e2._isBigEndian;
+			return !(e1 == e2);
 		}
 
 

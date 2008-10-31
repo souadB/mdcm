@@ -535,6 +535,7 @@ namespace Dicom.IO {
 
 					DicomStreamReader idsr = new DicomStreamReader(ss);
 					idsr.Dataset = ds;
+					idsr.Encoding = _encoding;
 					idsr.PositionOffset = ds.StreamPosition;
 					DicomReadStatus status = idsr.Read(null, options);
 					if (status != DicomReadStatus.Success)
