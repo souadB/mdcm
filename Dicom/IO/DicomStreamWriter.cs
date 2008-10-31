@@ -48,6 +48,7 @@ namespace Dicom.IO {
 		private Stream _stream = null;
 		private BinaryWriter _writer = null;
 		private DcmTS _syntax = null;
+		private Encoding _encoding = Encoding.ASCII;
 		private Endian _endian;
 
 		private ushort _group = 0xffff;
@@ -72,14 +73,23 @@ namespace Dicom.IO {
 			get { return _syntax; }
 			set {
 				_syntax = value;
-				if (_endian != _syntax.Endian || _writer == null || _syntax.IsDeflate) {
-					_endian = _syntax.Endian;
-					if (_syntax.IsDeflate)
-						_writer = EndianBinaryWriter.Create(
-							new DeflateStream(_stream, CompressionMode.Compress), _endian);
-					else
-						_writer = EndianBinaryWriter.Create(_stream, _endian);
-				}
+				_endian = _syntax.Endian;
+				if (_syntax.IsDeflate)
+					_writer = EndianBinaryWriter.Create(
+						new DeflateStream(_stream, CompressionMode.Compress), _encoding, _endian);
+				else
+					_writer = EndianBinaryWriter.Create(_stream, _encoding, _endian);
+			}
+		}
+
+		/// <summary>
+		/// String encoding
+		/// </summary>
+		public Encoding Encoding {
+			get { return _encoding; }
+			set {
+				_encoding = value;
+				TransferSyntax = _syntax;
 			}
 		}
 		#endregion
