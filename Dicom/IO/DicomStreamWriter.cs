@@ -48,7 +48,7 @@ namespace Dicom.IO {
 		private Stream _stream = null;
 		private BinaryWriter _writer = null;
 		private DcmTS _syntax = null;
-		private Encoding _encoding = Encoding.ASCII;
+		private Encoding _encoding = DcmEncoding.Default;
 		private Endian _endian;
 
 		private ushort _group = 0xffff;

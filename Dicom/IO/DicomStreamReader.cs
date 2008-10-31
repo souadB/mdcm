@@ -53,7 +53,7 @@ namespace Dicom.IO {
 		private Stream _stream = null;
 		private BinaryReader _reader = null;
 		private DcmTS _syntax = null;
-		private Encoding _encoding = Encoding.ASCII;
+		private Encoding _encoding = DcmEncoding.Default;
 		private Endian _endian;
 		private bool _isFile;
 
@@ -163,6 +163,8 @@ namespace Dicom.IO {
 		#endregion
 
 		private ByteBuffer CurrentBuffer(DicomReadOptions options) {
+			ByteBuffer bb = null;
+
 			if (_isFile) {
 				bool delayLoad = false;
 				if (_len >= 1024 && _vr != DcmVR.SQ) {
@@ -178,12 +180,18 @@ namespace Dicom.IO {
 					FileStream fs = (FileStream)_stream;
 					FileSegment segment = new FileSegment(fs.Name, fs.Position, _len);
 					_stream.Seek(_len, SeekOrigin.Current);
-					return new ByteBuffer(segment, _endian);
+					bb = new ByteBuffer(segment, _endian);
 				}
 			}
 
-			ByteBuffer bb = new ByteBuffer(_endian);
-			bb.CopyFrom(_stream, (int)_len);
+			if (bb == null) {
+				bb = new ByteBuffer(_endian);
+				bb.CopyFrom(_stream, (int)_len);
+			}
+
+			if (_vr.IsEncodedString)
+				bb.Encoding = _encoding;
+
 			return bb;
 		}
 
@@ -581,6 +589,19 @@ namespace Dicom.IO {
 				}
 				else
 					_dataset.AddItem(item);
+			}
+
+			if (_tag == DcmTags.SpecificCharacterSet && item is DcmCodeString) {
+				DcmCodeString cs = (DcmCodeString)item;
+				if (cs.Length > 0) {
+					string[] values = cs.GetValues();
+					for (int i = 0; i < values.Length; i++) {
+						if (String.IsNullOrEmpty(values[i]))
+							continue;
+						_encoding = DcmEncoding.GetEncodingForSpecificCharacterSet(values[i]);
+						break;
+					}
+				}
 			}
 		}
 	}

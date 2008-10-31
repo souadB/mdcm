@@ -23,6 +23,8 @@ using System;
 using System.IO;
 using System.Text;
 
+using Dicom.Data;
+
 namespace Dicom.IO {
 	public class ByteBuffer {
 		#region Private Members
@@ -41,7 +43,7 @@ namespace Dicom.IO {
 
 		public ByteBuffer(Endian endian) {
 			_endian = endian;
-			_encoding = Encoding.ASCII;
+			_encoding = DcmEncoding.Default;
 		}
 
 		public ByteBuffer(byte[] data) : this(data, Endian.LocalMachine) {
@@ -50,7 +52,7 @@ namespace Dicom.IO {
 		public ByteBuffer(byte[] data, Endian endian) {
 			_data = data;
 			_endian = endian;
-			_encoding = Encoding.ASCII;
+			_encoding = DcmEncoding.Default;
 		}
 
 		public ByteBuffer(FileSegment segment) : this(segment, Endian.LocalMachine) {
@@ -59,7 +61,7 @@ namespace Dicom.IO {
 		public ByteBuffer(FileSegment segment, Endian endian) {
 			_segment = segment;
 			_endian = endian;
-			_encoding = Encoding.ASCII;
+			_encoding = DcmEncoding.Default;
 		}
 		#endregion
 
