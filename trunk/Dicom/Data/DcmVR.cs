@@ -38,6 +38,7 @@ namespace Dicom.Data {
 		private string _desc;
 		private bool _is16BitLength;
 		private bool _isString;
+		private bool _isEncodedString;
 		private byte _padding;
 		private int _maxLength;
 		private int _unitSize;
@@ -46,12 +47,13 @@ namespace Dicom.Data {
 		private DcmVR() {
 		}
 
-		internal DcmVR(string value, string desc, bool isString, bool is16BitLength, 
+		internal DcmVR(string value, string desc, bool isString, bool isEncodedString, bool is16BitLength, 
 			byte padding, int maxLength, int unitSize, VrRestriction restriction) {
 			_strval = value;
 			_hash = (((int)value[0] << 8) | (int)value[1]);
 			_desc = desc;
 			_isString = isString;
+			_isEncodedString = isEncodedString;
 			_is16BitLength = is16BitLength;
 			//_padding = padding;
 			_padding = PadZero;
@@ -72,6 +74,13 @@ namespace Dicom.Data {
 
 		public bool IsString {
 			get { return _isString; }
+		}
+
+		/// <summary>
+		/// Specific Character Set applies to this VR
+		/// </summary>
+		public bool IsEncodedString {
+			get { return _isEncodedString; }
 		}
 
 		public bool Is16BitLengthField {
@@ -102,34 +111,34 @@ namespace Dicom.Data {
 		private const byte PadSpace = (byte)' ';
 		private const byte PadZero = 0;
 
-		public static DcmVR NONE = new DcmVR("NONE", "No VR", false, false, PadZero, 0, 0, VrRestriction.NotApplicable);
-		public static DcmVR AE = new DcmVR("AE", "Application Entity", true, true, PadSpace, 16, 1, VrRestriction.Maximum);
-		public static DcmVR AS = new DcmVR("AS", "Age String", true, true, PadSpace, 4, 1, VrRestriction.Fixed);
-		public static DcmVR AT = new DcmVR("AT", "Attribute Tag", false, true, PadZero, 4, 4, VrRestriction.Fixed);
-		public static DcmVR CS = new DcmVR("CS", "Code String", true, true, PadSpace, 16, 1, VrRestriction.Maximum);
-		public static DcmVR DA = new DcmVR("DA", "Date", true, true, PadSpace, 8, 1, VrRestriction.Fixed);
-		public static DcmVR DS = new DcmVR("DS", "Decimal String", true, true, PadSpace, 16, 1, VrRestriction.Maximum);
-		public static DcmVR DT = new DcmVR("DT", "Date Time", true, true, PadSpace, 26, 1, VrRestriction.Maximum);
-		public static DcmVR FD = new DcmVR("FD", "Floating Point Double", false, true, PadZero, 8, 8, VrRestriction.Fixed);
-		public static DcmVR FL = new DcmVR("FL", "Floating Point Single", false, true, PadZero, 4, 4, VrRestriction.Fixed);
-		public static DcmVR IS = new DcmVR("IS", "Integer String", true, true, PadSpace, 12, 1, VrRestriction.Maximum);
-		public static DcmVR LO = new DcmVR("LO", "Long String", true, true, PadSpace, 64, 1, VrRestriction.Maximum);
-		public static DcmVR LT = new DcmVR("LT", "Long Text", true, true, PadSpace, 10240, 1, VrRestriction.Maximum);
-		public static DcmVR OB = new DcmVR("OB", "Other Byte", false, false, PadZero, 0, 1, VrRestriction.Any);
-		public static DcmVR OF = new DcmVR("OF", "Other Float", false, false, PadZero, 0, 4, VrRestriction.Any);
-		public static DcmVR OW = new DcmVR("OW", "Other Word", false, false, PadZero, 0, 2, VrRestriction.Any);
-		public static DcmVR PN = new DcmVR("PN", "Person Name", true, true, PadSpace, 64, 1, VrRestriction.Maximum);
-		public static DcmVR SH = new DcmVR("SH", "Short String", true, true, PadSpace, 16, 1, VrRestriction.Maximum);
-		public static DcmVR SL = new DcmVR("SL", "Signed Long", false, true, PadZero, 4, 4, VrRestriction.Fixed);
-		public static DcmVR SQ = new DcmVR("SQ", "Sequence of Items", false, false, PadZero, 0, 0, VrRestriction.NotApplicable);
-		public static DcmVR SS = new DcmVR("SS", "Signed Short", false, true, PadZero, 2, 2, VrRestriction.Fixed);
-		public static DcmVR ST = new DcmVR("ST", "Short Text", false, true, PadSpace, 1024, 1, VrRestriction.Maximum);
-		public static DcmVR TM = new DcmVR("TM", "Time", true, true, PadSpace, 16, 1, VrRestriction.Maximum);
-		public static DcmVR UI = new DcmVR("UI", "Unique Identifier", true, true, PadSpace, 64, 1, VrRestriction.Maximum);
-		public static DcmVR UL = new DcmVR("UL", "Unsigned Long", false, true, PadZero, 4, 4, VrRestriction.Fixed);
-		public static DcmVR UN = new DcmVR("UN", "Unknown", false, false, PadZero, 0, 1, VrRestriction.Any);
-		public static DcmVR US = new DcmVR("US", "Unsigned Short", false, true, PadZero, 2, 2, VrRestriction.Fixed);
-		public static DcmVR UT = new DcmVR("UT", "Unlimited Text", true, false, PadSpace, 0, 1, VrRestriction.Any);
+		public static DcmVR NONE = new DcmVR("NONE", "No VR", false, false, false, PadZero, 0, 0, VrRestriction.NotApplicable);
+		public static DcmVR AE = new DcmVR("AE", "Application Entity", true, false, true, PadSpace, 16, 1, VrRestriction.Maximum);
+		public static DcmVR AS = new DcmVR("AS", "Age String", true, false, true, PadSpace, 4, 1, VrRestriction.Fixed);
+		public static DcmVR AT = new DcmVR("AT", "Attribute Tag", false, false, true, PadZero, 4, 4, VrRestriction.Fixed);
+		public static DcmVR CS = new DcmVR("CS", "Code String", true, false, true, PadSpace, 16, 1, VrRestriction.Maximum);
+		public static DcmVR DA = new DcmVR("DA", "Date", true, false, true, PadSpace, 8, 1, VrRestriction.Fixed);
+		public static DcmVR DS = new DcmVR("DS", "Decimal String", true, false, true, PadSpace, 16, 1, VrRestriction.Maximum);
+		public static DcmVR DT = new DcmVR("DT", "Date Time", true, false, true, PadSpace, 26, 1, VrRestriction.Maximum);
+		public static DcmVR FD = new DcmVR("FD", "Floating Point Double", false, false, true, PadZero, 8, 8, VrRestriction.Fixed);
+		public static DcmVR FL = new DcmVR("FL", "Floating Point Single", false, false, true, PadZero, 4, 4, VrRestriction.Fixed);
+		public static DcmVR IS = new DcmVR("IS", "Integer String", true, false, true, PadSpace, 12, 1, VrRestriction.Maximum);
+		public static DcmVR LO = new DcmVR("LO", "Long String", true, true, true, PadSpace, 64, 1, VrRestriction.Maximum);
+		public static DcmVR LT = new DcmVR("LT", "Long Text", true, true, true, PadSpace, 10240, 1, VrRestriction.Maximum);
+		public static DcmVR OB = new DcmVR("OB", "Other Byte", false, false, false, PadZero, 0, 1, VrRestriction.Any);
+		public static DcmVR OF = new DcmVR("OF", "Other Float", false, false, false, PadZero, 0, 4, VrRestriction.Any);
+		public static DcmVR OW = new DcmVR("OW", "Other Word", false, false, false, PadZero, 0, 2, VrRestriction.Any);
+		public static DcmVR PN = new DcmVR("PN", "Person Name", true, true, true, PadSpace, 64, 1, VrRestriction.Maximum);
+		public static DcmVR SH = new DcmVR("SH", "Short String", true, true, true, PadSpace, 16, 1, VrRestriction.Maximum);
+		public static DcmVR SL = new DcmVR("SL", "Signed Long", false, false, true, PadZero, 4, 4, VrRestriction.Fixed);
+		public static DcmVR SQ = new DcmVR("SQ", "Sequence of Items", false, false, false, PadZero, 0, 0, VrRestriction.NotApplicable);
+		public static DcmVR SS = new DcmVR("SS", "Signed Short", false, false, true, PadZero, 2, 2, VrRestriction.Fixed);
+		public static DcmVR ST = new DcmVR("ST", "Short Text", false, true, true, PadSpace, 1024, 1, VrRestriction.Maximum);
+		public static DcmVR TM = new DcmVR("TM", "Time", true, false, true, PadSpace, 16, 1, VrRestriction.Maximum);
+		public static DcmVR UI = new DcmVR("UI", "Unique Identifier", true, false, true, PadSpace, 64, 1, VrRestriction.Maximum);
+		public static DcmVR UL = new DcmVR("UL", "Unsigned Long", false, false, true, PadZero, 4, 4, VrRestriction.Fixed);
+		public static DcmVR UN = new DcmVR("UN", "Unknown", false, false, false, PadZero, 0, 1, VrRestriction.Any);
+		public static DcmVR US = new DcmVR("US", "Unsigned Short", false, false, true, PadZero, 2, 2, VrRestriction.Fixed);
+		public static DcmVR UT = new DcmVR("UT", "Unlimited Text", true, true, true, PadSpace, 0, 1, VrRestriction.Any);
 	}
 
 	public static class DcmVRs {

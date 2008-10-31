@@ -110,6 +110,7 @@
     <Compile Include="Codec\DcmCodecParameters.cs" />
     <Compile Include="Codec\DicomCodec.cs" />
     <Compile Include="Codec\DcmRleCodec.cs" />
+    <Compile Include="Data\DcmEncoding.cs" />
     <Compile Include="Imaging\ColorTable.cs" />
     <Compile Include="IO\SegmentStream.cs" />
     <Compile Include="Network\Client\CStoreClient.cs" />
