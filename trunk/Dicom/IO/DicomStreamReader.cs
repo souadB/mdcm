@@ -53,6 +53,7 @@ namespace Dicom.IO {
 		private Stream _stream = null;
 		private BinaryReader _reader = null;
 		private DcmTS _syntax = null;
+		private Encoding _encoding = Encoding.ASCII;
 		private Endian _endian;
 		private bool _isFile;
 
@@ -98,7 +99,18 @@ namespace Dicom.IO {
 			set {
 				_syntax = value;
 				_endian = _syntax.Endian;
-				_reader = EndianBinaryReader.Create(_stream, _endian);
+				_reader = EndianBinaryReader.Create(_stream, _encoding, _endian);
+			}
+		}
+
+		/// <summary>
+		/// String encoding
+		/// </summary>
+		public Encoding Encoding {
+			get { return _encoding; }
+			set {
+				_encoding = value;
+				TransferSyntax = _syntax;
 			}
 		}
 

@@ -161,29 +161,48 @@ namespace Dicom.IO {
 		#endregion
 
 		#region Public Constructors
-		public EndianBinaryReader(Stream s) : base(s) {
+		public EndianBinaryReader(Stream input) : base(input) {
 		}
-		public EndianBinaryReader(Stream s, Encoding e) : base(s, e) {
+		public EndianBinaryReader(Stream input, Encoding encoding) : base(input, encoding) {
 		}
-		public EndianBinaryReader(Stream s, Endian e) : base(s) {
-			Endian = e;
+		public EndianBinaryReader(Stream input, Endian endian) : base(input) {
+			Endian = endian;
 		}
-		public EndianBinaryReader(Stream s, Encoding enc, Endian end) : base(s, enc) {
-			Endian = end;
+		public EndianBinaryReader(Stream input, Encoding encoding, Endian endian) : base(input, encoding) {
+			Endian = endian;
 		}
 
-		public static BinaryReader Create(Stream s, Endian e) {
+		public static BinaryReader Create(Stream input, Endian endian) {
 			if (BitConverter.IsLittleEndian) {
-				if (Endian.Little == e) {
-					return new BinaryReader(s);
+				if (Endian.Little == endian) {
+					return new BinaryReader(input);
 				} else {
-					return new EndianBinaryReader(s, e);
+					return new EndianBinaryReader(input, endian);
 				}
 			} else {
-				if (Endian.Big == e) {
-					return new BinaryReader(s);
+				if (Endian.Big == endian) {
+					return new BinaryReader(input);
 				} else {
-					return new EndianBinaryReader(s, e);
+					return new EndianBinaryReader(input, endian);
+				}
+			}
+		}
+
+		public static BinaryReader Create(Stream input, Encoding encoding, Endian endian) {
+			if (BitConverter.IsLittleEndian) {
+				if (Endian.Little == endian) {
+					return new BinaryReader(input, encoding);
+				}
+				else {
+					return new EndianBinaryReader(input, encoding, endian);
+				}
+			}
+			else {
+				if (Endian.Big == endian) {
+					return new BinaryReader(input, encoding);
+				}
+				else {
+					return new EndianBinaryReader(input, encoding, endian);
 				}
 			}
 		}
@@ -306,29 +325,48 @@ namespace Dicom.IO {
 		#endregion
 
 		#region Public Constructors
-		public EndianBinaryWriter(Stream s) : base(s) {
+		public EndianBinaryWriter(Stream output) : base(output) {
 		}
-		public EndianBinaryWriter(Stream s, Encoding e) : base(s, e) {
+		public EndianBinaryWriter(Stream output, Encoding encoding) : base(output, encoding) {
 		}
-		public EndianBinaryWriter(Stream s, Endian e) : base(s) {
-			Endian = e;
+		public EndianBinaryWriter(Stream output, Endian endian) : base(output) {
+			Endian = endian;
 		}
-		public EndianBinaryWriter(Stream s, Encoding enc, Endian end) : base(s, enc) {
-			Endian = end;
+		public EndianBinaryWriter(Stream output, Encoding encoding, Endian endian) : base(output, encoding) {
+			Endian = endian;
 		}
 
-		public static BinaryWriter Create(Stream s, Endian e) {
+		public static BinaryWriter Create(Stream output, Endian endian) {
 			if (BitConverter.IsLittleEndian) {
-				if (Endian.Little == e) {
-					return new BinaryWriter(s);
+				if (Endian.Little == endian) {
+					return new BinaryWriter(output);
 				} else {
-					return new EndianBinaryWriter(s, e);
+					return new EndianBinaryWriter(output, endian);
 				}
 			} else {
-				if (Endian.Big == e) {
-					return new BinaryWriter(s);
+				if (Endian.Big == endian) {
+					return new BinaryWriter(output);
 				} else {
-					return new EndianBinaryWriter(s, e);
+					return new EndianBinaryWriter(output, endian);
+				}
+			}
+		}
+
+		public static BinaryWriter Create(Stream input, Encoding encoding, Endian endian) {
+			if (BitConverter.IsLittleEndian) {
+				if (Endian.Little == endian) {
+					return new BinaryWriter(input, encoding);
+				}
+				else {
+					return new EndianBinaryWriter(input, encoding, endian);
+				}
+			}
+			else {
+				if (Endian.Big == endian) {
+					return new BinaryWriter(input, encoding);
+				}
+				else {
+					return new EndianBinaryWriter(input, encoding, endian);
 				}
 			}
 		}
