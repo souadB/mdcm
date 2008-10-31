@@ -173,6 +173,11 @@ namespace Dicom.IO {
 		}
 
 		public static BinaryReader Create(Stream input, Endian endian) {
+			if (input == null)
+				throw new ArgumentNullException("input");
+			if (endian == null)
+				throw new ArgumentNullException("endian");
+
 			if (BitConverter.IsLittleEndian) {
 				if (Endian.Little == endian) {
 					return new BinaryReader(input);
@@ -189,6 +194,13 @@ namespace Dicom.IO {
 		}
 
 		public static BinaryReader Create(Stream input, Encoding encoding, Endian endian) {
+			if (encoding == null)
+				return Create(input, endian);
+			if (input == null)
+				throw new ArgumentNullException("input");
+			if (endian == null)
+				throw new ArgumentNullException("endian");
+
 			if (BitConverter.IsLittleEndian) {
 				if (Endian.Little == endian) {
 					return new BinaryReader(input, encoding);
@@ -337,6 +349,11 @@ namespace Dicom.IO {
 		}
 
 		public static BinaryWriter Create(Stream output, Endian endian) {
+			if (output == null)
+				throw new ArgumentNullException("output");
+			if (endian == null)
+				throw new ArgumentNullException("endian");
+
 			if (BitConverter.IsLittleEndian) {
 				if (Endian.Little == endian) {
 					return new BinaryWriter(output);
@@ -352,21 +369,28 @@ namespace Dicom.IO {
 			}
 		}
 
-		public static BinaryWriter Create(Stream input, Encoding encoding, Endian endian) {
+		public static BinaryWriter Create(Stream output, Encoding encoding, Endian endian) {
+			if (encoding == null)
+				return Create(output, endian);
+			if (output == null)
+				throw new ArgumentNullException("output");
+			if (endian == null)
+				throw new ArgumentNullException("endian");
+
 			if (BitConverter.IsLittleEndian) {
 				if (Endian.Little == endian) {
-					return new BinaryWriter(input, encoding);
+					return new BinaryWriter(output, encoding);
 				}
 				else {
-					return new EndianBinaryWriter(input, encoding, endian);
+					return new EndianBinaryWriter(output, encoding, endian);
 				}
 			}
 			else {
 				if (Endian.Big == endian) {
-					return new BinaryWriter(input, encoding);
+					return new BinaryWriter(output, encoding);
 				}
 				else {
-					return new EndianBinaryWriter(input, encoding, endian);
+					return new EndianBinaryWriter(output, encoding, endian);
 				}
 			}
 		}

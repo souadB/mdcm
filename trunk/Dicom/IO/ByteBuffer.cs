@@ -83,7 +83,7 @@ namespace Dicom.IO {
 		public BinaryReader Reader {
 			get {
 				if (_br == null) {
-					_br = EndianBinaryReader.Create(Stream, Endian);
+					_br = EndianBinaryReader.Create(Stream, Encoding, Endian);
 				}
 				return _br;
 			}
@@ -92,7 +92,7 @@ namespace Dicom.IO {
 		public BinaryWriter Writer {
 			get {
 				if (_bw == null) {
-					_bw = EndianBinaryWriter.Create(Stream, Endian);
+					_bw = EndianBinaryWriter.Create(Stream, Encoding, Endian);
 					_segment = null;
 				}
 				return _bw;
@@ -151,10 +151,13 @@ namespace Dicom.IO {
 		}
 
 		public ByteBuffer Clone() {
+			ByteBuffer clone = null;
 			if (_segment != null)
-				return new ByteBuffer(_segment, Endian);
+				clone = new ByteBuffer(_segment, Endian);
 			else
-				return new ByteBuffer(ToBytes(), Endian);
+				clone = new ByteBuffer(ToBytes(), Endian);
+			clone.Encoding = Encoding;
+			return clone;
 		}
 
 		public void Clear() {
