@@ -40,6 +40,7 @@ namespace Dicom.Network {
 		private BinaryWriter _bw;
 		private Stack<long> _m16;
 		private Stack<long> _m32;
+		private Encoding _encoding;
 		#endregion
 
 		#region Public Constructors
@@ -50,9 +51,10 @@ namespace Dicom.Network {
 		public RawPDU(byte type) {
 			_type = type;
 			_ms = new MemoryStream();
-			_bw = EndianBinaryWriter.Create(_ms, Endian.Big);
+			_bw = EndianBinaryWriter.Create(_ms, _encoding, Endian.Big);
 			_m16 = new Stack<long>();
 			_m32 = new Stack<long>();
+			_encoding = Encoding.ASCII;
 		}
 
 		/// <summary>
@@ -61,7 +63,7 @@ namespace Dicom.Network {
 		/// <param name="s">Input stream</param>
 		public RawPDU(Stream s) {
 			_is = s;
-			BinaryReader br = EndianBinaryReader.Create(_is, Endian.Big);
+			BinaryReader br = EndianBinaryReader.Create(_is, _encoding, Endian.Big);
 			_type = br.ReadByte();
 		}
 
@@ -71,7 +73,7 @@ namespace Dicom.Network {
 		/// <param name="buffer">Buffer</param>
 		public RawPDU(byte[] buffer) {
 			_is = new MemoryStream(buffer);
-			BinaryReader br = EndianBinaryReader.Create(_is, Endian.Big);
+			BinaryReader br = EndianBinaryReader.Create(_is, _encoding, Endian.Big);
 			_type = br.ReadByte();
 		}
 		#endregion
@@ -94,14 +96,14 @@ namespace Dicom.Network {
 		/// </summary>
 		public void ReadPDU() {
 			_ms = new MemoryStream();
-			BinaryReader br = EndianBinaryReader.Create(_is, Endian.Big);
+			BinaryReader br = EndianBinaryReader.Create(_is, _encoding, Endian.Big);
 
 			br.ReadByte();
 			uint len = br.ReadUInt32();	// PDU-Length
 
 			byte[] data = br.ReadBytes((int)len);
 			_ms = new MemoryStream(data, false);
-			_br = EndianBinaryReader.Create(_ms, Endian.Big);
+			_br = EndianBinaryReader.Create(_ms, _encoding, Endian.Big);
 		}
 
 		/// <summary>
