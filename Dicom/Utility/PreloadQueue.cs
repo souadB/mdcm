@@ -60,7 +60,7 @@ namespace Dicom.Utility {
 			Titem item = default(Titem);
 			lock (_queueLock) {
 				if (_queue.Count == 0)
-					throw new ArgumentOutOfRangeException();
+					throw new ArgumentOutOfRangeException("No items in preload queue");
 				item = _queue.Dequeue();				
 			}
 			if (!item.IsLoaded) {
