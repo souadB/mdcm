@@ -296,6 +296,7 @@ namespace Dicom.Network.Client {
 			CallingAE = "STORE_SCU";
 			CalledAE = "STORE_SCP";
 			_sendQueue = new PreloadQueue<CStoreRequestInfo, CStoreClient>(this);
+			_current = null;
 		}
 		#endregion
 
@@ -536,7 +537,7 @@ namespace Dicom.Network.Client {
 		private void SendNextCStoreRequest() {
 			DateTime linger = DateTime.Now.AddSeconds(Linger + 1);
 			while (linger > DateTime.Now && !_cancel) {
-				while (PendingCount > 0 && !_cancel) {
+				while (_sendQueue.Count > 0 && !_cancel) {
 					_current = _sendQueue.Dequeue();
 					_sendQueue.Preload(_preloadCount);
 					if (_current.Send(this)) {

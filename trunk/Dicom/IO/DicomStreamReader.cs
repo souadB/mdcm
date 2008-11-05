@@ -196,7 +196,7 @@ namespace Dicom.IO {
 		}
 
 		private DicomReadStatus NeedMoreData(long count) {
-			_need = (uint)count;
+			_need = (uint)(count - _remain);
 			return DicomReadStatus.NeedMoreData;
 		}
 
@@ -235,13 +235,17 @@ namespace Dicom.IO {
 						_vr = DcmVR.LO;
 
 					if (_fragment != null) {
-						InsertFragmentItem(options);
+						status = InsertFragmentItem(options);
+						if (status != DicomReadStatus.Success)
+							return status;
 					}
 					else if (_sqs.Count > 0 &&
 								(_tag == DcmTags.Item ||
 								 _tag == DcmTags.ItemDelimitationItem ||
 								 _tag == DcmTags.SequenceDelimitationItem)) {
-						InsertSequenceItem(options);
+						status = InsertSequenceItem(options);
+						if (status != DicomReadStatus.Success)
+							return status;
 					}
 					else {
 						if (_sqs.Count > 0) {
@@ -276,16 +280,14 @@ namespace Dicom.IO {
 								_sqs.Push(sq);
 							}
 							else {
-								if (_remain >= _len) {
-									DcmElement elem = DcmElement.Create(_tag, _vr, _pos, _endian, CurrentBuffer(options));
-									_remain -= _len;
-									_read += _len;
+								if (_len > _remain)
+									return NeedMoreData(_len);
 
-									InsertDatasetItem(elem, options);
-								}
-								else {
-									return NeedMoreData(_len - _remain);
-								}
+								DcmElement elem = DcmElement.Create(_tag, _vr, _pos, _endian, CurrentBuffer(options));
+								_remain -= _len;
+								_read += _len;
+
+								InsertDatasetItem(elem, options);
 							}
 						}
 					}
@@ -498,20 +500,17 @@ namespace Dicom.IO {
 
 		private DicomReadStatus InsertFragmentItem(DicomReadOptions options) {
 			if (_tag == DcmTags.Item) {
-				if (_remain >= _len) {
-					ByteBuffer data = CurrentBuffer(options);
-					_remain -= _len;
-					_read += _len;
+				if (_len > _remain)
+					return NeedMoreData(_len);
 
-					if (!_fragment.HasOffsetTable)
-						_fragment.SetOffsetTable(data);
-					else
-						_fragment.AddFragment(data);
+				ByteBuffer data = CurrentBuffer(options);
+				_remain -= _len;
+				_read += _len;
 
-				}
-				else {
-					return NeedMoreData(_remain - _len);
-				}
+				if (!_fragment.HasOffsetTable)
+					_fragment.SetOffsetTable(data);
+				else
+					_fragment.AddFragment(data);
 			}
 			else if (_tag == DcmTags.SequenceDelimitationItem) {
 				_fragment = null;
@@ -526,7 +525,7 @@ namespace Dicom.IO {
 		private DicomReadStatus InsertSequenceItem(DicomReadOptions options) {
 			if (_tag.Equals(DcmTags.Item)) {
 				if (_len != UndefinedLength && _len > _remain)
-					return NeedMoreData(_remain - _len);
+					return NeedMoreData(_len);
 
 				if (_sds.Count > _sqs.Count)
 					_sds.Pop();
