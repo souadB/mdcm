@@ -37,6 +37,7 @@ namespace Dicom.Data {
 		Prefix,
 		Append,
 		Format,
+		Truncate,
 		UserOp1,
 		UserOp2,
 		UserOp3,
@@ -272,6 +273,16 @@ namespace Dicom.Data {
 				if (_op == DicomModifyOp.Format) {
 					elem.SetValueString(String.Format(_output, value));
 					return;
+				}
+
+				if (_op == DicomModifyOp.Truncate) {
+					int length = int.Parse(_input);
+					string[] parts = value.Split('\\');
+					for (int i = 0; i < parts.Length; i++) {
+						if (parts[i].Length > length)
+							parts[i] = parts[i].Substring(0, length);
+					}
+					elem.SetValueString(String.Join("\\", parts));
 				}
 			}
 			catch (Exception e) {
