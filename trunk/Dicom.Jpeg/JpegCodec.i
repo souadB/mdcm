@@ -470,6 +470,8 @@ void JPEGCODEC::Decode(DcmPixelData^ oldPixelData, DcmPixelData^ newPixelData, D
 
 	int rowSize = dinfo.output_width * dinfo.output_components * sizeof(JSAMPLE);
 	int frameSize = rowSize * dinfo.output_height;
+	if ((frameSize % 2) != 0)
+		frameSize++;
 	array<unsigned char>^ frameBuffer = gcnew array<unsigned char>(frameSize);
 	pin_ptr<unsigned char> framePin = &frameBuffer[0];
 	unsigned char* framePtr = framePin;

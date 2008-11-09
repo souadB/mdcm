@@ -569,6 +569,8 @@ namespace Dicom.Data {
 					int count = (int)Math.Min(FragmentSize, (uint)(data.Length - pos));
 					ByteBuffer buffer = new ByteBuffer();
 					buffer.Append(data, pos, count);
+					if ((buffer.Length % 2) != 0)
+						buffer.Append(new byte[1], 0, 1);
 					sequence.Fragments.Add(buffer);
 					pos += count;
 				}
@@ -578,7 +580,12 @@ namespace Dicom.Data {
 					Endian.SwapBytes(BytesAllocated, data);
 				else if (BytesAllocated == 1 && PixelDataItem.VR == DcmVR.OW && TransferSyntax.Endian == Endian.Big)
 					Endian.SwapBytes(2, data);
-				PixelDataElement.ByteBuffer.Append(data, 0, data.Length);
+
+				long pos = UncompressedFrameSize * (NumberOfFrames - 1);
+				PixelDataElement.ByteBuffer.Stream.Seek(pos, System.IO.SeekOrigin.Begin);
+				PixelDataElement.ByteBuffer.Stream.Write(data, 0, data.Length);
+				if ((PixelDataElement.ByteBuffer.Length % 2) != 0)
+					PixelDataElement.ByteBuffer.Stream.Write(new byte[1], 0, 1);
 			}
 		}
 		#endregion

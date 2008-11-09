@@ -136,7 +136,7 @@ namespace Dicom.Network.Client {
 
 		protected override void OnReceiveAbort(DcmAbortSource source, DcmAbortReason reason) {
 			_closedOnError = true;
-			SendReleaseRequest();
+			Close();
 		}
 
 		protected override void OnReceiveReleaseResponse() {
