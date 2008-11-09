@@ -57,6 +57,8 @@ namespace Dicom.IO {
 		private Endian _endian;
 		private bool _isFile;
 
+		private uint _largeElementSize = 4096;
+
 		private DcmDataset _dataset;
 
 		private uint _privateCreatorCard = 0xffffffff;
@@ -160,6 +162,15 @@ namespace Dicom.IO {
 			get { return _offset; }
 			set { _offset = value; }
 		}
+
+		/// <summary>
+		/// Minimum size, in bytes, of elements that should be defer loaded when
+		/// using the DicomReadOptions.DeferLoadingLargeElements read option.
+		/// </summary>
+		public uint LargeElementSize {
+			get { return _largeElementSize; }
+			set { _largeElementSize = value; }
+		}
 		#endregion
 
 		private ByteBuffer CurrentBuffer(DicomReadOptions options) {
@@ -167,7 +178,7 @@ namespace Dicom.IO {
 
 			if (_isFile) {
 				bool delayLoad = false;
-				if (_len >= 1024 && _vr != DcmVR.SQ) {
+				if (_len >= _largeElementSize && _vr != DcmVR.SQ) {
 					if (Flags.IsSet(options, DicomReadOptions.DeferLoadingLargeElements))
 						delayLoad = true;
 					else if (Flags.IsSet(options, DicomReadOptions.DeferLoadingPixelData) && _tag == DcmTags.PixelData)
