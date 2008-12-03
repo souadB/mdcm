@@ -242,7 +242,8 @@ namespace Dicom.IO {
 						return status;
 
 					// handle UN private creator id
-					if (_vr == DcmVR.UN && _tag.IsPrivate && _tag.Element <= 0x00ff)
+					if (_vr == DcmVR.UN && _tag.IsPrivate && _tag.Element <= 0x00ff && 
+						Flags.IsSet(options, DicomReadOptions.ForcePrivateCreatorToLO))
 						_vr = DcmVR.LO;
 
 					if (_fragment != null) {
