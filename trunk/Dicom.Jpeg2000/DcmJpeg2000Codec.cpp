@@ -161,12 +161,9 @@ void DcmJpeg2000Codec::Encode(DcmDataset^ dataset, DcmPixelData^ oldPixelData, D
 
 				if (oldPixelData->BytesAllocated == 1) {
 					if (oldPixelData->IsSigned) {
+						int shift = 8 - oldPixelData->BitsStored;
 						for (int p = 0; p < pixelCount; p++) {
-							unsigned char b = frameData[pos];
-							if (b & 0x80)
-								comp->data[p] = -((int)(b & 0x7F));
-							else
-								comp->data[p] = b;
+							comp->data[p] = (char)(frameData[pos] << shift) >> shift;
 							pos += offset;
 						}
 					}
@@ -180,12 +177,9 @@ void DcmJpeg2000Codec::Encode(DcmDataset^ dataset, DcmPixelData^ oldPixelData, D
 				else if (oldPixelData->BytesAllocated == 2) {
 					unsigned short* frameData16 = (unsigned short*)frameData;
 					if (oldPixelData->IsSigned) {
+						int shift = 16 - oldPixelData->BitsStored;
 						for (int p = 0; p < pixelCount; p++) {
-							unsigned short s = frameData16[pos];
-							if (s & 0x8000)
-								comp->data[p] = -((int)(s & 0x7FFF));
-							else
-								comp->data[p] = s;
+							comp->data[p] = (short)(frameData16[pos] << shift) >> shift;
 							pos += offset;
 						}
 					}

@@ -416,16 +416,13 @@ namespace Dicom.Forms {
 
 				if (pixels.NumberOfFrames == 0)
 					return;
-				else if (pixels.NumberOfFrames == 1) {
+				else if (pixels.NumberOfFrames >= 1) {
 					SaveFileDialog sfd = new SaveFileDialog();
 					sfd.RestoreDirectory = true;
 					if (sfd.ShowDialog(this) == DialogResult.OK) {
 						byte[] data = pixels.GetFrameDataU8(0);
 						File.WriteAllBytes(sfd.FileName, data);
 					}
-				}
-				else {
-
 				}
 
 				GC.Collect();

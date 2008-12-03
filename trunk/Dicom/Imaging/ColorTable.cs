@@ -54,12 +54,10 @@ namespace Dicom.Imaging {
 
 		public static Color[] LoadLUT(string file) {
 			try {
-				FileInfo fi = new FileInfo(file);
-				if (fi.Length != (256 * 3)) return null;
-				byte[] data = new byte[fi.Length];
-				FileStream fs = fi.OpenRead();
-				fs.Read(data, 0, (int)fi.Length);
-				fs.Close();
+				byte[] data = File.ReadAllBytes(file);
+				if (data.Length != (256 * 3))
+					return null;
+
 				Color[] LUT = new Color[256];
 				for (int i = 0; i < 256; i++) {
 					LUT[i] = Color.FromArgb(data[i], data[i + 256], data[i + 512]);
