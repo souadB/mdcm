@@ -241,10 +241,13 @@ namespace Dicom.IO {
 					if (status != DicomReadStatus.Success)
 						return status;
 
-					// handle UN private creator id
-					if (_vr == DcmVR.UN && _tag.IsPrivate && _tag.Element <= 0x00ff && 
-						Flags.IsSet(options, DicomReadOptions.ForcePrivateCreatorToLO))
-						_vr = DcmVR.LO;
+					if (_vr == DcmVR.UN) {
+						// handle UN private creator id
+						if (_tag.IsPrivate && _tag.Element <= 0x00ff && Flags.IsSet(options, DicomReadOptions.ForcePrivateCreatorToLO))
+							_vr = DcmVR.LO;
+						else if (_syntax.IsExplicitVR && Flags.IsSet(options, DicomReadOptions.UseDictionaryForExplicitUN))
+							_vr = _tag.Entry.DefaultVR;
+					}
 
 					if (_fragment != null) {
 						status = InsertFragmentItem(options);
@@ -440,8 +443,6 @@ namespace Dicom.IO {
 							_stream.Position = pos;
 						}
 					}
-					else if (!_syntax.IsExplicitVR || Flags.IsSet(options, DicomReadOptions.UseDictionaryForExplicitUN))
-						_vr = _tag.Entry.DefaultVR;
 				}
 			}
 			return DicomReadStatus.Success;
