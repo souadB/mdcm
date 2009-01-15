@@ -31,7 +31,8 @@ namespace Dicom.Network.Server {
 	public enum DcmAssociateResult {
 		Accept,
 		RejectCalledAE,
-		RejectCallingAE
+		RejectCallingAE,
+		RejectNoReason
 	}
 
 	public class DcmServiceBase : DcmNetworkBase {

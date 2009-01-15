@@ -157,7 +157,7 @@ namespace Dicom.IO {
 			if (_segment != null)
 				clone = new ByteBuffer(_segment, Endian);
 			else
-				clone = new ByteBuffer(ToBytes(), Endian);
+				clone = new ByteBuffer((byte[])ToBytes().Clone(), Endian);
 			clone.Encoding = Encoding;
 			return clone;
 		}

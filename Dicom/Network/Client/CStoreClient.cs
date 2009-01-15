@@ -31,6 +31,12 @@ using Dicom.Network;
 using Dicom.Utility;
 
 namespace Dicom.Network.Client {
+	internal enum CStoreRequestResult {
+		Success,
+		Reassociate,
+		Failure
+	}
+
 	/// <summary>
 	/// C-Store Request Information
 	/// </summary>
@@ -222,13 +228,13 @@ namespace Dicom.Network.Client {
 			_exception = null;
 		}
 
-		internal bool Send(CStoreClient client) {
+		internal CStoreRequestResult Send(CStoreClient client) {
 			Load(client);
 
 			if (HasError) {
 				if (client.Associate.FindAbstractSyntax(SOPClassUID) == 0) {
 					client.Reassociate();
-					return false;
+					return CStoreRequestResult.Reassociate;
 				}
 			}
 
@@ -238,7 +244,7 @@ namespace Dicom.Network.Client {
 			if (HasError) {
 				if (client.OnCStoreRequestFailed != null)
 					client.OnCStoreRequestFailed(client, this);
-				return false;
+				return CStoreRequestResult.Failure;
 			}
 
 			byte pcid = client.Associate.FindAbstractSyntaxWithTransferSyntax(SOPClassUID, TransferSyntax);
@@ -248,7 +254,7 @@ namespace Dicom.Network.Client {
 				Status = DcmStatus.SOPClassNotSupported;
 				if (client.OnCStoreRequestFailed != null)
 					client.OnCStoreRequestFailed(client, this);
-				return false;
+				return CStoreRequestResult.Failure;
 			}
 
 			if (_dataset != null) {
@@ -263,7 +269,7 @@ namespace Dicom.Network.Client {
 			if (client.OnCStoreRequestComplete != null)
 				client.OnCStoreRequestComplete(client, this);
 
-			return true;
+			return CStoreRequestResult.Success;
 		}
 		#endregion
 	}
@@ -307,6 +313,7 @@ namespace Dicom.Network.Client {
 		public CStoreRequestCallback OnCStoreRequestComplete;
 		public CStoreRequestCallback OnCStoreResponseReceived;
 
+		public CStoreClientCallback OnCStoreConnected;
 		public CStoreClientCallback OnCStoreComplete;
 		public CStoreClientCallback OnCStoreClosed;
 
@@ -447,6 +454,9 @@ namespace Dicom.Network.Client {
 
 		#region Protected Methods
 		protected override void OnConnected() {
+			if (OnCStoreConnected != null)
+				OnCStoreConnected(this);
+
 			if (PendingCount > 0) {
 				DcmAssociate associate = new DcmAssociate();
 
@@ -540,11 +550,13 @@ namespace Dicom.Network.Client {
 				while (_sendQueue.Count > 0 && !_cancel) {
 					_current = _sendQueue.Dequeue();
 					_sendQueue.Preload(_preloadCount);
-					if (_current.Send(this)) {
-						_current.Unload();
-						return;
-					}
+
+					CStoreRequestResult result = _current.Send(this);
 					_current.Unload();
+
+					if (result == CStoreRequestResult.Success ||
+						result == CStoreRequestResult.Reassociate)
+						return;
 
 					linger = DateTime.Now.AddSeconds(Linger + 1);
 				}

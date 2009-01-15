@@ -62,6 +62,8 @@ namespace Dicom.Data {
 
 				if (tag != null) {
 					DcmElement elem = _dataset.GetElement(tag);
+					if (elem.Length == 0)
+						return String.Empty;
 					if (elem != null) {
 						return elem.GetValueObject();
 					}

@@ -43,6 +43,7 @@ namespace Dicom.Network.Client {
 		private ManualResetEvent _closedEvent;
 		private bool _closedOnError;
 		private string _error;
+		private object _userState;
 		#endregion
 
 		#region Public Constructors
@@ -85,6 +86,11 @@ namespace Dicom.Network.Client {
 
 		public string ErrorMessage {
 			get { return _error; }
+		}
+
+		public object UserState {
+			get { return _userState; }
+			set { _userState = value; }
 		}
 		#endregion
 

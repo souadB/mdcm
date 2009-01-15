@@ -86,7 +86,7 @@ namespace Dicom.Network {
 		/// </returns>
 		public override string ToString() {
 			if (State == DcmState.Warning || State == DcmState.Failure) {
-				return String.Format("{0}: {1}", State, Description);
+				return String.Format("{0} [{1:x4}]: {2}", State, Code, Description);
 			}
 			return Description;
 		}

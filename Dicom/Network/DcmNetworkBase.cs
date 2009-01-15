@@ -1016,12 +1016,16 @@ namespace Dicom.Network {
 			}
 			finally {
 				if (!success) {
-					try { _network.Close(); }
-					catch { }
-					_network = null;
-					try { _socket.Close(); }
-					catch { }
-					_socket = null;
+					if (_network != null) {
+						try { _network.Close(); }
+						catch { }
+						_network = null;
+					}
+					if (_socket != null) {
+						try { _socket.Close(); }
+						catch { }
+						_socket = null;
+					}
 					_isRunning = false;
 				}
 			}

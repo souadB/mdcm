@@ -197,5 +197,12 @@ namespace Dicom.Data {
 			}
 			return new DcmTS(uid, false, true, true, false, false);
 		}
+
+		public static bool IsImageCompression(DcmTS tx) {
+			return  tx != DcmTS.ImplicitVRLittleEndian &&
+					tx != DcmTS.ExplicitVRLittleEndian &&
+					tx != DcmTS.ExplicitVRBigEndian &&
+					tx != DcmTS.DeflatedExplicitVRLittleEndian;
+		}
 	}
 }

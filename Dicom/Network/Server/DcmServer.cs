@@ -106,10 +106,10 @@ namespace Dicom.Network.Server {
 								Debug.Log.Info("Authenticating SSL/TLS for client: {0}", client.RemoteEndPoint);
 
 							T handler = Activator.CreateInstance<T>();
-							if (OnDicomClientCreated != null)
-								OnDicomClientCreated(this, handler, client.Type);
 							handler.InitializeService(client);
 							clients.Add(handler);
+							if (OnDicomClientCreated != null)
+								OnDicomClientCreated(this, handler, client.Type);
 						}
 						catch (Exception e) {
 							Debug.Log.Error(e.Message);

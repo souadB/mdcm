@@ -76,6 +76,59 @@ namespace Dicom.Data {
 			uid.Append(baseUid.UID).Append('.').Append(nextSeq);
 			return new DcmUID(uid.ToString(), "SOP Instance UID", UidType.SOPInstance);
 		}
+
+		public static bool IsValid(DcmUID uid) {
+			if (uid == null)
+				return false;
+			return IsValid(uid.UID);
+		}
+		public static bool IsValid(string uid) {
+			if (String.IsNullOrEmpty(uid))
+				return false;
+			// only checks that the UID contains valid characters
+			foreach (char c in uid) {
+				if (c != '.' && !Char.IsDigit(c))
+					return false;
+			}
+			return true;
+		}
+
+		/// <summary>
+		/// Compare UIDs for sorting in numeric order
+		/// </summary>
+		public static int CompareNumeric(DcmUID uid0, DcmUID uid1) {
+			try {
+				string[] parts0 = uid0.UID.Split('.');
+				string[] parts1 = uid1.UID.Split('.');
+
+				int count = Math.Min(parts0.Length, parts1.Length);
+
+				for (int i = 0; i < count; i++) {
+					if (parts0[i] == parts1[i])
+						continue;
+
+					int i0 = int.Parse(parts0[i]);
+					int i1 = int.Parse(parts1[i]);
+
+					if (i0 == i1)
+						return 0;
+					else if (i0 < i1)
+						return -1;
+					else
+						return 1;
+				}
+
+				if (parts0.Length == parts1.Length)
+					return 0;
+				else if (parts0.Length < parts1.Length)
+					return -1;
+				else
+					return 1;
+			}
+			catch {
+				return 0;
+			}
+		}
 	}
 
 	public static class DcmUIDs {
@@ -361,6 +414,10 @@ namespace Dicom.Data {
 				o = new DcmUID(uid, "Unknown UID", UidType.Unknown);
 			}
 			return o;
+		}
+
+		public static bool IsImageStorage(DcmUID uid) {
+			return uid.Type == UidType.SOPClass && uid.Description.Contains("Image");
 		}
 
 		#region Dicom UIDs

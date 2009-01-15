@@ -456,7 +456,7 @@ namespace Dicom.Network {
 	}
 
 	public static class OpenSslNative {
-		const string DLL_SSL = "libssl32.dll";
+		const string DLL_SSL = "ssleay32.dll";
 		const string DLL_EAY = "libeay32.dll";
 
 		#region Initialization

@@ -37,7 +37,9 @@ namespace Dicom.Data {
 		Prefix,
 		Append,
 		Format,
+		Chomp,
 		Truncate,
+		GenerateID,
 		UserOp1,
 		UserOp2,
 		UserOp3,
@@ -169,6 +171,9 @@ namespace Dicom.Data {
 				case DicomModifyOp.Format:
 					enableInput = false;
 					break;
+				case DicomModifyOp.Chomp:
+					enableInput = false;
+					break;
 				default:
 					break;
 			}
@@ -238,6 +243,11 @@ namespace Dicom.Data {
 					return;
 				}
 
+				if (_op == DicomModifyOp.GenerateID) {
+					dataset.AddElementWithValueString(tag, GenerateID());
+					return;
+				}
+
 				if (elem == null)
 					return;
 
@@ -275,6 +285,12 @@ namespace Dicom.Data {
 					return;
 				}
 
+				if (_op == DicomModifyOp.Chomp) {
+					if (value.StartsWith(_output))
+						elem.SetValueString(value.Substring(_output.Length));
+					return;
+				}
+
 				if (_op == DicomModifyOp.Truncate) {
 					int length = int.Parse(_input);
 					string[] parts = value.Split('\\');
@@ -283,10 +299,26 @@ namespace Dicom.Data {
 							parts[i] = parts[i].Substring(0, length);
 					}
 					elem.SetValueString(String.Join("\\", parts));
+					return;
 				}
 			}
 			catch (Exception e) {
 				Dicom.Debug.Log.Error("Unable to modify dataset: {0}\n\trule: {1}", e.Message, ToString());
+			}
+		}
+
+		private static object gidlck = new object();
+		private static uint lastgid = 0;
+		public static string GenerateID() {
+			lock (gidlck) {
+				DateTime y2k = new DateTime(2000, 01, 01);
+				TimeSpan day = DateTime.Now.Subtract(y2k);
+				TimeSpan min = DateTime.Now.TimeOfDay;
+				String sid = String.Format("{0:0000}{1:00000}", (int)day.TotalDays, (int)min.TotalSeconds);
+				uint uid = uint.Parse(sid);
+				if (uid <= lastgid) uid = lastgid + 1;
+				lastgid = uid;
+				return String.Format("{0:000000000}", uid);
 			}
 		}
 		#endregion
