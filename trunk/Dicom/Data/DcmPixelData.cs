@@ -612,25 +612,20 @@ namespace Dicom.Data {
 			dataset.AddElementWithValue(DcmTags.NumberOfFrames, _frames);
 			dataset.AddElementWithValue(DcmTags.Columns, _width);
 			dataset.AddElementWithValue(DcmTags.Rows, _height);
-			if (_highBit != default(ushort))
-				dataset.AddElementWithValue(DcmTags.HighBit, _highBit);
-			if (_bitsStored != default(ushort))
-				dataset.AddElementWithValue(DcmTags.BitsStored, _bitsStored);
-			if (_bitsAllocated != default(ushort))
-				dataset.AddElementWithValue(DcmTags.BitsAllocated, _bitsAllocated);
-			if (_samplesPerPixel != default(ushort))
-				dataset.AddElementWithValue(DcmTags.SamplesPerPixel, _samplesPerPixel);
-			if (_pixelRepresentation != default(ushort))
-				dataset.AddElementWithValue(DcmTags.PixelRepresentation, _pixelRepresentation);
-			if (_planarConfiguration != default(ushort))
-				dataset.AddElementWithValue(DcmTags.PlanarConfiguration, _planarConfiguration);
-			if (!String.IsNullOrEmpty(_photometricInterpretation))
-				dataset.AddElementWithValue(DcmTags.PhotometricInterpretation, _photometricInterpretation);
+			dataset.AddElementWithValue(DcmTags.HighBit, _highBit);
+			dataset.AddElementWithValue(DcmTags.BitsStored, _bitsStored);
+			dataset.AddElementWithValue(DcmTags.BitsAllocated, _bitsAllocated);
+			dataset.AddElementWithValue(DcmTags.SamplesPerPixel, _samplesPerPixel);
+			dataset.AddElementWithValue(DcmTags.PixelRepresentation, _pixelRepresentation);
+			dataset.AddElementWithValue(DcmTags.PhotometricInterpretation, _photometricInterpretation);
 			if (SamplesPerPixel == 1) {
 				dataset.AddElementWithValue(DcmTags.RescaleSlope, _rescaleSlope);
 				dataset.AddElementWithValue(DcmTags.RescaleIntercept, _rescaleIntercept);
 				//if (_pixelPaddingValue != 0)
 				//    dataset.AddElementWithValue(DcmTags.PixelPaddingValue, _pixelPaddingValue);
+			}
+			else {
+				dataset.AddElementWithValue(DcmTags.PlanarConfiguration, _planarConfiguration);
 			}
 			dataset.AddItem(_pixelDataItem);
 		}

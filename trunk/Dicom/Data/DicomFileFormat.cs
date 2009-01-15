@@ -162,7 +162,6 @@ namespace Dicom.Data {
 			DcmFileMetaInfo metainfo = new DcmFileMetaInfo();
 			dsr.Dataset = metainfo;
 			if (dsr.Read(DcmFileMetaInfo.StopTag, DicomReadOptions.Default | DicomReadOptions.FileMetaInfoOnly) == DicomReadStatus.Success && fs.Position < fs.Length) {
-				fs.Seek(-4, SeekOrigin.Current);
 				return fs;
 			}
 			fs.Close();

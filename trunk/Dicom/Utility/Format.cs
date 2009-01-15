@@ -26,6 +26,10 @@ using System.Text;
 
 namespace Dicom.Utility {
 	public static class Format {
+		public static string Percent(int numerator, int denominator) {
+			return String.Format("{0}%", (int)(((double)numerator/(double)denominator) * 100));
+		}
+
 		public static string ByteCount(uint bytes) {
 			if (bytes > 1073741824)
 				return String.Format("{0:0.00} GB", bytes / 1073741824.0);

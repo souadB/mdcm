@@ -127,6 +127,10 @@ namespace Dicom.Utility {
 			byte[] bytes = ASCIIEncoding.Default.GetBytes(str);
 			return ByteUtility.SHA1(bytes);
 		}
+
+		public static string RemoveInvalidPathChars(string path) {
+			return String.Join("_", path.Split(Path.GetInvalidFileNameChars()));
+		}
 	}
 
 	public static class DateUtility {

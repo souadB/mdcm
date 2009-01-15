@@ -144,19 +144,21 @@ namespace Dicom.Network {
 
 		public void Apply(DcmAssociate associate) {
 			foreach (DcmPresContext pc in associate.GetPresentationContexts()) {
-				if (AbstractSyntaxes.Contains(pc.AbstractSyntax.UID)) {
-					IList<DcmTS> txs = pc.GetTransfers();
-					for (int i = 0; i < txs.Count; i++) {
-						if (TransferSyntaxes.Contains(txs[i].UID.UID)) {
-							pc.SetResult(DcmPresContextResult.Accept, txs[i]);
-							break;
+				if (pc.Result == DcmPresContextResult.Proposed) {
+					if (AbstractSyntaxes.Contains(pc.AbstractSyntax.UID)) {
+						IList<DcmTS> txs = pc.GetTransfers();
+						for (int i = 0; i < txs.Count; i++) {
+							if (TransferSyntaxes.Contains(txs[i].UID.UID)) {
+								pc.SetResult(DcmPresContextResult.Accept, txs[i]);
+								break;
+							}
 						}
+						if (pc.Result != DcmPresContextResult.Accept)
+							pc.SetResult(DcmPresContextResult.RejectTransferSyntaxesNotSupported);
 					}
-					if (pc.Result != DcmPresContextResult.Accept)
-						pc.SetResult(DcmPresContextResult.RejectTransferSyntaxesNotSupported);
-				}
-				else {
-					pc.SetResult(DcmPresContextResult.RejectAbstractSyntaxNotSupported);
+					else {
+						pc.SetResult(DcmPresContextResult.RejectAbstractSyntaxNotSupported);
+					}
 				}
 			}
 		}

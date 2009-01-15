@@ -27,12 +27,17 @@ using System.Text;
 using Dicom.Data;
 
 namespace Dicom.Network.Server {
+	public delegate DcmStatus DcmCStoreEchoCallback(CStoreService client, byte presentationID, ushort messageID, DcmPriority priority);
+	public delegate void DcmCStoreDimseCallback(CStoreService client, byte presentationID, DcmCommand command, DcmDataset dataset, DcmDimseProgress progress);
 	public delegate DcmStatus DcmCStoreCallback(CStoreService client, byte presentationID, ushort messageID, DcmUID affectedInstance, 
 										DcmPriority priority, string moveAE, ushort moveMessageID, DcmDataset dataset, string fileName);
 	public delegate DcmAssociateResult DcmAssociationCallback(CStoreService client, DcmAssociate association);
 
 	public class CStoreService : DcmServiceBase {
+		public DcmCStoreEchoCallback OnCEchoRequest;
 		public DcmCStoreCallback OnCStoreRequest;
+		public DcmCStoreDimseCallback OnCStoreRequestBegin;
+		public DcmCStoreDimseCallback OnCStoreRequestProgress;
 		public DcmAssociationCallback OnAssociationRequest;
 
 		public CStoreService() : base() {
@@ -53,6 +58,10 @@ namespace Dicom.Network.Server {
 					SendAssociateReject(DcmRejectResult.Permanent, DcmRejectSource.ServiceUser, DcmRejectReason.CallingAENotRecognized);
 					return;
 				}
+				else if (result == DcmAssociateResult.RejectNoReason) {
+					SendAssociateReject(DcmRejectResult.Permanent, DcmRejectSource.ServiceUser, DcmRejectReason.NoReasonGiven);
+					return;
+				}
 				else {
 					foreach (DcmPresContext pc in association.GetPresentationContexts()) {
 						if (pc.Result == DcmPresContextResult.Proposed)
@@ -68,7 +77,10 @@ namespace Dicom.Network.Server {
 		}
 
 		protected override void OnReceiveCEchoRequest(byte presentationID, ushort messageID, DcmPriority priority) {
-			SendCEchoResponse(presentationID, messageID, DcmStatus.Success);
+			DcmStatus status = DcmStatus.Success;
+			if (OnCEchoRequest != null)
+				status = OnCEchoRequest(this, presentationID, messageID, priority);
+			SendCEchoResponse(presentationID, messageID, status);
 		}
 
 		protected override void OnReceiveCStoreRequest(byte presentationID, ushort messageID, DcmUID affectedInstance, 
@@ -80,6 +92,16 @@ namespace Dicom.Network.Server {
 				status = OnCStoreRequest(this, presentationID, messageID, affectedInstance, priority, moveAE, moveMessageID, dataset, fileName);
 
 			SendCStoreResponse(presentationID, messageID, affectedInstance, status);
+		}
+
+		protected override void OnReceiveDimseBegin(byte pcid, DcmCommand command, DcmDataset dataset, DcmDimseProgress progress) {
+			if (command.CommandField == DcmCommandField.CStoreRequest && OnCStoreRequestBegin != null)
+				OnCStoreRequestBegin(this, pcid, command, dataset, progress);
+		}
+
+		protected override void OnReceiveDimseProgress(byte pcid, DcmCommand command, DcmDataset dataset, DcmDimseProgress progress) {
+			if (command.CommandField == DcmCommandField.CStoreRequest && OnCStoreRequestProgress != null)
+				OnCStoreRequestProgress(this, pcid, command, dataset, progress);
 		}
 	}
 }

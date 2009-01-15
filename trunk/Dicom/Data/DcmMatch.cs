@@ -32,15 +32,13 @@ using Dicom.Utility;
 namespace Dicom.Data {
 	public enum DicomMatchOp {
 		Equals,
-		NotEquals,
 		StartsWith,
 		EndsWith,
 		Contains,
 		OneOf,
 		Wildcard,
 		Regex,
-		Exists,
-		NotExists
+		Exists
 	}
 
 	[Serializable]
@@ -48,6 +46,7 @@ namespace Dicom.Data {
 		#region Private Members
 		private string _tag;
 		private DicomMatchOp _op;
+		private bool _negate;
 		private string _value;
 		#endregion
 
@@ -73,6 +72,11 @@ namespace Dicom.Data {
 			set { _op = value; }
 		}
 
+		public bool Negate {
+			get { return _negate; }
+			set { _negate = value; }
+		}
+
 		public string Value {
 			get { return _value; }
 			set { _value = value; }
@@ -85,44 +89,39 @@ namespace Dicom.Data {
 			DcmElement elem = ds.GetElement(tag);
 
 			if (_op == DicomMatchOp.Exists && elem == null)
-				return false;
-
-			if (_op == DicomMatchOp.NotExists && elem != null)
-				return false;
+				return _negate;
 
 			if (elem == null)
-				return false;
+				return _negate;
 
 			string value = elem.GetValueString();
 
 			switch (_op) {
-			case DicomMatchOp.Equals:
-				return value == _value;
-			case DicomMatchOp.NotEquals:
-				return value != _value;
-			case DicomMatchOp.StartsWith:
-				return value.StartsWith(_value);
-			case DicomMatchOp.EndsWith:
-				return value.EndsWith(_value);
-			case DicomMatchOp.Contains:
-				return value.Contains(_value);
-			case DicomMatchOp.Wildcard:
-				return Wildcard.Match(_value, value);
-			case DicomMatchOp.Regex:
-				return Regex.IsMatch(_value, value);
-			default:
-				break;
+				case DicomMatchOp.Equals:
+					return (value == _value) ? !_negate : _negate;
+				case DicomMatchOp.StartsWith:
+					return value.StartsWith(_value) ? !_negate : _negate;
+				case DicomMatchOp.EndsWith:
+					return value.EndsWith(_value) ? !_negate : _negate;
+				case DicomMatchOp.Contains:
+					return value.Contains(_value) ? !_negate : _negate;
+				case DicomMatchOp.Wildcard:
+					return Wildcard.Match(_value, value) ? !_negate : _negate;
+				case DicomMatchOp.Regex:
+					return Regex.IsMatch(_value, value) ? !_negate : _negate;
+				default:
+					break;
 			}
 
 			if (_op == DicomMatchOp.OneOf) {
 				string[] values = value.Split('\\');
 				foreach (string v in values) {
 					if (v == _value)
-						return true;
+						return  !_negate;
 				}
 			}
 
-			return false;
+			return _negate;
 		}
 
 		public override string ToString() {
