@@ -642,7 +642,7 @@ namespace Dicom.Network {
 				command.MoveOriginatorMessageID = moveMessageID;
 			}
 
-			Log.Info("{0} -> C-Store request [pc: {1}; id: {2}]", LogID, presentationID, messageID);
+			Log.Info("{0} -> C-Store request [pc: {1}; id: {2}]\n\t=> {3}\n\t=> {4}", LogID, presentationID, messageID, affectedInstance, affectedClass);
 			SendDimse(presentationID, command, dataset);
 		}
 
@@ -706,7 +706,7 @@ namespace Dicom.Network {
 				command.MoveOriginatorMessageID = moveMessageID;
 			}
 
-			Log.Info("{0} -> C-Store request [pc: {1}; id: {2}] (stream)", LogID, presentationID, messageID);
+			Log.Info("{0} -> C-Store request [pc: {1}; id: {2}] (stream)\n\t=> {3}\n\t=> {4}", LogID, presentationID, messageID, affectedInstance, affectedClass);
 			SendDimseStream(presentationID, command, datastream);
 		}
 
@@ -1281,9 +1281,7 @@ namespace Dicom.Network {
 
 							long remaining = _dimse.DatasetReader.BytesRemaining + pdv.Value.Length;
 							if (remaining >= _dimse.DatasetReader.BytesNeeded || pdv.IsLastFragment) {
-								_dimse.DatasetReader.Read(null, DicomReadOptions.Default |
-																DicomReadOptions.DeferLoadingLargeElements |
-																DicomReadOptions.DeferLoadingPixelData);
+								_dimse.DatasetReader.Read(null, DicomReadOptions.Default);
 
 								_dimse.Progress.EstimatedDatasetLength = (int)_dimse.DatasetReader.BytesEstimated;
 							}

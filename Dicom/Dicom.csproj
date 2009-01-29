@@ -70,11 +70,11 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>bin\x86\Release\</OutputPath>
-    <DefineConstants>TRACE;DOTNET35 OPENSSL</DefineConstants>
+    <DefineConstants>TRACE;OPENSSL</DefineConstants>
     <DocumentationFile>bin\Release\Dicom.XML</DocumentationFile>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
@@ -169,6 +169,7 @@
     <Compile Include="Network\ConnectionStats.cs" />
     <Compile Include="Network\PDataTFStream.cs" />
     <Compile Include="Network\PDU.cs" />
+    <Compile Include="Utility\Cache.cs" />
     <Compile Include="Utility\PreloadQueue.cs" />
     <Compile Include="Utility\LogWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

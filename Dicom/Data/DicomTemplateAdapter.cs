@@ -21,6 +21,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Security;
 using System.Text;
 
 namespace Dicom.Data {
@@ -45,9 +47,16 @@ namespace Dicom.Data {
 		}
 
 		private DcmDataset _dataset;
+		private bool _xmlEscape;
 
 		public DicomTemplateAdapter(DcmDataset dataset) {
 			_dataset = dataset;
+			_xmlEscape = false;
+		}
+
+		public DicomTemplateAdapter(DcmDataset dataset, bool xmlEscape) {
+			_dataset = dataset;
+			_xmlEscape = xmlEscape;
 		}
 
 		public object this[string index] {
@@ -65,12 +74,28 @@ namespace Dicom.Data {
 					if (elem.Length == 0)
 						return String.Empty;
 					if (elem != null) {
-						return elem.GetValueObject();
+						object o = elem.GetValueObject();
+						if (_xmlEscape && o is string)
+							return SecurityElement.Escape((string)o);
+						else
+							return o;
 					}
 				}
 
 				return String.Empty;
 			}
+		}
+
+		public static string FixStringTemplateLines(string template) {
+			StringBuilder sb = new StringBuilder();
+			StringReader reader = new StringReader(template);
+			for (; ; ) {
+				string line = reader.ReadLine();
+				if (line == null)
+					break;
+				sb.Append(line).AppendLine();//.AppendLine("$\\n$");
+			}
+			return sb.ToString();
 		}
 	}
 }

@@ -138,7 +138,7 @@ namespace Dicom.IO {
 					if (_syntax.IsExplicitVR)
 						_writer.Write((ushort)0x0000);
 
-					if (Flags.IsSet(options, DicomWriteOptions.ExplicitLengthSequence)) {
+					if (Flags.IsSet(options, DicomWriteOptions.ExplicitLengthSequence) || (item.Tag.IsPrivate && !_syntax.IsExplicitVR)) {
 						int hl = _syntax.IsExplicitVR ? 12 : 8;
 						_writer.Write((uint)sq.CalculateWriteLength(_syntax, options & ~DicomWriteOptions.CalculateGroupLengths) - (uint)hl);
 					} else {

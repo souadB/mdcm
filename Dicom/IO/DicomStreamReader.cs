@@ -240,13 +240,19 @@ namespace Dicom.IO {
 					status = ParseLength(options);
 					if (status != DicomReadStatus.Success)
 						return status;
+					
+					if (_tag.IsPrivate) {
+						if (_tag.Element != 0x0000 && _tag.Element <= 0x00ff) {
+							// handle UN private creator id
+							if (_vr != DcmVR.LO && Flags.IsSet(options, DicomReadOptions.ForcePrivateCreatorToLO)) {
+								Dicom.Debug.Log.Warn("Converting Private Creator VR from '{0}' to 'LO'", _vr.VR);
+								_vr = DcmVR.LO;
+							}
+						}
+					}
 
-					if (_vr == DcmVR.UN) {
-						// handle UN private creator id
-						if (_tag.IsPrivate && _tag.Element <= 0x00ff && Flags.IsSet(options, DicomReadOptions.ForcePrivateCreatorToLO))
-							_vr = DcmVR.LO;
-						else if (_syntax.IsExplicitVR && Flags.IsSet(options, DicomReadOptions.UseDictionaryForExplicitUN))
-							_vr = _tag.Entry.DefaultVR;
+					if (_vr == DcmVR.UN && _syntax.IsExplicitVR && Flags.IsSet(options, DicomReadOptions.UseDictionaryForExplicitUN)) {
+						_vr = _tag.Entry.DefaultVR;
 					}
 
 					if (_fragment != null) {
@@ -332,7 +338,7 @@ namespace Dicom.IO {
 					ushort e = _reader.ReadUInt16();
 					if (DcmTag.IsPrivateGroup(g) && e > 0x00ff) {
 						uint card = DcmTag.GetCard(g, e);
-						if ((card & _privateCreatorCard) != _privateCreatorCard) {
+						if ((card & 0xffffff00) != _privateCreatorCard) {
 							_privateCreatorCard = card & 0xffffff00;
 							DcmTag pct = DcmTag.GetPrivateCreatorTag(g, e);
 							DcmDataset ds = _dataset;
@@ -387,7 +393,7 @@ namespace Dicom.IO {
 					if (_tag.Element == 0x0000)
 						_vr = DcmVR.UL;
 					else if (Flags.IsSet(options, DicomReadOptions.ForcePrivateCreatorToLO) &&
-						_tag.IsPrivate && _tag.Element <= 0x00ff)
+						_tag.IsPrivate && _tag.Element > 0x0000 && _tag.Element <= 0x00ff)
 						_vr = DcmVR.UN;
 					else
 						_vr = _tag.Entry.DefaultVR;
@@ -558,8 +564,28 @@ namespace Dicom.IO {
 					idsr.Encoding = _encoding;
 					idsr.PositionOffset = ds.StreamPosition;
 					DicomReadStatus status = idsr.Read(null, options);
+
+					if (status == DicomReadStatus.NeedMoreData && TransferSyntax.IsExplicitVR) {
+						Dicom.Debug.Log.Warn("Unknown error while attempting to read explicit length sequence item.  Trying again with opposite VR encoding.");
+
+						DcmTS tx = TransferSyntax.IsExplicitVR ?
+							DcmTS.ImplicitVRLittleEndian :
+							DcmTS.ExplicitVRLittleEndian;
+
+						ds = new DcmDataset(_pos + 8, _len, tx);
+						si.Dataset = ds;
+
+						ss.Seek(0, SeekOrigin.Begin);
+
+						idsr = new DicomStreamReader(ss);
+						idsr.Dataset = ds;
+						idsr.Encoding = _encoding;
+						idsr.PositionOffset = ds.StreamPosition;
+						status = idsr.Read(null, options);
+					}
+
 					if (status != DicomReadStatus.Success)
-						return status;
+						return DicomReadStatus.UnknownError;
 				}
 				else {
 					_sds.Push(ds);

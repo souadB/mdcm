@@ -138,7 +138,7 @@ namespace Dicom.Data {
 		public static DcmVR UL = new DcmVR("UL", "Unsigned Long", false, false, true, PadZero, 4, 4, VrRestriction.Fixed);
 		public static DcmVR UN = new DcmVR("UN", "Unknown", false, false, false, PadZero, 0, 1, VrRestriction.Any);
 		public static DcmVR US = new DcmVR("US", "Unsigned Short", false, false, true, PadZero, 2, 2, VrRestriction.Fixed);
-		public static DcmVR UT = new DcmVR("UT", "Unlimited Text", true, true, true, PadSpace, 0, 1, VrRestriction.Any);
+		public static DcmVR UT = new DcmVR("UT", "Unlimited Text", true, true, false, PadSpace, 0, 1, VrRestriction.Any);
 	}
 
 	public static class DcmVRs {

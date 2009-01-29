@@ -116,7 +116,7 @@ namespace Dicom.Data {
 			Mask = uint.Parse(msb.ToString(), System.Globalization.NumberStyles.HexNumber);
 
 			Name = name;
-			PrivateCreator = privcreator;
+			PrivateCreator = privcreator.Trim();
 			Retired = retired;
 			VM = vm;
 			AllowedVRs = vrs;

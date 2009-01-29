@@ -149,6 +149,8 @@ namespace Dicom.Network {
 						IList<DcmTS> txs = pc.GetTransfers();
 						for (int i = 0; i < txs.Count; i++) {
 							if (TransferSyntaxes.Contains(txs[i].UID.UID)) {
+								if (!DcmUIDs.IsImageStorage(pc.AbstractSyntax) && DcmTSs.IsImageCompression(txs[i]))
+									continue;
 								pc.SetResult(DcmPresContextResult.Accept, txs[i]);
 								break;
 							}
