@@ -471,6 +471,17 @@ namespace Dicom.Network.Client {
 							_presContextMap[uid].Add(DcmTS.ExplicitVRLittleEndian);
 						if (!_presContextMap[uid].Contains(DcmTS.ImplicitVRLittleEndian))
 							_presContextMap[uid].Add(DcmTS.ImplicitVRLittleEndian);
+
+						if (!DcmUIDs.IsImageStorage(uid)) {
+							List<DcmTS> remove = new List<DcmTS>();
+							foreach (DcmTS tx in _presContextMap[uid]) {
+								if (DcmTSs.IsImageCompression(tx))
+									remove.Add(tx);
+							}
+							foreach (DcmTS tx in remove) {
+								_presContextMap[uid].Remove(tx);
+							}
+						}
 					}
 
 					if (SerializedPresentationContexts) {

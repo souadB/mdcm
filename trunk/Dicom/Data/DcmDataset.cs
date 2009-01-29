@@ -239,6 +239,22 @@ namespace Dicom.Data {
 			return false;
 		}
 
+		public bool AddElementWithValue(DcmTag tag, DateTime value) {
+			DcmVR vr = tag.Entry.DefaultVR;
+			if (vr != DcmVR.DA && vr != DcmVR.DT && vr != DcmVR.TM)
+				throw new DcmDataException("Tried to create element with incorrect VR");
+			if (AddElement(tag, vr)) {
+				if (vr == DcmVR.DA)
+					GetDA(tag).SetDateTime(value);
+				else if (vr == DcmVR.DT)
+					GetDT(tag).SetDateTime(value);
+				else if (vr == DcmVR.TM)
+					GetTM(tag).SetDateTime(value);
+				return true;
+			}
+			return false;
+		}
+
 		public bool AddElementWithValue(DcmTag tag, DcmTag value) {
 			DcmVR vr = tag.Entry.DefaultVR;
 			if (vr != DcmVR.AT)
@@ -723,6 +739,70 @@ namespace Dicom.Data {
 			if (ds != null)
 				return ds.GetDecimal();
 			return deflt;
+		}
+		#endregion
+
+		#region Special Use
+		/// <summary>
+		/// Original Attributes Sequence (0400,0561)
+		/// Sequence of Items containing all attributes that were
+		/// removed or replaced by other values in the main dataset.
+		/// One or more Items may be permitted in this sequence.
+		/// </summary>
+		/// <param name="originalAttributesSource">
+		/// Source of Previous Values (0400,0564)
+		/// The source that provided the SOP Instance prior to the
+		/// removal or replacement of the  values. For example, this
+		/// might be the Institution from which imported SOP Instances
+		/// were received.
+		/// </param>
+		/// <param name="modifyingSystem">
+		/// Modifying System (0400,0563)
+		/// Identification of the system which removed and/or replaced
+		/// the attributes.
+		/// </param>
+		/// <param name="reasonForModification">
+		/// Reason for the Attribute Modification (0400,0565)
+		/// Reason for the attribute modification. Defined terms are:
+		/// COERCE = Replace values of attributes such as Patient
+		///     Name, ID, Accession Number, for example, during import
+		///     of media from an external institution, or reconciliation
+		///     against a master patient index.
+		/// CORRECT = Replace incorrect values, such as Patient
+		///     Name or ID, for example, when incorrect worklist item
+		///     was chosen or operator input error.
+		/// </param>
+		/// <param name="tagsToModify">
+		/// Tags from this dataset to be removed or modified.
+		/// </param>
+		public void CreateOriginalAttributesSequence(string originalAttributesSource, string modifyingSystem, 
+			string reasonForModification, IEnumerable<DcmTag> tagsToModify) {
+			DcmItemSequenceItem item = new DcmItemSequenceItem();
+			item.Dataset.AddElementWithValue(DcmTags.SourceOfPreviousValues, originalAttributesSource);
+			item.Dataset.AddElementWithValue(DcmTags.AttributeModificationDateTime, DateTime.Now);
+			item.Dataset.AddElementWithValue(DcmTags.ModifyingSystem, modifyingSystem);
+			item.Dataset.AddElementWithValue(DcmTags.ReasonForTheAttributeModification, reasonForModification);
+
+			DcmItemSequence sq = new DcmItemSequence(DcmTags.ModifiedAttributesSequence);
+			item.Dataset.AddItem(sq);
+
+			DcmItemSequenceItem modified = new DcmItemSequenceItem();
+			sq.AddSequenceItem(modified);
+
+			foreach (DcmTag tag in tagsToModify) {
+				DcmItem modifiedItem = GetItem(tag);
+				if (modifiedItem == null)
+					modified.Dataset.AddElement(tag);
+				else
+					modified.Dataset.AddItem(modifiedItem.Clone());
+			}
+
+			DcmItemSequence oasq = GetSQ(DcmTags.OriginalAttributesSequence);
+			if (oasq == null) {
+				oasq = new DcmItemSequence(DcmTags.OriginalAttributesSequence);
+				AddItem(oasq);
+			}
+			oasq.AddSequenceItem(item);
 		}
 		#endregion
 

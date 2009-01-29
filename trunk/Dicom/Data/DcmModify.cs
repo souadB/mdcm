@@ -144,6 +144,21 @@ namespace Dicom.Data {
 			return (List<DcmModify>)serializer.Deserialize(reader);
 		}
 
+		public static IList<DcmTag> GetTags(IList<DcmModify> modifiers, DcmDataset dataset) {
+			List<DcmTag> tags = new List<DcmTag>();
+			foreach (DcmModify m in modifiers) {
+				DcmTagMask mask = DcmTagMask.Parse(m.DicomMask);
+				if (mask == null)
+					continue;
+
+				foreach (DcmTag tag in dataset.GetMaskedTags(mask)) {
+					if (!tags.Contains(tag))
+						tags.Add(tag);
+				}
+			}
+			return tags;
+		}
+
 		public static void RunAll(IList<DcmModify> modifiers, DcmDataset dataset) {
 			foreach (DcmModify modify in modifiers) {
 				modify.Modify(dataset);

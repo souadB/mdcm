@@ -37,11 +37,16 @@ namespace Dicom.Network.Server {
 
 		private bool _stop;
 		private List<Thread> _threads = new List<Thread>();
+		private int _clientCount = 0;
 		#endregion
 
 		#region Public Members
 		public DicomClientCreatedDelegate OnDicomClientCreated;
 		public DicomClientClosedDelegate OnDicomClientClosed;
+
+		public int ClientCount {
+			get { return _clientCount; }
+		}
 
 		public void AddPort(int port, DcmSocketType type) {
 			_ports.Add(port);
@@ -84,6 +89,7 @@ namespace Dicom.Network.Server {
 				thread.Join();
 			}
 			_threads.Clear();
+			_clientCount = 0;
 			Dicom.Debug.Log.Info("DICOM services stopped");
 		}
 		#endregion
@@ -96,7 +102,7 @@ namespace Dicom.Network.Server {
 				List<T> clients = new List<T>();
 
 				while (!_stop) {
-					if (socket.Poll(1000000, SelectMode.SelectRead)) {
+					if (socket.Poll(250000, SelectMode.SelectRead)) {
 						try {
 							DcmSocket client = socket.Accept();
 
@@ -110,6 +116,7 @@ namespace Dicom.Network.Server {
 							clients.Add(handler);
 							if (OnDicomClientCreated != null)
 								OnDicomClientCreated(this, handler, client.Type);
+							Interlocked.Increment(ref _clientCount);
 						}
 						catch (Exception e) {
 							Debug.Log.Error(e.Message);
@@ -122,6 +129,7 @@ namespace Dicom.Network.Server {
 							if (OnDicomClientClosed != null)
 								OnDicomClientClosed(this, clients[i]);
 							clients.RemoveAt(i--);
+							Interlocked.Decrement(ref _clientCount);
 						}
 					}
 				}
@@ -130,6 +138,7 @@ namespace Dicom.Network.Server {
 					clients[i].Close();
 					if (OnDicomClientClosed != null)
 						OnDicomClientClosed(this, clients[i]);
+					Interlocked.Decrement(ref _clientCount);
 				}
 
 				foreach (DcmSocket s in sockets) {

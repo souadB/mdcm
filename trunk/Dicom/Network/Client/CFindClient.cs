@@ -79,7 +79,7 @@ namespace Dicom.Network.Client {
 		#endregion
 	}
 
-	public class CFindClient<Tq, Tr> : DcmClientBase
+	public class CFindClientT<Tq, Tr> : DcmClientBase
 		where Tq : CFindQuery
 		where Tr : CFindResponse {
 		#region Private Members
@@ -89,7 +89,7 @@ namespace Dicom.Network.Client {
 		#endregion
 
 		#region Public Constructor
-		public CFindClient() : base() {
+		public CFindClientT() : base() {
 			LogID = "C-Find SCU";
 			CallingAE = "FIND_SCU";
 			CalledAE = "FIND_SCP";
@@ -228,7 +228,7 @@ namespace Dicom.Network.Client {
 		#endregion
 	}
 
-	public sealed class CFindPatientClient : CFindClient<CFindPatientQuery, CFindPatientResponse> {
+	public sealed class CFindPatientClient : CFindClientT<CFindPatientQuery, CFindPatientResponse> {
 		public CFindPatientClient() : base() {
 		}
 	}
@@ -428,7 +428,7 @@ namespace Dicom.Network.Client {
 		#endregion
 	}
 
-	public sealed class CFindStudyClient : CFindClient<CFindStudyQuery, CFindStudyResponse> {
+	public sealed class CFindStudyClient : CFindClientT<CFindStudyQuery, CFindStudyResponse> {
 		public CFindStudyClient() : base() {
 			FindSopClassUID = DcmUIDs.StudyRootQueryRetrieveInformationModelFIND;
 		}
@@ -436,7 +436,6 @@ namespace Dicom.Network.Client {
 	#endregion
 
 	#region Worklist
-#if DOTNET35
 	public sealed class CFindWorklistQuery : CFindQuery {
 	#region Private Members
 		private string _patientId;
@@ -663,11 +662,10 @@ namespace Dicom.Network.Client {
 		#endregion
 	}
 
-	public sealed class CFindWorklistClient : CFindClient<CFindWorklistQuery, CFindWorklistResponse> {
+	public sealed class CFindWorklistClient : CFindClientT<CFindWorklistQuery, CFindWorklistResponse> {
 		public CFindWorklistClient() : base() {
 			FindSopClassUID = DcmUIDs.ModalityWorklistInformationModelFIND;
 		}
 	}
-#endif
 	#endregion
 }
