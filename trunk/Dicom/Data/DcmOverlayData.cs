@@ -1,6 +1,6 @@
 // mDCM: A C# DICOM library
 //
-// Copyright (c) 2006-2008  Colby Dillion
+// Copyright (c) 2006-2009  Colby Dillion
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
@@ -172,7 +172,7 @@ namespace Dicom.Data {
 			int[] overlay = new int[Rows * Columns];
 			BitArray bits = new BitArray(_data);
 			if (bits.Length < overlay.Length)
-				throw new DcmDataException("Invalid overlay length: " + bits.Length);
+				throw new DicomDataException("Invalid overlay length: " + bits.Length);
 			for (int i = 0, c = overlay.Length; i < c; i++) {
 				if (bits.Get(i))
 					overlay[i] = fg;
@@ -187,7 +187,7 @@ namespace Dicom.Data {
 		/// </summary>
 		/// <param name="ds">Dataset</param>
 		/// <returns>Array of overlays</returns>
-		public static DcmOverlayData[] GetOverlays(DcmDataset ds) {
+		public static DcmOverlayData[] FromDataset(DcmDataset ds) {
 			List<ushort> groups = new List<ushort>();
 			foreach (DcmItem elem in ds.Elements) {
 				if (elem.Tag.Element == 0x0010) {

@@ -413,7 +413,7 @@ namespace Dicom.Network {
 		public DcmPresContext GetPresentationContext(byte pcid) {
 			DcmPresContext ctx = null;
 			if (!_presContexts.TryGetValue(pcid, out ctx))
-				throw new DcmNetworkException("Invalid Presentaion Context ID");
+				throw new DicomNetworkException("Invalid Presentaion Context ID");
 			return ctx;
 		}
 

@@ -1,6 +1,6 @@
 // mDCM: A C# DICOM library
 //
-// Copyright (c) 2006-2008  Colby Dillion
+// Copyright (c) 2006-2009  Colby Dillion
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
@@ -29,47 +29,69 @@ using Dicom.IO;
 
 namespace Dicom.Data {
 	public class DcmDataset {
-		#region Protected Members
-		protected SortedList<uint, DcmItem> _items = new SortedList<uint, DcmItem>();
+		#region Private Members
+		private SortedList<uint, DcmItem> _items = new SortedList<uint, DcmItem>();
 
-		protected long _streamPosition = 0;
-		protected uint _streamLength = 0xffffffff;
+		private long _streamPosition = 0;
+		private uint _streamLength = 0xffffffff;
 
-		protected DcmTS _transferSyntax;
+		private DcmTS _transferSyntax;
+		private object _userState;
 		#endregion
 
 		#region Public Constructors
-		//public DcmDataset() {
-		//    _transferSyntax = DcmTS.ExplicitVRLittleEndian;
-		//}
-		public DcmDataset(DcmTS ts) {
-			_transferSyntax = ts;
+		public DcmDataset() : this(DcmTS.ExplicitVRLittleEndian) {
 		}
-		//public DcmDataset(long pos, uint len) {
-		//    _streamPosition = pos;
-		//    _streamLength = len;
-		//    _transferSyntax = DcmTS.ExplicitVRLittleEndian;
-		//}
-		public DcmDataset(long pos, uint len, DcmTS ts) {
-			_streamPosition = pos;
-			_streamLength = len;
-			_transferSyntax = ts;
+
+		public DcmDataset(DcmTS transferSyntax) {
+			_transferSyntax = transferSyntax;
+		}
+
+		public DcmDataset(long streamPosition, uint lengthInStream) : this(streamPosition, lengthInStream, DcmTS.ExplicitVRLittleEndian) {
+		}
+
+		public DcmDataset(long streamPosition, uint lengthInStream, DcmTS transferSyntax) {
+			_streamPosition = streamPosition;
+			_streamLength = lengthInStream;
+			_transferSyntax = transferSyntax;
 		}
 		#endregion
 
 		#region Public Properties
+		/// <summary>
+		/// Position of this dataset in the source stream.
+		/// </summary>
 		public long StreamPosition {
 			get { return _streamPosition; }
 		}
+
+		/// <summary>
+		/// Length of this dataset in the source stream.
+		/// </summary>
 		public uint StreamLength {
 			get { return _streamLength; }
 		}
+
+		/// <summary>
+		/// Transfer syntax used to encode the elements in this dataset.
+		/// </summary>
 		public DcmTS InternalTransferSyntax {
 			get { return _transferSyntax; }
 		}
 
+		/// <summary>
+		/// List of the items contained in this dataset.
+		/// </summary>
 		public IList<DcmItem> Elements {
 			get { return _items.Values; }
+		}
+
+		/// <summary>
+		/// User state object
+		/// </summary>
+		public object UserState {
+			get { return _userState; }
+			set { _userState = value; }
 		}
 		#endregion
 
@@ -108,7 +130,7 @@ namespace Dicom.Data {
 
 		internal void SelectByteOrder(Endian endian) {
 			foreach (DcmItem item in _items.Values) {
-				item.SelectByteOrder(endian);
+				item.Endian = endian;
 			}
 		}
 
@@ -148,6 +170,7 @@ namespace Dicom.Data {
 			foreach (DcmItem item in Elements) {
 				dataset.AddItem(item.Clone());
 			}
+			dataset.UserState = UserState;
 			return dataset;
 		}
 		#endregion
@@ -180,7 +203,7 @@ namespace Dicom.Data {
 		public bool AddElementWithValue(DcmTag tag, string value) {
 			DcmVR vr = tag.Entry.DefaultVR;
 			if (!vr.IsString)
-				throw new DcmDataException("Tried to create element with incorrect VR");
+				throw new DicomDataException("Tried to create element with incorrect VR");
 			if (AddElement(tag, vr)) {
 				if (value != null && value != String.Empty)
 					SetString(tag, value);
@@ -192,7 +215,7 @@ namespace Dicom.Data {
 		public bool AddElementWithValue(DcmTag tag, ushort value) {
 			DcmVR vr = tag.Entry.DefaultVR;
 			if (vr != DcmVR.US)
-				throw new DcmDataException("Tried to create element with incorrect VR");
+				throw new DicomDataException("Tried to create element with incorrect VR");
 			if (AddElement(tag, vr)) {
 				GetUS(tag).SetValue(value);
 				return true;
@@ -203,7 +226,7 @@ namespace Dicom.Data {
 		public bool AddElementWithValue(DcmTag tag, int value) {
 			DcmVR vr = tag.Entry.DefaultVR;
 			if (vr != DcmVR.IS && vr != DcmVR.SL)
-				throw new DcmDataException("Tried to create element with incorrect VR");
+				throw new DicomDataException("Tried to create element with incorrect VR");
 			if (AddElement(tag, vr)) {
 				if (vr == DcmVR.IS)
 					GetIS(tag).SetInt32(value);
@@ -217,7 +240,7 @@ namespace Dicom.Data {
 		public bool AddElementWithValue(DcmTag tag, double value) {
 			DcmVR vr = tag.Entry.DefaultVR;
 			if (vr != DcmVR.DS && vr != DcmVR.FD)
-				throw new DcmDataException("Tried to create element with incorrect VR");
+				throw new DicomDataException("Tried to create element with incorrect VR");
 			if (AddElement(tag, vr)) {
 				if (vr == DcmVR.DS)
 					GetDS(tag).SetDouble(value);
@@ -231,7 +254,7 @@ namespace Dicom.Data {
 		public bool AddElementWithValue(DcmTag tag, decimal value) {
 			DcmVR vr = tag.Entry.DefaultVR;
 			if (vr != DcmVR.DS)
-				throw new DcmDataException("Tried to create element with incorrect VR");
+				throw new DicomDataException("Tried to create element with incorrect VR");
 			if (AddElement(tag, vr)) {
 				GetDS(tag).SetDecimal(value);
 				return true;
@@ -242,7 +265,7 @@ namespace Dicom.Data {
 		public bool AddElementWithValue(DcmTag tag, DateTime value) {
 			DcmVR vr = tag.Entry.DefaultVR;
 			if (vr != DcmVR.DA && vr != DcmVR.DT && vr != DcmVR.TM)
-				throw new DcmDataException("Tried to create element with incorrect VR");
+				throw new DicomDataException("Tried to create element with incorrect VR");
 			if (AddElement(tag, vr)) {
 				if (vr == DcmVR.DA)
 					GetDA(tag).SetDateTime(value);
@@ -258,7 +281,7 @@ namespace Dicom.Data {
 		public bool AddElementWithValue(DcmTag tag, DcmTag value) {
 			DcmVR vr = tag.Entry.DefaultVR;
 			if (vr != DcmVR.AT)
-				throw new DcmDataException("Tried to create element with incorrect VR");
+				throw new DicomDataException("Tried to create element with incorrect VR");
 			if (AddElement(tag, vr)) {
 				GetAT(tag).SetValue(value);
 				return true;
@@ -291,7 +314,7 @@ namespace Dicom.Data {
 		public void AddItem(DcmItem item) {
 			_items.Remove(item.Tag.Card);
 			_items.Add(item.Tag.Card, item);
-			item.SelectByteOrder(InternalTransferSyntax.Endian);
+			item.Endian = InternalTransferSyntax.Endian;
 		}
 
 		public DcmItem GetItem(DcmTag tag) {
@@ -333,7 +356,7 @@ namespace Dicom.Data {
 			if (elem is DcmApplicationEntity)
 				return elem as DcmApplicationEntity;
 			if (elem != null)
-				throw new DcmDataException("Tried to access element with incorrect VR");
+				throw new DicomDataException("Tried to access element with incorrect VR");
 			return null;
 		}
 
@@ -342,7 +365,7 @@ namespace Dicom.Data {
 			if (elem is DcmAgeString)
 				return elem as DcmAgeString;
 			if (elem != null)
-				throw new DcmDataException("Tried to access element with incorrect VR");
+				throw new DicomDataException("Tried to access element with incorrect VR");
 			return null;
 		}
 
@@ -351,7 +374,7 @@ namespace Dicom.Data {
 			if (elem is DcmAttributeTag)
 				return elem as DcmAttributeTag;
 			if (elem != null)
-				throw new DcmDataException("Tried to access element with incorrect VR");
+				throw new DicomDataException("Tried to access element with incorrect VR");
 			return null;
 		}
 
@@ -360,7 +383,7 @@ namespace Dicom.Data {
 			if (elem is DcmCodeString)
 				return elem as DcmCodeString;
 			if (elem != null)
-				throw new DcmDataException("Tried to access element with incorrect VR");
+				throw new DicomDataException("Tried to access element with incorrect VR");
 			return null;
 		}
 
@@ -369,7 +392,7 @@ namespace Dicom.Data {
 			if (elem is DcmDate)
 				return elem as DcmDate;
 			if (elem != null)
-				throw new DcmDataException("Tried to access element with incorrect VR");
+				throw new DicomDataException("Tried to access element with incorrect VR");
 			return null;
 		}
 
@@ -378,7 +401,7 @@ namespace Dicom.Data {
 			if (elem is DcmDecimalString)
 				return elem as DcmDecimalString;
 			if (elem != null)
-				throw new DcmDataException("Tried to access element with incorrect VR");
+				throw new DicomDataException("Tried to access element with incorrect VR");
 			return null;
 		}
 
@@ -387,7 +410,7 @@ namespace Dicom.Data {
 			if (elem is DcmDateTime)
 				return elem as DcmDateTime;
 			if (elem != null)
-				throw new DcmDataException("Tried to access element with incorrect VR");
+				throw new DicomDataException("Tried to access element with incorrect VR");
 			return null;
 		}
 
@@ -396,7 +419,7 @@ namespace Dicom.Data {
 			if (elem is DcmFloatingPointDouble)
 				return elem as DcmFloatingPointDouble;
 			if (elem != null)
-				throw new DcmDataException("Tried to access element with incorrect VR");
+				throw new DicomDataException("Tried to access element with incorrect VR");
 			return null;
 		}
 
@@ -405,7 +428,7 @@ namespace Dicom.Data {
 			if (elem is DcmFloatingPointSingle)
 				return elem as DcmFloatingPointSingle;
 			if (elem != null)
-				throw new DcmDataException("Tried to access element with incorrect VR");
+				throw new DicomDataException("Tried to access element with incorrect VR");
 			return null;
 		}
 
@@ -414,7 +437,7 @@ namespace Dicom.Data {
 			if (elem is DcmIntegerString)
 				return elem as DcmIntegerString;
 			if (elem != null)
-				throw new DcmDataException("Tried to access element with incorrect VR");
+				throw new DicomDataException("Tried to access element with incorrect VR");
 			return null;
 		}
 
@@ -423,7 +446,7 @@ namespace Dicom.Data {
 			if (elem is DcmLongString)
 				return elem as DcmLongString;
 			if (elem != null)
-				throw new DcmDataException("Tried to access element with incorrect VR");
+				throw new DicomDataException("Tried to access element with incorrect VR");
 			return null;
 		}
 
@@ -432,7 +455,7 @@ namespace Dicom.Data {
 			if (elem is DcmLongText)
 				return elem as DcmLongText;
 			if (elem != null)
-				throw new DcmDataException("Tried to access element with incorrect VR");
+				throw new DicomDataException("Tried to access element with incorrect VR");
 			return null;
 		}
 
@@ -441,7 +464,7 @@ namespace Dicom.Data {
 			if (elem is DcmOtherByte)
 				return elem as DcmOtherByte;
 			if (elem != null)
-				throw new DcmDataException("Tried to access element with incorrect VR");
+				throw new DicomDataException("Tried to access element with incorrect VR");
 			return null;
 		}
 
@@ -450,7 +473,7 @@ namespace Dicom.Data {
 			if (elem is DcmOtherFloat)
 				return elem as DcmOtherFloat;
 			if (elem != null)
-				throw new DcmDataException("Tried to access element with incorrect VR");
+				throw new DicomDataException("Tried to access element with incorrect VR");
 			return null;
 		}
 
@@ -459,7 +482,7 @@ namespace Dicom.Data {
 			if (elem is DcmOtherWord)
 				return elem as DcmOtherWord;
 			if (elem != null)
-				throw new DcmDataException("Tried to access element with incorrect VR");
+				throw new DicomDataException("Tried to access element with incorrect VR");
 			return null;
 		}
 
@@ -468,7 +491,7 @@ namespace Dicom.Data {
 			if (elem is DcmPersonName)
 				return elem as DcmPersonName;
 			if (elem != null)
-				throw new DcmDataException("Tried to access element with incorrect VR");
+				throw new DicomDataException("Tried to access element with incorrect VR");
 			return null;
 		}
 
@@ -477,7 +500,7 @@ namespace Dicom.Data {
 			if (elem is DcmShortString)
 				return elem as DcmShortString;
 			if (elem != null)
-				throw new DcmDataException("Tried to access element with incorrect VR");
+				throw new DicomDataException("Tried to access element with incorrect VR");
 			return null;
 		}
 
@@ -486,7 +509,7 @@ namespace Dicom.Data {
 			if (elem is DcmSignedLong)
 				return elem as DcmSignedLong;
 			if (elem != null)
-				throw new DcmDataException("Tried to access element with incorrect VR");
+				throw new DicomDataException("Tried to access element with incorrect VR");
 			return null;
 		}
 
@@ -495,7 +518,7 @@ namespace Dicom.Data {
 			if (item is DcmItemSequence)
 				return item as DcmItemSequence;
 			if (item != null)
-				throw new DcmDataException("Tried to access element with incorrect VR");
+				throw new DicomDataException("Tried to access element with incorrect VR");
 			return null;
 		}
 
@@ -504,7 +527,7 @@ namespace Dicom.Data {
 			if (elem is DcmSignedShort)
 				return elem as DcmSignedShort;
 			if (elem != null)
-				throw new DcmDataException("Tried to access element with incorrect VR");
+				throw new DicomDataException("Tried to access element with incorrect VR");
 			return null;
 		}
 
@@ -513,7 +536,7 @@ namespace Dicom.Data {
 			if (elem is DcmShortText)
 				return elem as DcmShortText;
 			if (elem != null)
-				throw new DcmDataException("Tried to access element with incorrect VR");
+				throw new DicomDataException("Tried to access element with incorrect VR");
 			return null;
 		}
 
@@ -522,7 +545,7 @@ namespace Dicom.Data {
 			if (elem is DcmTime)
 				return elem as DcmTime;
 			if (elem != null)
-				throw new DcmDataException("Tried to access element with incorrect VR");
+				throw new DicomDataException("Tried to access element with incorrect VR");
 			return null;
 		}
 
@@ -531,7 +554,7 @@ namespace Dicom.Data {
 			if (elem is DcmUniqueIdentifier)
 				return elem as DcmUniqueIdentifier;
 			if (elem != null)
-				throw new DcmDataException("Tried to access element with incorrect VR");
+				throw new DicomDataException("Tried to access element with incorrect VR");
 			return null;
 		}
 
@@ -540,7 +563,7 @@ namespace Dicom.Data {
 			if (elem is DcmUnsignedLong)
 				return elem as DcmUnsignedLong;
 			if (elem != null)
-				throw new DcmDataException("Tried to access element with incorrect VR");
+				throw new DicomDataException("Tried to access element with incorrect VR");
 			return null;
 		}
 
@@ -549,7 +572,7 @@ namespace Dicom.Data {
 			if (elem is DcmUnknown)
 				return elem as DcmUnknown;
 			if (elem != null)
-				throw new DcmDataException("Tried to access element with incorrect VR");
+				throw new DicomDataException("Tried to access element with incorrect VR");
 			return null;
 		}
 
@@ -558,7 +581,7 @@ namespace Dicom.Data {
 			if (elem is DcmUnsignedShort)
 				return elem as DcmUnsignedShort;
 			if (elem != null)
-				throw new DcmDataException("Tried to access element with incorrect VR");
+				throw new DicomDataException("Tried to access element with incorrect VR");
 			return null;
 		}
 
@@ -567,7 +590,7 @@ namespace Dicom.Data {
 			if (elem is DcmUnlimitedText)
 				return elem as DcmUnlimitedText;
 			if (elem != null)
-				throw new DcmDataException("Tried to access element with incorrect VR");
+				throw new DicomDataException("Tried to access element with incorrect VR");
 			return null;
 		}
 		#endregion
@@ -591,7 +614,7 @@ namespace Dicom.Data {
 			if (elem is DcmMultiStringElement)
 				return (elem as DcmMultiStringElement).GetValue(index);
 			if (elem != null)
-				throw new DcmDataException("Tried to access element with incorrect VR");
+				throw new DicomDataException("Tried to access element with incorrect VR");
 			return deflt;
 		}
 
@@ -606,8 +629,8 @@ namespace Dicom.Data {
 				return;
 			}
 			if (elem != null)
-				throw new DcmDataException("Tried to access element with incorrect VR");
-			throw new DcmDataException("Element does not exist in Dataset");
+				throw new DicomDataException("Tried to access element with incorrect VR");
+			throw new DicomDataException("Element does not exist in Dataset");
 		}
 
 		public string[] GetStringArray(DcmTag tag, string[] deflt) {
@@ -617,7 +640,7 @@ namespace Dicom.Data {
 			if (elem is DcmStringElement)
 				return new string[] { (elem as DcmStringElement).GetValue() };
 			if (elem != null)
-				throw new DcmDataException("Tried to access element with incorrect VR");
+				throw new DicomDataException("Tried to access element with incorrect VR");
 			return deflt;
 		}
 
@@ -628,8 +651,8 @@ namespace Dicom.Data {
 				return;
 			}
 			if (elem != null)
-				throw new DcmDataException("Tried to access element with incorrect VR");
-			throw new DcmDataException("Element does not exist in Dataset");
+				throw new DicomDataException("Tried to access element with incorrect VR");
+			throw new DicomDataException("Element does not exist in Dataset");
 		}
 
 		public DateTime GetDateTime(DcmTag tag, int index, DateTime deflt) {
@@ -648,7 +671,7 @@ namespace Dicom.Data {
 				}
 			}
 			if (elem != null)
-				throw new DcmDataException("Tried to access element with incorrect VR");
+				throw new DicomDataException("Tried to access element with incorrect VR");
 			return deflt;	
 		}
 
@@ -659,14 +682,17 @@ namespace Dicom.Data {
 				dt = da.GetDateTime(0);
 			else
 				dt = deflt;
-			try {
-				DcmTime tm = GetTM(ttag);
-				if (tm != null) {
-					DateTime time = tm.GetDateTime(0);
-					dt = new DateTime(dt.Year, dt.Month, dt.Day, time.Hour, time.Minute, time.Second);
+			if (ttag != null) {
+				try {
+
+					DcmTime tm = GetTM(ttag);
+					if (tm != null) {
+						DateTime time = tm.GetDateTime(0);
+						dt = new DateTime(dt.Year, dt.Month, dt.Day, time.Hour, time.Minute, time.Second);
+					}
 				}
+				catch { }
 			}
-			catch { }
 			return dt;
 		}
 
@@ -702,7 +728,7 @@ namespace Dicom.Data {
 				else if (elem.VR == DcmVR.SL)
 					return (elem as DcmSignedLong).GetValue();
 				else
-					throw new DcmDataException("Tried to access element with incorrect VR");
+					throw new DicomDataException("Tried to access element with incorrect VR");
 			}
 			return deflt;
 		}
@@ -729,7 +755,7 @@ namespace Dicom.Data {
 				else if (elem.VR == DcmVR.DS)
 					return (elem as DcmDecimalString).GetDouble();
 				else
-					throw new DcmDataException("Tried to access element with incorrect VR");
+					throw new DicomDataException("Tried to access element with incorrect VR");
 			}
 			return deflt;
 		}
@@ -847,14 +873,14 @@ namespace Dicom.Data {
 			_transferSyntax = ts;
 			foreach (DcmItem item in _items.Values) {
 				if (item is DcmElement) {
-					item.SelectByteOrder(ts.Endian);
+					item.Endian = ts.Endian;
 				}
 				else if (item is DcmFragmentSequence) {
-					item.SelectByteOrder(ts.Endian);
+					item.Endian = ts.Endian;
 				}
 				else if (item is DcmItemSequence) {
 					DcmItemSequence sq = item as DcmItemSequence;
-					sq.SelectByteOrder(ts.Endian);
+					sq.Endian = ts.Endian;
 					foreach (DcmItemSequenceItem si in sq.SequenceItems) {
 						si.Dataset.SetInternalTransferSyntax(ts);
 					}
@@ -906,12 +932,12 @@ namespace Dicom.Data {
 		private object LoadDicomFieldValue(DcmElement elem, Type vtype, DicomFieldDefault deflt, bool udzl) {
 			if (vtype.IsSubclassOf(typeof(DcmElement))) {
 				if (elem != null && vtype != elem.GetType())
-					throw new DcmDataException("Invalid binding type for Element VR!");
+					throw new DicomDataException("Invalid binding type for Element VR!");
 				return elem;
 			} else if (vtype.IsArray) {
 				if (elem != null) {
 					if (vtype.GetElementType() != elem.GetValueType())
-						throw new DcmDataException("Invalid binding type for Element VR!");
+						throw new DicomDataException("Invalid binding type for Element VR!");
 					if (elem.GetValueType() == typeof(DateTime))
 						return (elem as DcmDateElementBase).GetDateTimes();
 					else
@@ -941,7 +967,7 @@ namespace Dicom.Data {
 						} else if (vtype == typeof(object)) {
 							return elem.GetValueObject();
 						} else
-							throw new DcmDataException("Invalid binding type for Element VR!");
+							throw new DicomDataException("Invalid binding type for Element VR!");
 					} else {
 						return elem.GetValueObject();
 					}
@@ -1002,7 +1028,7 @@ namespace Dicom.Data {
 					DcmElement elem = GetElement(tag);
 					if (vtype.IsArray) {
 						if (vtype.GetElementType() != elem.GetValueType())
-							throw new DcmDataException("Invalid binding type for Element VR!");
+							throw new DicomDataException("Invalid binding type for Element VR!");
 						if (elem.GetValueType() == typeof(DateTime))
 							(elem as DcmDateElementBase).SetDateTimes((DateTime[])value);
 						else
@@ -1022,7 +1048,7 @@ namespace Dicom.Data {
 							if (vtype == typeof(string)) {
 								elem.SetValueString((string)value);
 							} else
-								throw new DcmDataException("Invalid binding type for Element VR!");
+								throw new DicomDataException("Invalid binding type for Element VR!");
 						} else {
 							elem.SetValueObject(value);
 						}

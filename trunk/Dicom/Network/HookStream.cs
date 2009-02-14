@@ -2,7 +2,7 @@
 using System.IO;
 
 namespace Dicom.Network {
-	public class HookStream : Stream {
+	public abstract class HookStream : Stream {
 		#region Private Members
 		private Stream _internal;
 		#endregion

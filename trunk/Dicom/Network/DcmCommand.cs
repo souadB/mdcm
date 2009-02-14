@@ -1,6 +1,6 @@
 ﻿// mDCM: A C# DICOM library
 //
-// Copyright (c) 2006-2008  Colby Dillion
+// Copyright (c) 2006-2009  Colby Dillion
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
@@ -20,6 +20,7 @@
 //    Colby Dillion (colby.dillion@gmail.com)
 
 using System;
+using System.Text;
 
 using Dicom.Data;
 
@@ -277,6 +278,34 @@ namespace Dicom.Network {
 			set {
 				AddElementWithValue(DcmTags.MoveOriginatorMessageID, value);
 			}
+		}
+		#endregion
+
+		#region Public Methods
+		public string GetErrorString() {
+			StringBuilder sb = new StringBuilder();
+
+			if (Contains(DcmTags.ErrorComment))
+				sb.Append(ErrorComment);
+			else {
+				sb.Append("Unspecified");
+			}
+
+			if (Contains(DcmTags.OffendingElement)) {
+				DcmAttributeTag at = GetAT(DcmTags.OffendingElement);
+				sb.Append(" [");
+				DcmTag[] tags = at.GetValues();
+				for (int i = 0; i < tags.Length; i++) {
+					if (i > 0)
+						sb.Append("; ");
+					sb.Append(tags[i].ToString());
+					sb.Append(" ");
+					sb.Append(tags[i].Entry.Name);
+				}
+				sb.Append("]");
+			}
+
+			return sb.ToString();
 		}
 		#endregion
 	}

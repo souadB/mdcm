@@ -1,6 +1,6 @@
 ﻿// mDCM: A C# DICOM library
 //
-// Copyright (c) 2006-2008  Colby Dillion
+// Copyright (c) 2006-2009  Colby Dillion
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
@@ -28,13 +28,26 @@ using System.Threading;
 using NLog;
 
 namespace Dicom.Network.Server {
+	/// <summary>
+	/// Result status of and association request
+	/// </summary>
 	public enum DcmAssociateResult {
+		/// <summary>Accepted</summary>
 		Accept,
+
+		/// <summary>Rejected because the called AE title was unknown</summary>
 		RejectCalledAE,
+
+		/// <summary>Rejected because the calling AE title was unknown</summary>
 		RejectCallingAE,
+
+		/// <summary>Rejected with no reason given</summary>
 		RejectNoReason
 	}
 
+	/// <summary>
+	/// Base class for implementing a DICOM server service.
+	/// </summary>
 	public class DcmServiceBase : DcmNetworkBase {
 		#region Protected Properties
 		private bool _closeConnectionAfterRelease = true;

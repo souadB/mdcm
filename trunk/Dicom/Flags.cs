@@ -43,7 +43,7 @@ namespace Dicom {
 	}
 
 	[Flags]
-	public enum DicomDumpOptions {
+	public enum DicomDumpOptions : int {
 		None = 0x00000000,
 		ShortenLongValues = 0x00000001,
 		Restrict80CharactersPerLine = 0x00000002,
@@ -52,7 +52,7 @@ namespace Dicom {
 	}
 
 	[Flags]
-	public enum DicomReadOptions {
+	public enum DicomReadOptions : int {
 		None = 0x00000000,
 		KeepGroupLengths = 0x00000001,
 		UseDictionaryForExplicitUN = 0x00000002,
@@ -69,7 +69,7 @@ namespace Dicom {
 	}
 
 	[Flags]
-	public enum DicomWriteOptions {
+	public enum DicomWriteOptions : int {
 		None = 0x00000000,
 		CalculateGroupLengths = 0x00000001,
 		ExplicitLengthSequence = 0x00000002,
@@ -79,7 +79,7 @@ namespace Dicom {
 	}
 
 	[Flags]
-	public enum XDicomOptions {
+	public enum XDicomOptions : int {
 		None = 0x00000000,
 		Comments = 0x00000001,
 		IncludePixelData = 0x00000002,

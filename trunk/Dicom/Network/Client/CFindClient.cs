@@ -246,6 +246,7 @@ namespace Dicom.Network.Client {
 		private string _studyInstanceUid;
 		private string _modalitiesInStudy;
 		private string _studyDescription;
+		private string _institutionName;
 		#endregion
 
 		#region Public Constructors
@@ -309,6 +310,12 @@ namespace Dicom.Network.Client {
 			get { return _studyDescription; }
 			set { _studyDescription = value; }
 		}
+
+		[DicomField(DcmConstTags.InstitutionName, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
+		public string InstitutionName {
+			get { return _institutionName; }
+			set { _institutionName = value; }
+		}
 		#endregion
 
 		#region Protected Members
@@ -335,6 +342,7 @@ namespace Dicom.Network.Client {
 		private string _modality;
 		private string _modalitiesInStudy;
 		private string _studyDescription;
+		private string _institutionName;
 		private DateTime _studyDate;
 		private DateTime _studyTime;
 		private int _numberOfStudyRelatedSeries;
@@ -412,6 +420,12 @@ namespace Dicom.Network.Client {
 		public string StudyDescription {
 			get { return _studyDescription; }
 			set { _studyDescription = value; }
+		}
+
+		[DicomField(DcmConstTags.InstitutionName, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
+		public string InstitutionName {
+			get { return _institutionName; }
+			set { _institutionName = value; }
 		}
 
 		[DicomField(DcmConstTags.NumberOfStudyRelatedSeries, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
@@ -666,6 +680,103 @@ namespace Dicom.Network.Client {
 		public CFindWorklistClient() : base() {
 			FindSopClassUID = DcmUIDs.ModalityWorklistInformationModelFIND;
 		}
+	}
+	#endregion
+
+	#region CFindClient
+	public class CFindClient : DcmClientBase {
+		#region Private Members
+		private DcmUID _findSopClass;
+		private Queue<DcmDataset> _queries;
+		private DcmDataset _current;
+		#endregion
+
+		#region Public Constructor
+		public CFindClient()
+			: base() {
+			LogID = "C-Find SCU";
+			CallingAE = "FIND_SCU";
+			CalledAE = "FIND_SCP";
+			_queries = new Queue<DcmDataset>();
+			_findSopClass = DcmUIDs.StudyRootQueryRetrieveInformationModelFIND;
+			_current = null;
+		}
+		#endregion
+
+		#region Public Properties
+		public delegate void CFindResponseDelegate(DcmDataset query, DcmDataset result);
+		public CFindResponseDelegate OnCFindResponse;
+
+		public delegate void CFindCompleteDelegate(DcmDataset query);
+		public CFindCompleteDelegate OnCFindComplete;
+
+		public DcmUID FindSopClassUID {
+			get { return _findSopClass; }
+			set { _findSopClass = value; }
+		}
+
+		public Queue<DcmDataset> FindQueries {
+			get { return _queries; }
+			set { _queries = value; }
+		}
+		#endregion
+
+		#region Public Members
+		public void AddQuery(DcmDataset query) {
+			_queries.Enqueue(query);
+		}
+		#endregion
+
+		#region Protected Overrides
+		protected override void OnConnected() {
+			DcmAssociate associate = new DcmAssociate();
+
+			byte pcid = associate.AddPresentationContext(FindSopClassUID);
+			//associate.AddTransferSyntax(pcid, DcmTS.ExplicitVRLittleEndian);
+			associate.AddTransferSyntax(pcid, DcmTS.ImplicitVRLittleEndian);
+
+			associate.CalledAE = CalledAE;
+			associate.CallingAE = CallingAE;
+			associate.MaximumPduLength = MaxPduSize;
+
+			SendAssociateRequest(associate);
+		}
+
+		private void PerformQueryOrRelease() {
+			if (FindQueries.Count > 0) {
+				_current = FindQueries.Dequeue();
+				byte pcid = Associate.FindAbstractSyntax(FindSopClassUID);
+				if (Associate.GetPresentationContextResult(pcid) == DcmPresContextResult.Accept) {
+					SendCFindRequest(pcid, NextMessageID(), Priority, _current);
+				}
+				else {
+					Log.Info("{0} <- Presentation context rejected: {1}", LogID, Associate.GetPresentationContextResult(pcid));
+					SendReleaseRequest();
+				}
+			}
+			else {
+				SendReleaseRequest();
+			}
+		}
+
+		protected override void OnReceiveAssociateAccept(DcmAssociate association) {
+			PerformQueryOrRelease();
+		}
+
+		protected override void OnReceiveCFindResponse(byte presentationID, ushort messageID, DcmDataset dataset, DcmStatus status) {
+			if (status.State != DcmState.Pending) {
+				if (OnCFindComplete != null) {
+					OnCFindComplete(_current);
+				}
+				PerformQueryOrRelease();
+			}
+			else if (dataset != null) {
+				if (OnCFindResponse != null) {
+					OnCFindResponse(_current, dataset);
+				}
+			}
+		}
+		#endregion
 	}
 	#endregion
 }

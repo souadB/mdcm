@@ -1,6 +1,6 @@
 // mDCM: A C# DICOM library
 //
-// Copyright (c) 2006-2008  Colby Dillion
+// Copyright (c) 2006-2009  Colby Dillion
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
@@ -166,7 +166,7 @@ namespace Dicom.IO {
 						}
 					}
 
-					if (!Flags.IsSet(options, DicomWriteOptions.ExplicitLengthSequence)) {
+					if (!Flags.IsSet(options, DicomWriteOptions.ExplicitLengthSequence) && !(item.Tag.IsPrivate && !_syntax.IsExplicitVR)) {
 						_writer.Write((ushort)DcmTags.SequenceDelimitationItem.Group);
 						_writer.Write((ushort)DcmTags.SequenceDelimitationItem.Element);
 						_writer.Write((uint)0x00000000);

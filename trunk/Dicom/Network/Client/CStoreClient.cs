@@ -145,7 +145,7 @@ namespace Dicom.Network.Client {
 				}
 
 				if (tx == null)
-					throw new DcmNetworkException("No accepted presentation contexts for abstract syntax: " + _sopClass.Description);
+					throw new DicomNetworkException("No accepted presentation contexts for abstract syntax: " + _sopClass.Description);
 
 				// Possible to stream from file?
 				if (!client.DisableFileStreaming && tx == TransferSyntax)

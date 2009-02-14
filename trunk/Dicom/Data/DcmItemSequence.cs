@@ -1,6 +1,6 @@
 // mDCM: A C# DICOM library
 //
-// Copyright (c) 2006-2008  Colby Dillion
+// Copyright (c) 2006-2009  Colby Dillion
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
@@ -50,7 +50,7 @@ namespace Dicom.Data {
 			}
 			set {
 				_dataset = value;
-				_endian = _dataset.InternalTransferSyntax.Endian;
+				Endian = _dataset.InternalTransferSyntax.Endian;
 			}
 		}
 
@@ -69,7 +69,7 @@ namespace Dicom.Data {
 		}
 
 		protected override void ChangeEndianInternal() {
-			Dataset.SelectByteOrder(_endian);
+			Dataset.SelectByteOrder(Endian);
 		}
 
 		internal override void Preload() {
@@ -146,7 +146,7 @@ namespace Dicom.Data {
 
 		protected override void ChangeEndianInternal() {
 			foreach (DcmItemSequenceItem item in SequenceItems) {
-				item.SelectByteOrder(_endian);
+				item.Endian = Endian;
 			}
 		}
 

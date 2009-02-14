@@ -696,7 +696,7 @@ namespace Dicom.Network {
 		/// http://www.openssl.org/docs/ssl/SSL_CTX_use_certificate.html
 		/// </summary>
 		/// <param name="ctx">SSL_CTX*</param>
-		/// <param name="x">EVP_PKEY*</param>
+		/// <param name="pkey">EVP_PKEY*</param>
 		/// <returns>error code</returns>
 		[DllImport(DLL_SSL)]
 		public extern static int SSL_CTX_use_PrivateKey(IntPtr ctx, IntPtr pkey);
@@ -807,7 +807,7 @@ namespace Dicom.Network {
 		/// 
 		/// http://www.openssl.org/docs/ssl/SSL_CTX_use_certificate.html
 		/// </summary>
-		/// <param name="ctx">SSL*</param>
+		/// <param name="ssl">SSL*</param>
 		/// <param name="x">X509*</param>
 		/// <returns>error code</returns>
 		[DllImport(DLL_SSL)]
@@ -818,8 +818,8 @@ namespace Dicom.Network {
 		/// 
 		/// http://www.openssl.org/docs/ssl/SSL_CTX_use_certificate.html
 		/// </summary>
-		/// <param name="ctx">SSL*</param>
-		/// <param name="x">EVP_PKEY*</param>
+		/// <param name="ssl">SSL*</param>
+		/// <param name="pkey">EVP_PKEY*</param>
 		/// <returns>error code</returns>
 		[DllImport(DLL_SSL)]
 		public extern static int SSL_use_PrivateKey(IntPtr ssl, IntPtr pkey);

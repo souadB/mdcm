@@ -361,7 +361,7 @@ namespace Dicom.Data {
 		public int[] GetFrameDataS32(int frame) {
 			if (SamplesPerPixel == 1) {
 				if (BitsAllocated != 8 && BitsAllocated != 16)
-					throw new DcmDataException("BitsAllocated=" + BitsAllocated + " is unsupported!");
+					throw new DicomDataException("BitsAllocated=" + BitsAllocated + " is unsupported!");
 
 				if (IsSigned) {
 					if (BitsAllocated == 8) {
@@ -424,10 +424,10 @@ namespace Dicom.Data {
 				}
 			} else if (SamplesPerPixel == 3) {
 				if (BitsAllocated != 8)
-					throw new DcmDataException("BitsAllocated=" + BitsAllocated + " is unsupported!");
+					throw new DicomDataException("BitsAllocated=" + BitsAllocated + " is unsupported!");
 
 				if (PhotometricInterpretation != "RGB" && PhotometricInterpretation != "YBR_FULL")
-					throw new DcmDataException("PhotometricInterpretation=" + PhotometricInterpretation + " is unsupported!");
+					throw new DicomDataException("PhotometricInterpretation=" + PhotometricInterpretation + " is unsupported!");
 
 				int count = ImageWidth * ImageHeight;
 				int[] pixels = new int[count];
@@ -450,7 +450,7 @@ namespace Dicom.Data {
 				}
 				return pixels;
 			} else
-				throw new DcmDataException("SamplesPerPixel=" + SamplesPerPixel + " is unsupported!");
+				throw new DicomDataException("SamplesPerPixel=" + SamplesPerPixel + " is unsupported!");
 		}
 
 		public List<ByteBuffer> GetFrameFragments(int frame) {
@@ -516,7 +516,7 @@ namespace Dicom.Data {
 
 				if (allSameLength) {
 					if ((fragmentCount % NumberOfFrames) != 0)
-						throw new DcmDataException("Unable to determine frame length from pixel data sequence!");
+						throw new DicomDataException("Unable to determine frame length from pixel data sequence!");
 
 					int count = fragmentCount / NumberOfFrames;
 					int start = frame * count;
