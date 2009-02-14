@@ -3625,7 +3625,7 @@ namespace Dicom.Data {
 		/// <summary>(0028,1054) VR=LO VM=1 Rescale Type</summary>
 		public static DcmTag RescaleType = new DcmTag(0x0028, 0x1054);
 
-		/// <summary>(0028,1055) VR=LO VM=1-n Window Center & Width Explanation</summary>
+		/// <summary>(0028,1055) VR=LO VM=1-n Window Center &amp; Width Explanation</summary>
 		public static DcmTag WindowCenterWidthExplanation = new DcmTag(0x0028, 0x1055);
 
 		/// <summary>(0028,1056) VR=CS VM=1 VOI LUT Function</summary>

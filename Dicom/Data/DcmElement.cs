@@ -1,6 +1,6 @@
 // mDCM: A C# DICOM library
 //
-// Copyright (c) 2006-2008  Colby Dillion
+// Copyright (c) 2006-2009  Colby Dillion
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
@@ -39,13 +39,13 @@ namespace Dicom.Data {
 
 		protected DcmElement(DcmTag tag, DcmVR vr, long pos, Endian endian)
 			: base(tag, vr, pos, endian) {
-			_bb = new ByteBuffer(_endian);
+			_bb = new ByteBuffer(Endian);
 		}
 
 		protected DcmElement(DcmTag tag, DcmVR vr, long pos, Endian endian, ByteBuffer buffer)
 			: base(tag, vr, pos, endian) {
-			if (buffer == null && _endian != Endian.LocalMachine)
-				_bb = new ByteBuffer(_endian);
+			if (buffer == null && Endian != Endian.LocalMachine)
+				_bb = new ByteBuffer(Endian);
 			else
 				_bb = buffer;
 		}
@@ -107,8 +107,10 @@ namespace Dicom.Data {
 		}
 
 		protected override void ChangeEndianInternal() {
-			ByteBuffer.Endian = _endian;
-			ByteBuffer.Swap(_vr.UnitSize);
+			if (ByteBuffer.Endian != Endian) {
+				ByteBuffer.Endian = Endian;
+				ByteBuffer.Swap(VR.UnitSize);
+			}
 		}
 
 		internal override void Preload() {
@@ -204,7 +206,7 @@ namespace Dicom.Data {
 
 		public static DcmElement Create(DcmTag tag, DcmVR vr, long pos, Endian endian, ByteBuffer buffer) {
 			if (vr == DcmVR.SQ)
-				throw new DcmDataException("Sequence Elements should be created explicitly");
+				throw new DicomDataException("Sequence Elements should be created explicitly");
 
 			switch (vr.VR) {
 			case "AE":
@@ -262,7 +264,7 @@ namespace Dicom.Data {
 			default:
 				break;
 			}
-			throw new DcmDataException("Unhandled VR: " + vr.VR);
+			throw new DicomDataException("Unhandled VR: " + vr.VR);
 		}
 		#endregion
 	}
@@ -305,14 +307,14 @@ namespace Dicom.Data {
 		}
 		public override void SetValueObject(object val) {
 			if (val.GetType() != GetValueType())
-				throw new DcmDataException("Invalid type for Element VR!");
+				throw new DicomDataException("Invalid type for Element VR!");
 			SetValue((string)val);
 		}
 		public override void SetValueObjectArray(object[] vals) {
 			if (vals.Length == 0)
 				SetValues(new string[0]);
 			if (vals[0].GetType() != GetValueType())
-				throw new DcmDataException("Invalid type for Element VR!");
+				throw new DicomDataException("Invalid type for Element VR!");
 			SetValues((string[])vals);
 		}
 		#endregion
@@ -324,7 +326,7 @@ namespace Dicom.Data {
 
 		public string GetValue(int index) {
 			if (index != 0)
-				throw new DcmDataException("Non-zero index used for single value string element");
+				throw new DicomDataException("Non-zero index used for single value string element");
 			return GetValueString();
 		}
 
@@ -382,14 +384,14 @@ namespace Dicom.Data {
 		}
 		public override void SetValueObject(object val) {
 			if (val.GetType() != GetValueType())
-				throw new DcmDataException("Invalid type for Element VR!");
+				throw new DicomDataException("Invalid type for Element VR!");
 			SetValue((string)val);
 		}
 		public override void SetValueObjectArray(object[] vals) {
 			if (vals.Length == 0)
 				SetValues(new string[0]);
 			if (vals[0].GetType() != GetValueType())
-				throw new DcmDataException("Invalid type for Element VR!");
+				throw new DicomDataException("Invalid type for Element VR!");
 			SetValues((string[])vals);
 		}
 		#endregion
@@ -402,7 +404,7 @@ namespace Dicom.Data {
 		public string GetValue(int index) {
 			string[] vals = GetValues();
 			if (index >= vals.Length)
-				throw new DcmDataException("Value index out of range");
+				throw new DicomDataException("Value index out of range");
 			return vals[index].TrimEnd(' ', '\0');
 		}
 
@@ -489,7 +491,7 @@ namespace Dicom.Data {
 			return GetDateTime();
 		}
 		public override object[] GetValueObjectArray() {
-			throw new DcmDataException("GetValueObjectArray() should not be called for DateTime types!");
+			throw new DicomDataException("GetValueObjectArray() should not be called for DateTime types!");
 		}
 		public override void SetValueObject(object val) {
 			if (val.GetType() == typeof(DcmDateRange))
@@ -499,10 +501,10 @@ namespace Dicom.Data {
 			else if (val.GetType() == typeof(string))
 				SetValue((string)val);
 			else
-				throw new DcmDataException("Invalid type for Element VR!");
+				throw new DicomDataException("Invalid type for Element VR!");
 		}
 		public override void SetValueObjectArray(object[] vals) {
-			throw new DcmDataException("SetValueObjectArray() should not be called for DateTime types!");
+			throw new DicomDataException("SetValueObjectArray() should not be called for DateTime types!");
 		}
 		#endregion
 
@@ -656,14 +658,14 @@ namespace Dicom.Data {
 		}
 		public override void SetValueObject(object val) {
 			if (val.GetType() != GetValueType())
-				throw new DcmDataException("Invalid type for Element VR!");
+				throw new DicomDataException("Invalid type for Element VR!");
 			SetValue((T)val);
 		}
 		public override void SetValueObjectArray(object[] vals) {
 			if (vals.Length == 0)
 				SetValues(new T[0]);
 			if (vals[0].GetType() != GetValueType())
-				throw new DcmDataException("Invalid type for Element VR!");
+				throw new DicomDataException("Invalid type for Element VR!");
 			T[] v = new T[vals.Length];
 			Array.Copy(vals, v, vals.Length);
 			SetValues(v);
@@ -677,8 +679,8 @@ namespace Dicom.Data {
 
 		public T GetValue(int index) {
 			if (index >= GetVM())
-				throw new DcmDataException("Value index out of range");
-			SelectByteOrder(Endian.LocalMachine);
+				throw new DicomDataException("Value index out of range");
+			Endian = Endian.LocalMachine;
 			T[] vals = new T[1];
 			Buffer.BlockCopy(ByteBuffer.ToBytes(), index * VR.UnitSize,
 				vals, 0, VR.UnitSize);
@@ -686,7 +688,7 @@ namespace Dicom.Data {
 		}
 
 		public T[] GetValues() {
-			SelectByteOrder(Endian.LocalMachine);
+			Endian = Endian.LocalMachine;
 			T[] vals = new T[GetVM()];
 			Buffer.BlockCopy(ByteBuffer.ToBytes(), 0, vals, 0, vals.Length * VR.UnitSize);
 			return vals;
@@ -699,7 +701,7 @@ namespace Dicom.Data {
 		}
 
 		public void SetValues(T[] vals) {
-			SelectByteOrder(Endian.LocalMachine);
+			Endian = Endian.LocalMachine;
 			byte[] bytes = new byte[vals.Length * VR.UnitSize];
 			Buffer.BlockCopy(vals, 0, bytes, 0, bytes.Length);
 			ByteBuffer.FromBytes(bytes);
@@ -801,14 +803,14 @@ namespace Dicom.Data {
 		}
 		public override void SetValueObject(object val) {
 			if (val.GetType() != GetValueType())
-				throw new DcmDataException("Invalid type for Element VR!");
+				throw new DicomDataException("Invalid type for Element VR!");
 			SetValue((DcmTag)val);
 		}
 		public override void SetValueObjectArray(object[] vals) {
 			if (vals.Length == 0)
 				SetValues(new DcmTag[0]);
 			if (vals[0].GetType() != GetValueType())
-				throw new DcmDataException("Invalid type for Element VR!");
+				throw new DicomDataException("Invalid type for Element VR!");
 			SetValues((DcmTag[])vals);
 		}
 		#endregion
@@ -820,15 +822,15 @@ namespace Dicom.Data {
 
 		public DcmTag GetValue(int index) {
 			if (index >= GetVM())
-				throw new DcmDataException("Value index out of range");
-			SelectByteOrder(Endian.LocalMachine);
+				throw new DicomDataException("Value index out of range");
+			Endian = Endian.LocalMachine;
 			ushort[] u16s = new ushort[2];
 			Buffer.BlockCopy(ByteBuffer.ToBytes(), index * 4, u16s, 0, 4);
 			return new DcmTag(u16s[0], u16s[1]);
 		}
 
 		public DcmTag[] GetValues() {
-			SelectByteOrder(Endian.LocalMachine);
+			Endian = Endian.LocalMachine;
 			ushort[] u16s = new ushort[GetVM() * 2];
 			Buffer.BlockCopy(ByteBuffer.ToBytes(), 0, u16s, 0, u16s.Length * 2);
 			DcmTag[] tags = new DcmTag[GetVM()];
@@ -839,14 +841,14 @@ namespace Dicom.Data {
 		}
 
 		public void SetValue(DcmTag val) {
-			SelectByteOrder(Endian.LocalMachine);
+			Endian = Endian.LocalMachine;
 			ByteBuffer.Clear();
 			ByteBuffer.Writer.Write(val.Group);
 			ByteBuffer.Writer.Write(val.Element);
 		}
 
 		public void SetValues(DcmTag[] vals) {
-			SelectByteOrder(Endian.LocalMachine);
+			Endian = Endian.LocalMachine;
 			ByteBuffer.Clear();
 			foreach (DcmTag val in vals) {
 				ByteBuffer.Writer.Write(val.Group);
@@ -857,7 +859,10 @@ namespace Dicom.Data {
 
 		#region DcmItem Methods
 		protected override void ChangeEndianInternal() {
-			ByteBuffer.Swap(2);
+			if (ByteBuffer.Endian != Endian) {
+				ByteBuffer.Endian = Endian;
+				ByteBuffer.Swap(2);
+			}
 		}
 		#endregion
 	}

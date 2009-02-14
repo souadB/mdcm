@@ -1,6 +1,6 @@
 // mDCM: A C# DICOM library
 //
-// Copyright (c) 2006-2008  Colby Dillion
+// Copyright (c) 2006-2009  Colby Dillion
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
@@ -27,11 +27,11 @@ using Dicom.IO;
 
 namespace Dicom.Data {
 	public abstract class DcmItem {
-		#region Protected Members
-		protected DcmTag _tag;
-		protected DcmVR _vr;
-		protected long _streamPosition;
-		protected Endian _endian;
+		#region Private Members
+		private DcmTag _tag;
+		private DcmVR _vr;
+		private long _streamPosition;
+		private Endian _endian;
 		#endregion
 
 		#region Public Constructors
@@ -70,17 +70,16 @@ namespace Dicom.Data {
 
 		public Endian Endian {
 			get { return _endian; }
+			internal set {
+				if (_endian != value) {
+					_endian = value;
+					ChangeEndianInternal();
+				}
+			}
 		}
 		#endregion
 
 		#region Public Methods
-		internal void SelectByteOrder(Endian endian) {
-			if (endian == _endian)
-				return;
-			_endian = endian;
-			ChangeEndianInternal();
-		}
-
 		public override string ToString() {
 			return _tag.Entry.ToString();
 		}

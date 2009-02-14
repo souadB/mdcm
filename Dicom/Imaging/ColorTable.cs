@@ -1,6 +1,6 @@
 ﻿// mDCM: A C# DICOM library
 //
-// Copyright (c) 2006-2008  Colby Dillion
+// Copyright (c) 2006-2009  Colby Dillion
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
@@ -27,8 +27,8 @@ using System.IO;
 namespace Dicom.Imaging {
 	public static class ColorTable {
 		#region LUT
-		public static Color[] Monochrome1 = InitGrayscaleLUT(true);
-		public static Color[] Monochrome2 = InitGrayscaleLUT(false);
+		public readonly static Color[] Monochrome1 = InitGrayscaleLUT(true);
+		public readonly static Color[] Monochrome2 = InitGrayscaleLUT(false);
 
 		private static Color[] InitGrayscaleLUT(bool reverse) {
 			Color[] LUT = new Color[256];

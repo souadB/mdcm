@@ -208,7 +208,7 @@ namespace IJGVERS {
 }
 
 void JPEGCODEC::Encode(DcmPixelData^ oldPixelData, DcmPixelData^ newPixelData, DcmJpegParameters^ params, int frame) {
-	if ((oldPixelData->PhotometricInterpretation == "YBR_ICT")         ||
+	if ((oldPixelData->PhotometricInterpretation == "YBR_ICT") ||
 		(oldPixelData->PhotometricInterpretation == "YBR_RCT"))
 		throw gcnew DicomCodecException(String::Format("Photometric Interpretation '{0}' not supported by JPEG encoder!",
 														oldPixelData->PhotometricInterpretation));

@@ -1,6 +1,6 @@
 // mDCM: A C# DICOM library
 //
-// Copyright (c) 2006-2008  Colby Dillion
+// Copyright (c) 2006-2009  Colby Dillion
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
@@ -27,9 +27,9 @@ using Dicom.IO;
 
 namespace Dicom.Data {
 	public class DcmFragmentSequence : DcmItem {
-		#region Protected Members
-		protected List<uint> _table;
-		protected List<ByteBuffer> _fragments = new List<ByteBuffer>();
+		#region Private Members
+		private List<uint> _table;
+		private List<ByteBuffer> _fragments = new List<ByteBuffer>();
 		#endregion
 
 		#region Public Constructors
@@ -108,8 +108,8 @@ namespace Dicom.Data {
 
 		protected override void ChangeEndianInternal() {
 			foreach (ByteBuffer bb in Fragments) {
-				if (bb.Endian != _endian) {
-					bb.Endian = _endian;
+				if (bb.Endian != Endian) {
+					bb.Endian = Endian;
 					bb.Swap(VR.UnitSize);
 				}
 			}

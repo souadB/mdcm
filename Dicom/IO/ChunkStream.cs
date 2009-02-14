@@ -24,7 +24,7 @@ using System.Collections.Generic;
 using System.IO;
 
 namespace Dicom.IO {
-	public class ChunkStream : Stream {
+	internal class ChunkStream : Stream {
 		#region Private Members
 		private long _position;
 		private long _length;

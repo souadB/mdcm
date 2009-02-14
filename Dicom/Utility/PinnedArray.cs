@@ -71,6 +71,7 @@ namespace Dicom.Utility {
 			_handle = GCHandle.Alloc(_data, GCHandleType.Pinned);
 			_pointer = _handle.AddrOfPinnedObject();
 		}
+
 		~PinnedArray() {
 			Dispose(false);
 		}

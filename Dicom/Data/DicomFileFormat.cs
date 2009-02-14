@@ -146,7 +146,7 @@ namespace Dicom.Data {
 				fs.ReadByte() != (byte)'I' ||
 				fs.ReadByte() != (byte)'C' ||
 				fs.ReadByte() != (byte)'M')
-				throw new DcmDataException("Invalid DICOM file: " + fs.Name);
+				throw new DicomDataException("Invalid DICOM file: " + fs.Name);
 		}
 
 		/// <summary>

@@ -23,10 +23,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Dicom.Network
-{
-	public class DcmNetworkException : Exception {
-		public DcmNetworkException(String s) : base(s) {
+namespace Dicom.Data {
+	public class DicomDataException : Exception {
+		public DicomDataException(String s) : base(s) {
 		}
 	}
 }

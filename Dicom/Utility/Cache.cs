@@ -1,9 +1,17 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 
 namespace Dicom.Utility {
-	public class LeastRecentUsedCache<T> {
+	public interface ICache<T> {
+		T this[string key] {
+			get;
+			set;
+		}
+	}
+
+	public class LeastRecentUsedCache<T> : ICache<T>, IDictionary<string, T> {
 		#region Private Members
 		private const int LockTimeout = 1000; // 1 second
 
@@ -25,6 +33,22 @@ namespace Dicom.Utility {
 		#region Public Properties
 		public int MaximumItems {
 			get { return _maxItems; }
+		}
+
+		public ICollection<string> Keys {
+			get { return _index.Keys; }
+		}
+
+		public ICollection<T> Values {
+			get { return _index.Values; }
+		}
+
+		public int Count {
+			get { return _index.Count; }
+		}
+
+		public bool IsReadOnly {
+			get { return false; }
 		}
 
 		public T this[string key] {
@@ -62,11 +86,24 @@ namespace Dicom.Utility {
 			}
 		}
 
-		public void Remove(string key) {
+		public void Add(KeyValuePair<string, T> item) {
+			Add(item.Key, item.Value);
+		}
+
+		public bool Contains(KeyValuePair<string, T> item) {
+			return ContainsKey(item.Key);
+		}
+
+		public bool Remove(string key) {
 			lock (_lock) {
-				_index.Remove(key);
+				bool ret = _index.Remove(key);
 				_removalQueue.Remove(key);
+				return ret;
 			}
+		}
+
+		public bool Remove(KeyValuePair<string, T> item) {
+			return Remove(item.Key);
 		}
 
 		public bool ContainsKey(string key) {
@@ -75,10 +112,37 @@ namespace Dicom.Utility {
 			}
 		}
 
+		public bool TryGetValue(string key, out T value) {
+			lock (_lock) {
+				if (_index.TryGetValue(key, out value)) {
+					_removalQueue.Remove(key);
+					_removalQueue.Add(key);
+					return true;
+				}
+				return false;
+			}
+		}
+
 		public void Clear() {
 			lock (_lock) {
 				_index.Clear();
 				_removalQueue.Clear();
+			}
+		}
+
+		public IEnumerator<KeyValuePair<string, T>> GetEnumerator() {
+			return _index.GetEnumerator();
+		}
+
+		IEnumerator IEnumerable.GetEnumerator() {
+			return _index.GetEnumerator();
+		}
+
+		public void CopyTo(KeyValuePair<string, T>[] array, int arrayIndex) {
+			lock (_lock) {
+				foreach (KeyValuePair<string, T> kv in _index) {
+					array[arrayIndex++] = kv;
+				}
 			}
 		}
 		#endregion

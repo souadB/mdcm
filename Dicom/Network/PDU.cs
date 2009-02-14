@@ -164,7 +164,7 @@ namespace Dicom.Network {
 			if ((_ms.Position + bytes) > _ms.Length) {
 				String msg = String.Format("{0} (offset={1}, bytes={2}, field=\"{3}\") Requested offset out of range!", ToString(),
 					_ms.Position + 6, bytes, name);
-				throw new DcmNetworkException(msg);
+				throw new DicomNetworkException(msg);
 			}
 		}
 

@@ -106,7 +106,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Codec\DcmCodecHelper.cs" />
-    <Compile Include="Codec\DcmCodecException.cs" />
+    <Compile Include="Codec\DicomCodecException.cs" />
     <Compile Include="Codec\DcmCodecParameters.cs" />
     <Compile Include="Codec\DicomCodec.cs" />
     <Compile Include="Codec\DcmRleCodec.cs" />
@@ -115,7 +115,7 @@
     <Compile Include="IO\SegmentStream.cs" />
     <Compile Include="Network\Client\CStoreClient.cs" />
     <Compile Include="Network\DcmCommand.cs" />
-    <Compile Include="Data\DcmDataException.cs" />
+    <Compile Include="Data\DicomDataException.cs" />
     <Compile Include="Data\DcmDataset.cs" />
     <Compile Include="Data\DcmDateRange.cs" />
     <Compile Include="Data\DcmDictionary.cs" />
@@ -160,7 +160,7 @@
     <Compile Include="IO\VoidStream.cs" />
     <Compile Include="Network\DcmAssociate.cs" />
     <Compile Include="Network\DcmNetworkBase.cs" />
-    <Compile Include="Network\DcmNetworkException.cs" />
+    <Compile Include="Network\DicomNetworkException.cs" />
     <Compile Include="Network\Server\CEchoService.cs" />
     <Compile Include="Network\Server\CStoreService.cs" />
     <Compile Include="Network\Server\DcmServer.cs" />
@@ -177,6 +177,7 @@
     <Compile Include="Utility\SerializableDictionary.cs" />
     <Compile Include="Utility\Format.cs" />
     <Compile Include="Utility\SyslogTarget.cs" />
+    <Compile Include="Utility\MultiThread.cs" />
     <Compile Include="Utility\Utility.cs" />
     <Compile Include="Utility\Wildcard.cs" />
     <Compile Include="Utility\WorkQueue.cs" />
