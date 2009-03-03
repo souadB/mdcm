@@ -70,7 +70,7 @@ namespace Dicom.Network.Client {
 		}
 
 		public CMoveQuery(string studyUid, string seriesUid, string instUid) {
-			_queryLevel = DcmQueryRetrieveLevel.Instance;
+			_queryLevel = DcmQueryRetrieveLevel.Image;
 			_studyUid = studyUid;
 			_seriesUid = seriesUid;
 			_instanceUid = instUid;
@@ -110,8 +110,8 @@ namespace Dicom.Network.Client {
 			get { return _instanceUid; }
 			set {
 				_instanceUid = value;
-				if (_queryLevel < DcmQueryRetrieveLevel.Instance)
-					_queryLevel = DcmQueryRetrieveLevel.Instance;
+				if (_queryLevel < DcmQueryRetrieveLevel.Image)
+					_queryLevel = DcmQueryRetrieveLevel.Image;
 			}
 		}
 
@@ -203,8 +203,8 @@ namespace Dicom.Network.Client {
 						dataset.AddElementWithValue(DcmTags.StudyInstanceUID, query.StudyInstanceUID);
 						dataset.AddElementWithValue(DcmTags.SeriesInstanceUID, query.SeriesInstanceUID);
 						break;
-					case DcmQueryRetrieveLevel.Instance:
-						dataset.AddElementWithValue(DcmTags.QueryRetrieveLevel, "INSTANCE");
+					case DcmQueryRetrieveLevel.Image:
+						dataset.AddElementWithValue(DcmTags.QueryRetrieveLevel, "IMAGE");
 						dataset.AddElementWithValue(DcmTags.PatientID, query.PatientID);
 						dataset.AddElementWithValue(DcmTags.StudyInstanceUID, query.StudyInstanceUID);
 						dataset.AddElementWithValue(DcmTags.SeriesInstanceUID, query.SeriesInstanceUID);

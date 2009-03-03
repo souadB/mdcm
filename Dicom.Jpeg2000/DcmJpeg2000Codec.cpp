@@ -81,7 +81,7 @@ void DcmJpeg2000Codec::Encode(DcmDataset^ dataset, DcmPixelData^ oldPixelData, D
 		array<unsigned char>^ frameArray = oldPixelData->GetFrameDataU8(frame);
 		pin_ptr<unsigned char> framePin = &frameArray[0];
 		unsigned char* frameData = framePin;
-		int frameDataSize = frameArray->Length;
+		const int frameDataSize = frameArray->Length;
 
 		opj_image_cmptparm_t cmptparm[3];
 		opj_cparameters_t eparams;  /* compression parameters */
@@ -128,7 +128,8 @@ void DcmJpeg2000Codec::Encode(DcmDataset^ dataset, DcmPixelData^ oldPixelData, D
 		for (int i = 0; i < oldPixelData->SamplesPerPixel; i++) {
 			cmptparm[i].bpp = oldPixelData->BitsAllocated;
 			cmptparm[i].prec = oldPixelData->BitsStored;
-			cmptparm[i].sgnd = oldPixelData->IsSigned ? 1 : 0;
+			if (!jparams->EncodeSignedPixelValuesAsUnsigned)
+				cmptparm[i].sgnd = oldPixelData->PixelRepresentation;
 			cmptparm[i].dx = eparams.subsampling_dx;
 			cmptparm[i].dy = eparams.subsampling_dy;
 			cmptparm[i].h = oldPixelData->ImageHeight;
@@ -147,24 +148,29 @@ void DcmJpeg2000Codec::Encode(DcmDataset^ dataset, DcmPixelData^ oldPixelData, D
 			for (int c = 0; c < image->numcomps; c++) {
 				opj_image_comp_t* comp = &image->comps[c];
 
-				int pos = 0;
-				int offset = 0;
-
-				if (oldPixelData->IsPlanar) {
-					pos = c * pixelCount;
-					offset = 1;
-				}
-				else {
-					pos = c;
-					offset = image->numcomps;
-				}
+				int pos = oldPixelData->IsPlanar ? (c * pixelCount) : c;
+				const int offset = oldPixelData->IsPlanar ? 1 : image->numcomps;
 
 				if (oldPixelData->BytesAllocated == 1) {
-					if (oldPixelData->IsSigned) {
-						int shift = 8 - oldPixelData->BitsStored;
-						for (int p = 0; p < pixelCount; p++) {
-							comp->data[p] = (char)(frameData[pos] << shift) >> shift;
-							pos += offset;
+					if (comp->sgnd) {
+						if (oldPixelData->BitsStored < 8) {
+							const unsigned char sign = 1 << oldPixelData->HighBit;
+							const unsigned char mask = sign - 1;
+							for (int p = 0; p < pixelCount; p++) {
+								const unsigned char pixel = frameData[pos];
+								if (pixel & sign)
+									comp->data[p] = -(pixel & mask);
+								else
+									comp->data[p] = pixel;
+								pos += offset;
+							}
+						}
+						else {
+							char* frameData8 = (char*)frameData;
+							for (int p = 0; p < pixelCount; p++) {
+								comp->data[p] = frameData8[pos];
+								pos += offset;
+							}
 						}
 					}
 					else {
@@ -175,15 +181,30 @@ void DcmJpeg2000Codec::Encode(DcmDataset^ dataset, DcmPixelData^ oldPixelData, D
 					}
 				}
 				else if (oldPixelData->BytesAllocated == 2) {
-					unsigned short* frameData16 = (unsigned short*)frameData;
-					if (oldPixelData->IsSigned) {
-						int shift = 16 - oldPixelData->BitsStored;
-						for (int p = 0; p < pixelCount; p++) {
-							comp->data[p] = (short)(frameData16[pos] << shift) >> shift;
-							pos += offset;
+					if (comp->sgnd) {
+						if (oldPixelData->BitsStored < 16) {
+							unsigned short* frameData16 = (unsigned short*)frameData;
+							const unsigned short sign = 1 << oldPixelData->HighBit;
+							const unsigned short mask = sign - 1;
+							for (int p = 0; p < pixelCount; p++) {
+								const unsigned short pixel = frameData16[pos];
+								if (pixel & sign)
+									comp->data[p] = -(pixel & mask);
+								else
+									comp->data[p] = pixel;
+								pos += offset;
+							}
+						}
+						else {
+							short* frameData16 = (short*)frameData;
+							for (int p = 0; p < pixelCount; p++) {
+								comp->data[p] = frameData16[pos];
+								pos += offset;
+							}
 						}
 					}
 					else {
+						unsigned short* frameData16 = (unsigned short*)frameData;
 						for (int p = 0; p < pixelCount; p++) {
 							comp->data[p] = frameData16[pos];
 							pos += offset;
@@ -219,8 +240,8 @@ void DcmJpeg2000Codec::Encode(DcmDataset^ dataset, DcmPixelData^ oldPixelData, D
 				newPixelData->IsLossy = true;
 				newPixelData->LossyCompressionMethod = "ISO_15444_1";
 				
-				double oldSize = oldPixelData->GetFrameSize(0);
-				double newSize = newPixelData->GetFrameSize(0);
+				const double oldSize = oldPixelData->GetFrameSize(0);
+				const double newSize = newPixelData->GetFrameSize(0);
 				String^ ratio = String::Format("{0:0.000}", oldSize / newSize);
 				newPixelData->LossyCompressionRatio = ratio;
 			}
@@ -244,9 +265,9 @@ void DcmJpeg2000Codec::Decode(DcmDataset^ dataset, DcmPixelData^ oldPixelData, D
 	array<unsigned char>^ destArray = gcnew array<unsigned char>(oldPixelData->UncompressedFrameSize);
 	pin_ptr<unsigned char> destPin = &destArray[0];
 	unsigned char* destData = destPin;
-	int destDataSize = destArray->Length;
+	const int destDataSize = destArray->Length;
 
-	int pixelCount = oldPixelData->ImageHeight * oldPixelData->ImageWidth;
+	const int pixelCount = oldPixelData->ImageHeight * oldPixelData->ImageWidth;
 
 	if (newPixelData->PhotometricInterpretation == "YBR_RCT" || newPixelData->PhotometricInterpretation == "YBR_ICT")
 		newPixelData->PhotometricInterpretation = "RGB";
@@ -261,7 +282,7 @@ void DcmJpeg2000Codec::Decode(DcmDataset^ dataset, DcmPixelData^ oldPixelData, D
 		array<unsigned char>^ jpegArray = oldPixelData->GetFrameDataU8(frame);
 		pin_ptr<unsigned char> jpegPin = &jpegArray[0];
 		unsigned char* jpegData = jpegPin;
-		int jpegDataSize = jpegArray->Length;
+		const int jpegDataSize = jpegArray->Length;
 
 		opj_dparameters_t dparams;
 		opj_event_mgr_t event_mgr;
@@ -301,28 +322,18 @@ void DcmJpeg2000Codec::Decode(DcmDataset^ dataset, DcmPixelData^ oldPixelData, D
 			for (int c = 0; c < image->numcomps; c++) {
 				opj_image_comp_t* comp = &image->comps[c];
 
-				int pos = 0;
-				int offset = 0;
-
-				if (newPixelData->IsPlanar) {
-					pos = c * pixelCount;
-					offset = 1;
-				}
-				else {
-					pos = c;
-					offset = image->numcomps;
-				}
+				int pos = newPixelData->IsPlanar ? (c * pixelCount) : c;
+				const int offset = newPixelData->IsPlanar ? 1 : image->numcomps;
 
 				if (newPixelData->BytesAllocated == 1) {
-					if (newPixelData->IsSigned) {
-						unsigned char signBit = 1 << newPixelData->HighBit;
-						unsigned char maskBit = 0xFF ^ signBit;
+					if (comp->sgnd) {
+						const unsigned char sign = 1 << newPixelData->HighBit;
 						for (int p = 0; p < pixelCount; p++) {
-							int i = comp->data[p];
+							const int i = comp->data[p];
 							if (i < 0)
-								destArray[pos] = (unsigned char)((i & maskBit) | signBit);
+								destArray[pos] = (unsigned char)(-i | sign);
 							else
-								destArray[pos] = (unsigned char)(i & maskBit);
+								destArray[pos] = (unsigned char)(i);
 							pos += offset;
 						}
 					}
@@ -334,16 +345,15 @@ void DcmJpeg2000Codec::Decode(DcmDataset^ dataset, DcmPixelData^ oldPixelData, D
 					}
 				}
 				else if (newPixelData->BytesAllocated == 2) {
-					unsigned short signBit = 1 << newPixelData->HighBit;
-					unsigned short maskBit = 0xFFFF ^ signBit;
+					const unsigned short sign = 1 << newPixelData->HighBit;
 					unsigned short* destData16 = (unsigned short*)destData;
-					if (newPixelData->IsSigned) {
+					if (comp->sgnd) {
 						for (int p = 0; p < pixelCount; p++) {
-							int i = comp->data[p];
+							const int i = comp->data[p];
 							if (i < 0)
-								destData16[pos] = (unsigned short)((i & maskBit) | signBit);
+								destData16[pos] = (unsigned short)(-i | sign);
 							else
-								destData16[pos] = (unsigned short)(i & maskBit);
+								destData16[pos] = (unsigned short)(i);
 							pos += offset;
 						}
 					}

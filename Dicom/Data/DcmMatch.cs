@@ -38,7 +38,8 @@ namespace Dicom.Data {
 		OneOf,
 		Wildcard,
 		Regex,
-		Exists
+		Exists,
+		Empty
 	}
 
 	[Serializable]
@@ -88,15 +89,20 @@ namespace Dicom.Data {
 			DcmTag tag = DcmTag.Parse(_tag);
 			DcmElement elem = ds.GetElement(tag);
 
-			if (_op == DicomMatchOp.Exists && elem == null)
-				return _negate;
-
-			if (elem == null)
-				return _negate;
+			if (elem == null) {
+				if (_op == DicomMatchOp.Empty)
+					return !_negate;
+				else if (_op == DicomMatchOp.Exists)
+					return _negate;
+				else
+					return _negate;
+			}
 
 			string value = elem.GetValueString();
 
 			switch (_op) {
+				case DicomMatchOp.Empty:
+					return String.IsNullOrEmpty(value) ? !_negate : _negate;
 				case DicomMatchOp.Equals:
 					return (value == _value) ? !_negate : _negate;
 				case DicomMatchOp.StartsWith:
@@ -114,7 +120,7 @@ namespace Dicom.Data {
 			}
 
 			if (_op == DicomMatchOp.OneOf) {
-				string[] values = value.Split('\\');
+				string[] values = _value.Split('\\');
 				foreach (string v in values) {
 					if (v == _value)
 						return  !_negate;
@@ -128,7 +134,7 @@ namespace Dicom.Data {
 			DcmTag tag = DcmTag.Parse(_tag);
 			if (tag == null)
 				return "Invalid DICOM Match Rule";
-			return string.Format("'{0} {1}' {2} '{3}'", tag, tag.Entry.Name, _op, _value);
+			return string.Format("'{0} {1}' {2}{3} '{4}'", tag, tag.Entry.Name, (_negate ? "!" : ""), _op, _value);
 		}
 
 		public static string Serialize(DcmMatch match) {

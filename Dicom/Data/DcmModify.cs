@@ -38,6 +38,8 @@ namespace Dicom.Data {
 		Append,
 		Format,
 		Chomp,
+		Trim,
+		Pad,
 		Truncate,
 		GenerateID,
 		UserOp1,
@@ -303,6 +305,22 @@ namespace Dicom.Data {
 				if (_op == DicomModifyOp.Chomp) {
 					if (value.StartsWith(_output))
 						elem.SetValueString(value.Substring(_output.Length));
+					return;
+				}
+
+				if (_op == DicomModifyOp.Trim) {
+					if (value.EndsWith(_output))
+						elem.SetValueString(value.Substring(0, value.Length - _output.Length));
+					return;
+				}
+
+				if (_op == DicomModifyOp.Pad) {
+					int length = int.Parse(_input);
+					char pad = !String.IsNullOrEmpty(_output) ? _output[0] : ' ';
+					if (length < 0)
+						elem.SetValueString(value.PadLeft(-length, pad));
+					else
+						elem.SetValueString(value.PadRight(length, pad));
 					return;
 				}
 

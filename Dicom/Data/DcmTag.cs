@@ -1492,8 +1492,8 @@ namespace Dicom.Data {
 		/// <summary>(0018,1152) VR=IS VM=1 Exposure</summary>
 		public static DcmTag Exposure = new DcmTag(0x0018, 0x1152);
 
-		/// <summary>(0018,1153) VR=IS VM=1 Exposure in µAs</summary>
-		public static DcmTag ExposureInµAs = new DcmTag(0x0018, 0x1153);
+		/// <summary>(0018,1153) VR=IS VM=1 Exposure in uAs</summary>
+		public static DcmTag ExposureInMicroAs = new DcmTag(0x0018, 0x1153);
 
 		/// <summary>(0018,1154) VR=DS VM=1 Average Pulse Width</summary>
 		public static DcmTag AveragePulseWidth = new DcmTag(0x0018, 0x1154);
@@ -2110,11 +2110,11 @@ namespace Dicom.Data {
 		/// <summary>(0018,7065) VR=DS VM=1 Phototimer Setting</summary>
 		public static DcmTag PhototimerSetting = new DcmTag(0x0018, 0x7065);
 
-		/// <summary>(0018,8150) VR=DS VM=1 Exposure Time in µS</summary>
-		public static DcmTag ExposureTimeInµS = new DcmTag(0x0018, 0x8150);
+		/// <summary>(0018,8150) VR=DS VM=1 Exposure Time in uS</summary>
+		public static DcmTag ExposureTimeInMicroS = new DcmTag(0x0018, 0x8150);
 
-		/// <summary>(0018,8151) VR=DS VM=1 X-Ray Tube Current in µA</summary>
-		public static DcmTag XRayTubeCurrentInµA = new DcmTag(0x0018, 0x8151);
+		/// <summary>(0018,8151) VR=DS VM=1 X-Ray Tube Current in uA</summary>
+		public static DcmTag XRayTubeCurrentInMicroA = new DcmTag(0x0018, 0x8151);
 
 		/// <summary>(0018,9004) VR=CS VM=1 Content Qualification</summary>
 		public static DcmTag ContentQualification = new DcmTag(0x0018, 0x9004);
@@ -9384,8 +9384,8 @@ namespace Dicom.Data {
 		/// <summary>(0018,1152) VR=IS VM=1 Exposure</summary>
 		public const uint Exposure = 0x00181152;
 
-		/// <summary>(0018,1153) VR=IS VM=1 Exposure in µAs</summary>
-		public const uint ExposureInµAs = 0x00181153;
+		/// <summary>(0018,1153) VR=IS VM=1 Exposure in uAs</summary>
+		public const uint ExposureInMicroAs = 0x00181153;
 
 		/// <summary>(0018,1154) VR=DS VM=1 Average Pulse Width</summary>
 		public const uint AveragePulseWidth = 0x00181154;
@@ -9963,11 +9963,11 @@ namespace Dicom.Data {
 		/// <summary>(0018,7065) VR=DS VM=1 Phototimer Setting</summary>
 		public const uint PhototimerSetting = 0x00187065;
 
-		/// <summary>(0018,8150) VR=DS VM=1 Exposure Time in µS</summary>
-		public const uint ExposureTimeInµS = 0x00188150;
+		/// <summary>(0018,8150) VR=DS VM=1 Exposure Time in uS</summary>
+		public const uint ExposureTimeInMicroS = 0x00188150;
 
-		/// <summary>(0018,8151) VR=DS VM=1 X-Ray Tube Current in µA</summary>
-		public const uint XRayTubeCurrentInµA = 0x00188151;
+		/// <summary>(0018,8151) VR=DS VM=1 X-Ray Tube Current in uA</summary>
+		public const uint XRayTubeCurrentInMicroA = 0x00188151;
 
 		/// <summary>(0018,9004) VR=CS VM=1 Content Qualification</summary>
 		public const uint ContentQualification = 0x00189004;

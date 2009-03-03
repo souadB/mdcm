@@ -40,6 +40,7 @@ namespace Jpeg2000 {
 		bool _isVerbose;
 		bool _enableMct;
 		bool _updatePmi;
+		bool _signedAsUnsigned;
 
 	public:
 		DcmJpeg2000Parameters() {
@@ -48,6 +49,7 @@ namespace Jpeg2000 {
 			_isVerbose = false;
 			_enableMct = true;
 			_updatePmi = true;
+			_signedAsUnsigned = true;
 
 			_rates = gcnew array<int>(9);
 			_rates[0] = 1280;
@@ -89,6 +91,11 @@ namespace Jpeg2000 {
 		property bool UpdatePhotometricInterpretation {
 			bool get() { return _updatePmi; }
 			void set(bool value) { _updatePmi = value; }
+		}
+
+		property bool EncodeSignedPixelValuesAsUnsigned {
+			bool get() { return _signedAsUnsigned; }
+			void set(bool value) { _signedAsUnsigned = value; }
 		}
 	};
 
