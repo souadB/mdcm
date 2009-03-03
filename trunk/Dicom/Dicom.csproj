@@ -129,6 +129,7 @@
     <Compile Include="Data\DcmOverlayData.cs" />
     <Compile Include="Data\DcmPixelData.cs" />
     <Compile Include="Data\DicomTemplateAdapter.cs" />
+    <Compile Include="Network\DcmQueryRetrieveLevel.cs" />
     <Compile Include="Network\HookStream.cs" />
     <Compile Include="Network\NetworkErrorStream.cs" />
     <Compile Include="Network\OpenSSL.cs" />

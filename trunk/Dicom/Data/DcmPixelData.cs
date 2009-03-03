@@ -598,9 +598,11 @@ namespace Dicom.Data {
 		public void UpdateDataset(DcmDataset dataset) {
 			if (_lossy) {
 				DcmCodeString cs = dataset.GetCS(DcmTags.ImageType);
-				string[] values = cs.GetValues();
-				values[0] = "DERIVED";
-				cs.SetValues(values);
+				if (cs != null) {
+					string[] values = cs.GetValues();
+					values[0] = "DERIVED";
+					cs.SetValues(values);
+				}
 
 				dataset.AddElementWithValue(DcmTags.SOPInstanceUID, DcmUID.Generate());
 

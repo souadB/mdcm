@@ -34,14 +34,6 @@ using Dicom.Utility;
 using NLog;
 
 namespace Dicom.Network {
-	public enum DcmQueryRetrieveLevel {
-		Patient,
-		Study,
-		Series,
-		Instance,
-		Worklist
-	}
-
 	public class DcmDimseProgress {
 		#region Private Members
 		private int _bytesTransfered;

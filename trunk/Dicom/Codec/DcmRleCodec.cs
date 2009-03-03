@@ -301,12 +301,15 @@ namespace Dicom.Codec {
 
 			#region Public Constructors
 			public RLEDecoder(IList<ByteBuffer> data) {
-				int size = 0;
+				uint size = 0;
 				foreach (ByteBuffer frag in data)
-					size += frag.Length;
-				MemoryStream stream = new MemoryStream(size);
-				foreach (ByteBuffer frag in data)
-					frag.CopyTo(stream);
+					size += (uint)frag.Length;
+				MemoryStream stream = new MemoryStream(data[0].ToBytes());
+				for (int i = 1; i < data.Count; i++) {
+					stream.Seek(0, SeekOrigin.End);
+					byte[] ba = data[i].ToBytes();
+					stream.Write(ba, 0, ba.Length);
+				}
 				BinaryReader reader = EndianBinaryReader.Create(stream, Endian.Little);
 				_count = (int)reader.ReadUInt32();
 				_offsets = new int[15];
@@ -334,18 +337,26 @@ namespace Dicom.Codec {
 			}
 
 			private static void Decode(byte[] buffer, byte[] rleData, int offset, int count) {
+				// ClearCanvas:
+				// Note: SB - this is a literal translation of the decoder as described in
+				// the Dicom standard.  It works exactly the same way as the existing code
+				// but would be easier to make unsafe if we wanted boost performance.
+				// Rewrote it while fixing #2349 to make sure the existing code was correct (and it is).
+
 				int pos = 0;
 				int end = offset + count;
 				for (int i = offset; i < end; ) {
 					int n = rleData[i++];
 					if ((n & 0x80) != 0) {
 						int c = 257 - n;
-						if (i >= end)
+						if (i >= end) {
 							throw new DicomCodecException("RLE Segement unexpectedly wrong.");
+						}
 						byte b = rleData[i++];
 						while (c-- > 0) {
-							if (pos >= buffer.Length)
+							if (pos >= buffer.Length) {
 								throw new DicomCodecException("RLE segment unexpectedly too long.  Ignoring data.");
+							}
 							buffer[pos++] = b;
 						}
 					}
@@ -356,8 +367,9 @@ namespace Dicom.Codec {
 						if ((i + c) >= end) {
 							c = offset + count - i;
 						}
-						if (i > rleData.Length || pos + c > buffer.Length)
+						if (i > rleData.Length || pos + c > buffer.Length) {
 							throw new DicomCodecException("Invalid formatted RLE data.  RLE segment unexpectedly too long.");
+						}
 
 						Array.Copy(rleData, i, buffer, pos, c);
 						pos += c;
