@@ -1,8 +1,8 @@
 #Code snipped to create a dicom file, once you've extracted the byte data from an image
 
 = Details =
-
-/// <summary>
+{{{
+       /// <summary>
         /// Writes a dicom file from an array of image data and the width and height
         /// </summary>
         /// <param name="greybytes">byte array of image data, this example uses 2 bytes for each greyscale pixel</param>
@@ -66,3 +66,4 @@
             ff.Save(fileout, DicomWriteOptions.Default);
             ff = null;
         }
+}}}
