@@ -33,10 +33,10 @@ namespace Dicom.Data {
 		#endregion
 
 		#region Public Constructors
-		public DcmFragmentSequence(DcmTag tag, DcmVR vr) : base(tag, vr) {
+		public DcmFragmentSequence(DicomTag tag, DicomVR vr) : base(tag, vr) {
 		}
 
-		public DcmFragmentSequence(DcmTag tag, DcmVR vr, long pos, Endian endian)
+		public DcmFragmentSequence(DicomTag tag, DicomVR vr, long pos, Endian endian)
 			: base(tag, vr, pos, endian) {
 		}
 		#endregion
@@ -86,7 +86,7 @@ namespace Dicom.Data {
 		#endregion
 
 		#region DcmItem Methods
-		internal override uint CalculateWriteLength(DcmTS syntax, DicomWriteOptions options) {
+		internal override uint CalculateWriteLength(DicomTransferSyntax syntax, DicomWriteOptions options) {
 			uint length = 0;
 			length += 4; // element tag
 			if (syntax.IsExplicitVR) {

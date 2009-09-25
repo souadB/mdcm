@@ -41,7 +41,7 @@ namespace Dicom.Data {
 
 		private static void LoadSequence(XElement parent, IList<DcmItem> items, XDicomOptions options) {
 			foreach (DcmItem item in items) {
-				if (!Flags.IsSet(options, XDicomOptions.IncludePixelData) && item.Tag == DcmTags.PixelData)
+				if (!Flags.IsSet(options, XDicomOptions.IncludePixelData) && item.Tag == DicomTags.PixelData)
 					continue;
 
 				XElement attr = new XElement("attr");
@@ -98,12 +98,12 @@ namespace Dicom.Data {
 			}
 		}
 
-		private static void LoadFragmentItem(XElement parent, DcmVR vr, ByteBuffer fragment) {
+		private static void LoadFragmentItem(XElement parent, DicomVR vr, ByteBuffer fragment) {
 			XElement item = new XElement("item");
 			item.SetAttributeValue("len", fragment.Length);
 			parent.Add(item);
 
-			if (vr == DcmVR.OW) {
+			if (vr == DicomVR.OW) {
 				ushort[] data = fragment.ToUInt16s();
 				StringBuilder sb = new StringBuilder();
 				foreach (ushort d in data) {
@@ -122,18 +122,18 @@ namespace Dicom.Data {
 		}
 
 		public static DcmDataset ToDICOM(XDocument document) {
-			DcmDataset dataset = new DcmDataset(DcmTS.ExplicitVRLittleEndian);
+			DcmDataset dataset = new DcmDataset(DicomTransferSyntax.ExplicitVRLittleEndian);
 			Save(document.Root, dataset);
 			return dataset;
 		}
 
 		private static void Save(XElement parent, DcmDataset dataset) {
 			foreach (XElement attr in parent.Elements("attr")) {
-				DcmTag tag = DcmTag.Parse(attr.Attribute("tag").Value);
-				DcmVR vr = DcmVRs.Lookup(attr.Attribute("vr").Value);
+				DicomTag tag = DicomTag.Parse(attr.Attribute("tag").Value);
+				DicomVR vr = DicomVR.Lookup(attr.Attribute("vr").Value);
 				int len = int.Parse(attr.Attribute("len").Value);
 
-				if (vr == DcmVR.SQ) {
+				if (vr == DicomVR.SQ) {
 					DcmItemSequence seq = new DcmItemSequence(tag);
 					foreach (XElement itm in attr.Elements("item")) {
 						DcmItemSequenceItem item = new DcmItemSequenceItem();
@@ -177,7 +177,7 @@ namespace Dicom.Data {
 		private static void SaveFragmentItem(XElement item, DcmFragmentSequence seq) {
 			ByteBuffer bb = new ByteBuffer();
 			string[] strs = item.FirstText().Split('\\');
-			if (seq.VR == DcmVR.OW) {
+			if (seq.VR == DicomVR.OW) {
 				foreach (string s in strs) {
 					bb.Writer.Write(ushort.Parse(s, NumberStyles.HexNumber));
 				}

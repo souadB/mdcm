@@ -42,7 +42,7 @@ public:
 		return GetTransferSyntax()->UID->Description;
 	}
 
-	virtual DcmTS^ GetTransferSyntax() = 0;
+	virtual DicomTransferSyntax^ GetTransferSyntax() = 0;
 
 	virtual DcmCodecParameters^ GetDefaultParameters() {
 		return gcnew DcmJpegParameters();
@@ -60,8 +60,8 @@ public:
 [DicomCodec]
 public ref class DcmJpegProcess1Codec : public DcmJpegCodec {
 public:
-	virtual DcmTS^ GetTransferSyntax() override {
-		return DcmTS::JPEGProcess1;
+	virtual DicomTransferSyntax^ GetTransferSyntax() override {
+		return DicomTransferSyntax::JPEGProcess1;
 	}
 
 	virtual IJpegCodec^ GetCodec(int bits, DcmJpegParameters^ jparams) override {
@@ -75,8 +75,8 @@ public:
 [DicomCodec]
 public ref class DcmJpegProcess4Codec : public DcmJpegCodec {
 public:
-	virtual DcmTS^ GetTransferSyntax() override {
-		return DcmTS::JPEGProcess2_4;
+	virtual DicomTransferSyntax^ GetTransferSyntax() override {
+		return DicomTransferSyntax::JPEGProcess2_4;
 	}
 
 	virtual IJpegCodec^ GetCodec(int bits, DcmJpegParameters^ jparams) override {
@@ -90,8 +90,8 @@ public:
 [DicomCodec]
 public ref class DcmJpegLossless14Codec : public DcmJpegCodec {
 public:
-	virtual DcmTS^ GetTransferSyntax() override {
-		return DcmTS::JPEGProcess14;
+	virtual DicomTransferSyntax^ GetTransferSyntax() override {
+		return DicomTransferSyntax::JPEGProcess14;
 	}
 
 	virtual IJpegCodec^ GetCodec(int bits, DcmJpegParameters^ jparams) override {
@@ -109,8 +109,8 @@ public:
 [DicomCodec]
 public ref class DcmJpegLossless14SV1Codec : public DcmJpegCodec {
 public:
-	virtual DcmTS^ GetTransferSyntax() override {
-		return DcmTS::JPEGProcess14SV1;
+	virtual DicomTransferSyntax^ GetTransferSyntax() override {
+		return DicomTransferSyntax::JPEGProcess14SV1;
 	}
 
 	virtual IJpegCodec^ GetCodec(int bits, DcmJpegParameters^ jparams) override {

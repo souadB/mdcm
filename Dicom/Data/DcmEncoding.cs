@@ -51,5 +51,19 @@ namespace Dicom.Data {
 				return Encoding.GetEncoding(codePage);
 			return Default;
 		}
+
+		public static string GetSpecificCharacterSetForEncoding(Encoding encoding) {
+			if (encoding == null)
+				encoding = Encoding.ASCII;
+
+			foreach (KeyValuePair<string, int> codePage in EncodingCodePageMap) {
+				if (codePage.Value == encoding.CodePage)
+					return codePage.Key;
+			}
+
+			throw new DicomDataException(
+				String.Format("Unable to find specific character set value for encoding: {0} ({1})", 
+					encoding.EncodingName, encoding.CodePage));
+		}
 	}
 }

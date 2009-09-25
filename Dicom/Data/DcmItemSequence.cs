@@ -33,11 +33,11 @@ namespace Dicom.Data {
 
 		#region Public Constructors
 		public DcmItemSequenceItem()
-			: base(DcmTags.Item, DcmVR.NONE) {
+			: base(DicomTags.Item, DicomVR.NONE) {
 		}
 
 		public DcmItemSequenceItem(long pos, uint length)
-			: base(DcmTags.Item, DcmVR.NONE, pos, Endian.LocalMachine) {
+			: base(DicomTags.Item, DicomVR.NONE, pos, Endian.LocalMachine) {
 		}
 		#endregion
 
@@ -45,7 +45,7 @@ namespace Dicom.Data {
 		public DcmDataset Dataset {
 			get {
 				if (_dataset == null)
-					_dataset = new DcmDataset(DcmTS.ExplicitVRLittleEndian);
+					_dataset = new DcmDataset(DicomTransferSyntax.ExplicitVRLittleEndian);
 				return _dataset;
 			}
 			set {
@@ -60,7 +60,7 @@ namespace Dicom.Data {
 		#endregion
 
 		#region DcmItem Overrides
-		internal override uint CalculateWriteLength(DcmTS syntax, DicomWriteOptions options) {
+		internal override uint CalculateWriteLength(DicomTransferSyntax syntax, DicomWriteOptions options) {
 			uint length = 4 + 4;
 			length += Dataset.CalculateWriteLength(syntax, options & ~DicomWriteOptions.CalculateGroupLengths);
 			if (!Flags.IsSet(options, DicomWriteOptions.ExplicitLengthSequenceItem))
@@ -100,12 +100,12 @@ namespace Dicom.Data {
 		private List<DcmItemSequenceItem> _items = new List<DcmItemSequenceItem>();
 		private uint _streamLength = 0xffffffff;
 
-		public DcmItemSequence(DcmTag tag) 
-			: base(tag, DcmVR.SQ) {
+		public DcmItemSequence(DicomTag tag) 
+			: base(tag, DicomVR.SQ) {
 		}
 
-		public DcmItemSequence(DcmTag tag, long pos, uint length, Endian endian)
-			: base(tag, DcmVR.SQ, pos, endian) {
+		public DcmItemSequence(DicomTag tag, long pos, uint length, Endian endian)
+			: base(tag, DicomVR.SQ, pos, endian) {
 			_streamLength = length;
 		}
 
@@ -127,7 +127,7 @@ namespace Dicom.Data {
 			_items.Add(item);
 		}
 
-		internal override uint CalculateWriteLength(DcmTS syntax, DicomWriteOptions options) {
+		internal override uint CalculateWriteLength(DicomTransferSyntax syntax, DicomWriteOptions options) {
 			uint length = 0;
 			length += 4; // element tag
 			if (syntax.IsExplicitVR) {

@@ -88,10 +88,7 @@ namespace Dicom.Forms {
 			try {
 				ClearDump();
 
-				ff.Load(file, DicomReadOptions.Default |
-					DicomReadOptions.KeepGroupLengths |
-					DicomReadOptions.DeferLoadingLargeElements |
-					DicomReadOptions.DeferLoadingPixelData);
+				ff.Load(file, DicomReadOptions.Default | DicomReadOptions.KeepGroupLengths);
 
 				success = true;
 			}
@@ -103,7 +100,7 @@ namespace Dicom.Forms {
 			treeDump.ExpandAll();
 
 			if (success) {
-				if (ff.Dataset.Contains(DcmTags.PixelData)) {
+				if (ff.Dataset.Contains(DicomTags.PixelData)) {
 					tsbViewImage.Enabled = false;
 					tsbExtractPixels.Enabled = true;
 				}
@@ -189,9 +186,9 @@ namespace Dicom.Forms {
 					else if (_elem is DcmUniqueIdentifier) {
 						DcmUniqueIdentifier ui = _elem as DcmUniqueIdentifier;
 						if (ui.Length > 0) {
-							DcmUID uid = ui.GetUID();
+							DicomUID uid = ui.GetUID();
 							string val = uid.UID;
-							if (uid.Type != UidType.Unknown) {
+							if (uid.Type != DicomUidType.Unknown) {
 								val += String.Format(" ({0})", uid.Description);
 							}
 							return "  " + val;
@@ -200,7 +197,7 @@ namespace Dicom.Forms {
 					}
 					else {
 						DcmElement el = _elem as DcmElement;
-						if (el.VR == DcmVR.OB || el.VR == DcmVR.OW)
+						if (el.VR == DicomVR.OB || el.VR == DicomVR.OW)
 							return "  (binary data)";
 						String val = el.GetValueString();
 						if (val.Length >= 200) {
@@ -214,11 +211,11 @@ namespace Dicom.Forms {
 		}
 
 		private class DicomTagNode : Node {
-			private DcmTag _tag;
+			private DicomTag _tag;
 			private uint _len;
 			private Image _image;
 
-			public DicomTagNode(Image image, DcmTag tag, uint len)
+			public DicomTagNode(Image image, DicomTag tag, uint len)
 				: base() {
 				_image = image;
 				_tag = tag;
@@ -315,17 +312,17 @@ namespace Dicom.Forms {
 					DcmItemSequence sq = di as DcmItemSequence;
 					foreach (DcmItemSequenceItem item in sq.SequenceItems) {
 						icon = LoadTreeViewAdvResourceImage("Folder", "", Color.Black);
-						DicomTagNode din = new DicomTagNode(icon, DcmTags.Item, item.StreamLength);
+						DicomTagNode din = new DicomTagNode(icon, DicomTags.Item, item.StreamLength);
 						dn.Nodes.Add(din);
 						LoadDataset(item.Dataset, din.Nodes);
 						if (item.StreamLength == 0xffffffff) {
 							icon = LoadTreeViewAdvResourceImage("FolderClosed", "", Color.Black);
-							din.Nodes.Add(new DicomTagNode(icon, DcmTags.ItemDelimitationItem, 0));
+							din.Nodes.Add(new DicomTagNode(icon, DicomTags.ItemDelimitationItem, 0));
 						}
 					}
 					if (sq.StreamLength == 0xffffffff) {
 						icon = LoadTreeViewAdvResourceImage("FolderClosed", "", Color.Black);
-						dn.Nodes.Add(new DicomTagNode(icon, DcmTags.SequenceDelimitationItem, 0));
+						dn.Nodes.Add(new DicomTagNode(icon, DicomTags.SequenceDelimitationItem, 0));
 					}
 				}
 			}

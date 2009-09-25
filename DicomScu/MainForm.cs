@@ -31,7 +31,7 @@ namespace DicomScu {
 		private string ConfigPath = null;
 
 		private string[] TransferSyntaxDescriptions;
-		private DcmTS[] TransferSyntaxes;
+		private DicomTransferSyntax[] TransferSyntaxes;
 
 		public MainForm() {
 			InitializeComponent();
@@ -56,18 +56,18 @@ namespace DicomScu {
 
 			i = 0;
 
-			TransferSyntaxes = new DcmTS[11];
+			TransferSyntaxes = new DicomTransferSyntax[11];
 			TransferSyntaxes[i++] = null;
-			TransferSyntaxes[i++] = DcmTS.JPEG2000Lossy;
-			TransferSyntaxes[i++] = DcmTS.JPEG2000Lossless;
-			TransferSyntaxes[i++] = DcmTS.JPEGProcess1;
-			TransferSyntaxes[i++] = DcmTS.JPEGProcess2_4;
-			TransferSyntaxes[i++] = DcmTS.JPEGProcess14;
-			TransferSyntaxes[i++] = DcmTS.JPEGProcess14SV1;
-			TransferSyntaxes[i++] = DcmTS.RLELossless;
-			TransferSyntaxes[i++] = DcmTS.ExplicitVRLittleEndian;
-			TransferSyntaxes[i++] = DcmTS.ImplicitVRLittleEndian;
-			TransferSyntaxes[i++] = DcmTS.ExplicitVRBigEndian;
+			TransferSyntaxes[i++] = DicomTransferSyntax.JPEG2000Lossy;
+			TransferSyntaxes[i++] = DicomTransferSyntax.JPEG2000Lossless;
+			TransferSyntaxes[i++] = DicomTransferSyntax.JPEGProcess1;
+			TransferSyntaxes[i++] = DicomTransferSyntax.JPEGProcess2_4;
+			TransferSyntaxes[i++] = DicomTransferSyntax.JPEGProcess14;
+			TransferSyntaxes[i++] = DicomTransferSyntax.JPEGProcess14SV1;
+			TransferSyntaxes[i++] = DicomTransferSyntax.RLELossless;
+			TransferSyntaxes[i++] = DicomTransferSyntax.ExplicitVRLittleEndian;
+			TransferSyntaxes[i++] = DicomTransferSyntax.ImplicitVRLittleEndian;
+			TransferSyntaxes[i++] = DicomTransferSyntax.ExplicitVRBigEndian;
 
 			foreach (string tx in TransferSyntaxDescriptions) {
 				cbTransferSyntax.Items.Add(tx);
@@ -239,6 +239,7 @@ namespace DicomScu {
 			SaveConfig();
 
 			CStoreClient scu = new CStoreClient();
+			scu.DisableFileStreaming = true;
 			scu.CallingAE = Config.LocalAE;
 			scu.CalledAE = Config.RemoteAE;
 			scu.MaxPduSize = Config.MaxPdu;
@@ -248,13 +249,13 @@ namespace DicomScu {
 			scu.SerializedPresentationContexts = true;
 			scu.PreferredTransferSyntax = TransferSyntaxes[Config.TransferSyntax];
 
-			if (scu.PreferredTransferSyntax == DcmTS.JPEGProcess1 ||
-				scu.PreferredTransferSyntax == DcmTS.JPEGProcess2_4) {
+			if (scu.PreferredTransferSyntax == DicomTransferSyntax.JPEGProcess1 ||
+				scu.PreferredTransferSyntax == DicomTransferSyntax.JPEGProcess2_4) {
 				DcmJpegParameters param = new DcmJpegParameters();
 				param.Quality = Config.Quality;
 				scu.PreferredTransferSyntaxParams = param;
 			}
-			else if (scu.PreferredTransferSyntax == DcmTS.JPEG2000Lossy) {
+			else if (scu.PreferredTransferSyntax == DicomTransferSyntax.JPEG2000Lossy) {
 				DcmJpeg2000Parameters param = new DcmJpeg2000Parameters();
 				param.Rate = Config.Quality;
 				scu.PreferredTransferSyntaxParams = param;

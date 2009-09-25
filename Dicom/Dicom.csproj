@@ -111,6 +111,8 @@
     <Compile Include="Codec\DicomCodec.cs" />
     <Compile Include="Codec\DcmRleCodec.cs" />
     <Compile Include="Data\DcmEncoding.cs" />
+    <Compile Include="Data\DicomMatch.cs" />
+    <Compile Include="Data\DicomTransform.cs" />
     <Compile Include="Imaging\ColorTable.cs" />
     <Compile Include="IO\SegmentStream.cs" />
     <Compile Include="Network\Client\CStoreClient.cs" />
@@ -124,11 +126,10 @@
     <Compile Include="Data\DcmFragmentSequence.cs" />
     <Compile Include="Data\DcmItem.cs" />
     <Compile Include="Data\DcmItemSequence.cs" />
-    <Compile Include="Data\DcmMatch.cs" />
-    <Compile Include="Data\DcmModify.cs" />
     <Compile Include="Data\DcmOverlayData.cs" />
     <Compile Include="Data\DcmPixelData.cs" />
     <Compile Include="Data\DicomTemplateAdapter.cs" />
+    <Compile Include="Network\DcmNetworkBase.cs" />
     <Compile Include="Network\DcmQueryRetrieveLevel.cs" />
     <Compile Include="Network\HookStream.cs" />
     <Compile Include="Network\NetworkErrorStream.cs" />
@@ -143,10 +144,10 @@
     <Compile Include="Network\DcmAssociateProfile.cs" />
     <Compile Include="Network\DcmSocket.cs" />
     <Compile Include="Network\DcmStatus.cs" />
-    <Compile Include="Data\DcmTag.cs" />
-    <Compile Include="Data\DcmTS.cs" />
-    <Compile Include="Data\DcmUID.cs" />
-    <Compile Include="Data\DcmVR.cs" />
+    <Compile Include="Data\DicomTag.cs" />
+    <Compile Include="Data\DicomTransferSyntax.cs" />
+    <Compile Include="Data\DicomUID.cs" />
+    <Compile Include="Data\DicomVR.cs" />
     <Compile Include="Data\DicomFieldAttribute.cs" />
     <Compile Include="Data\DicomFileFormat.cs" />
     <Compile Include="Debug.cs" />
@@ -160,7 +161,6 @@
     <Compile Include="IO\Endian.cs" />
     <Compile Include="IO\VoidStream.cs" />
     <Compile Include="Network\DcmAssociate.cs" />
-    <Compile Include="Network\DcmNetworkBase.cs" />
     <Compile Include="Network\DicomNetworkException.cs" />
     <Compile Include="Network\Server\CEchoService.cs" />
     <Compile Include="Network\Server\CStoreService.cs" />
@@ -170,6 +170,7 @@
     <Compile Include="Network\ConnectionStats.cs" />
     <Compile Include="Network\PDataTFStream.cs" />
     <Compile Include="Network\PDU.cs" />
+    <Compile Include="Utility\ActiveSchedule.cs" />
     <Compile Include="Utility\Cache.cs" />
     <Compile Include="Utility\PreloadQueue.cs" />
     <Compile Include="Utility\LogWriter.cs" />

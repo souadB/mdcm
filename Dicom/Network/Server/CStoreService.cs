@@ -29,7 +29,7 @@ using Dicom.Data;
 namespace Dicom.Network.Server {
 	public delegate DcmStatus DcmCStoreEchoCallback(CStoreService client, byte presentationID, ushort messageID, DcmPriority priority);
 	public delegate void DcmCStoreDimseCallback(CStoreService client, byte presentationID, DcmCommand command, DcmDataset dataset, DcmDimseProgress progress);
-	public delegate DcmStatus DcmCStoreCallback(CStoreService client, byte presentationID, ushort messageID, DcmUID affectedInstance, 
+	public delegate DcmStatus DcmCStoreCallback(CStoreService client, byte presentationID, ushort messageID, DicomUID affectedInstance, 
 										DcmPriority priority, string moveAE, ushort moveMessageID, DcmDataset dataset, string fileName);
 	public delegate DcmAssociateResult DcmAssociationCallback(CStoreService client, DcmAssociate association);
 
@@ -83,7 +83,7 @@ namespace Dicom.Network.Server {
 			SendCEchoResponse(presentationID, messageID, status);
 		}
 
-		protected override void OnReceiveCStoreRequest(byte presentationID, ushort messageID, DcmUID affectedInstance, 
+		protected override void OnReceiveCStoreRequest(byte presentationID, ushort messageID, DicomUID affectedInstance, 
 			DcmPriority priority, string moveAE, ushort moveMessageID, DcmDataset dataset, string fileName)
 		{
 			DcmStatus status = DcmStatus.Success;

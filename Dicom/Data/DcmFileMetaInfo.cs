@@ -27,100 +27,100 @@ using System.Text;
 namespace Dicom.Data {
 	public class DcmFileMetaInfo : DcmDataset {
 		#region Public Constructors
-		public DcmFileMetaInfo() : base(DcmTS.ExplicitVRLittleEndian) {
+		public DcmFileMetaInfo() : base(DicomTransferSyntax.ExplicitVRLittleEndian) {
 		}
 		#endregion
 
 		#region Public Properties
 		public readonly static byte[] Version = new byte[] { 0x00, 0x01 };
-		public readonly static DcmTag StopTag = new DcmTag(0x0002, 0xFFFF);
+		public readonly static DicomTag StopTag = new DicomTag(0x0002, 0xFFFF);
 
 		public byte[] FileMetaInformationVersion {
 			get {
-				if (Contains(DcmTags.FileMetaInformationVersion))
-					return GetOB(DcmTags.FileMetaInformationVersion).GetValues();
+				if (Contains(DicomTags.FileMetaInformationVersion))
+					return GetOB(DicomTags.FileMetaInformationVersion).GetValues();
 				return null;
 			}
 			set {
-				if (AddElement(DcmTags.FileMetaInformationVersion, DcmVR.OB))
-					GetOB(DcmTags.FileMetaInformationVersion).SetValues(value);
+				if (AddElement(DicomTags.FileMetaInformationVersion, DicomVR.OB))
+					GetOB(DicomTags.FileMetaInformationVersion).SetValues(value);
 			}
 		}
 
-		public DcmUID MediaStorageSOPClassUID {
+		public DicomUID MediaStorageSOPClassUID {
 			get {
-				return GetUID(DcmTags.MediaStorageSOPClassUID);
+				return GetUID(DicomTags.MediaStorageSOPClassUID);
 			}
 			set {
-				AddElementWithValue(DcmTags.MediaStorageSOPClassUID, value);
+				AddElementWithValue(DicomTags.MediaStorageSOPClassUID, value);
 			}
 		}
 
-		public DcmUID MediaStorageSOPInstanceUID {
+		public DicomUID MediaStorageSOPInstanceUID {
 			get {
-				return GetUID(DcmTags.MediaStorageSOPInstanceUID);
+				return GetUID(DicomTags.MediaStorageSOPInstanceUID);
 			}
 			set {
-				AddElementWithValue(DcmTags.MediaStorageSOPInstanceUID, value);
+				AddElementWithValue(DicomTags.MediaStorageSOPInstanceUID, value);
 			}
 		}
 
-		public DcmTS TransferSyntax {
+		public DicomTransferSyntax TransferSyntax {
 			get {
-				if (Contains(DcmTags.TransferSyntaxUID))
-					return GetUI(DcmTags.TransferSyntaxUID).GetTS();
+				if (Contains(DicomTags.TransferSyntaxUID))
+					return GetUI(DicomTags.TransferSyntaxUID).GetTS();
 				return null;
 			}
 			set {
-				AddElementWithValue(DcmTags.TransferSyntaxUID, value.UID);
+				AddElementWithValue(DicomTags.TransferSyntaxUID, value.UID);
 			}
 		}
 
-		public DcmUID ImplementationClassUID {
+		public DicomUID ImplementationClassUID {
 			get {
-				return GetUID(DcmTags.ImplementationClassUID);
+				return GetUID(DicomTags.ImplementationClassUID);
 			}
 			set {
-				AddElementWithValue(DcmTags.ImplementationClassUID, value);
+				AddElementWithValue(DicomTags.ImplementationClassUID, value);
 			}
 		}
 
 		public string ImplementationVersionName {
 			get {
-				return GetString(DcmTags.ImplementationVersionName, null);
+				return GetString(DicomTags.ImplementationVersionName, null);
 			}
 			set {
-				AddElementWithValue(DcmTags.ImplementationVersionName, value);
+				AddElementWithValue(DicomTags.ImplementationVersionName, value);
 			}
 		}
 
 		public string SourceApplicationEntityTitle {
 			get {
-				return GetString(DcmTags.SourceApplicationEntityTitle, null);
+				return GetString(DicomTags.SourceApplicationEntityTitle, null);
 			}
 			set {
-				AddElementWithValue(DcmTags.SourceApplicationEntityTitle, value);
+				AddElementWithValue(DicomTags.SourceApplicationEntityTitle, value);
 			}
 		}
 
-		public DcmUID PrivateInformationCreatorUID {
+		public DicomUID PrivateInformationCreatorUID {
 			get {
-				return GetUID(DcmTags.PrivateInformationCreatorUID);
+				return GetUID(DicomTags.PrivateInformationCreatorUID);
 			}
 			set {
-				AddElementWithValue(DcmTags.PrivateInformationCreatorUID, value);
+				AddElementWithValue(DicomTags.PrivateInformationCreatorUID, value);
 			}
 		}
 
 		public byte[] PrivateInformation {
 			get {
-				if (Contains(DcmTags.PrivateInformation))
-					return GetOB(DcmTags.PrivateInformation).GetValues();
+				if (Contains(DicomTags.PrivateInformation))
+					return GetOB(DicomTags.PrivateInformation).GetValues();
 				return null;
 			}
 			set {
-				if (AddElement(DcmTags.PrivateInformation, DcmVR.OB))
-					GetOB(DcmTags.PrivateInformation).SetValues(value);
+				if (AddElement(DicomTags.PrivateInformation, DicomVR.OB))
+					GetOB(DicomTags.PrivateInformation).SetValues(value);
 			}
 		}
 		#endregion

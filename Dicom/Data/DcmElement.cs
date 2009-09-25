@@ -33,16 +33,16 @@ namespace Dicom.Data {
 		#endregion
 
 		#region Constructors
-		protected DcmElement(DcmTag tag, DcmVR vr) : base(tag, vr) {
+		protected DcmElement(DicomTag tag, DicomVR vr) : base(tag, vr) {
 			_bb = new ByteBuffer();
 		}
 
-		protected DcmElement(DcmTag tag, DcmVR vr, long pos, Endian endian)
+		protected DcmElement(DicomTag tag, DicomVR vr, long pos, Endian endian)
 			: base(tag, vr, pos, endian) {
 			_bb = new ByteBuffer(Endian);
 		}
 
-		protected DcmElement(DcmTag tag, DcmVR vr, long pos, Endian endian, ByteBuffer buffer)
+		protected DcmElement(DicomTag tag, DicomVR vr, long pos, Endian endian, ByteBuffer buffer)
 			: base(tag, vr, pos, endian) {
 			if (buffer == null && Endian != Endian.LocalMachine)
 				_bb = new ByteBuffer(Endian);
@@ -91,7 +91,7 @@ namespace Dicom.Data {
 		#endregion
 
 		#region DcmItem Methods
-		internal override uint CalculateWriteLength(DcmTS syntax, DicomWriteOptions options) {
+		internal override uint CalculateWriteLength(DicomTransferSyntax syntax, DicomWriteOptions options) {
 			uint length = 4; // element tag
 			if (syntax.IsExplicitVR) {
 				length += 2; // vr
@@ -139,11 +139,11 @@ namespace Dicom.Data {
 			} else {
 				if (VR.IsString) {
 					String value = null;
-					if (VR == DcmVR.UI) {
+					if (VR == DicomVR.UI) {
 						DcmUniqueIdentifier ui = this as DcmUniqueIdentifier;
-						DcmUID uid = ui.GetUID();
+						DicomUID uid = ui.GetUID();
 						if (uid != null) {
-							if (uid.Type == UidType.Unknown)
+							if (uid.Type == DicomUidType.Unknown)
 								value = "[" + uid.UID + "]";
 							else
 								value = "=" + uid.Description;
@@ -191,21 +191,21 @@ namespace Dicom.Data {
 		#endregion
 
 		#region Static Create Methods
-		public static DcmElement Create(DcmTag tag) {
-			DcmVR vr = tag.Entry.DefaultVR;
+		public static DcmElement Create(DicomTag tag) {
+			DicomVR vr = tag.Entry.DefaultVR;
 			return Create(tag, vr);
 		}
 
-		public static DcmElement Create(DcmTag tag, DcmVR vr) {
+		public static DcmElement Create(DicomTag tag, DicomVR vr) {
 			return Create(tag, vr, 0, Endian.LocalMachine);
 		}
 
-		public static DcmElement Create(DcmTag tag, DcmVR vr, long pos, Endian endian) {
+		public static DcmElement Create(DicomTag tag, DicomVR vr, long pos, Endian endian) {
 			return Create(tag, vr, pos, endian, null);
 		}
 
-		public static DcmElement Create(DcmTag tag, DcmVR vr, long pos, Endian endian, ByteBuffer buffer) {
-			if (vr == DcmVR.SQ)
+		public static DcmElement Create(DicomTag tag, DicomVR vr, long pos, Endian endian, ByteBuffer buffer) {
+			if (vr == DicomVR.SQ)
 				throw new DicomDataException("Sequence Elements should be created explicitly");
 
 			switch (vr.VR) {
@@ -272,14 +272,14 @@ namespace Dicom.Data {
 	#region Base Types
 	public class DcmStringElement : DcmElement {
 		#region Public Constructors
-		public DcmStringElement(DcmTag tag, DcmVR vr) : base(tag, vr) {
+		public DcmStringElement(DicomTag tag, DicomVR vr) : base(tag, vr) {
 		}
 
-		public DcmStringElement(DcmTag tag, DcmVR vr, long pos, Endian endian)
+		public DcmStringElement(DicomTag tag, DicomVR vr, long pos, Endian endian)
 			: base(tag, vr, pos, endian) {
 		}
 
-		public DcmStringElement(DcmTag tag, DcmVR vr, long pos, Endian endian, ByteBuffer buffer)
+		public DcmStringElement(DicomTag tag, DicomVR vr, long pos, Endian endian, ByteBuffer buffer)
 			: base(tag, vr, pos, endian, buffer) {
 		}
 		#endregion
@@ -346,14 +346,14 @@ namespace Dicom.Data {
 
 	public class DcmMultiStringElement : DcmElement {
 		#region Public Constructors
-		public DcmMultiStringElement(DcmTag tag, DcmVR vr) : base(tag, vr) {
+		public DcmMultiStringElement(DicomTag tag, DicomVR vr) : base(tag, vr) {
 		}
 
-		public DcmMultiStringElement(DcmTag tag, DcmVR vr, long pos, Endian endian)
+		public DcmMultiStringElement(DicomTag tag, DicomVR vr, long pos, Endian endian)
 			: base(tag, vr, pos, endian) {
 		}
 
-		public DcmMultiStringElement(DcmTag tag, DcmVR vr, long pos, Endian endian, ByteBuffer buffer)
+		public DcmMultiStringElement(DicomTag tag, DicomVR vr, long pos, Endian endian, ByteBuffer buffer)
 			: base(tag, vr, pos, endian, buffer) {
 		}
 		#endregion
@@ -428,15 +428,15 @@ namespace Dicom.Data {
 		#endregion
 
 		#region Public Constructors
-		public DcmDateElementBase(DcmTag tag, DcmVR vr)
+		public DcmDateElementBase(DicomTag tag, DicomVR vr)
 			: base(tag, vr) {
 		}
 
-		public DcmDateElementBase(DcmTag tag, DcmVR vr, long pos, Endian endian)
+		public DcmDateElementBase(DicomTag tag, DicomVR vr, long pos, Endian endian)
 			: base(tag, vr, pos, endian) {
 		}
 
-		public DcmDateElementBase(DcmTag tag, DcmVR vr, long pos, Endian endian, ByteBuffer buffer)
+		public DcmDateElementBase(DicomTag tag, DicomVR vr, long pos, Endian endian, ByteBuffer buffer)
 			: base(tag, vr, pos, endian, buffer) {
 		}
 		#endregion
@@ -563,19 +563,19 @@ namespace Dicom.Data {
 		#endregion
 
 		#region Public Constructors
-		public DcmValueElement(DcmTag tag, DcmVR vr)
+		public DcmValueElement(DicomTag tag, DicomVR vr)
 			: base(tag, vr) {
 			StringFormat = "{0}";
 			NumberStyle = NumberStyles.Any;
 		}
 
-		public DcmValueElement(DcmTag tag, DcmVR vr, long pos, Endian endian)
+		public DcmValueElement(DicomTag tag, DicomVR vr, long pos, Endian endian)
 			: base(tag, vr, pos, endian) {
 			StringFormat = "{0}";
 			NumberStyle = NumberStyles.Any;
 		}
 
-		public DcmValueElement(DcmTag tag, DcmVR vr, long pos, Endian endian, ByteBuffer buffer)
+		public DcmValueElement(DicomTag tag, DicomVR vr, long pos, Endian endian, ByteBuffer buffer)
 			: base(tag, vr, pos, endian, buffer) {
 			StringFormat = "{0}";
 			NumberStyle = NumberStyles.Any;
@@ -714,16 +714,16 @@ namespace Dicom.Data {
 	/// <summary>Application Entity (AE)</summary>
 	public class DcmApplicationEntity : DcmMultiStringElement {
 		#region Public Constructors
-		public DcmApplicationEntity(DcmTag tag)
-			: base(tag, DcmVR.AE) {
+		public DcmApplicationEntity(DicomTag tag)
+			: base(tag, DicomVR.AE) {
 		}
 
-		public DcmApplicationEntity(DcmTag tag, long pos, Endian endian)
-			: base(tag, DcmVR.AE, pos, endian) {
+		public DcmApplicationEntity(DicomTag tag, long pos, Endian endian)
+			: base(tag, DicomVR.AE, pos, endian) {
 		}
 
-		public DcmApplicationEntity(DcmTag tag, long pos, Endian endian, ByteBuffer buffer)
-			: base(tag, DcmVR.AE, pos, endian, buffer) {
+		public DcmApplicationEntity(DicomTag tag, long pos, Endian endian, ByteBuffer buffer)
+			: base(tag, DicomVR.AE, pos, endian, buffer) {
 		}
 		#endregion
 	}
@@ -731,16 +731,16 @@ namespace Dicom.Data {
 	/// <summary>Age String (AS)</summary>
 	public class DcmAgeString : DcmMultiStringElement {
 		#region Public Constructors
-		public DcmAgeString(DcmTag tag)
-			: base(tag, DcmVR.AS) {
+		public DcmAgeString(DicomTag tag)
+			: base(tag, DicomVR.AS) {
 		}
 
-		public DcmAgeString(DcmTag tag, long pos, Endian endian)
-			: base(tag, DcmVR.AS, pos, endian) {
+		public DcmAgeString(DicomTag tag, long pos, Endian endian)
+			: base(tag, DicomVR.AS, pos, endian) {
 		}
 
-		public DcmAgeString(DcmTag tag, long pos, Endian endian, ByteBuffer buffer)
-			: base(tag, DcmVR.AS, pos, endian, buffer) {
+		public DcmAgeString(DicomTag tag, long pos, Endian endian, ByteBuffer buffer)
+			: base(tag, DicomVR.AS, pos, endian, buffer) {
 		}
 		#endregion
 	}
@@ -748,16 +748,16 @@ namespace Dicom.Data {
 	/// <summary>Attribute Tag (AT)</summary>
 	public class DcmAttributeTag : DcmElement {
 		#region Public Constructors
-		public DcmAttributeTag(DcmTag tag)
-			: base(tag, DcmVR.AT) {
+		public DcmAttributeTag(DicomTag tag)
+			: base(tag, DicomVR.AT) {
 		}
 
-		public DcmAttributeTag(DcmTag tag, long pos, Endian endian)
-			: base(tag, DcmVR.AT, pos, endian) {
+		public DcmAttributeTag(DicomTag tag, long pos, Endian endian)
+			: base(tag, DicomVR.AT, pos, endian) {
 		}
 
-		public DcmAttributeTag(DcmTag tag, long pos, Endian endian, ByteBuffer buffer)
-			: base(tag, DcmVR.AT, pos, endian, buffer) {
+		public DcmAttributeTag(DicomTag tag, long pos, Endian endian, ByteBuffer buffer)
+			: base(tag, DicomVR.AT, pos, endian, buffer) {
 		}
 		#endregion
 
@@ -767,9 +767,9 @@ namespace Dicom.Data {
 		}
 
 		public override string GetValueString() {
-			DcmTag[] tags = GetValues();
+			DicomTag[] tags = GetValues();
 			StringBuilder sb = new StringBuilder();
-			foreach (DcmTag tag in tags) {
+			foreach (DicomTag tag in tags) {
 				sb.AppendFormat("{0:X4}{1:X4}\\", tag.Group, tag.Element);
 			}
 			if (sb.Length > 0) {
@@ -779,21 +779,21 @@ namespace Dicom.Data {
 		}
 		public override void SetValueString(string val) {
 			string[] strs = val.Split('\\');
-			DcmTag[] tags = new DcmTag[strs.Length];
+			DicomTag[] tags = new DicomTag[strs.Length];
 			for (int i = 0; i < tags.Length; i++) {
 				if (strs[i].Length == 8) {
 					string gs = strs[i].Substring(0, 4);
 					string es = strs[i].Substring(4, 4);
 					ushort g = ushort.Parse(gs, NumberStyles.HexNumber);
 					ushort e = ushort.Parse(es, NumberStyles.HexNumber);
-					tags[i] = new DcmTag(g, e);
+					tags[i] = new DicomTag(g, e);
 				}
 			}
 			SetValues(tags);
 		}
 
 		public override Type GetValueType() {
-			return typeof(DcmTag);
+			return typeof(DicomTag);
 		}
 		public override object GetValueObject() {
 			return GetValue();
@@ -804,53 +804,53 @@ namespace Dicom.Data {
 		public override void SetValueObject(object val) {
 			if (val.GetType() != GetValueType())
 				throw new DicomDataException("Invalid type for Element VR!");
-			SetValue((DcmTag)val);
+			SetValue((DicomTag)val);
 		}
 		public override void SetValueObjectArray(object[] vals) {
 			if (vals.Length == 0)
-				SetValues(new DcmTag[0]);
+				SetValues(new DicomTag[0]);
 			if (vals[0].GetType() != GetValueType())
 				throw new DicomDataException("Invalid type for Element VR!");
-			SetValues((DcmTag[])vals);
+			SetValues((DicomTag[])vals);
 		}
 		#endregion
 
 		#region Public Members
-		public DcmTag GetValue() {
+		public DicomTag GetValue() {
 			return GetValue(0);
 		}
 
-		public DcmTag GetValue(int index) {
+		public DicomTag GetValue(int index) {
 			if (index >= GetVM())
 				throw new DicomDataException("Value index out of range");
 			Endian = Endian.LocalMachine;
 			ushort[] u16s = new ushort[2];
 			Buffer.BlockCopy(ByteBuffer.ToBytes(), index * 4, u16s, 0, 4);
-			return new DcmTag(u16s[0], u16s[1]);
+			return new DicomTag(u16s[0], u16s[1]);
 		}
 
-		public DcmTag[] GetValues() {
+		public DicomTag[] GetValues() {
 			Endian = Endian.LocalMachine;
 			ushort[] u16s = new ushort[GetVM() * 2];
 			Buffer.BlockCopy(ByteBuffer.ToBytes(), 0, u16s, 0, u16s.Length * 2);
-			DcmTag[] tags = new DcmTag[GetVM()];
+			DicomTag[] tags = new DicomTag[GetVM()];
 			for (int i = 0, n = 0; i < tags.Length; i++) {
-				tags[i] = new DcmTag(u16s[n++], u16s[n++]);
+				tags[i] = new DicomTag(u16s[n++], u16s[n++]);
 			}
 			return tags;
 		}
 
-		public void SetValue(DcmTag val) {
+		public void SetValue(DicomTag val) {
 			Endian = Endian.LocalMachine;
 			ByteBuffer.Clear();
 			ByteBuffer.Writer.Write(val.Group);
 			ByteBuffer.Writer.Write(val.Element);
 		}
 
-		public void SetValues(DcmTag[] vals) {
+		public void SetValues(DicomTag[] vals) {
 			Endian = Endian.LocalMachine;
 			ByteBuffer.Clear();
-			foreach (DcmTag val in vals) {
+			foreach (DicomTag val in vals) {
 				ByteBuffer.Writer.Write(val.Group);
 				ByteBuffer.Writer.Write(val.Element);
 			}
@@ -870,16 +870,16 @@ namespace Dicom.Data {
 	/// <summary>Code String (CS)</summary>
 	public class DcmCodeString : DcmMultiStringElement {
 		#region Public Constructors
-		public DcmCodeString(DcmTag tag)
-			: base(tag, DcmVR.CS) {
+		public DcmCodeString(DicomTag tag)
+			: base(tag, DicomVR.CS) {
 		}
 
-		public DcmCodeString(DcmTag tag, long pos, Endian endian)
-			: base(tag, DcmVR.CS, pos, endian) {
+		public DcmCodeString(DicomTag tag, long pos, Endian endian)
+			: base(tag, DicomVR.CS, pos, endian) {
 		}
 
-		public DcmCodeString(DcmTag tag, long pos, Endian endian, ByteBuffer buffer)
-			: base(tag, DcmVR.CS, pos, endian, buffer) {
+		public DcmCodeString(DicomTag tag, long pos, Endian endian, ByteBuffer buffer)
+			: base(tag, DicomVR.CS, pos, endian, buffer) {
 		}
 		#endregion
 	}
@@ -887,18 +887,18 @@ namespace Dicom.Data {
 	/// <summary>Date (DA)</summary>
 	public class DcmDate : DcmDateElementBase {
 		#region Public Constructors
-		public DcmDate(DcmTag tag)
-			: base(tag, DcmVR.DA) {
+		public DcmDate(DicomTag tag)
+			: base(tag, DicomVR.DA) {
 			InitFormats();
 		}
 
-		public DcmDate(DcmTag tag, long pos, Endian endian)
-			: base(tag, DcmVR.DA, pos, endian) {
+		public DcmDate(DicomTag tag, long pos, Endian endian)
+			: base(tag, DicomVR.DA, pos, endian) {
 			InitFormats();
 		}
 
-		public DcmDate(DcmTag tag, long pos, Endian endian, ByteBuffer buffer)
-			: base(tag, DcmVR.DA, pos, endian, buffer) {
+		public DcmDate(DicomTag tag, long pos, Endian endian, ByteBuffer buffer)
+			: base(tag, DicomVR.DA, pos, endian, buffer) {
 			InitFormats();
 		}
 
@@ -919,16 +919,16 @@ namespace Dicom.Data {
 	/// <summary>Decimal String (DS)</summary>
 	public class DcmDecimalString : DcmMultiStringElement {
 		#region Public Constructors
-		public DcmDecimalString(DcmTag tag)
-			: base(tag, DcmVR.DS) {
+		public DcmDecimalString(DicomTag tag)
+			: base(tag, DicomVR.DS) {
 		}
 
-		public DcmDecimalString(DcmTag tag, long pos, Endian endian)
-			: base(tag, DcmVR.DS, pos, endian) {
+		public DcmDecimalString(DicomTag tag, long pos, Endian endian)
+			: base(tag, DicomVR.DS, pos, endian) {
 		}
 
-		public DcmDecimalString(DcmTag tag, long pos, Endian endian, ByteBuffer buffer)
-			: base(tag, DcmVR.DS, pos, endian, buffer) {
+		public DcmDecimalString(DicomTag tag, long pos, Endian endian, ByteBuffer buffer)
+			: base(tag, DicomVR.DS, pos, endian, buffer) {
 		}
 		#endregion
 
@@ -996,16 +996,16 @@ namespace Dicom.Data {
 	/// <summary>Date Time (DT)</summary>
 	public class DcmDateTime : DcmDateElementBase {
 		#region Public Constructors
-		public DcmDateTime(DcmTag tag)
-			: base(tag, DcmVR.DT) {
+		public DcmDateTime(DicomTag tag)
+			: base(tag, DicomVR.DT) {
 		}
 
-		public DcmDateTime(DcmTag tag, long pos, Endian endian)
-			: base(tag, DcmVR.DT, pos, endian) {
+		public DcmDateTime(DicomTag tag, long pos, Endian endian)
+			: base(tag, DicomVR.DT, pos, endian) {
 		}
 
-		public DcmDateTime(DcmTag tag, long pos, Endian endian, ByteBuffer buffer)
-			: base(tag, DcmVR.DT, pos, endian, buffer) {
+		public DcmDateTime(DicomTag tag, long pos, Endian endian, ByteBuffer buffer)
+			: base(tag, DicomVR.DT, pos, endian, buffer) {
 		}
 		#endregion
 	}
@@ -1013,16 +1013,16 @@ namespace Dicom.Data {
 	/// <summary>Floating Point Double (FD)</summary>
 	public class DcmFloatingPointDouble : DcmValueElement<double> {
 		#region Public Constructors
-		public DcmFloatingPointDouble(DcmTag tag)
-			: base(tag, DcmVR.FD) {
+		public DcmFloatingPointDouble(DicomTag tag)
+			: base(tag, DicomVR.FD) {
 		}
 
-		public DcmFloatingPointDouble(DcmTag tag, long pos, Endian endian)
-			: base(tag, DcmVR.FD, pos, endian) {
+		public DcmFloatingPointDouble(DicomTag tag, long pos, Endian endian)
+			: base(tag, DicomVR.FD, pos, endian) {
 		}
 
-		public DcmFloatingPointDouble(DcmTag tag, long pos, Endian endian, ByteBuffer buffer)
-			: base(tag, DcmVR.FD, pos, endian, buffer) {
+		public DcmFloatingPointDouble(DicomTag tag, long pos, Endian endian, ByteBuffer buffer)
+			: base(tag, DicomVR.FD, pos, endian, buffer) {
 		}
 		#endregion
 	}
@@ -1030,16 +1030,16 @@ namespace Dicom.Data {
 	/// <summary>Floating Point Single (FL)</summary>
 	public class DcmFloatingPointSingle : DcmValueElement<float> {
 		#region Public Constructors
-		public DcmFloatingPointSingle(DcmTag tag) 
-			: base(tag, DcmVR.FL) {
+		public DcmFloatingPointSingle(DicomTag tag) 
+			: base(tag, DicomVR.FL) {
 		}
 
-		public DcmFloatingPointSingle(DcmTag tag, long pos, Endian endian)
-			: base(tag, DcmVR.FL, pos, endian) {
+		public DcmFloatingPointSingle(DicomTag tag, long pos, Endian endian)
+			: base(tag, DicomVR.FL, pos, endian) {
 		}
 
-		public DcmFloatingPointSingle(DcmTag tag, long pos, Endian endian, ByteBuffer buffer)
-			: base(tag, DcmVR.FL, pos, endian, buffer) {
+		public DcmFloatingPointSingle(DicomTag tag, long pos, Endian endian, ByteBuffer buffer)
+			: base(tag, DicomVR.FL, pos, endian, buffer) {
 		}
 		#endregion
 	}
@@ -1047,16 +1047,16 @@ namespace Dicom.Data {
 	/// <summary>Integer String (IS)</summary>
 	public class DcmIntegerString : DcmMultiStringElement {
 		#region Public Constructors
-		public DcmIntegerString(DcmTag tag)
-			: base(tag, DcmVR.IS) {
+		public DcmIntegerString(DicomTag tag)
+			: base(tag, DicomVR.IS) {
 		}
 
-		public DcmIntegerString(DcmTag tag, long pos, Endian endian)
-			: base(tag, DcmVR.IS, pos, endian) {
+		public DcmIntegerString(DicomTag tag, long pos, Endian endian)
+			: base(tag, DicomVR.IS, pos, endian) {
 		}
 
-		public DcmIntegerString(DcmTag tag, long pos, Endian endian, ByteBuffer buffer)
-			: base(tag, DcmVR.IS, pos, endian, buffer) {
+		public DcmIntegerString(DicomTag tag, long pos, Endian endian, ByteBuffer buffer)
+			: base(tag, DicomVR.IS, pos, endian, buffer) {
 		}
 		#endregion
 
@@ -1095,16 +1095,16 @@ namespace Dicom.Data {
 	/// <summary>Long String (LO)</summary>
 	public class DcmLongString : DcmStringElement {
 		#region Public Constructors
-		public DcmLongString(DcmTag tag)
-			: base(tag, DcmVR.LO) {
+		public DcmLongString(DicomTag tag)
+			: base(tag, DicomVR.LO) {
 		}
 
-		public DcmLongString(DcmTag tag, long pos, Endian endian)
-			: base(tag, DcmVR.LO, pos, endian) {
+		public DcmLongString(DicomTag tag, long pos, Endian endian)
+			: base(tag, DicomVR.LO, pos, endian) {
 		}
 
-		public DcmLongString(DcmTag tag, long pos, Endian endian, ByteBuffer buffer)
-			: base(tag, DcmVR.LO, pos, endian, buffer) {
+		public DcmLongString(DicomTag tag, long pos, Endian endian, ByteBuffer buffer)
+			: base(tag, DicomVR.LO, pos, endian, buffer) {
 		}
 		#endregion
 	}
@@ -1112,16 +1112,16 @@ namespace Dicom.Data {
 	/// <summary>Long Text (LT)</summary>
 	public class DcmLongText : DcmStringElement {
 		#region Public Constructors
-		public DcmLongText(DcmTag tag)
-			: base(tag, DcmVR.LT) {
+		public DcmLongText(DicomTag tag)
+			: base(tag, DicomVR.LT) {
 		}
 
-		public DcmLongText(DcmTag tag, long pos, Endian endian)
-			: base(tag, DcmVR.LT, pos, endian) {
+		public DcmLongText(DicomTag tag, long pos, Endian endian)
+			: base(tag, DicomVR.LT, pos, endian) {
 		}
 
-		public DcmLongText(DcmTag tag, long pos, Endian endian, ByteBuffer buffer)
-			: base(tag, DcmVR.LT, pos, endian, buffer) {
+		public DcmLongText(DicomTag tag, long pos, Endian endian, ByteBuffer buffer)
+			: base(tag, DicomVR.LT, pos, endian, buffer) {
 		}
 		#endregion
 	}
@@ -1129,20 +1129,20 @@ namespace Dicom.Data {
 	/// <summary>Other Byte (OB)</summary>
 	public class DcmOtherByte : DcmValueElement<byte> {
 		#region Public Constructors
-		public DcmOtherByte(DcmTag tag)
-			: base(tag, DcmVR.OB) {
+		public DcmOtherByte(DicomTag tag)
+			: base(tag, DicomVR.OB) {
 			StringFormat = "{0:X2}";
 			NumberStyle = NumberStyles.HexNumber;
 		}
 
-		public DcmOtherByte(DcmTag tag, long pos, Endian endian)
-			: base(tag, DcmVR.OB, pos, endian) {
+		public DcmOtherByte(DicomTag tag, long pos, Endian endian)
+			: base(tag, DicomVR.OB, pos, endian) {
 			StringFormat = "{0:X2}";
 			NumberStyle = NumberStyles.HexNumber;
 		}
 
-		public DcmOtherByte(DcmTag tag, long pos, Endian endian, ByteBuffer buffer)
-			: base(tag, DcmVR.OB, pos, endian, buffer) {
+		public DcmOtherByte(DicomTag tag, long pos, Endian endian, ByteBuffer buffer)
+			: base(tag, DicomVR.OB, pos, endian, buffer) {
 			StringFormat = "{0:X2}";
 			NumberStyle = NumberStyles.HexNumber;
 		}
@@ -1152,20 +1152,20 @@ namespace Dicom.Data {
 	/// <summary>Other Word (OW)</summary>
 	public class DcmOtherWord : DcmValueElement<ushort> {
 		#region Public Constructors
-		public DcmOtherWord(DcmTag tag)
-			: base(tag, DcmVR.OW) {
+		public DcmOtherWord(DicomTag tag)
+			: base(tag, DicomVR.OW) {
 			StringFormat = "{0:X4}";
 			NumberStyle = NumberStyles.HexNumber;
 		}
 
-		public DcmOtherWord(DcmTag tag, long pos, Endian endian)
-			: base(tag, DcmVR.OW, pos, endian) {
+		public DcmOtherWord(DicomTag tag, long pos, Endian endian)
+			: base(tag, DicomVR.OW, pos, endian) {
 			StringFormat = "{0:X4}";
 			NumberStyle = NumberStyles.HexNumber;
 		}
 
-		public DcmOtherWord(DcmTag tag, long pos, Endian endian, ByteBuffer buffer)
-			: base(tag, DcmVR.OW, pos, endian, buffer) {
+		public DcmOtherWord(DicomTag tag, long pos, Endian endian, ByteBuffer buffer)
+			: base(tag, DicomVR.OW, pos, endian, buffer) {
 			StringFormat = "{0:X4}";
 			NumberStyle = NumberStyles.HexNumber;
 		}
@@ -1175,16 +1175,16 @@ namespace Dicom.Data {
 	/// <summary>Other Float (OF)</summary>
 	public class DcmOtherFloat : DcmValueElement<float> {
 		#region Public Constructors
-		public DcmOtherFloat(DcmTag tag)
-			: base(tag, DcmVR.OF) {
+		public DcmOtherFloat(DicomTag tag)
+			: base(tag, DicomVR.OF) {
 		}
 
-		public DcmOtherFloat(DcmTag tag, long pos, Endian endian)
-			: base(tag, DcmVR.OF, pos, endian) {
+		public DcmOtherFloat(DicomTag tag, long pos, Endian endian)
+			: base(tag, DicomVR.OF, pos, endian) {
 		}
 
-		public DcmOtherFloat(DcmTag tag, long pos, Endian endian, ByteBuffer buffer)
-			: base(tag, DcmVR.OF, pos, endian, buffer) {
+		public DcmOtherFloat(DicomTag tag, long pos, Endian endian, ByteBuffer buffer)
+			: base(tag, DicomVR.OF, pos, endian, buffer) {
 		}
 		#endregion
 	}
@@ -1192,16 +1192,16 @@ namespace Dicom.Data {
 	/// <summary>Person Name (PN)</summary>
 	public class DcmPersonName : DcmStringElement {
 		#region Public Constructors
-		public DcmPersonName(DcmTag tag)
-			: base(tag, DcmVR.PN) {
+		public DcmPersonName(DicomTag tag)
+			: base(tag, DicomVR.PN) {
 		}
 
-		public DcmPersonName(DcmTag tag, long pos, Endian endian)
-			: base(tag, DcmVR.PN, pos, endian) {
+		public DcmPersonName(DicomTag tag, long pos, Endian endian)
+			: base(tag, DicomVR.PN, pos, endian) {
 		}
 
-		public DcmPersonName(DcmTag tag, long pos, Endian endian, ByteBuffer buffer)
-			: base(tag, DcmVR.PN, pos, endian, buffer) {
+		public DcmPersonName(DicomTag tag, long pos, Endian endian, ByteBuffer buffer)
+			: base(tag, DicomVR.PN, pos, endian, buffer) {
 		}
 		#endregion
 	}
@@ -1209,16 +1209,16 @@ namespace Dicom.Data {
 	/// <summary>Short String (SH)</summary>
 	public class DcmShortString : DcmStringElement {
 		#region Public Constructors
-		public DcmShortString(DcmTag tag)
-			: base(tag, DcmVR.SH) {
+		public DcmShortString(DicomTag tag)
+			: base(tag, DicomVR.SH) {
 		}
 
-		public DcmShortString(DcmTag tag, long pos, Endian endian)
-			: base(tag, DcmVR.SH, pos, endian) {
+		public DcmShortString(DicomTag tag, long pos, Endian endian)
+			: base(tag, DicomVR.SH, pos, endian) {
 		}
 
-		public DcmShortString(DcmTag tag, long pos, Endian endian, ByteBuffer buffer)
-			: base(tag, DcmVR.SH, pos, endian, buffer) {
+		public DcmShortString(DicomTag tag, long pos, Endian endian, ByteBuffer buffer)
+			: base(tag, DicomVR.SH, pos, endian, buffer) {
 		}
 		#endregion
 	}
@@ -1226,16 +1226,16 @@ namespace Dicom.Data {
 	/// <summary>Signed Long (SL)</summary>
 	public class DcmSignedLong : DcmValueElement<int> {
 		#region Public Constructors
-		public DcmSignedLong(DcmTag tag)
-			: base(tag, DcmVR.SL) {
+		public DcmSignedLong(DicomTag tag)
+			: base(tag, DicomVR.SL) {
 		}
 
-		public DcmSignedLong(DcmTag tag, long pos, Endian endian)
-			: base(tag, DcmVR.SL, pos, endian) {
+		public DcmSignedLong(DicomTag tag, long pos, Endian endian)
+			: base(tag, DicomVR.SL, pos, endian) {
 		}
 
-		public DcmSignedLong(DcmTag tag, long pos, Endian endian, ByteBuffer buffer)
-			: base(tag, DcmVR.SL, pos, endian, buffer) {
+		public DcmSignedLong(DicomTag tag, long pos, Endian endian, ByteBuffer buffer)
+			: base(tag, DicomVR.SL, pos, endian, buffer) {
 		}
 		#endregion
 	}
@@ -1243,16 +1243,16 @@ namespace Dicom.Data {
 	/// <summary>Signed Short (SS)</summary>
 	public class DcmSignedShort : DcmValueElement<short> {
 		#region Public Constructors
-		public DcmSignedShort(DcmTag tag)
-			: base(tag, DcmVR.SS) {
+		public DcmSignedShort(DicomTag tag)
+			: base(tag, DicomVR.SS) {
 		}
 
-		public DcmSignedShort(DcmTag tag, long pos, Endian endian)
-			: base(tag, DcmVR.SS, pos, endian) {
+		public DcmSignedShort(DicomTag tag, long pos, Endian endian)
+			: base(tag, DicomVR.SS, pos, endian) {
 		}
 
-		public DcmSignedShort(DcmTag tag, long pos, Endian endian, ByteBuffer buffer)
-			: base(tag, DcmVR.SS, pos, endian, buffer) {
+		public DcmSignedShort(DicomTag tag, long pos, Endian endian, ByteBuffer buffer)
+			: base(tag, DicomVR.SS, pos, endian, buffer) {
 		}
 		#endregion
 	}
@@ -1260,16 +1260,16 @@ namespace Dicom.Data {
 	/// <summary>Short Text (ST)</summary>
 	public class DcmShortText : DcmStringElement {
 		#region Public Constructors
-		public DcmShortText(DcmTag tag)
-			: base(tag, DcmVR.ST) {
+		public DcmShortText(DicomTag tag)
+			: base(tag, DicomVR.ST) {
 		}
 
-		public DcmShortText(DcmTag tag, long pos, Endian endian)
-			: base(tag, DcmVR.ST, pos, endian) {
+		public DcmShortText(DicomTag tag, long pos, Endian endian)
+			: base(tag, DicomVR.ST, pos, endian) {
 		}
 
-		public DcmShortText(DcmTag tag, long pos, Endian endian, ByteBuffer buffer)
-			: base(tag, DcmVR.ST, pos, endian, buffer) {
+		public DcmShortText(DicomTag tag, long pos, Endian endian, ByteBuffer buffer)
+			: base(tag, DicomVR.ST, pos, endian, buffer) {
 		}
 		#endregion
 	}
@@ -1277,18 +1277,18 @@ namespace Dicom.Data {
 	/// <summary>Time (TM)</summary>
 	public class DcmTime : DcmDateElementBase {
 		#region Public Constructors
-		public DcmTime(DcmTag tag)
-			: base(tag, DcmVR.TM) {
+		public DcmTime(DicomTag tag)
+			: base(tag, DicomVR.TM) {
 			InitFormats();
 		}
 
-		public DcmTime(DcmTag tag, long pos, Endian endian)
-			: base(tag, DcmVR.TM, pos, endian) {
+		public DcmTime(DicomTag tag, long pos, Endian endian)
+			: base(tag, DicomVR.TM, pos, endian) {
 			InitFormats();
 		}
 
-		public DcmTime(DcmTag tag, long pos, Endian endian, ByteBuffer buffer)
-			: base(tag, DcmVR.TM, pos, endian, buffer) {
+		public DcmTime(DicomTag tag, long pos, Endian endian, ByteBuffer buffer)
+			: base(tag, DicomVR.TM, pos, endian, buffer) {
 			InitFormats();
 		}
 
@@ -1297,7 +1297,7 @@ namespace Dicom.Data {
 				_formats = new string[37];
 				_formats[0] = "HHmmss";
 				_formats[1] = "HH";
-				_formats[2] = "HHmm";				
+				_formats[2] = "HHmm";
 				_formats[3] = "HHmmssf";
 				_formats[4] = "HHmmssff";
 				_formats[5] = "HHmmssfff";
@@ -1340,33 +1340,33 @@ namespace Dicom.Data {
 	/// <summary>Unique Identifier (UI)</summary>
 	public class DcmUniqueIdentifier : DcmMultiStringElement {
 		#region Public Constructors
-		public DcmUniqueIdentifier(DcmTag tag)
-			: base(tag, DcmVR.UI) {
+		public DcmUniqueIdentifier(DicomTag tag)
+			: base(tag, DicomVR.UI) {
 		}
 
-		public DcmUniqueIdentifier(DcmTag tag, long pos, Endian endian)
-			: base(tag, DcmVR.UI, pos, endian) {
+		public DcmUniqueIdentifier(DicomTag tag, long pos, Endian endian)
+			: base(tag, DicomVR.UI, pos, endian) {
 		}
 
-		public DcmUniqueIdentifier(DcmTag tag, long pos, Endian endian, ByteBuffer buffer)
-			: base(tag, DcmVR.UI, pos, endian, buffer) {
+		public DcmUniqueIdentifier(DicomTag tag, long pos, Endian endian, ByteBuffer buffer)
+			: base(tag, DicomVR.UI, pos, endian, buffer) {
 		}
 		#endregion
 
 		#region Access Methods
-		public DcmUID GetUID() {
-			return DcmUIDs.Lookup(GetValue());
+		public DicomUID GetUID() {
+			return DicomUID.Lookup(GetValue());
 		}
 
-		public DcmTS GetTS() {
-			return DcmTSs.Lookup(GetUID());
+		public DicomTransferSyntax GetTS() {
+			return DicomTransferSyntax.Lookup(GetUID());
 		}
 
-		public void SetUID(DcmUID ui) {
+		public void SetUID(DicomUID ui) {
 			SetValue(ui.UID);
 		}
 
-		public void SetTS(DcmTS ts) {
+		public void SetTS(DicomTransferSyntax ts) {
 			SetUID(ts.UID);
 		}
 		#endregion
@@ -1375,16 +1375,16 @@ namespace Dicom.Data {
 	/// <summary>Unsigned Long (UL)</summary>
 	public class DcmUnsignedLong : DcmValueElement<uint> {
 		#region Public Constructors
-		public DcmUnsignedLong(DcmTag tag)
-			: base(tag, DcmVR.UL) {
+		public DcmUnsignedLong(DicomTag tag)
+			: base(tag, DicomVR.UL) {
 		}
 
-		public DcmUnsignedLong(DcmTag tag, long pos, Endian endian)
-			: base(tag, DcmVR.UL, pos, endian) {
+		public DcmUnsignedLong(DicomTag tag, long pos, Endian endian)
+			: base(tag, DicomVR.UL, pos, endian) {
 		}
 
-		public DcmUnsignedLong(DcmTag tag, long pos, Endian endian, ByteBuffer buffer)
-			: base(tag, DcmVR.UL, pos, endian, buffer) {
+		public DcmUnsignedLong(DicomTag tag, long pos, Endian endian, ByteBuffer buffer)
+			: base(tag, DicomVR.UL, pos, endian, buffer) {
 		}
 		#endregion
 	}
@@ -1392,20 +1392,20 @@ namespace Dicom.Data {
 	/// <summary>Unknown (UN)</summary>
 	public class DcmUnknown : DcmValueElement<byte> {
 		#region Public Constructors
-		public DcmUnknown(DcmTag tag)
-			: base(tag, DcmVR.UN) {
+		public DcmUnknown(DicomTag tag)
+			: base(tag, DicomVR.UN) {
 			StringFormat = "{0:X2}";
 			NumberStyle = NumberStyles.HexNumber;
 		}
 
-		public DcmUnknown(DcmTag tag, long pos, Endian endian)
-			: base(tag, DcmVR.UN, pos, endian) {
+		public DcmUnknown(DicomTag tag, long pos, Endian endian)
+			: base(tag, DicomVR.UN, pos, endian) {
 			StringFormat = "{0:X2}";
 			NumberStyle = NumberStyles.HexNumber;
 		}
 
-		public DcmUnknown(DcmTag tag, long pos, Endian endian, ByteBuffer buffer)
-			: base(tag, DcmVR.UN, pos, endian, buffer) {
+		public DcmUnknown(DicomTag tag, long pos, Endian endian, ByteBuffer buffer)
+			: base(tag, DicomVR.UN, pos, endian, buffer) {
 			StringFormat = "{0:X2}";
 			NumberStyle = NumberStyles.HexNumber;
 		}
@@ -1415,16 +1415,16 @@ namespace Dicom.Data {
 	/// <summary>Unsigned Short (US)</summary>
 	public class DcmUnsignedShort : DcmValueElement<ushort> {
 		#region Public Constructors
-		public DcmUnsignedShort(DcmTag tag)
-			: base(tag, DcmVR.US) {
+		public DcmUnsignedShort(DicomTag tag)
+			: base(tag, DicomVR.US) {
 		}
 
-		public DcmUnsignedShort(DcmTag tag, long pos, Endian endian)
-			: base(tag, DcmVR.US, pos, endian) {
+		public DcmUnsignedShort(DicomTag tag, long pos, Endian endian)
+			: base(tag, DicomVR.US, pos, endian) {
 		}
 
-		public DcmUnsignedShort(DcmTag tag, long pos, Endian endian, ByteBuffer buffer)
-			: base(tag, DcmVR.US, pos, endian, buffer) {
+		public DcmUnsignedShort(DicomTag tag, long pos, Endian endian, ByteBuffer buffer)
+			: base(tag, DicomVR.US, pos, endian, buffer) {
 		}
 		#endregion
 	}
@@ -1432,16 +1432,16 @@ namespace Dicom.Data {
 	/// <summary>Unlimited Text (UT)</summary>
 	public class DcmUnlimitedText : DcmStringElement {
 		#region Public Constructors
-		public DcmUnlimitedText(DcmTag tag)
-			: base(tag, DcmVR.UT) {
+		public DcmUnlimitedText(DicomTag tag)
+			: base(tag, DicomVR.UT) {
 		}
 
-		public DcmUnlimitedText(DcmTag tag, long pos, Endian endian)
-			: base(tag, DcmVR.UT, pos, endian) {
+		public DcmUnlimitedText(DicomTag tag, long pos, Endian endian)
+			: base(tag, DicomVR.UT, pos, endian) {
 		}
 
-		public DcmUnlimitedText(DcmTag tag, long pos, Endian endian, ByteBuffer buffer)
-			: base(tag, DcmVR.UT, pos, endian, buffer) {
+		public DcmUnlimitedText(DicomTag tag, long pos, Endian endian, ByteBuffer buffer)
+			: base(tag, DicomVR.UT, pos, endian, buffer) {
 		}
 		#endregion
 	}

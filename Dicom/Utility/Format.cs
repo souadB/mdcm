@@ -27,6 +27,8 @@ using System.Text;
 namespace Dicom.Utility {
 	public static class Format {
 		public static string Percent(int numerator, int denominator) {
+			if (denominator == 0)
+				return "--%";
 			return String.Format("{0}%", (int)(((double)numerator/(double)denominator) * 100));
 		}
 

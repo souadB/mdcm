@@ -31,25 +31,25 @@ namespace DicomPrintScp {
 	/// <summary>Print Job</summary>
 	public class DcmPrintJob {
 		#region Private Members
-		private DcmUID _sopInst;
+		private DicomUID _sopInst;
 		private DcmDataset _dataset;
 		#endregion
 
 		#region Public Constructors
-		public DcmPrintJob(DcmUID sopInst) {
+		public DcmPrintJob(DicomUID sopInst) {
 			_sopInst = sopInst;
 			if (_sopInst == null || _sopInst.UID == String.Empty)
-				_sopInst = DcmUID.Generate();
-			_dataset = new DcmDataset(DcmTS.ImplicitVRLittleEndian);
+				_sopInst = DicomUID.Generate();
+			_dataset = new DcmDataset(DicomTransferSyntax.ImplicitVRLittleEndian);
 		}
 		#endregion
 
 		#region Public Properties
 		/// <summary>Print Job SOP</summary>
-		public static readonly DcmUID SOPClassUID = DcmUIDs.PrintJobSOPClass;
+		public static readonly DicomUID SOPClassUID = DicomUID.PrintJobSOPClass;
 
 		/// <summary>SOP Instance UID</summary>
-		public DcmUID SOPInstanceUID {
+		public DicomUID SOPInstanceUID {
 			get { return _sopInst; }
 		}
 
@@ -68,14 +68,14 @@ namespace DicomPrintScp {
 		/// </list>
 		/// </remarks>
 		public string ExecutionStatus {
-			get { return _dataset.GetString(DcmTags.ExecutionStatus, String.Empty); }
-			set { _dataset.AddElementWithValue(DcmTags.ExecutionStatus, value); }
+			get { return _dataset.GetString(DicomTags.ExecutionStatus, String.Empty); }
+			set { _dataset.AddElementWithValue(DicomTags.ExecutionStatus, value); }
 		}
 
 		/// <summary>Additional information about Execution Status (2100,0020).</summary>
 		public string ExecutionStatusInfo {
-			get { return _dataset.GetString(DcmTags.ExecutionStatusInfo, String.Empty); }
-			set { _dataset.AddElementWithValue(DcmTags.ExecutionStatusInfo, value); }
+			get { return _dataset.GetString(DicomTags.ExecutionStatusInfo, String.Empty); }
+			set { _dataset.AddElementWithValue(DicomTags.ExecutionStatusInfo, value); }
 		}
 
 		/// <summary>Specifies the priority of the print job.</summary>
@@ -88,26 +88,26 @@ namespace DicomPrintScp {
 		/// </list>
 		/// </remarks>
 		public string PrintPriority {
-			get { return _dataset.GetString(DcmTags.PrintPriority, String.Empty); }
-			set { _dataset.AddElementWithValue(DcmTags.PrintPriority, value); }
+			get { return _dataset.GetString(DicomTags.PrintPriority, String.Empty); }
+			set { _dataset.AddElementWithValue(DicomTags.PrintPriority, value); }
 		}
 
 		/// <summary>Date/Time of print job creation.</summary>
 		public DateTime CreationDateTime {
-			get { return _dataset.GetDateTime(DcmTags.CreationDate, DcmTags.CreationTime, DateTime.MinValue); }
-			set { _dataset.SetDateTime(DcmTags.CreationDate, DcmTags.CreationTime, value); }
+			get { return _dataset.GetDateTime(DicomTags.CreationDate, DicomTags.CreationTime, DateTime.MinValue); }
+			set { _dataset.SetDateTime(DicomTags.CreationDate, DicomTags.CreationTime, value); }
 		}
 
 		/// <summary>User defined name identifying the printer.</summary>
 		public string PrinterName {
-			get { return _dataset.GetString(DcmTags.PrinterName, String.Empty); }
-			set { _dataset.AddElementWithValue(DcmTags.PrinterName, value); }
+			get { return _dataset.GetString(DicomTags.PrinterName, String.Empty); }
+			set { _dataset.AddElementWithValue(DicomTags.PrinterName, value); }
 		}
 
 		/// <summary>DICOM Application Entity Title that issued the print operation.</summary>
 		public string Originator {
-			get { return _dataset.GetString(DcmTags.Originator, String.Empty); }
-			set { _dataset.AddElementWithValue(DcmTags.Originator, value); }
+			get { return _dataset.GetString(DicomTags.Originator, String.Empty); }
+			set { _dataset.AddElementWithValue(DicomTags.Originator, value); }
 		}
 		#endregion
 	}
@@ -116,8 +116,8 @@ namespace DicomPrintScp {
 	[Serializable]
 	public class DcmFilmSession {
 		#region Private Members
-		private DcmUID _sessionClass;
-		private DcmUID _sopInstance;
+		private DicomUID _sessionClass;
+		private DicomUID _sopInstance;
 		private DcmDataset _dataset;
 		private List<DcmFilmBox> _boxes;
 		#endregion
@@ -127,9 +127,9 @@ namespace DicomPrintScp {
 		/// Initializes new Basic Film Session
 		/// </summary>
 		/// <param name="sessionClass">Color or Grayscale Basic Print Management UID</param>
-		public DcmFilmSession(DcmUID sessionClass) {
+		public DcmFilmSession(DicomUID sessionClass) {
 			_sessionClass = sessionClass;
-			_dataset = new DcmDataset(DcmTS.ImplicitVRLittleEndian);
+			_dataset = new DcmDataset(DicomTransferSyntax.ImplicitVRLittleEndian);
 			_boxes = new List<DcmFilmBox>();
 		}
 
@@ -139,30 +139,30 @@ namespace DicomPrintScp {
 		/// <param name="sessionClass">Color or Grayscale Basic Print Management UID</param>
 		/// <param name="sopInstance">SOP Instance UID</param>
 		/// <param name="dataset">Dataset</param>
-		public DcmFilmSession(DcmUID sessionClass, DcmUID sopInstance, DcmDataset dataset) {
+		public DcmFilmSession(DicomUID sessionClass, DicomUID sopInstance, DcmDataset dataset) {
 			_sessionClass = sessionClass;
 			_sopInstance = sopInstance;
 			_dataset = dataset;
 			_boxes = new List<DcmFilmBox>();
 
 			if (_sopInstance == null || _sopInstance.UID == String.Empty)
-				_sopInstance = DcmUID.Generate();
+				_sopInstance = DicomUID.Generate();
 		}
 		#endregion
 
 		#region Public Properties
 		/// <summary>Basic Film Box SOP</summary>
-		public static readonly DcmUID SOPClassUID = DcmUIDs.BasicFilmSessionSOPClass;
+		public static readonly DicomUID SOPClassUID = DicomUID.BasicFilmSessionSOPClass;
 
 		/// <summary>
 		/// Color or Grayscale Basic Print Management UID
 		/// </summary>
-		public DcmUID SessionClassUID {
+		public DicomUID SessionClassUID {
 			get { return _sessionClass; }
 		}
 
 		/// <summary>SOP Instance UID</summary>
-		public DcmUID SOPInstanceUID {
+		public DicomUID SOPInstanceUID {
 			get { return _sopInstance; }
 		}
 
@@ -178,8 +178,8 @@ namespace DicomPrintScp {
 
 		/// <summary>Number of copies to be printed for each film of the film session.</summary>
 		public int NumberOfCopies {
-			get { return _dataset.GetInt32(DcmTags.NumberOfCopies, 1); }
-			set { _dataset.AddElementWithValue(DcmTags.NumberOfCopies, value); }
+			get { return _dataset.GetInt32(DicomTags.NumberOfCopies, 1); }
+			set { _dataset.AddElementWithValue(DicomTags.NumberOfCopies, value); }
 		}
 
 		/// <summary>Specifies the priority of the print job.</summary>
@@ -192,8 +192,8 @@ namespace DicomPrintScp {
 		/// </list>
 		/// </remarks>
 		public string PrintPriority {
-			get { return _dataset.GetString(DcmTags.PrintPriority, null); }
-			set { _dataset.AddElementWithValue(DcmTags.PrintPriority, value); }
+			get { return _dataset.GetString(DicomTags.PrintPriority, null); }
+			set { _dataset.AddElementWithValue(DicomTags.PrintPriority, value); }
 		}
 
 		/// <summary>Type of medium on which the print job will be printed.</summary>
@@ -208,8 +208,8 @@ namespace DicomPrintScp {
 		/// </list>
 		/// </remarks>
 		public string MediumType {
-			get { return _dataset.GetString(DcmTags.MediumType, null); }
-			set { _dataset.AddElementWithValue(DcmTags.MediumType, value); }
+			get { return _dataset.GetString(DicomTags.MediumType, null); }
+			set { _dataset.AddElementWithValue(DicomTags.MediumType, value); }
 		}
 
 		/// <summary>Film destination.</summary>
@@ -233,41 +233,41 @@ namespace DicomPrintScp {
 		/// </item>
 		/// </remarks>
 		public string FilmDestination {
-			get { return _dataset.GetString(DcmTags.FilmDestination, null); }
-			set { _dataset.AddElementWithValue(DcmTags.FilmDestination, value); }
+			get { return _dataset.GetString(DicomTags.FilmDestination, null); }
+			set { _dataset.AddElementWithValue(DicomTags.FilmDestination, value); }
 		}
 
 		/// <summary>Human readable label that identifies the film session.</summary>
 		public string FilmSessionLabel {
-			get { return _dataset.GetString(DcmTags.FilmSessionLabel, null); }
-			set { _dataset.AddElementWithValue(DcmTags.FilmSessionLabel, value); }
+			get { return _dataset.GetString(DicomTags.FilmSessionLabel, null); }
+			set { _dataset.AddElementWithValue(DicomTags.FilmSessionLabel, value); }
 		}
 
 		/// <summary>Amount of memory allocated for the film session.</summary>
 		/// <remarks>Value is expressed in KB.</remarks>
 		public int MemoryAllocation {
-			get { return _dataset.GetInt32(DcmTags.MemoryAllocation, 0); }
-			set { _dataset.AddElementWithValue(DcmTags.MemoryAllocation, value); }
+			get { return _dataset.GetInt32(DicomTags.MemoryAllocation, 0); }
+			set { _dataset.AddElementWithValue(DicomTags.MemoryAllocation, value); }
 		}
 
 		/// <summary>Identification of the owner of the film session.</summary>
 		public string OwnerID {
-			get { return _dataset.GetString(DcmTags.OwnerID, null); }
-			set { _dataset.AddElementWithValue(DcmTags.OwnerID, value); }
+			get { return _dataset.GetString(DicomTags.OwnerID, null); }
+			set { _dataset.AddElementWithValue(DicomTags.OwnerID, value); }
 		}
 		#endregion
 
 		#region Public Methods
-		public DcmFilmBox CreateFilmBox(DcmUID sopInstance, DcmDataset dataset) {
-			DcmUID uid = sopInstance;
+		public DcmFilmBox CreateFilmBox(DicomUID sopInstance, DcmDataset dataset) {
+			DicomUID uid = sopInstance;
 			if (uid == null || uid.UID == String.Empty)
-				uid = DcmUID.Generate(SOPInstanceUID, _boxes.Count + 1);
+				uid = DicomUID.Generate(SOPInstanceUID, _boxes.Count + 1);
 			DcmFilmBox box = new DcmFilmBox(this, uid, dataset);
 			_boxes.Add(box);
 			return box;
 		}
 
-		public void DeleteFilmBox(DcmUID instUid) {
+		public void DeleteFilmBox(DicomUID instUid) {
 			for (int i = 0; i < _boxes.Count; i++) {
 				if (_boxes[i].SOPInstanceUID.UID == instUid.UID) {
 					_boxes.RemoveAt(i);
@@ -276,7 +276,7 @@ namespace DicomPrintScp {
 			}
 		}
 
-		public DcmFilmBox FindFilmBox(DcmUID instUid) {
+		public DcmFilmBox FindFilmBox(DicomUID instUid) {
 			foreach (DcmFilmBox box in _boxes) {
 				if (box.SOPInstanceUID.UID == instUid.UID)
 					return box;
@@ -284,7 +284,7 @@ namespace DicomPrintScp {
 			return null;
 		}
 
-		public DcmImageBox FindImageBox(DcmUID instUid) {
+		public DcmImageBox FindImageBox(DicomUID instUid) {
 			foreach (DcmFilmBox filmBox in _boxes) {
 				DcmImageBox imageBox = filmBox.FindImageBox(instUid);
 				if (imageBox != null)
@@ -303,7 +303,7 @@ namespace DicomPrintScp {
 	public class DcmFilmBox {
 		#region Private Members
 		private DcmFilmSession _session;
-		private DcmUID _sopInstance;
+		private DicomUID _sopInstance;
 		private DcmDataset _dataset;
 		private List<DcmImageBox> _boxes;
 		#endregion
@@ -314,10 +314,10 @@ namespace DicomPrintScp {
 		/// </summary>
 		/// <param name="session">Basic Film Session</param>
 		/// <param name="sopInstance">SOP Instance UID</param>
-		public DcmFilmBox(DcmFilmSession session, DcmUID sopInstance) {
+		public DcmFilmBox(DcmFilmSession session, DicomUID sopInstance) {
 			_session = session;
 			_sopInstance = sopInstance;
-			_dataset = new DcmDataset(DcmTS.ImplicitVRLittleEndian);
+			_dataset = new DcmDataset(DicomTransferSyntax.ImplicitVRLittleEndian);
 			_boxes = new List<DcmImageBox>();
 		}
 
@@ -327,7 +327,7 @@ namespace DicomPrintScp {
 		/// <param name="session">Basic Film Session</param>
 		/// <param name="sopInstance">SOP Instance UID</param>
 		/// <param name="dataset">Dataset</param>
-		public DcmFilmBox(DcmFilmSession session, DcmUID sopInstance, DcmDataset dataset) {
+		public DcmFilmBox(DcmFilmSession session, DicomUID sopInstance, DcmDataset dataset) {
 			_session = session;
 			_sopInstance = sopInstance;
 			_dataset = dataset;
@@ -337,10 +337,10 @@ namespace DicomPrintScp {
 
 		#region Public Properties
 		/// <summary>Basic Film Session SOP</summary>
-		public static readonly DcmUID SOPClassUID = DcmUIDs.BasicFilmBoxSOPClass;
+		public static readonly DicomUID SOPClassUID = DicomUID.BasicFilmBoxSOPClass;
 
 		/// <summary>SOP Instance UID</summary>
-		public DcmUID SOPInstanceUID {
+		public DicomUID SOPInstanceUID {
 			get { return _sopInstance; }
 		}
 
@@ -394,8 +394,8 @@ namespace DicomPrintScp {
 		/// </list>
  		/// </remarks>
 		public string ImageDisplayFormat {
-			get { return _dataset.GetValueString(DcmTags.ImageDisplayFormat); }
-			set { _dataset.AddElementWithValue(DcmTags.ImageDisplayFormat, value); }
+			get { return _dataset.GetValueString(DicomTags.ImageDisplayFormat); }
+			set { _dataset.AddElementWithValue(DicomTags.ImageDisplayFormat, value); }
 		}
 		
 		/// <summary>Film orientation.</summary>
@@ -413,8 +413,8 @@ namespace DicomPrintScp {
 		/// </list>
 		/// </remarks>
 		public string FilmOrientation {
-			get { return _dataset.GetString(DcmTags.FilmOrientation, "PORTRAIT"); }
-			set { _dataset.AddElementWithValue(DcmTags.FilmOrientation, value); }
+			get { return _dataset.GetString(DicomTags.FilmOrientation, "PORTRAIT"); }
+			set { _dataset.AddElementWithValue(DicomTags.FilmOrientation, value); }
 		}
 		
 		/// <summary> Film size identification.</summary>
@@ -441,8 +441,8 @@ namespace DicomPrintScp {
 		/// A3 corresponds with 297 x 420 millimeters
 		/// </remarks>
 		public string FilmSizeID {
-			get { return _dataset.GetString(DcmTags.FilmSizeID, "8_5INX11IN"); }
-			set { _dataset.AddElementWithValue(DcmTags.FilmSizeID, value); }
+			get { return _dataset.GetString(DicomTags.FilmSizeID, "8_5INX11IN"); }
+			set { _dataset.AddElementWithValue(DicomTags.FilmSizeID, value); }
 		}
 		
 		/// <summary>Interpolation type by which the printer magnifies or decimates the image 
@@ -457,16 +457,16 @@ namespace DicomPrintScp {
 		/// </list>
 		/// </remarks>
 		public string MagnificationType {
-			get { return _dataset.GetString(DcmTags.MagnificationType, "BILINEAR"); }
-			set { _dataset.AddElementWithValue(DcmTags.MagnificationType, value); }
+			get { return _dataset.GetString(DicomTags.MagnificationType, "BILINEAR"); }
+			set { _dataset.AddElementWithValue(DicomTags.MagnificationType, value); }
 		}
 		
 		/// <summary>Maximum density of the images on the film, expressed in hundredths of 
 		/// OD. If Max Density is higher than maximum printer density than Max Density is set 
 		/// to maximum printer density.</summary>
 		public ushort MaxDensity {
-			get { return _dataset.GetUInt16(DcmTags.MaxDensity, 0); }
-			set { _dataset.AddElementWithValue(DcmTags.MaxDensity, value); }
+			get { return _dataset.GetUInt16(DicomTags.MaxDensity, 0); }
+			set { _dataset.AddElementWithValue(DicomTags.MaxDensity, value); }
 		}
 		
 		/// <summary>Character string that contains either the ID of the printer configuration 
@@ -487,16 +487,16 @@ namespace DicomPrintScp {
 		/// the highest contrast levels available.
 		/// </remarks>
 		public string ConfigurationInformation {
-			get { return _dataset.GetString(DcmTags.ConfigurationInformation, String.Empty); }
-			set { _dataset.AddElementWithValue(DcmTags.ConfigurationInformation, value); }
+			get { return _dataset.GetString(DicomTags.ConfigurationInformation, String.Empty); }
+			set { _dataset.AddElementWithValue(DicomTags.ConfigurationInformation, value); }
 		}
 		
 		/// <summary>Identification of annotation display format. The definition of the annotation 
 		/// display formats and the annotation box position sequence are defined in the Conformance 
 		/// Statement.</summary>
 		public string AnnotationDisplayFormatID {
-			get { return _dataset.GetString(DcmTags.AnnotationDisplayFormatID, String.Empty); }
-			set { _dataset.AddElementWithValue(DcmTags.AnnotationDisplayFormatID, value); }
+			get { return _dataset.GetString(DicomTags.AnnotationDisplayFormatID, String.Empty); }
+			set { _dataset.AddElementWithValue(DicomTags.AnnotationDisplayFormatID, value); }
 		}
 
 		/// <summary>Further specifies the type of the interpolation function. Values 
@@ -504,8 +504,8 @@ namespace DicomPrintScp {
 		/// 
 		/// Only valid for Magnification Type (2010,0060) = CUBIC</summary>
 		public string SmoothingType {
-			get { return _dataset.GetString(DcmTags.SmoothingType, String.Empty); }
-			set { _dataset.AddElementWithValue(DcmTags.SmoothingType, value); }
+			get { return _dataset.GetString(DicomTags.SmoothingType, String.Empty); }
+			set { _dataset.AddElementWithValue(DicomTags.SmoothingType, value); }
 		}
 		
 		/// <summary>Density of the film areas surrounding and between images on the film.</summary>
@@ -519,8 +519,8 @@ namespace DicomPrintScp {
 		/// </list>
 		/// </remarks>
 		public string BorderDensity {
-			get { return _dataset.GetString(DcmTags.BorderDensity, "BLACK"); }
-			set { _dataset.AddElementWithValue(DcmTags.BorderDensity, value); }
+			get { return _dataset.GetString(DicomTags.BorderDensity, "BLACK"); }
+			set { _dataset.AddElementWithValue(DicomTags.BorderDensity, value); }
 		}
 
 		/// <summary>Density of the image box area on the film that contains no image.</summary>
@@ -534,16 +534,16 @@ namespace DicomPrintScp {
 		/// </list>
 		/// </remarks>
 		public string EmptyImageDensity {
-			get { return _dataset.GetString(DcmTags.EmptyImageDensity, "BLACK"); }
-			set { _dataset.AddElementWithValue(DcmTags.EmptyImageDensity, value); }
+			get { return _dataset.GetString(DicomTags.EmptyImageDensity, "BLACK"); }
+			set { _dataset.AddElementWithValue(DicomTags.EmptyImageDensity, value); }
 		}
 
 		/// <summary>Minimum density of the images on the film, expressed in hundredths of 
 		/// OD. If Min Density is lower than minimum printer density than Min Density is set 
 		/// to minimum printer density.</summary>
 		public ushort MinDensity {
-			get { return _dataset.GetUInt16(DcmTags.MinDensity, 0); }
-			set { _dataset.AddElementWithValue(DcmTags.MinDensity, value); }
+			get { return _dataset.GetUInt16(DicomTags.MinDensity, 0); }
+			set { _dataset.AddElementWithValue(DicomTags.MinDensity, value); }
 		}
 		
 		/// <summary>Specifies whether a trim box shall be printed surrounding each image 
@@ -556,23 +556,23 @@ namespace DicomPrintScp {
 		/// </list>
 		/// </remarks>
 		public string Trim {
-			get { return _dataset.GetString(DcmTags.Trim, "NO"); }
-			set { _dataset.AddElementWithValue(DcmTags.Trim, value); }
+			get { return _dataset.GetString(DicomTags.Trim, "NO"); }
+			set { _dataset.AddElementWithValue(DicomTags.Trim, value); }
 		}
 		
 		/// <summary>Luminance of lightbox illuminating a piece of transmissive film, or for 
 		/// the case of reflective media, luminance obtainable from diffuse reflection of the 
 		/// illumination present. Expressed as L0, in candelas per square meter (cd/m2).</summary>
 		public ushort Illumination {
-			get { return _dataset.GetUInt16(DcmTags.Illumination, 0); }
-			set { _dataset.AddElementWithValue(DcmTags.Illumination, value); }
+			get { return _dataset.GetUInt16(DicomTags.Illumination, 0); }
+			set { _dataset.AddElementWithValue(DicomTags.Illumination, value); }
 		}
 
 		/// <summary>For transmissive film, luminance contribution due to reflected ambient 
 		/// light. Expressed as La, in candelas per square meter (cd/m2).</summary>
 		public ushort ReflectedAmbientLight {
-			get { return _dataset.GetUInt16(DcmTags.ReflectedAmbientLight, 0); }
-			set { _dataset.AddElementWithValue(DcmTags.ReflectedAmbientLight, value); }
+			get { return _dataset.GetUInt16(DicomTags.ReflectedAmbientLight, 0); }
+			set { _dataset.AddElementWithValue(DicomTags.ReflectedAmbientLight, value); }
 		}
 
 		/// <summary>Specifies the resolution at which images in this Film Box are to be printed.</summary>
@@ -590,14 +590,14 @@ namespace DicomPrintScp {
 		/// </list>
 		/// </remarks>
 		public string RequestedResolutionID {
-			get { return _dataset.GetString(DcmTags.RequestedResolutionID, "STANDARD"); }
-			set { _dataset.AddElementWithValue(DcmTags.RequestedResolutionID, value); }
+			get { return _dataset.GetString(DicomTags.RequestedResolutionID, "STANDARD"); }
+			set { _dataset.AddElementWithValue(DicomTags.RequestedResolutionID, value); }
 		}
 		#endregion
 
 		#region Public Methods
 		public bool Initialize() {
-			_dataset.AddItem(new DcmItemSequence(DcmTags.ReferencedImageBoxSequence));
+			_dataset.AddItem(new DcmItemSequence(DicomTags.ReferencedImageBoxSequence));
 			
 			// Set Defaults
 			FilmOrientation = FilmOrientation;
@@ -612,10 +612,10 @@ namespace DicomPrintScp {
 			Trim = Trim;
 			RequestedResolutionID = RequestedResolutionID;
 			
-			//_dataset.AddItem(new DcmItemSequence(DcmTags.ReferencedBasicAnnotationBoxSequence));
+			//_dataset.AddItem(new DcmItemSequence(DicomTags.ReferencedBasicAnnotationBoxSequence));
 			//AnnotationDisplayFormatID = AnnotationDisplayFormatID;
 
-			//_dataset.AddItem(new DcmItemSequence(DcmTags.ReferencedPresentationLUTSequence));
+			//_dataset.AddItem(new DcmItemSequence(DicomTags.ReferencedPresentationLUTSequence));
 			//Illumination = Illumination;
 			//ReflectedAmbientLight = ReflectedAmbientLight;
 
@@ -663,7 +663,7 @@ namespace DicomPrintScp {
 			return false;
 		}
 
-		public DcmImageBox FindImageBox(DcmUID instUid) {
+		public DcmImageBox FindImageBox(DicomUID instUid) {
 			foreach (DcmImageBox box in _boxes) {
 				if (box.SOPInstanceUID.UID == instUid.UID)
 					return box;
@@ -682,17 +682,17 @@ namespace DicomPrintScp {
 
 		#region Private Methods
 		private void CreateImageBox() {
-			DcmUID classUid = DcmUIDs.BasicGrayscaleImageBoxSOPClass;
-			if (_session.SessionClassUID == DcmUIDs.BasicColorPrintManagementMetaSOPClass)
-				classUid = DcmUIDs.BasicColorImageBoxSOPClass;
+			DicomUID classUid = DicomUID.BasicGrayscaleImageBoxSOPClass;
+			if (_session.SessionClassUID == DicomUID.BasicColorPrintManagementMetaSOPClass)
+				classUid = DicomUID.BasicColorImageBoxSOPClass;
 
-			DcmUID instUid = DcmUID.Generate(SOPInstanceUID, _boxes.Count + 1);
+			DicomUID instUid = DicomUID.Generate(SOPInstanceUID, _boxes.Count + 1);
 
 			DcmImageBox box = new DcmImageBox(this, classUid, instUid);
 			box.ImageBoxPosition = (ushort)(_boxes.Count + 1);
 			_boxes.Add(box);
 
-			_dataset.AddReferenceSequenceItem(DcmTags.ReferencedImageBoxSequence, classUid, instUid);
+			_dataset.AddReferenceSequenceItem(DicomTags.ReferencedImageBoxSequence, classUid, instUid);
 		}
 		#endregion
 	}
@@ -701,8 +701,8 @@ namespace DicomPrintScp {
 	public class DcmImageBox {
 		#region Private Members
 		private DcmFilmBox _filmBox;
-		private DcmUID _sopClass;
-		private DcmUID _sopInstance;
+		private DicomUID _sopClass;
+		private DicomUID _sopInstance;
 		private DcmDataset _dataset;
 		#endregion
 
@@ -713,11 +713,11 @@ namespace DicomPrintScp {
 		/// <param name="filmBox">Basic Film Box</param>
 		/// <param name="sopClass">SOP Class UID</param>
 		/// <param name="sopInstance">SOP Instance UID</param>
-		public DcmImageBox(DcmFilmBox filmBox, DcmUID sopClass, DcmUID sopInstance) {
+		public DcmImageBox(DcmFilmBox filmBox, DicomUID sopClass, DicomUID sopInstance) {
 			_filmBox = filmBox;
 			_sopClass = sopClass;
 			_sopInstance = sopInstance;
-			_dataset = new DcmDataset(DcmTS.ImplicitVRLittleEndian);
+			_dataset = new DcmDataset(DicomTransferSyntax.ImplicitVRLittleEndian);
 		}
 
 		/// <summary>
@@ -727,7 +727,7 @@ namespace DicomPrintScp {
 		/// <param name="sopClass">SOP Class UID</param>
 		/// <param name="sopInstance">SOP Instance UID</param>
 		/// <param name="dataset">Dataset</param>
-		public DcmImageBox(DcmFilmBox filmBox, DcmUID sopClass, DcmUID sopInstance, DcmDataset dataset) {
+		public DcmImageBox(DcmFilmBox filmBox, DicomUID sopClass, DicomUID sopInstance, DcmDataset dataset) {
 			_filmBox = filmBox;
 			_sopClass = sopClass;
 			_sopInstance = sopInstance;
@@ -737,18 +737,18 @@ namespace DicomPrintScp {
 
 		#region Public Properties
 		/// <summary>Basic Color Image Box SOP</summary>
-		public static readonly DcmUID ColorSOPClassUID = DcmUIDs.BasicColorImageBoxSOPClass;
+		public static readonly DicomUID ColorSOPClassUID = DicomUID.BasicColorImageBoxSOPClass;
 
 		/// <summary>Basic Grayscale Image Box SOP</summary>
-		public static readonly DcmUID GraySOPClassUID = DcmUIDs.BasicGrayscaleImageBoxSOPClass;
+		public static readonly DicomUID GraySOPClassUID = DicomUID.BasicGrayscaleImageBoxSOPClass;
 
 		/// <summary>SOP Class UID</summary>
-		public DcmUID SOPClassUID {
+		public DicomUID SOPClassUID {
 			get { return _sopClass; }
 		}
 
 		/// <summary>SOP Instance UID</summary>
-		public DcmUID SOPInstanceUID {
+		public DicomUID SOPInstanceUID {
 			get { return _sopInstance; }
 		}
 
@@ -762,9 +762,9 @@ namespace DicomPrintScp {
 			get {
 				DcmItemSequence sq = null;
 				if (_sopClass == ColorSOPClassUID)
-					sq = _dataset.GetSQ(DcmTags.BasicColorImageSequence);
+					sq = _dataset.GetSQ(DicomTags.BasicColorImageSequence);
 				else
-					sq = _dataset.GetSQ(DcmTags.BasicGrayscaleImageSequence);
+					sq = _dataset.GetSQ(DicomTags.BasicGrayscaleImageSequence);
 
 				if (sq != null && sq.SequenceItems.Count > 0)
 					return sq.SequenceItems[0].Dataset;
@@ -776,8 +776,8 @@ namespace DicomPrintScp {
 		/// <summary>The position of the image on the film, based on Image Display 
 		/// Format (2010,0010). See C.13.5.1 for specification.</summary>
 		public ushort ImageBoxPosition {
-			get { return _dataset.GetUInt16(DcmTags.ImageBoxPosition, 1); }
-			set { _dataset.AddElementWithValue(DcmTags.ImageBoxPosition, value); }
+			get { return _dataset.GetUInt16(DicomTags.ImageBoxPosition, 1); }
+			set { _dataset.AddElementWithValue(DicomTags.ImageBoxPosition, value); }
 		}
 
 		/// <summary>Specifies whether minimum pixel values (after VOI LUT transformation) 
@@ -798,8 +798,8 @@ namespace DicomPrintScp {
 		/// If Polarity (2020,0020) is not specified by the SCU, the SCP shall print with NORMAL polarity.
 		/// </remarks>
 		public string Polarity {
-			get { return _dataset.GetString(DcmTags.Polarity, "NORMAL"); }
-			set { _dataset.AddElementWithValue(DcmTags.Polarity, value); }
+			get { return _dataset.GetString(DicomTags.Polarity, "NORMAL"); }
+			set { _dataset.AddElementWithValue(DicomTags.Polarity, value); }
 		}
 
 		/// <summary>Interpolation type by which the printer magnifies or decimates the image 
@@ -814,8 +814,8 @@ namespace DicomPrintScp {
 		/// </list>
 		/// </remarks>
 		public string MagnificationType {
-			get { return _dataset.GetString(DcmTags.MagnificationType, _filmBox.MagnificationType); }
-			set { _dataset.AddElementWithValue(DcmTags.MagnificationType, value); }
+			get { return _dataset.GetString(DicomTags.MagnificationType, _filmBox.MagnificationType); }
+			set { _dataset.AddElementWithValue(DicomTags.MagnificationType, value); }
 		}
 
 		/// <summary>Further specifies the type of the interpolation function. Values 
@@ -823,24 +823,24 @@ namespace DicomPrintScp {
 		/// 
 		/// Only valid for Magnification Type (2010,0060) = CUBIC</summary>
 		public string SmoothingType {
-			get { return _dataset.GetString(DcmTags.SmoothingType, _filmBox.SmoothingType); }
-			set { _dataset.AddElementWithValue(DcmTags.SmoothingType, value); }
+			get { return _dataset.GetString(DicomTags.SmoothingType, _filmBox.SmoothingType); }
+			set { _dataset.AddElementWithValue(DicomTags.SmoothingType, value); }
 		}
 
 		/// <summary>Minimum density of the images on the film, expressed in hundredths of 
 		/// OD. If Min Density is lower than minimum printer density than Min Density is set 
 		/// to minimum printer density.</summary>
 		public ushort MinDensity {
-			get { return _dataset.GetUInt16(DcmTags.MinDensity, _filmBox.MinDensity); }
-			set { _dataset.AddElementWithValue(DcmTags.MinDensity, value); }
+			get { return _dataset.GetUInt16(DicomTags.MinDensity, _filmBox.MinDensity); }
+			set { _dataset.AddElementWithValue(DicomTags.MinDensity, value); }
 		}
 
 		/// <summary>Maximum density of the images on the film, expressed in hundredths of 
 		/// OD. If Max Density is higher than maximum printer density than Max Density is set 
 		/// to maximum printer density.</summary>
 		public ushort MaxDensity {
-			get { return _dataset.GetUInt16(DcmTags.MaxDensity, _filmBox.MaxDensity); }
-			set { _dataset.AddElementWithValue(DcmTags.MaxDensity, value); }
+			get { return _dataset.GetUInt16(DicomTags.MaxDensity, _filmBox.MaxDensity); }
+			set { _dataset.AddElementWithValue(DicomTags.MaxDensity, value); }
 		}
 
 		/// <summary>Character string that contains either the ID of the printer configuration 
@@ -862,15 +862,15 @@ namespace DicomPrintScp {
 		/// the highest contrast levels available.
 		/// </remarks>
 		public string ConfigurationInformation {
-			get { return _dataset.GetString(DcmTags.ConfigurationInformation, _filmBox.ConfigurationInformation); }
-			set { _dataset.AddElementWithValue(DcmTags.ConfigurationInformation, value); }
+			get { return _dataset.GetString(DicomTags.ConfigurationInformation, _filmBox.ConfigurationInformation); }
+			set { _dataset.AddElementWithValue(DicomTags.ConfigurationInformation, value); }
 		}
 
 		/// <summary>Width (x-dimension) in mm of the image to be printed. This value overrides 
 		/// the size that corresponds with optimal filling of the Image Box.</summary>
 		public double RequestedImageSize {
-			get { return _dataset.GetDouble(DcmTags.RequestedImageSize, 0.0); }
-			set { _dataset.AddElementWithValue(DcmTags.RequestedImageSize, value); }
+			get { return _dataset.GetDouble(DicomTags.RequestedImageSize, 0.0); }
+			set { _dataset.AddElementWithValue(DicomTags.RequestedImageSize, value); }
 		}
 
 		/// <summary>Specifies whether image pixels are to be decimated or cropped if the image 
@@ -900,8 +900,8 @@ namespace DicomPrintScp {
 		/// </list>
 		/// </remarks>
 		public string RequestedDecimateCropBehavior {
-			get { return _dataset.GetString(DcmTags.RequestedDecimateCropBehavior, "DECIMATE"); }
-			set { _dataset.AddElementWithValue(DcmTags.RequestedDecimateCropBehavior, value); }
+			get { return _dataset.GetString(DicomTags.RequestedDecimateCropBehavior, "DECIMATE"); }
+			set { _dataset.AddElementWithValue(DicomTags.RequestedDecimateCropBehavior, value); }
 		}
 		#endregion
 

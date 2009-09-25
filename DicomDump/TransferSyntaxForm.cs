@@ -12,9 +12,9 @@ using Dicom.Data;
 namespace Dicom.Forms {
 	public partial class TransferSyntaxForm : Form {
 		private string[] TransferSyntaxDescriptions;
-		private DcmTS[] TransferSyntaxes;
+		private DicomTransferSyntax[] TransferSyntaxes;
 
-		private DcmTS _selectedSyntax = null;
+		private DicomTransferSyntax _selectedSyntax = null;
 		private int _selectedQualityRate = 0;
 
 		public TransferSyntaxForm() {
@@ -33,16 +33,16 @@ namespace Dicom.Forms {
 			TransferSyntaxDescriptions[i++] = "Explicit VR Big Endian";
 
 			i = 0;
-			TransferSyntaxes = new DcmTS[9];
+			TransferSyntaxes = new DicomTransferSyntax[9];
 			TransferSyntaxes[i++] = null;
-			TransferSyntaxes[i++] = DcmTS.JPEG2000Lossless;
-			TransferSyntaxes[i++] = DcmTS.JPEGProcess14SV1;
-			TransferSyntaxes[i++] = DcmTS.JPEGProcess14;
-			TransferSyntaxes[i++] = DcmTS.RLELossless;
-			TransferSyntaxes[i++] = DcmTS.DeflatedExplicitVRLittleEndian;
-			TransferSyntaxes[i++] = DcmTS.ExplicitVRLittleEndian;
-			TransferSyntaxes[i++] = DcmTS.ImplicitVRLittleEndian;
-			TransferSyntaxes[i++] = DcmTS.ExplicitVRBigEndian;
+			TransferSyntaxes[i++] = DicomTransferSyntax.JPEG2000Lossless;
+			TransferSyntaxes[i++] = DicomTransferSyntax.JPEGProcess14SV1;
+			TransferSyntaxes[i++] = DicomTransferSyntax.JPEGProcess14;
+			TransferSyntaxes[i++] = DicomTransferSyntax.RLELossless;
+			TransferSyntaxes[i++] = DicomTransferSyntax.DeflatedExplicitVRLittleEndian;
+			TransferSyntaxes[i++] = DicomTransferSyntax.ExplicitVRLittleEndian;
+			TransferSyntaxes[i++] = DicomTransferSyntax.ImplicitVRLittleEndian;
+			TransferSyntaxes[i++] = DicomTransferSyntax.ExplicitVRBigEndian;
 
 			foreach (string tx in TransferSyntaxDescriptions) {
 				cbTransferSyntax.Items.Add(tx);
@@ -50,7 +50,7 @@ namespace Dicom.Forms {
 			cbTransferSyntax.SelectedIndex = 0;
 		}
 
-		public DcmTS SelectedTransferSyntax {
+		public DicomTransferSyntax SelectedTransferSyntax {
 			get { return _selectedSyntax; }
 		}
 

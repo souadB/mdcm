@@ -104,11 +104,11 @@ namespace Dicom.Network {
 		#endregion
 
 		#region Methods
-		public bool Supports(DcmTS tx) {
+		public bool Supports(DicomTransferSyntax tx) {
 			return TransferSyntaxes.Contains(tx.UID.UID);
 		}
 
-		public bool Supports(DcmUID ax) {
+		public bool Supports(DicomUID ax) {
 			return AbstractSyntaxes.Contains(ax.UID);
 		}
 
@@ -136,8 +136,8 @@ namespace Dicom.Network {
 			TransferSyntaxes = new List<string>();
 			TransferSyntaxes.AddRange(SupportedTransferSyntaxes);
 			AbstractSyntaxes = new List<string>();
-			foreach (DcmUID uid in DcmUIDs.Entries.Values) {
-				if (uid.Type == UidType.SOPClass)
+			foreach (DicomUID uid in DicomUID.Entries.Values) {
+				if (uid.Type == DicomUidType.SOPClass)
 					SupportedStorageSyntaxes.Add(uid.UID);
 			}
 		}
@@ -146,10 +146,10 @@ namespace Dicom.Network {
 			foreach (DcmPresContext pc in associate.GetPresentationContexts()) {
 				if (pc.Result == DcmPresContextResult.Proposed) {
 					if (AbstractSyntaxes.Contains(pc.AbstractSyntax.UID)) {
-						IList<DcmTS> txs = pc.GetTransfers();
+						IList<DicomTransferSyntax> txs = pc.GetTransfers();
 						for (int i = 0; i < txs.Count; i++) {
 							if (TransferSyntaxes.Contains(txs[i].UID.UID)) {
-								if (!DcmUIDs.IsImageStorage(pc.AbstractSyntax) && DcmTSs.IsImageCompression(txs[i]))
+								if (!DicomUID.IsImageStorage(pc.AbstractSyntax) && DicomTransferSyntax.IsImageCompression(txs[i]))
 									continue;
 								pc.SetResult(DcmPresContextResult.Accept, txs[i]);
 								break;
@@ -174,15 +174,15 @@ namespace Dicom.Network {
 
 		static DcmAssociateProfile() {
 			SupportedTransferSyntaxes = new List<string>();
-			SupportedTransferSyntaxes.Add(DcmTS.JPEG2000Lossless.UID.UID);
-			SupportedTransferSyntaxes.Add(DcmTS.JPEGProcess14SV1.UID.UID);
-			SupportedTransferSyntaxes.Add(DcmTS.RLELossless.UID.UID);
-			SupportedTransferSyntaxes.Add(DcmTS.ExplicitVRLittleEndian.UID.UID);
-			SupportedTransferSyntaxes.Add(DcmTS.ImplicitVRLittleEndian.UID.UID);
+			SupportedTransferSyntaxes.Add(DicomTransferSyntax.JPEG2000Lossless.UID.UID);
+			SupportedTransferSyntaxes.Add(DicomTransferSyntax.JPEGProcess14SV1.UID.UID);
+			SupportedTransferSyntaxes.Add(DicomTransferSyntax.RLELossless.UID.UID);
+			SupportedTransferSyntaxes.Add(DicomTransferSyntax.ExplicitVRLittleEndian.UID.UID);
+			SupportedTransferSyntaxes.Add(DicomTransferSyntax.ImplicitVRLittleEndian.UID.UID);
 
 			SupportedStorageSyntaxes = new List<string>();
-			SupportedStorageSyntaxes.Add(DcmUIDs.VerificationSOPClass.UID);
-			foreach (DcmUID uid in DcmUIDs.Entries.Values) {
+			SupportedStorageSyntaxes.Add(DicomUID.VerificationSOPClass.UID);
+			foreach (DicomUID uid in DicomUID.Entries.Values) {
 				if (uid.Description.Contains("Storage"))
 					SupportedStorageSyntaxes.Add(uid.UID);
 			}

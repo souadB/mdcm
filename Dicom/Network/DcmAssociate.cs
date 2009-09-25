@@ -47,23 +47,23 @@ namespace Dicom.Network {
 		#region Private Members
 		private byte _pcid;
 		private DcmPresContextResult _result;
-		private DcmUID _abstract;
-		private List<DcmTS> _transfers;
+		private DicomUID _abstract;
+		private List<DicomTransferSyntax> _transfers;
 		#endregion
 
 		#region Public Constructor
-		public DcmPresContext(byte pcid, DcmUID abstractSyntax) {
+		public DcmPresContext(byte pcid, DicomUID abstractSyntax) {
 			_pcid = pcid;
 			_result = DcmPresContextResult.Proposed;
 			_abstract = abstractSyntax;
-			_transfers = new List<DcmTS>();
+			_transfers = new List<DicomTransferSyntax>();
 		}
 
-		internal DcmPresContext(byte pcid, DcmUID abstractSyntax, DcmTS transferSyntax, DcmPresContextResult result) {
+		internal DcmPresContext(byte pcid, DicomUID abstractSyntax, DicomTransferSyntax transferSyntax, DcmPresContextResult result) {
 			_pcid = pcid;
 			_result = result;
 			_abstract = abstractSyntax;
-			_transfers = new List<DcmTS>();
+			_transfers = new List<DicomTransferSyntax>();
 			_transfers.Add(transferSyntax);
 		}
 		#endregion
@@ -77,11 +77,11 @@ namespace Dicom.Network {
 			get { return _result; }
 		}
 
-		public DcmUID AbstractSyntax {
+		public DicomUID AbstractSyntax {
 			get { return _abstract; }
 		}
 
-		public DcmTS AcceptedTransferSyntax {
+		public DicomTransferSyntax AcceptedTransferSyntax {
 			get {
 				if (_transfers.Count > 0)
 					return _transfers[0];
@@ -95,18 +95,18 @@ namespace Dicom.Network {
 			SetResult(result, _transfers[0]);
 		}
 
-		public void SetResult(DcmPresContextResult result, DcmTS acceptedTs) {
+		public void SetResult(DcmPresContextResult result, DicomTransferSyntax acceptedTs) {
 			_transfers.Clear();
 			_transfers.Add(acceptedTs);
 			_result = result;
 		}
 
-		public void AddTransfer(DcmTS ts) {
+		public void AddTransfer(DicomTransferSyntax ts) {
 			if (!_transfers.Contains(ts))
 				_transfers.Add(ts);
 		}
 
-		public void RemoveTransfer(DcmTS ts) {
+		public void RemoveTransfer(DicomTransferSyntax ts) {
 			if (_transfers.Contains(ts))
 				_transfers.Remove(ts);
 		}
@@ -115,11 +115,11 @@ namespace Dicom.Network {
 			_transfers.Clear();
 		}
 
-		public IList<DcmTS> GetTransfers() {
+		public IList<DicomTransferSyntax> GetTransfers() {
 			return _transfers.AsReadOnly();
 		}
 
-		public bool HasTransfer(DcmTS ts) {
+		public bool HasTransfer(DicomTransferSyntax ts) {
 			return _transfers.Contains(ts);
 		}
 
@@ -146,8 +146,8 @@ namespace Dicom.Network {
 
 	public class DcmAssociate {
 		#region Private Members
-		private DcmUID _appCtxNm;
-		private DcmUID _implClass;
+		private DicomUID _appCtxNm;
+		private DicomUID _implClass;
 		private string _implVersion;
 		private uint _maxPdu;
 		private string _calledAe;
@@ -161,7 +161,7 @@ namespace Dicom.Network {
 		#region Public Constructor
 		public DcmAssociate() {
 			_maxPdu = (uint)PDataTFStream.MaxPduSizeLimit;
-			_appCtxNm = DcmUIDs.DICOMApplicationContextName;
+			_appCtxNm = DicomUID.DICOMApplicationContextName;
 			_implClass = Implementation.ClassUID;
 			_implVersion = Implementation.Version;
 			_presContexts = new SortedList<byte, DcmPresContext>();
@@ -175,7 +175,7 @@ namespace Dicom.Network {
 		/// <summary>
 		/// Gets or sets the Application Context Name.
 		/// </summary>
-		public DcmUID ApplicationContextName {
+		public DicomUID ApplicationContextName {
 			get { return _appCtxNm; }
 			set { _appCtxNm = value; }
 		}
@@ -183,7 +183,7 @@ namespace Dicom.Network {
 		/// <summary>
 		/// Gets or sets the Implementation Class UID.
 		/// </summary>
-		public DcmUID ImplementationClass {
+		public DicomUID ImplementationClass {
 			get { return _implClass; }
 			set { _implClass = value; }
 		}
@@ -246,14 +246,14 @@ namespace Dicom.Network {
 		/// <summary>
 		/// Adds a Presentation Context to the DICOM Associate.
 		/// </summary>
-		public void AddPresentationContext(byte pcid, DcmUID abstractSyntax) {
+		public void AddPresentationContext(byte pcid, DicomUID abstractSyntax) {
 			_presContexts.Add(pcid, new DcmPresContext(pcid, abstractSyntax));
 		}
 
 		/// <summary>
 		/// Adds a Presentation Context to the DICOM Associate.
 		/// </summary>
-		public byte AddPresentationContext(DcmUID abstractSyntax) {
+		public byte AddPresentationContext(DicomUID abstractSyntax) {
 			byte pcid = 1;
 			foreach (byte id in _presContexts.Keys) {
 				if (id >= pcid)
@@ -263,7 +263,7 @@ namespace Dicom.Network {
 			return pcid;
 		}
 
-		public byte AddOrGetPresentationContext(DcmUID abstractSyntax) {
+		public byte AddOrGetPresentationContext(DicomUID abstractSyntax) {
 			byte pcid = 1;
 			foreach (byte id in _presContexts.Keys) {
 				if (_presContexts[id].AbstractSyntax == abstractSyntax)
@@ -314,7 +314,7 @@ namespace Dicom.Network {
 		/// </summary>
 		/// <param name="pcid">Presentation Context ID</param>
 		/// <param name="ts">Transfer Syntax</param>
-		public void AddTransferSyntax(byte pcid, DcmTS ts) {
+		public void AddTransferSyntax(byte pcid, DicomTransferSyntax ts) {
 			GetPresentationContext(pcid).AddTransfer(ts);
 		}
 
@@ -333,7 +333,7 @@ namespace Dicom.Network {
 		/// <param name="pcid">Presentation Context ID</param>
 		/// <param name="index">Index of Transfer Syntax</param>
 		/// <returns>Transfer Syntax</returns>
-		public DcmTS GetTransferSyntax(byte pcid, int index) {
+		public DicomTransferSyntax GetTransferSyntax(byte pcid, int index) {
 			return GetPresentationContext(pcid).GetTransfers()[index];
 		}
 
@@ -342,7 +342,7 @@ namespace Dicom.Network {
 		/// </summary>
 		/// <param name="pcid">Presentation Context ID</param>
 		/// <param name="ts">Transfer Syntax</param>
-		public void RemoveTransferSyntax(byte pcid, DcmTS ts) {
+		public void RemoveTransferSyntax(byte pcid, DicomTransferSyntax ts) {
 			GetPresentationContext(pcid).RemoveTransfer(ts);
 		}
 
@@ -351,7 +351,7 @@ namespace Dicom.Network {
 		/// </summary>
 		/// <param name="pcid">Presentation Context ID</param>
 		/// <returns>Abstract Syntax</returns>
-		public DcmUID GetAbstractSyntax(byte pcid) {
+		public DicomUID GetAbstractSyntax(byte pcid) {
 			return GetPresentationContext(pcid).AbstractSyntax;
 		}
 
@@ -360,17 +360,17 @@ namespace Dicom.Network {
 		/// </summary>
 		/// <param name="pcid">Presentation Context ID</param>
 		/// <returns>Transfer Syntax</returns>
-		public DcmTS GetAcceptedTransferSyntax(byte pcid) {
+		public DicomTransferSyntax GetAcceptedTransferSyntax(byte pcid) {
 			return GetPresentationContext(pcid).AcceptedTransferSyntax;
 		}
 
 		public void SetAcceptedTransferSyntax(byte pcid, int index) {
-			DcmTS ts = GetPresentationContext(pcid).GetTransfers()[index];
+			DicomTransferSyntax ts = GetPresentationContext(pcid).GetTransfers()[index];
 			GetPresentationContext(pcid).ClearTransfers();
 			GetPresentationContext(pcid).AddTransfer(ts);
 		}
 
-		public void SetAcceptedTransferSyntax(byte pcid, DcmTS ts) {
+		public void SetAcceptedTransferSyntax(byte pcid, DicomTransferSyntax ts) {
 			GetPresentationContext(pcid).ClearTransfers();
 			GetPresentationContext(pcid).AddTransfer(ts);
 		}
@@ -380,7 +380,7 @@ namespace Dicom.Network {
 		/// </summary>
 		/// <param name="abstractSyntax">Abstract Syntax</param>
 		/// <returns>Presentation Context ID</returns>
-		public byte FindAbstractSyntax(DcmUID abstractSyntax) {
+		public byte FindAbstractSyntax(DicomUID abstractSyntax) {
 			foreach (DcmPresContext ctx in _presContexts.Values) {
 				if (ctx.AbstractSyntax == abstractSyntax && ctx.Result == DcmPresContextResult.Accept)
 					return ctx.ID;
@@ -398,7 +398,7 @@ namespace Dicom.Network {
 		/// <param name="abstractSyntax">Abstract Syntax</param>
 		/// <param name="transferSyntax">Transfer Syntax</param>
 		/// <returns>Presentation Context ID</returns>
-		public byte FindAbstractSyntaxWithTransferSyntax(DcmUID abstractSyntax, DcmTS trasferSyntax) {
+		public byte FindAbstractSyntaxWithTransferSyntax(DicomUID abstractSyntax, DicomTransferSyntax trasferSyntax) {
 			foreach (DcmPresContext ctx in _presContexts.Values) {
 				if (ctx.AbstractSyntax == abstractSyntax && ctx.HasTransfer(trasferSyntax))
 					return ctx.ID;
@@ -406,7 +406,7 @@ namespace Dicom.Network {
 			return 0;
 		}
 
-		public void AddPresentationContext(byte pcid, DcmUID abstractSyntax, DcmTS transferSyntax, DcmPresContextResult result) {
+		public void AddPresentationContext(byte pcid, DicomUID abstractSyntax, DicomTransferSyntax transferSyntax, DcmPresContextResult result) {
 			_presContexts.Add(pcid, new DcmPresContext(pcid, abstractSyntax, transferSyntax, result));
 		}
 
@@ -435,10 +435,10 @@ namespace Dicom.Network {
 			sb.AppendFormat("Presentation Contexts:   {0}\n", _presContexts.Count);
 			foreach (DcmPresContext pctx in _presContexts.Values) {
 				sb.AppendFormat("  Presentation Context:  {0} [{1}]\n", pctx.ID, pctx.GetResultDescription());
-				sb.AppendFormat("      Abstract:  {0}\n", (pctx.AbstractSyntax.Type == UidType.Unknown) ?
+				sb.AppendFormat("      Abstract:  {0}\n", (pctx.AbstractSyntax.Type == DicomUidType.Unknown) ?
 					pctx.AbstractSyntax.UID : pctx.AbstractSyntax.Description);
-				foreach (DcmTS ts in pctx.GetTransfers()) {
-					sb.AppendFormat("      Transfer:  {0}\n", (ts.UID.Type == UidType.Unknown) ?
+				foreach (DicomTransferSyntax ts in pctx.GetTransfers()) {
+					sb.AppendFormat("      Transfer:  {0}\n", (ts.UID.Type == DicomUidType.Unknown) ?
 						ts.UID.UID : ts.UID.Description);
 				}
 			}

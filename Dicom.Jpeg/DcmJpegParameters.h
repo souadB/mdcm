@@ -54,7 +54,7 @@ public:
 	DcmJpegParameters() {
 		_quality = 90;
 		_smoothing = 0;
-		_convertColorspace = true;
+		_convertColorspace = false;
 		_sample = JpegSampleFactor::SF444;
 		_predictor = 1;
 		_pointTransform = 0;

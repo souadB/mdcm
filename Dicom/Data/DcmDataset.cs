@@ -35,22 +35,22 @@ namespace Dicom.Data {
 		private long _streamPosition = 0;
 		private uint _streamLength = 0xffffffff;
 
-		private DcmTS _transferSyntax;
+		private DicomTransferSyntax _transferSyntax;
 		private object _userState;
 		#endregion
 
 		#region Public Constructors
-		public DcmDataset() : this(DcmTS.ExplicitVRLittleEndian) {
+		public DcmDataset() : this(DicomTransferSyntax.ExplicitVRLittleEndian) {
 		}
 
-		public DcmDataset(DcmTS transferSyntax) {
+		public DcmDataset(DicomTransferSyntax transferSyntax) {
 			_transferSyntax = transferSyntax;
 		}
 
-		public DcmDataset(long streamPosition, uint lengthInStream) : this(streamPosition, lengthInStream, DcmTS.ExplicitVRLittleEndian) {
+		public DcmDataset(long streamPosition, uint lengthInStream) : this(streamPosition, lengthInStream, DicomTransferSyntax.ExplicitVRLittleEndian) {
 		}
 
-		public DcmDataset(long streamPosition, uint lengthInStream, DcmTS transferSyntax) {
+		public DcmDataset(long streamPosition, uint lengthInStream, DicomTransferSyntax transferSyntax) {
 			_streamPosition = streamPosition;
 			_streamLength = lengthInStream;
 			_transferSyntax = transferSyntax;
@@ -75,7 +75,7 @@ namespace Dicom.Data {
 		/// <summary>
 		/// Transfer syntax used to encode the elements in this dataset.
 		/// </summary>
-		public DcmTS InternalTransferSyntax {
+		public DicomTransferSyntax InternalTransferSyntax {
 			get { return _transferSyntax; }
 		}
 
@@ -93,10 +93,39 @@ namespace Dicom.Data {
 			get { return _userState; }
 			set { _userState = value; }
 		}
+
+		/// <summary>
+		/// Specific Character Set
+		/// </summary>
+		public Encoding SpecificCharacterSetEncoding {
+			get {
+				DcmCodeString enc = GetCS(DicomTags.SpecificCharacterSet);
+				if (enc == null || enc.Length == 0)
+					return DcmEncoding.Default;
+				return DcmEncoding.GetEncodingForSpecificCharacterSet(enc.GetValue());
+			}
+			set {
+				string charSet = DcmEncoding.GetSpecificCharacterSetForEncoding(value);
+				AddElementWithValue(DicomTags.SpecificCharacterSet, charSet);
+
+				foreach (DcmItem item in Elements) {
+					if (item is DcmElement && item.VR.IsEncodedString) {
+						DcmElement elem = (DcmElement)item;
+
+						if (elem.Length == 0)
+							continue;
+
+						string elemValue = elem.ByteBuffer.GetString();
+						elem.ByteBuffer.Encoding = value;
+						elem.ByteBuffer.SetString(elemValue, elem.VR.Padding);
+					}
+				}
+			}
+		}
 		#endregion
 
 		#region Internal Use Methods
-		internal uint CalculateGroupWriteLength(ushort group, DcmTS syntax, DicomWriteOptions options) {
+		public uint CalculateGroupWriteLength(ushort group, DicomTransferSyntax syntax, DicomWriteOptions options) {
 			uint length = 0;
 			foreach (DcmItem item in _items.Values) {
 				if (item.Tag.Group < group || item.Tag.Element == 0x0000)
@@ -108,7 +137,7 @@ namespace Dicom.Data {
 			return length;
 		}
 
-		internal uint CalculateWriteLength(DcmTS syntax, DicomWriteOptions options) {
+		public uint CalculateWriteLength(DicomTransferSyntax syntax, DicomWriteOptions options) {
 			uint length = 0;
 			ushort group = 0xffff;
 			foreach (DcmItem item in _items.Values) {
@@ -146,7 +175,7 @@ namespace Dicom.Data {
 			}
 		}
 
-		public void AddReferenceSequenceItem(DcmTag tag, DcmUID classUid, DcmUID instUid) {
+		public void AddReferenceSequenceItem(DicomTag tag, DicomUID classUid, DicomUID instUid) {
 			DcmItemSequence sq = GetSQ(tag);
 
 			if (sq == null) {
@@ -155,8 +184,8 @@ namespace Dicom.Data {
 			}
 
 			DcmItemSequenceItem item = new DcmItemSequenceItem();
-			item.Dataset.AddElementWithValue(DcmTags.ReferencedSOPClassUID, classUid);
-			item.Dataset.AddElementWithValue(DcmTags.ReferencedSOPInstanceUID, instUid);
+			item.Dataset.AddElementWithValue(DicomTags.ReferencedSOPClassUID, classUid);
+			item.Dataset.AddElementWithValue(DicomTags.ReferencedSOPInstanceUID, instUid);
 			sq.AddSequenceItem(item);
 		}
 
@@ -176,12 +205,12 @@ namespace Dicom.Data {
 		#endregion
 
 		#region Element Access Methods
-		public void Remove(DcmTag tag) {
+		public void Remove(DicomTag tag) {
 			try { _items.Remove(tag.Card); }
 			catch { }
 		}
 
-		public void Remove(DcmTagMask mask) {
+		public void Remove(DicomTagMask mask) {
 			for (int i = 0; i < _items.Values.Count; i++) {
 				if (mask.IsMatch(_items.Values[i].Tag)) {
 					try { _items.RemoveAt(i--); }
@@ -190,18 +219,22 @@ namespace Dicom.Data {
 			}
 		}
 
-		public bool AddElement(DcmTag tag) {
+		public bool AddElement(DicomTag tag) {
 			return AddElement(tag, tag.Entry.DefaultVR);
 		}
 
-		public bool AddElement(DcmTag tag, DcmVR vr) {
+		public bool AddElement(DicomTag tag, DicomVR vr) {
 			DcmElement elem = DcmElement.Create(tag, vr);
+
+			if (vr.IsEncodedString)
+				elem.ByteBuffer.Encoding = SpecificCharacterSetEncoding;
+
 			AddItem(elem);
 			return true;
 		}
 
-		public bool AddElementWithValue(DcmTag tag, string value) {
-			DcmVR vr = tag.Entry.DefaultVR;
+		public bool AddElementWithValue(DicomTag tag, string value) {
+			DicomVR vr = tag.Entry.DefaultVR;
 			if (!vr.IsString)
 				throw new DicomDataException("Tried to create element with incorrect VR");
 			if (AddElement(tag, vr)) {
@@ -212,9 +245,9 @@ namespace Dicom.Data {
 			return false;
 		}
 
-		public bool AddElementWithValue(DcmTag tag, ushort value) {
-			DcmVR vr = tag.Entry.DefaultVR;
-			if (vr != DcmVR.US)
+		public bool AddElementWithValue(DicomTag tag, ushort value) {
+			DicomVR vr = tag.Entry.DefaultVR;
+			if (vr != DicomVR.US)
 				throw new DicomDataException("Tried to create element with incorrect VR");
 			if (AddElement(tag, vr)) {
 				GetUS(tag).SetValue(value);
@@ -223,12 +256,12 @@ namespace Dicom.Data {
 			return false;
 		}
 
-		public bool AddElementWithValue(DcmTag tag, int value) {
-			DcmVR vr = tag.Entry.DefaultVR;
-			if (vr != DcmVR.IS && vr != DcmVR.SL)
+		public bool AddElementWithValue(DicomTag tag, int value) {
+			DicomVR vr = tag.Entry.DefaultVR;
+			if (vr != DicomVR.IS && vr != DicomVR.SL)
 				throw new DicomDataException("Tried to create element with incorrect VR");
 			if (AddElement(tag, vr)) {
-				if (vr == DcmVR.IS)
+				if (vr == DicomVR.IS)
 					GetIS(tag).SetInt32(value);
 				else
 					GetSL(tag).SetValue(value);
@@ -237,12 +270,12 @@ namespace Dicom.Data {
 			return false;
 		}
 		
-		public bool AddElementWithValue(DcmTag tag, double value) {
-			DcmVR vr = tag.Entry.DefaultVR;
-			if (vr != DcmVR.DS && vr != DcmVR.FD)
+		public bool AddElementWithValue(DicomTag tag, double value) {
+			DicomVR vr = tag.Entry.DefaultVR;
+			if (vr != DicomVR.DS && vr != DicomVR.FD)
 				throw new DicomDataException("Tried to create element with incorrect VR");
 			if (AddElement(tag, vr)) {
-				if (vr == DcmVR.DS)
+				if (vr == DicomVR.DS)
 					GetDS(tag).SetDouble(value);
 				else
 					GetFD(tag).SetValue(value);
@@ -251,9 +284,9 @@ namespace Dicom.Data {
 			return false;
 		}
 
-		public bool AddElementWithValue(DcmTag tag, decimal value) {
-			DcmVR vr = tag.Entry.DefaultVR;
-			if (vr != DcmVR.DS)
+		public bool AddElementWithValue(DicomTag tag, decimal value) {
+			DicomVR vr = tag.Entry.DefaultVR;
+			if (vr != DicomVR.DS)
 				throw new DicomDataException("Tried to create element with incorrect VR");
 			if (AddElement(tag, vr)) {
 				GetDS(tag).SetDecimal(value);
@@ -262,25 +295,25 @@ namespace Dicom.Data {
 			return false;
 		}
 
-		public bool AddElementWithValue(DcmTag tag, DateTime value) {
-			DcmVR vr = tag.Entry.DefaultVR;
-			if (vr != DcmVR.DA && vr != DcmVR.DT && vr != DcmVR.TM)
+		public bool AddElementWithValue(DicomTag tag, DateTime value) {
+			DicomVR vr = tag.Entry.DefaultVR;
+			if (vr != DicomVR.DA && vr != DicomVR.DT && vr != DicomVR.TM)
 				throw new DicomDataException("Tried to create element with incorrect VR");
 			if (AddElement(tag, vr)) {
-				if (vr == DcmVR.DA)
+				if (vr == DicomVR.DA)
 					GetDA(tag).SetDateTime(value);
-				else if (vr == DcmVR.DT)
+				else if (vr == DicomVR.DT)
 					GetDT(tag).SetDateTime(value);
-				else if (vr == DcmVR.TM)
+				else if (vr == DicomVR.TM)
 					GetTM(tag).SetDateTime(value);
 				return true;
 			}
 			return false;
 		}
 
-		public bool AddElementWithValue(DcmTag tag, DcmTag value) {
-			DcmVR vr = tag.Entry.DefaultVR;
-			if (vr != DcmVR.AT)
+		public bool AddElementWithValue(DicomTag tag, DicomTag value) {
+			DicomVR vr = tag.Entry.DefaultVR;
+			if (vr != DicomVR.AT)
 				throw new DicomDataException("Tried to create element with incorrect VR");
 			if (AddElement(tag, vr)) {
 				GetAT(tag).SetValue(value);
@@ -289,12 +322,12 @@ namespace Dicom.Data {
 			return false;
 		}
 
-		public bool AddElementWithValue(DcmTag tag, DcmUID value) {
+		public bool AddElementWithValue(DicomTag tag, DicomUID value) {
 			return AddElementWithValue(tag, value.UID);
 		}
 
-		public bool AddElementWithObjectValue(DcmTag tag, object value) {
-			DcmVR vr = tag.Entry.DefaultVR;
+		public bool AddElementWithObjectValue(DicomTag tag, object value) {
+			DicomVR vr = tag.Entry.DefaultVR;
 			if (AddElement(tag, vr)) {
 				GetElement(tag).SetValueObject(value);
 				return true;
@@ -302,8 +335,8 @@ namespace Dicom.Data {
 			return false;
 		}
 
-		public bool AddElementWithValueString(DcmTag tag, string value) {
-			DcmVR vr = tag.Entry.DefaultVR;
+		public bool AddElementWithValueString(DicomTag tag, string value) {
+			DicomVR vr = tag.Entry.DefaultVR;
 			if (AddElement(tag, vr)) {
 				GetElement(tag).SetValueString(value);
 				return true;
@@ -317,25 +350,25 @@ namespace Dicom.Data {
 			item.Endian = InternalTransferSyntax.Endian;
 		}
 
-		public DcmItem GetItem(DcmTag tag) {
+		public DcmItem GetItem(DicomTag tag) {
 			DcmItem item = null;
 			if (!_items.TryGetValue(tag.Card, out item))
 				return null;
 			return item;
 		}
 
-		public bool Contains(DcmTag tag) {
+		public bool Contains(DicomTag tag) {
 			return _items.ContainsKey(tag.Card);
 		}
 
-		public DcmVR GetVR(DcmTag tag) {
+		public DicomVR GetVR(DicomTag tag) {
 			DcmElement elem = GetElement(tag);
 			if (elem == null)
 				return null;
 			return elem.VR;
 		}
 
-		public DcmElement GetElement(DcmTag tag) {
+		public DcmElement GetElement(DicomTag tag) {
 			DcmItem item = null;
 			if (!_items.TryGetValue(tag.Card, out item))
 				return null;
@@ -344,14 +377,14 @@ namespace Dicom.Data {
 			return null;
 		}
 
-		public IEnumerable<DcmTag> GetMaskedTags(DcmTagMask mask) {
+		public IEnumerable<DicomTag> GetMaskedTags(DicomTagMask mask) {
 			for (int i = 0; i < _items.Values.Count; i++) {
 				if (mask.IsMatch(_items.Values[i].Tag))
 					yield return _items.Values[i].Tag;
 			}
 		}
 
-		public DcmApplicationEntity GetAE(DcmTag tag) {
+		public DcmApplicationEntity GetAE(DicomTag tag) {
 			DcmElement elem = GetElement(tag);
 			if (elem is DcmApplicationEntity)
 				return elem as DcmApplicationEntity;
@@ -360,7 +393,7 @@ namespace Dicom.Data {
 			return null;
 		}
 
-		public DcmAgeString GetAS(DcmTag tag) {
+		public DcmAgeString GetAS(DicomTag tag) {
 			DcmElement elem = GetElement(tag);
 			if (elem is DcmAgeString)
 				return elem as DcmAgeString;
@@ -369,7 +402,7 @@ namespace Dicom.Data {
 			return null;
 		}
 
-		public DcmAttributeTag GetAT(DcmTag tag) {
+		public DcmAttributeTag GetAT(DicomTag tag) {
 			DcmElement elem = GetElement(tag);
 			if (elem is DcmAttributeTag)
 				return elem as DcmAttributeTag;
@@ -378,7 +411,7 @@ namespace Dicom.Data {
 			return null;
 		}
 
-		public DcmCodeString GetCS(DcmTag tag) {
+		public DcmCodeString GetCS(DicomTag tag) {
 			DcmElement elem = GetElement(tag);
 			if (elem is DcmCodeString)
 				return elem as DcmCodeString;
@@ -387,7 +420,7 @@ namespace Dicom.Data {
 			return null;
 		}
 
-		public DcmDate GetDA(DcmTag tag) {
+		public DcmDate GetDA(DicomTag tag) {
 			DcmElement elem = GetElement(tag);
 			if (elem is DcmDate)
 				return elem as DcmDate;
@@ -396,7 +429,7 @@ namespace Dicom.Data {
 			return null;
 		}
 
-		public DcmDecimalString GetDS(DcmTag tag) {
+		public DcmDecimalString GetDS(DicomTag tag) {
 			DcmElement elem = GetElement(tag);
 			if (elem is DcmDecimalString)
 				return elem as DcmDecimalString;
@@ -405,7 +438,7 @@ namespace Dicom.Data {
 			return null;
 		}
 
-		public DcmDateTime GetDT(DcmTag tag) {
+		public DcmDateTime GetDT(DicomTag tag) {
 			DcmElement elem = GetElement(tag);
 			if (elem is DcmDateTime)
 				return elem as DcmDateTime;
@@ -414,7 +447,7 @@ namespace Dicom.Data {
 			return null;
 		}
 
-		public DcmFloatingPointDouble GetFD(DcmTag tag) {
+		public DcmFloatingPointDouble GetFD(DicomTag tag) {
 			DcmElement elem = GetElement(tag);
 			if (elem is DcmFloatingPointDouble)
 				return elem as DcmFloatingPointDouble;
@@ -423,7 +456,7 @@ namespace Dicom.Data {
 			return null;
 		}
 
-		public DcmFloatingPointSingle GetFL(DcmTag tag) {
+		public DcmFloatingPointSingle GetFL(DicomTag tag) {
 			DcmElement elem = GetElement(tag);
 			if (elem is DcmFloatingPointSingle)
 				return elem as DcmFloatingPointSingle;
@@ -432,7 +465,7 @@ namespace Dicom.Data {
 			return null;
 		}
 
-		public DcmIntegerString GetIS(DcmTag tag) {
+		public DcmIntegerString GetIS(DicomTag tag) {
 			DcmElement elem = GetElement(tag);
 			if (elem is DcmIntegerString)
 				return elem as DcmIntegerString;
@@ -441,7 +474,7 @@ namespace Dicom.Data {
 			return null;
 		}
 
-		public DcmLongString GetLO(DcmTag tag) {
+		public DcmLongString GetLO(DicomTag tag) {
 			DcmElement elem = GetElement(tag);
 			if (elem is DcmLongString)
 				return elem as DcmLongString;
@@ -450,7 +483,7 @@ namespace Dicom.Data {
 			return null;
 		}
 
-		public DcmLongText GetLT(DcmTag tag) {
+		public DcmLongText GetLT(DicomTag tag) {
 			DcmElement elem = GetElement(tag);
 			if (elem is DcmLongText)
 				return elem as DcmLongText;
@@ -459,7 +492,7 @@ namespace Dicom.Data {
 			return null;
 		}
 
-		public DcmOtherByte GetOB(DcmTag tag) {
+		public DcmOtherByte GetOB(DicomTag tag) {
 			DcmElement elem = GetElement(tag);
 			if (elem is DcmOtherByte)
 				return elem as DcmOtherByte;
@@ -468,7 +501,7 @@ namespace Dicom.Data {
 			return null;
 		}
 
-		public DcmOtherFloat GetOF(DcmTag tag) {
+		public DcmOtherFloat GetOF(DicomTag tag) {
 			DcmElement elem = GetElement(tag);
 			if (elem is DcmOtherFloat)
 				return elem as DcmOtherFloat;
@@ -477,7 +510,7 @@ namespace Dicom.Data {
 			return null;
 		}
 
-		public DcmOtherWord GetOW(DcmTag tag) {
+		public DcmOtherWord GetOW(DicomTag tag) {
 			DcmElement elem = GetElement(tag);
 			if (elem is DcmOtherWord)
 				return elem as DcmOtherWord;
@@ -486,7 +519,7 @@ namespace Dicom.Data {
 			return null;
 		}
 
-		public DcmPersonName GetPN(DcmTag tag) {
+		public DcmPersonName GetPN(DicomTag tag) {
 			DcmElement elem = GetElement(tag);
 			if (elem is DcmPersonName)
 				return elem as DcmPersonName;
@@ -495,7 +528,7 @@ namespace Dicom.Data {
 			return null;
 		}
 
-		public DcmShortString GetSH(DcmTag tag) {
+		public DcmShortString GetSH(DicomTag tag) {
 			DcmElement elem = GetElement(tag);
 			if (elem is DcmShortString)
 				return elem as DcmShortString;
@@ -504,7 +537,7 @@ namespace Dicom.Data {
 			return null;
 		}
 
-		public DcmSignedLong GetSL(DcmTag tag) {
+		public DcmSignedLong GetSL(DicomTag tag) {
 			DcmElement elem = GetElement(tag);
 			if (elem is DcmSignedLong)
 				return elem as DcmSignedLong;
@@ -513,7 +546,7 @@ namespace Dicom.Data {
 			return null;
 		}
 
-		public DcmItemSequence GetSQ(DcmTag tag) {
+		public DcmItemSequence GetSQ(DicomTag tag) {
 			DcmItem item = GetItem(tag);
 			if (item is DcmItemSequence)
 				return item as DcmItemSequence;
@@ -522,7 +555,7 @@ namespace Dicom.Data {
 			return null;
 		}
 
-		public DcmSignedShort GetSS(DcmTag tag) {
+		public DcmSignedShort GetSS(DicomTag tag) {
 			DcmElement elem = GetElement(tag);
 			if (elem is DcmSignedShort)
 				return elem as DcmSignedShort;
@@ -531,7 +564,7 @@ namespace Dicom.Data {
 			return null;
 		}
 
-		public DcmShortText GetST(DcmTag tag) {
+		public DcmShortText GetST(DicomTag tag) {
 			DcmElement elem = GetElement(tag);
 			if (elem is DcmShortText)
 				return elem as DcmShortText;
@@ -540,7 +573,7 @@ namespace Dicom.Data {
 			return null;
 		}
 
-		public DcmTime GetTM(DcmTag tag) {
+		public DcmTime GetTM(DicomTag tag) {
 			DcmElement elem = GetElement(tag);
 			if (elem is DcmTime)
 				return elem as DcmTime;
@@ -549,7 +582,7 @@ namespace Dicom.Data {
 			return null;
 		}
 
-		public DcmUniqueIdentifier GetUI(DcmTag tag) {
+		public DcmUniqueIdentifier GetUI(DicomTag tag) {
 			DcmElement elem = GetElement(tag);
 			if (elem is DcmUniqueIdentifier)
 				return elem as DcmUniqueIdentifier;
@@ -558,7 +591,7 @@ namespace Dicom.Data {
 			return null;
 		}
 
-		public DcmUnsignedLong GetUL(DcmTag tag) {
+		public DcmUnsignedLong GetUL(DicomTag tag) {
 			DcmElement elem = GetElement(tag);
 			if (elem is DcmUnsignedLong)
 				return elem as DcmUnsignedLong;
@@ -567,7 +600,7 @@ namespace Dicom.Data {
 			return null;
 		}
 
-		public DcmUnknown GetUN(DcmTag tag) {
+		public DcmUnknown GetUN(DicomTag tag) {
 			DcmElement elem = GetElement(tag);
 			if (elem is DcmUnknown)
 				return elem as DcmUnknown;
@@ -576,7 +609,7 @@ namespace Dicom.Data {
 			return null;
 		}
 
-		public DcmUnsignedShort GetUS(DcmTag tag) {
+		public DcmUnsignedShort GetUS(DicomTag tag) {
 			DcmElement elem = GetElement(tag);
 			if (elem is DcmUnsignedShort)
 				return elem as DcmUnsignedShort;
@@ -585,7 +618,7 @@ namespace Dicom.Data {
 			return null;
 		}
 
-		public DcmUnlimitedText GetUT(DcmTag tag) {
+		public DcmUnlimitedText GetUT(DicomTag tag) {
 			DcmElement elem = GetElement(tag);
 			if (elem is DcmUnlimitedText)
 				return elem as DcmUnlimitedText;
@@ -596,18 +629,18 @@ namespace Dicom.Data {
 		#endregion
 
 		#region Data Access Methods
-		public string GetValueString(DcmTag tag) {
+		public string GetValueString(DicomTag tag) {
 			DcmElement elem = GetElement(tag);
 			if (elem == null)
 				return null;
 			return elem.GetValueString();
 		}
 
-		public string GetString(DcmTag tag, string deflt) {
+		public string GetString(DicomTag tag, string deflt) {
 			return GetString(tag, 0, deflt);
 		}
 
-		public string GetString(DcmTag tag, int index, string deflt) {
+		public string GetString(DicomTag tag, int index, string deflt) {
 			DcmElement elem = GetElement(tag);
 			if (elem is DcmStringElement)
 				return (elem as DcmStringElement).GetValue(index);
@@ -618,7 +651,7 @@ namespace Dicom.Data {
 			return deflt;
 		}
 
-		public void SetString(DcmTag tag, string value) {
+		public void SetString(DicomTag tag, string value) {
 			DcmElement elem = GetElement(tag);
 			if (elem is DcmStringElement) {
 				(elem as DcmStringElement).SetValue(value);
@@ -633,7 +666,7 @@ namespace Dicom.Data {
 			throw new DicomDataException("Element does not exist in Dataset");
 		}
 
-		public string[] GetStringArray(DcmTag tag, string[] deflt) {
+		public string[] GetStringArray(DicomTag tag, string[] deflt) {
 			DcmElement elem = GetElement(tag);
 			if (elem is DcmMultiStringElement)
 				return (elem as DcmMultiStringElement).GetValues();
@@ -644,7 +677,7 @@ namespace Dicom.Data {
 			return deflt;
 		}
 
-		public void SetStringArray(DcmTag tag, string[] values) {
+		public void SetStringArray(DicomTag tag, string[] values) {
 			DcmElement elem = GetElement(tag);
 			if (elem is DcmMultiStringElement) {
 				(elem as DcmMultiStringElement).SetValues(values);
@@ -655,7 +688,7 @@ namespace Dicom.Data {
 			throw new DicomDataException("Element does not exist in Dataset");
 		}
 
-		public DateTime GetDateTime(DcmTag tag, int index, DateTime deflt) {
+		public DateTime GetDateTime(DicomTag tag, int index, DateTime deflt) {
 			DcmElement elem = GetElement(tag);
 			if (elem is DcmDate || elem is DcmTime || elem is DcmDateTime) {
 				try {
@@ -675,7 +708,7 @@ namespace Dicom.Data {
 			return deflt;	
 		}
 
-		public DateTime GetDateTime(DcmTag dtag, DcmTag ttag, DateTime deflt) {
+		public DateTime GetDateTime(DicomTag dtag, DicomTag ttag, DateTime deflt) {
 			DateTime dt;
 			DcmDate da = GetDA(dtag);
 			if (da != null)
@@ -696,7 +729,7 @@ namespace Dicom.Data {
 			return dt;
 		}
 
-		public void SetDateTime(DcmTag dtag, DcmTag ttag, DateTime value) {
+		public void SetDateTime(DicomTag dtag, DicomTag ttag, DateTime value) {
 			DcmDate da = new DcmDate(dtag);
 			da.SetDateTime(value);
 			AddItem(da);
@@ -706,26 +739,26 @@ namespace Dicom.Data {
 			AddItem(tm);
 		}
 
-		public DcmTag GetDcmTag(DcmTag tag) {
+		public DicomTag GetDcmTag(DicomTag tag) {
 			DcmAttributeTag at = GetAT(tag);
 			if (at != null)
 				return at.GetValue();
 			return null;
 		}
 
-		public DcmUID GetUID(DcmTag tag) {
+		public DicomUID GetUID(DicomTag tag) {
 			DcmUniqueIdentifier ui = GetUI(tag);
 			if (ui != null)
 				return ui.GetUID();
 			return null;
 		}
 
-		public int GetInt32(DcmTag tag, int deflt) {
+		public int GetInt32(DicomTag tag, int deflt) {
 			DcmElement elem = GetElement(tag);
 			if (elem != null) {
-				if (elem.VR == DcmVR.IS)
+				if (elem.VR == DicomVR.IS)
 					return (elem as DcmIntegerString).GetInt32();
-				else if (elem.VR == DcmVR.SL)
+				else if (elem.VR == DicomVR.SL)
 					return (elem as DcmSignedLong).GetValue();
 				else
 					throw new DicomDataException("Tried to access element with incorrect VR");
@@ -733,26 +766,26 @@ namespace Dicom.Data {
 			return deflt;
 		}
 
-		public short GetInt16(DcmTag tag, short deflt) {
+		public short GetInt16(DicomTag tag, short deflt) {
 			DcmSignedShort ss = GetSS(tag);
 			if (ss != null)
 				return ss.GetValue();
 			return deflt;
 		}
 
-		public ushort GetUInt16(DcmTag tag, ushort deflt) {
+		public ushort GetUInt16(DicomTag tag, ushort deflt) {
 			DcmUnsignedShort us = GetUS(tag);
 			if (us != null)
 				return us.GetValue();
 			return deflt;
 		}
 
-		public double GetDouble(DcmTag tag, double deflt) {
+		public double GetDouble(DicomTag tag, double deflt) {
 			DcmElement elem = GetElement(tag);
 			if (elem != null) {
-				if (elem.VR == DcmVR.FD)
+				if (elem.VR == DicomVR.FD)
 					return (elem as DcmFloatingPointDouble).GetValue();
-				else if (elem.VR == DcmVR.DS)
+				else if (elem.VR == DicomVR.DS)
 					return (elem as DcmDecimalString).GetDouble();
 				else
 					throw new DicomDataException("Tried to access element with incorrect VR");
@@ -760,7 +793,7 @@ namespace Dicom.Data {
 			return deflt;
 		}
 
-		public decimal GetDecimal(DcmTag tag, decimal deflt) {
+		public decimal GetDecimal(DicomTag tag, decimal deflt) {
 			DcmDecimalString ds = GetDS(tag);
 			if (ds != null)
 				return ds.GetDecimal();
@@ -802,20 +835,20 @@ namespace Dicom.Data {
 		/// Tags from this dataset to be removed or modified.
 		/// </param>
 		public void CreateOriginalAttributesSequence(string originalAttributesSource, string modifyingSystem, 
-			string reasonForModification, IEnumerable<DcmTag> tagsToModify) {
+			string reasonForModification, IEnumerable<DicomTag> tagsToModify) {
 			DcmItemSequenceItem item = new DcmItemSequenceItem();
-			item.Dataset.AddElementWithValue(DcmTags.SourceOfPreviousValues, originalAttributesSource);
-			item.Dataset.AddElementWithValue(DcmTags.AttributeModificationDateTime, DateTime.Now);
-			item.Dataset.AddElementWithValue(DcmTags.ModifyingSystem, modifyingSystem);
-			item.Dataset.AddElementWithValue(DcmTags.ReasonForTheAttributeModification, reasonForModification);
+			item.Dataset.AddElementWithValue(DicomTags.SourceOfPreviousValues, originalAttributesSource);
+			item.Dataset.AddElementWithValue(DicomTags.AttributeModificationDateTime, DateTime.Now);
+			item.Dataset.AddElementWithValue(DicomTags.ModifyingSystem, modifyingSystem);
+			item.Dataset.AddElementWithValue(DicomTags.ReasonForTheAttributeModification, reasonForModification);
 
-			DcmItemSequence sq = new DcmItemSequence(DcmTags.ModifiedAttributesSequence);
+			DcmItemSequence sq = new DcmItemSequence(DicomTags.ModifiedAttributesSequence);
 			item.Dataset.AddItem(sq);
 
 			DcmItemSequenceItem modified = new DcmItemSequenceItem();
 			sq.AddSequenceItem(modified);
 
-			foreach (DcmTag tag in tagsToModify) {
+			foreach (DicomTag tag in tagsToModify) {
 				DcmItem modifiedItem = GetItem(tag);
 				if (modifiedItem == null)
 					modified.Dataset.AddElement(tag);
@@ -823,9 +856,9 @@ namespace Dicom.Data {
 					modified.Dataset.AddItem(modifiedItem.Clone());
 			}
 
-			DcmItemSequence oasq = GetSQ(DcmTags.OriginalAttributesSequence);
+			DcmItemSequence oasq = GetSQ(DicomTags.OriginalAttributesSequence);
 			if (oasq == null) {
-				oasq = new DcmItemSequence(DcmTags.OriginalAttributesSequence);
+				oasq = new DcmItemSequence(DicomTags.OriginalAttributesSequence);
 				AddItem(oasq);
 			}
 			oasq.AddSequenceItem(item);
@@ -833,18 +866,18 @@ namespace Dicom.Data {
 		#endregion
 
 		#region Encoding
-		public void ChangeTransferSyntax(DcmTS newTransferSyntax, DcmCodecParameters parameters) {
-			DcmTS oldTransferSyntax = InternalTransferSyntax;
+		public void ChangeTransferSyntax(DicomTransferSyntax newTransferSyntax, DcmCodecParameters parameters) {
+			DicomTransferSyntax oldTransferSyntax = InternalTransferSyntax;
 
 			if (oldTransferSyntax == newTransferSyntax)
 				return;
 
 			if (oldTransferSyntax.IsEncapsulated && newTransferSyntax.IsEncapsulated) {
-				ChangeTransferSyntax(DcmTS.ExplicitVRLittleEndian, null);
-				oldTransferSyntax = DcmTS.ExplicitVRLittleEndian;
+				ChangeTransferSyntax(DicomTransferSyntax.ExplicitVRLittleEndian, parameters);
+				oldTransferSyntax = DicomTransferSyntax.ExplicitVRLittleEndian;
 			}
 
-			if (Contains(DcmTags.PixelData)) {
+			if (Contains(DicomTags.PixelData)) {
 				DcmPixelData oldPixelData = new DcmPixelData(this);
 				DcmPixelData newPixelData = new DcmPixelData(newTransferSyntax, oldPixelData);
 
@@ -862,14 +895,14 @@ namespace Dicom.Data {
 						newPixelData.AddFrame(data);
 					}
 				}
-				
+
 				newPixelData.UpdateDataset(this);
 			}
 
 			SetInternalTransferSyntax(newTransferSyntax);
 		}
 
-		internal void SetInternalTransferSyntax(DcmTS ts) {
+		internal void SetInternalTransferSyntax(DicomTransferSyntax ts) {
 			_transferSyntax = ts;
 			foreach (DcmItem item in _items.Values) {
 				if (item is DcmElement) {
@@ -892,7 +925,7 @@ namespace Dicom.Data {
 		#region Binding
 		private object GetDefaultValue(Type vtype, DicomFieldDefault deflt) {
 			try {
-				if (vtype == typeof(DcmUID) || vtype == typeof(DcmTS) || vtype.IsSubclassOf(typeof(DcmElement)))
+				if (vtype == typeof(DicomUID) || vtype == typeof(DicomTransferSyntax) || vtype.IsSubclassOf(typeof(DcmElement)))
 					return null;
 				if (deflt == DicomFieldDefault.Null || deflt == DicomFieldDefault.None)
 					return null;
@@ -956,9 +989,9 @@ namespace Dicom.Data {
 					if (vtype != elem.GetValueType()) {
 						if (vtype == typeof(string)) {
 							return elem.GetValueString();
-						} else if (vtype == typeof(DcmUID) && elem.VR == DcmVR.UI) {
+						} else if (vtype == typeof(DicomUID) && elem.VR == DicomVR.UI) {
 							return (elem as DcmUniqueIdentifier).GetUID();
-						} else if (vtype == typeof(DcmTS) && elem.VR == DcmVR.UI) {
+						} else if (vtype == typeof(DicomTransferSyntax) && elem.VR == DicomVR.UI) {
 							return (elem as DcmUniqueIdentifier).GetTS();
 						} else if (vtype == typeof(DcmDateRange) && elem.GetType().IsSubclassOf(typeof(DcmDateElementBase))) {
 							return (elem as DcmDateElementBase).GetDateTimeRange();
@@ -1016,7 +1049,7 @@ namespace Dicom.Data {
 			}
 		}
 
-		private void SaveDicomFieldValue(DcmTag tag, object value, bool createEmpty) {
+		private void SaveDicomFieldValue(DicomTag tag, object value, bool createEmpty) {
 			if (value != null && value != DBNull.Value) {
 				Type vtype = value.GetType();
 				if (vtype.IsSubclassOf(typeof(DcmElement))) {
@@ -1034,11 +1067,11 @@ namespace Dicom.Data {
 						else
 							elem.SetValueObjectArray((object[])value);
 					} else {
-						if (elem.VR == DcmVR.UI && vtype == typeof(DcmUID)) {
-							DcmUID ui = (DcmUID)value;
+						if (elem.VR == DicomVR.UI && vtype == typeof(DicomUID)) {
+							DicomUID ui = (DicomUID)value;
 							elem.SetValueString(ui.UID);
-						} else if (elem.VR == DcmVR.UI && vtype == typeof(DcmTS)) {
-							DcmTS ts = (DcmTS)value;
+						} else if (elem.VR == DicomVR.UI && vtype == typeof(DicomTransferSyntax)) {
+							DicomTransferSyntax ts = (DicomTransferSyntax)value;
 							elem.SetValueString(ts.UID.UID);
 						}
 						else if (vtype == typeof(DcmDateRange) && elem.GetType().IsSubclassOf(typeof(DcmDateElementBase))) {
@@ -1093,7 +1126,7 @@ namespace Dicom.Data {
 
 		public void Dump(StringBuilder sb, String prefix, DicomDumpOptions options) {
 			foreach (DcmItem item in _items.Values) {
-				item.Dump(sb, prefix, DicomDumpOptions.Default);
+				item.Dump(sb, prefix, options);
 				sb.AppendLine();
 			}
 		}

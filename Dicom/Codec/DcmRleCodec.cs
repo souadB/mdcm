@@ -36,6 +36,7 @@ using System.Text;
 
 using Dicom.Data;
 using Dicom.IO;
+using Dicom.Utility;
 
 namespace Dicom.Codec {
 	public class DcmRleCodecParameters : DcmCodecParameters {
@@ -67,8 +68,8 @@ namespace Dicom.Codec {
 			return "RLE Lossless";
 		}
 
-		public DcmTS GetTransferSyntax() {
-			return DcmTS.RLELossless;
+		public DicomTransferSyntax GetTransferSyntax() {
+			return DicomTransferSyntax.RLELossless;
 		}
 
 		public DcmCodecParameters GetDefaultParameters() {
@@ -76,7 +77,7 @@ namespace Dicom.Codec {
 		}
 
 		public static void Register() {
-			DicomCodec.RegisterCodec(DcmTS.RLELossless, typeof(DcmRleCodec));
+			DicomCodec.RegisterCodec(DicomTransferSyntax.RLELossless, typeof(DcmRleCodec));
 		}
 
 		#region Encode
@@ -326,54 +327,71 @@ namespace Dicom.Codec {
 				get { return _count; }
 			}
 
-			public void DecodeSegment(int segment, byte[] buffer) {
+			public void DecodeSegment(int segment, byte[] buffer, int start, int sampleOffset) {
 				if (segment < 0 || segment >= _count)
 					throw new IndexOutOfRangeException("Segment number out of range");
 
 				int offset = GetSegmentOffset(segment);
 				int length = GetSegmentLength(segment);
 
-				Decode(buffer, _data, offset, length);
+				Decode(buffer, start, sampleOffset, _data, offset, length);
 			}
 
-			private static void Decode(byte[] buffer, byte[] rleData, int offset, int count) {
-				// ClearCanvas:
-				// Note: SB - this is a literal translation of the decoder as described in
-				// the Dicom standard.  It works exactly the same way as the existing code
-				// but would be easier to make unsafe if we wanted boost performance.
-				// Rewrote it while fixing #2349 to make sure the existing code was correct (and it is).
+			private static void Decode(byte[] buffer, int start, int sampleOffset, byte[] rleData, int offset, int count) {
+				unchecked {
+					int pos = start;
+					int end = offset + count;
+					int bufferLength = buffer.Length;
 
-				int pos = 0;
-				int end = offset + count;
-				for (int i = offset; i < end; ) {
-					int n = rleData[i++];
-					if ((n & 0x80) != 0) {
-						int c = 257 - n;
-						if (i >= end) {
-							throw new DicomCodecException("RLE Segement unexpectedly wrong.");
-						}
-						byte b = rleData[i++];
-						while (c-- > 0) {
-							if (pos >= buffer.Length) {
-								throw new DicomCodecException("RLE segment unexpectedly too long.  Ignoring data.");
+					for (int i = offset; i < end && pos < bufferLength; ) {
+						sbyte control = (sbyte)rleData[i++];
+
+						if (control >= 0) {
+							int length = control + 1;
+
+							if ((end - i) < length)
+								throw new DicomCodecException("RLE literal run exceeds input buffer length.");
+							if ((pos + ((length - 1) * sampleOffset)) >= bufferLength)
+							    throw new DicomCodecException("RLE literal run exceeds output buffer length.");
+
+							if (sampleOffset == 1) {
+								// ANTS says this is faster than Array.Copy!
+								Buffer.BlockCopy(rleData, i, buffer, pos, length);
+								pos += length;
+								i += length;
 							}
-							buffer[pos++] = b;
+							else {
+								while (length-- > 0) {
+									buffer[pos] = rleData[i++];
+									pos += sampleOffset;
+								}
+							}
 						}
-					}
-					else {
-						if (n == 0 && i == end) // Single padding char
-							return;
-						int c = (n & 0x7F) + 1;
-						if ((i + c) >= end) {
-							c = offset + count - i;
-						}
-						if (i > rleData.Length || pos + c > buffer.Length) {
-							throw new DicomCodecException("Invalid formatted RLE data.  RLE segment unexpectedly too long.");
+						else if (control >= -127) {
+							int length = -control;
+
+							//if (i >= end) // never happens due to check below
+							//    throw new DicomCodecException("RLE repeat run exceeds input buffer length.");
+							if ((pos + ((length - 1) * sampleOffset)) >= bufferLength)
+							    throw new DicomCodecException("RLE repeat run exceeds output buffer length.");
+
+							// why is there not a managed version of memset??
+							byte b = rleData[i++];
+
+							if (sampleOffset == 1) {
+								while (length-- >= 0)
+									buffer[pos++] = b;
+							}
+							else {
+								while (length-- >= 0) {
+									buffer[pos] = b;
+									pos += sampleOffset;
+								}
+							}
 						}
 
-						Array.Copy(rleData, i, buffer, pos, c);
-						pos += c;
-						i += c;
+						if ((i + 2) >= end)
+							break;
 					}
 				}
 			}
@@ -405,10 +423,8 @@ namespace Dicom.Codec {
 
 			int pixelCount = oldPixelData.ImageWidth * oldPixelData.ImageHeight;
 			int numberOfSegments = oldPixelData.BytesAllocated * oldPixelData.SamplesPerPixel;
-			int segmentLength = (pixelCount & 1) == 1 ? pixelCount + 1 : pixelCount;
 
-			byte[] segment = new byte[segmentLength];
-			byte[] frameData = new byte[oldPixelData.UncompressedFrameSize];
+			byte[] frameData = new byte[newPixelData.UncompressedFrameSize];
 
 			for (int i = 0; i < oldPixelData.NumberOfFrames; i++) {
 				IList<ByteBuffer> rleData = oldPixelData.GetFrameFragments(i);
@@ -418,32 +434,26 @@ namespace Dicom.Codec {
 					throw new DicomCodecException("Unexpected number of RLE segments!");
 
 				for (int s = 0; s < numberOfSegments; s++) {
-					decoder.DecodeSegment(s, segment);
+					int sample = s / newPixelData.BytesAllocated;
+					int sabyte = s % newPixelData.BytesAllocated;
 
-					int sample = s / oldPixelData.BytesAllocated;
-					int sabyte = s % oldPixelData.BytesAllocated;
-
-					int pos;
-					int offset;
+					int pos, offset;
 
 					if (newPixelData.PlanarConfiguration == 0) {
-						pos = sample * oldPixelData.BytesAllocated;
-						offset = oldPixelData.SamplesPerPixel * oldPixelData.BytesAllocated;
+						pos = sample * newPixelData.BytesAllocated;
+						offset = newPixelData.SamplesPerPixel * newPixelData.BytesAllocated;
 					}
 					else {
-						pos = sample * oldPixelData.BytesAllocated * pixelCount;
-						offset = oldPixelData.BytesAllocated;
+						pos = sample * newPixelData.BytesAllocated * pixelCount;
+						offset = newPixelData.BytesAllocated;
 					}
 
 					if (rleParams.ReverseByteOrder)
 						pos += sabyte;
 					else
-						pos += oldPixelData.BytesAllocated - sabyte - 1;
+						pos += newPixelData.BytesAllocated - sabyte - 1;
 
-					for (int p = 0; p < pixelCount; p++) {
-						frameData[pos] = segment[p];
-						pos += offset;
-					}
+					decoder.DecodeSegment(s, frameData, pos, offset);
 				}
 
 				newPixelData.AddFrame(frameData);

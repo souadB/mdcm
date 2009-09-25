@@ -30,7 +30,7 @@ namespace Dicom.Data {
 	public class DcmPixelData {
 		#region Private Members
 		private string _imageType;
-		private DcmTS _transferSyntax;
+		private DicomTransferSyntax _transferSyntax;
 		private bool _lossy;
 		private string _lossyMethod;
 		private string _lossyRatio;
@@ -53,12 +53,12 @@ namespace Dicom.Data {
 		#endregion
 
 		#region Public Contructors
-		public DcmPixelData(DcmTS ts) {
+		public DcmPixelData(DicomTransferSyntax ts) {
 			_transferSyntax = ts;
 			CreatePixelDataItem();
 		}
 
-		public DcmPixelData(DcmTS ts, DcmPixelData old) {
+		public DcmPixelData(DicomTransferSyntax ts, DcmPixelData old) {
 			_transferSyntax = ts;
 			_lossy = old.IsLossy;
 			_lossyMethod = old.LossyCompressionMethod;
@@ -81,26 +81,26 @@ namespace Dicom.Data {
 
 		public DcmPixelData(DcmDataset dataset) {
 			_transferSyntax = dataset.InternalTransferSyntax;
-			_lossy = dataset.GetString(DcmTags.LossyImageCompression, "00") != "00";
-			_lossyMethod = dataset.GetString(DcmTags.LossyImageCompressionMethod, String.Empty);
-			_lossyRatio = dataset.GetString(DcmTags.LossyImageCompressionRatio, String.Empty);
-			_frames = dataset.GetInt32(DcmTags.NumberOfFrames, 1);
-			_width = dataset.GetUInt16(DcmTags.Columns, 0);
-			_height = dataset.GetUInt16(DcmTags.Rows, 0);
-			_bitsStored = dataset.GetUInt16(DcmTags.BitsStored, 0);
-			_bitsAllocated = dataset.GetUInt16(DcmTags.BitsAllocated, 0);
-			_highBit = dataset.GetUInt16(DcmTags.HighBit, (ushort)(_bitsStored - 1));
-			_samplesPerPixel = dataset.GetUInt16(DcmTags.SamplesPerPixel, 0);
-			_pixelRepresentation = dataset.GetUInt16(DcmTags.PixelRepresentation, 0);
-			_planarConfiguration = dataset.GetUInt16(DcmTags.PlanarConfiguration, 0);
-			_photometricInterpretation = dataset.GetString(DcmTags.PhotometricInterpretation, String.Empty);
-			_rescaleSlope = dataset.GetDouble(DcmTags.RescaleSlope, 1.0);
-			_rescaleIntercept = dataset.GetDouble(DcmTags.RescaleIntercept, 0.0);
-			_pixelDataItem = dataset.GetItem(DcmTags.PixelData);
+			_lossy = dataset.GetString(DicomTags.LossyImageCompression, "00") != "00";
+			_lossyMethod = dataset.GetString(DicomTags.LossyImageCompressionMethod, String.Empty);
+			_lossyRatio = dataset.GetString(DicomTags.LossyImageCompressionRatio, String.Empty);
+			_frames = dataset.GetInt32(DicomTags.NumberOfFrames, 1);
+			_width = dataset.GetUInt16(DicomTags.Columns, 0);
+			_height = dataset.GetUInt16(DicomTags.Rows, 0);
+			_bitsStored = dataset.GetUInt16(DicomTags.BitsStored, 0);
+			_bitsAllocated = dataset.GetUInt16(DicomTags.BitsAllocated, 0);
+			_highBit = dataset.GetUInt16(DicomTags.HighBit, (ushort)(_bitsStored - 1));
+			_samplesPerPixel = dataset.GetUInt16(DicomTags.SamplesPerPixel, 0);
+			_pixelRepresentation = dataset.GetUInt16(DicomTags.PixelRepresentation, 0);
+			_planarConfiguration = dataset.GetUInt16(DicomTags.PlanarConfiguration, 0);
+			_photometricInterpretation = dataset.GetString(DicomTags.PhotometricInterpretation, String.Empty);
+			_rescaleSlope = dataset.GetDouble(DicomTags.RescaleSlope, 1.0);
+			_rescaleIntercept = dataset.GetDouble(DicomTags.RescaleIntercept, 0.0);
+			_pixelDataItem = dataset.GetItem(DicomTags.PixelData);
 
-			_hasPixelPadding = dataset.Contains(DcmTags.PixelPaddingValue);
+			_hasPixelPadding = dataset.Contains(DicomTags.PixelPaddingValue);
 			if (_hasPixelPadding) {
-				DcmElement elem = dataset.GetElement(DcmTags.PixelPaddingValue);
+				DcmElement elem = dataset.GetElement(DicomTags.PixelPaddingValue);
 				if (elem is DcmUnsignedShort)
 					_pixelPaddingValue = (elem as DcmUnsignedShort).GetValue();
 				else if (elem is DcmSignedShort) {
@@ -117,7 +117,7 @@ namespace Dicom.Data {
 			set { _imageType = value; }
 		}
 
-		public DcmTS TransferSyntax {
+		public DicomTransferSyntax TransferSyntax {
 			get { return _transferSyntax; }
 		}
 
@@ -318,7 +318,7 @@ namespace Dicom.Data {
 				Buffer.BlockCopy(data.ToBytes(), offset, buffer, 0, size);
 				if (BytesAllocated > 1 && data.Endian != Endian.LocalMachine)
 					Endian.SwapBytes(BytesAllocated, buffer);
-				else if (PixelDataItem.VR == DcmVR.OW && data.Endian == Endian.Big)
+				else if (PixelDataItem.VR == DicomVR.OW && data.Endian == Endian.Big)
 					Endian.SwapBytes(2, buffer);
 				return buffer;
 			}
@@ -578,7 +578,7 @@ namespace Dicom.Data {
 			else {
 				if (BytesAllocated > 1 && TransferSyntax.Endian != Endian.LocalMachine)
 					Endian.SwapBytes(BytesAllocated, data);
-				else if (BytesAllocated == 1 && PixelDataItem.VR == DcmVR.OW && TransferSyntax.Endian == Endian.Big)
+				else if (BytesAllocated == 1 && PixelDataItem.VR == DicomVR.OW && TransferSyntax.Endian == Endian.Big)
 					Endian.SwapBytes(2, data);
 
 				long pos = UncompressedFrameSize * (NumberOfFrames - 1);
@@ -597,37 +597,37 @@ namespace Dicom.Data {
 
 		public void UpdateDataset(DcmDataset dataset) {
 			if (_lossy) {
-				DcmCodeString cs = dataset.GetCS(DcmTags.ImageType);
+				DcmCodeString cs = dataset.GetCS(DicomTags.ImageType);
 				if (cs != null) {
 					string[] values = cs.GetValues();
 					values[0] = "DERIVED";
 					cs.SetValues(values);
 				}
 
-				dataset.AddElementWithValue(DcmTags.SOPInstanceUID, DcmUID.Generate());
+				dataset.AddElementWithValue(DicomTags.SOPInstanceUID, DicomUID.Generate());
 
 				// FIXME: append existing values
-				dataset.AddElementWithValue(DcmTags.LossyImageCompression, "01");
-				dataset.AddElementWithValue(DcmTags.LossyImageCompressionMethod, _lossyMethod);
-				dataset.AddElementWithValue(DcmTags.LossyImageCompressionRatio, _lossyRatio);
+				dataset.AddElementWithValue(DicomTags.LossyImageCompression, "01");
+				dataset.AddElementWithValue(DicomTags.LossyImageCompressionMethod, _lossyMethod);
+				dataset.AddElementWithValue(DicomTags.LossyImageCompressionRatio, _lossyRatio);
 			}
-			dataset.AddElementWithValue(DcmTags.NumberOfFrames, _frames);
-			dataset.AddElementWithValue(DcmTags.Columns, _width);
-			dataset.AddElementWithValue(DcmTags.Rows, _height);
-			dataset.AddElementWithValue(DcmTags.HighBit, _highBit);
-			dataset.AddElementWithValue(DcmTags.BitsStored, _bitsStored);
-			dataset.AddElementWithValue(DcmTags.BitsAllocated, _bitsAllocated);
-			dataset.AddElementWithValue(DcmTags.SamplesPerPixel, _samplesPerPixel);
-			dataset.AddElementWithValue(DcmTags.PixelRepresentation, _pixelRepresentation);
-			dataset.AddElementWithValue(DcmTags.PhotometricInterpretation, _photometricInterpretation);
+			dataset.AddElementWithValue(DicomTags.NumberOfFrames, _frames);
+			dataset.AddElementWithValue(DicomTags.Columns, _width);
+			dataset.AddElementWithValue(DicomTags.Rows, _height);
+			dataset.AddElementWithValue(DicomTags.HighBit, _highBit);
+			dataset.AddElementWithValue(DicomTags.BitsStored, _bitsStored);
+			dataset.AddElementWithValue(DicomTags.BitsAllocated, _bitsAllocated);
+			dataset.AddElementWithValue(DicomTags.SamplesPerPixel, _samplesPerPixel);
+			dataset.AddElementWithValue(DicomTags.PixelRepresentation, _pixelRepresentation);
+			dataset.AddElementWithValue(DicomTags.PhotometricInterpretation, _photometricInterpretation);
 			if (SamplesPerPixel == 1) {
-				dataset.AddElementWithValue(DcmTags.RescaleSlope, _rescaleSlope);
-				dataset.AddElementWithValue(DcmTags.RescaleIntercept, _rescaleIntercept);
+				dataset.AddElementWithValue(DicomTags.RescaleSlope, _rescaleSlope);
+				dataset.AddElementWithValue(DicomTags.RescaleIntercept, _rescaleIntercept);
 				//if (_pixelPaddingValue != 0)
-				//    dataset.AddElementWithValue(DcmTags.PixelPaddingValue, _pixelPaddingValue);
+				//    dataset.AddElementWithValue(DicomTags.PixelPaddingValue, _pixelPaddingValue);
 			}
 			else {
-				dataset.AddElementWithValue(DcmTags.PlanarConfiguration, _planarConfiguration);
+				dataset.AddElementWithValue(DicomTags.PlanarConfiguration, _planarConfiguration);
 			}
 			dataset.AddItem(_pixelDataItem);
 		}
@@ -653,13 +653,13 @@ namespace Dicom.Data {
 		protected void CreatePixelDataItem() {
 			_frames = 0;
 			if (IsEncapsulated) {
-				_pixelDataItem = new DcmFragmentSequence(DcmTags.PixelData, DcmVR.OB);
+				_pixelDataItem = new DcmFragmentSequence(DicomTags.PixelData, DicomVR.OB);
 			}
 			else {
 				if (!TransferSyntax.IsExplicitVR || (_bitsAllocated > 8 && _bitsAllocated <= 16))
-					_pixelDataItem = new DcmOtherWord(DcmTags.PixelData);
+					_pixelDataItem = new DcmOtherWord(DicomTags.PixelData);
 				else
-					_pixelDataItem = new DcmOtherByte(DcmTags.PixelData);
+					_pixelDataItem = new DcmOtherByte(DicomTags.PixelData);
 			}
 		}
 		#endregion
