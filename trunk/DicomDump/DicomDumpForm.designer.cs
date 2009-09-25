@@ -137,6 +137,7 @@ namespace Dicom.Forms {
 			this.ncName.IncrementalSearchEnabled = true;
 			this.ncName.LeftMargin = 3;
 			this.ncName.ParentColumn = this.ElementColumn;
+			this.ncName.Trimming = System.Drawing.StringTrimming.EllipsisCharacter;
 			// 
 			// nvVR
 			// 
@@ -198,7 +199,7 @@ namespace Dicom.Forms {
             this.lblCount});
 			this.toolStrip1.Location = new System.Drawing.Point(3, 0);
 			this.toolStrip1.Name = "toolStrip1";
-			this.toolStrip1.Size = new System.Drawing.Size(571, 25);
+			this.toolStrip1.Size = new System.Drawing.Size(540, 25);
 			this.toolStrip1.TabIndex = 0;
 			// 
 			// tsbOpenFile

@@ -47,7 +47,7 @@ namespace Dicom.IO {
 
 		private Stream _stream = null;
 		private BinaryWriter _writer = null;
-		private DcmTS _syntax = null;
+		private DicomTransferSyntax _syntax = null;
 		private Encoding _encoding = DcmEncoding.Default;
 		private Endian _endian;
 
@@ -61,7 +61,7 @@ namespace Dicom.IO {
 		/// <param name="stream">Target stream</param>
 		public DicomStreamWriter(Stream stream) {
 			_stream = stream;
-			TransferSyntax = DcmTS.ExplicitVRLittleEndian;
+			TransferSyntax = DicomTransferSyntax.ExplicitVRLittleEndian;
 		}
 		#endregion
 
@@ -69,7 +69,7 @@ namespace Dicom.IO {
 		/// <summary>
 		/// Transfer syntax
 		/// </summary>
-		public DcmTS TransferSyntax {
+		public DicomTransferSyntax TransferSyntax {
 			get { return _syntax; }
 			set {
 				_syntax = value;
@@ -148,8 +148,8 @@ namespace Dicom.IO {
 					foreach (DcmItemSequenceItem ids in sq.SequenceItems) {
 						ids.Dataset.ChangeTransferSyntax(dataset.InternalTransferSyntax, null);
 
-						_writer.Write((ushort)DcmTags.Item.Group);
-						_writer.Write((ushort)DcmTags.Item.Element);
+						_writer.Write((ushort)DicomTags.Item.Group);
+						_writer.Write((ushort)DicomTags.Item.Element);
 
 						if (Flags.IsSet(options, DicomWriteOptions.ExplicitLengthSequenceItem)) {
 							_writer.Write((uint)ids.CalculateWriteLength(_syntax, options & ~DicomWriteOptions.CalculateGroupLengths) - (uint)8);
@@ -160,15 +160,15 @@ namespace Dicom.IO {
 						Write(ids.Dataset, options & ~DicomWriteOptions.CalculateGroupLengths);
 
 						if (!Flags.IsSet(options, DicomWriteOptions.ExplicitLengthSequenceItem)) {
-							_writer.Write((ushort)DcmTags.ItemDelimitationItem.Group);
-							_writer.Write((ushort)DcmTags.ItemDelimitationItem.Element);
+							_writer.Write((ushort)DicomTags.ItemDelimitationItem.Group);
+							_writer.Write((ushort)DicomTags.ItemDelimitationItem.Element);
 							_writer.Write((uint)0x00000000);
 						}
 					}
 
 					if (!Flags.IsSet(options, DicomWriteOptions.ExplicitLengthSequence) && !(item.Tag.IsPrivate && !_syntax.IsExplicitVR)) {
-						_writer.Write((ushort)DcmTags.SequenceDelimitationItem.Group);
-						_writer.Write((ushort)DcmTags.SequenceDelimitationItem.Element);
+						_writer.Write((ushort)DicomTags.SequenceDelimitationItem.Group);
+						_writer.Write((ushort)DicomTags.SequenceDelimitationItem.Element);
 						_writer.Write((uint)0x00000000);
 					}
 				}
@@ -180,8 +180,8 @@ namespace Dicom.IO {
 						_writer.Write((ushort)0x0000);
 					_writer.Write((uint)UndefinedLength);
 
-					_writer.Write((ushort)DcmTags.Item.Group);
-					_writer.Write((ushort)DcmTags.Item.Element);
+					_writer.Write((ushort)DicomTags.Item.Group);
+					_writer.Write((ushort)DicomTags.Item.Element);
 
 					if (Flags.IsSet(options, DicomWriteOptions.WriteFragmentOffsetTable) && fs.HasOffsetTable) {
 						_writer.Write((uint)fs.OffsetTableBuffer.Length);
@@ -191,14 +191,14 @@ namespace Dicom.IO {
 					}
 
 					foreach (ByteBuffer bb in fs.Fragments) {
-						_writer.Write((ushort)DcmTags.Item.Group);
-						_writer.Write((ushort)DcmTags.Item.Element);
+						_writer.Write((ushort)DicomTags.Item.Group);
+						_writer.Write((ushort)DicomTags.Item.Element);
 						_writer.Write((uint)bb.Length);
 						bb.CopyTo(_writer.BaseStream);
 					}
 
-					_writer.Write((ushort)DcmTags.SequenceDelimitationItem.Group);
-					_writer.Write((ushort)DcmTags.SequenceDelimitationItem.Element);
+					_writer.Write((ushort)DicomTags.SequenceDelimitationItem.Group);
+					_writer.Write((ushort)DicomTags.SequenceDelimitationItem.Element);
 					_writer.Write((uint)0x00000000);
 				}
 				

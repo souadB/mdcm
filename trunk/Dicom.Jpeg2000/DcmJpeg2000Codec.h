@@ -107,7 +107,7 @@ namespace Jpeg2000 {
 			return GetTransferSyntax()->UID->Description;
 		}
 
-		virtual DcmTS^ GetTransferSyntax() = 0;
+		virtual DicomTransferSyntax^ GetTransferSyntax() = 0;
 
 		virtual DcmCodecParameters^ GetDefaultParameters() {
 			return gcnew DcmJpeg2000Parameters();
@@ -123,8 +123,8 @@ namespace Jpeg2000 {
 	public ref class DcmJpeg2000LossyCodec : public DcmJpeg2000Codec
 	{
 	public:
-		virtual DcmTS^ GetTransferSyntax() override {
-			return DcmTS::JPEG2000Lossy;
+		virtual DicomTransferSyntax^ GetTransferSyntax() override {
+			return DicomTransferSyntax::JPEG2000Lossy;
 		}
 	};
 
@@ -132,8 +132,8 @@ namespace Jpeg2000 {
 	public ref class DcmJpeg2000LosslessCodec : public DcmJpeg2000Codec
 	{
 	public:
-		virtual DcmTS^ GetTransferSyntax() override {
-			return DcmTS::JPEG2000Lossless;
+		virtual DicomTransferSyntax^ GetTransferSyntax() override {
+			return DicomTransferSyntax::JPEG2000Lossless;
 		}
 	};
 

@@ -17,7 +17,6 @@ namespace IJGVERS {
 		ErrorStruct *myerr = (ErrorStruct *)cinfo->err;
 		char buffer[JMSG_LENGTH_MAX];
 		(*cinfo->err->format_message)((jpeg_common_struct *)cinfo, buffer); /* Create the message */
-		//Console::WriteLine(gcnew String(buffer));
 		Dicom::Debug::Log->Info("IJG: {0}", gcnew String(buffer));
 	}
 }
@@ -45,8 +44,6 @@ namespace IJGVERS {
 
 	// callbacks for compress-destination-manager
 	void initDestination(j_compress_ptr cinfo) {
-		//GCHandle^ thisHdl = GCHandle::FromIntPtr(IntPtr(cinfo->client_data));
-		//JPEGCODEC^ thisPtr = (JPEGCODEC^)thisHdl->Target;
 		JPEGCODEC^ thisPtr = (JPEGCODEC^)JPEGCODEC::This;
 		thisPtr->MemoryBuffer = gcnew MemoryStream();
 		cinfo->dest->next_output_byte = thisPtr->DataPtr;
@@ -54,8 +51,6 @@ namespace IJGVERS {
 	}
 
 	ijg_boolean emptyOutputBuffer(j_compress_ptr cinfo) {
-		//GCHandle^ thisHdl = GCHandle::FromIntPtr(IntPtr(cinfo->client_data));
-		//JPEGCODEC^ thisPtr = (JPEGCODEC^)thisHdl->Target;
 		JPEGCODEC^ thisPtr = (JPEGCODEC^)JPEGCODEC::This;
 		thisPtr->MemoryBuffer->Write(thisPtr->DataBuffer, 0, IJGE_BLOCKSIZE);
 		cinfo->dest->next_output_byte = thisPtr->DataPtr;
@@ -64,8 +59,6 @@ namespace IJGVERS {
 	}
 
 	void termDestination(j_compress_ptr cinfo) {
-		//GCHandle^ thisHdl = GCHandle::FromIntPtr(IntPtr(cinfo->client_data));
-		//JPEGCODEC^ thisPtr = (JPEGCODEC^)thisHdl->Target;
 		JPEGCODEC^ thisPtr = (JPEGCODEC^)JPEGCODEC::This;
 		int count = IJGE_BLOCKSIZE - cinfo->dest->free_in_buffer;
 		thisPtr->MemoryBuffer->Write(thisPtr->DataBuffer, 0, count);
@@ -213,7 +206,19 @@ void JPEGCODEC::Encode(DcmPixelData^ oldPixelData, DcmPixelData^ newPixelData, D
 		throw gcnew DicomCodecException(String::Format("Photometric Interpretation '{0}' not supported by JPEG encoder!",
 														oldPixelData->PhotometricInterpretation));
 
-	array<unsigned char>^ frameData = oldPixelData->GetFrameDataU8(frame);
+	array<unsigned char>^ frameData = nullptr;
+	
+	if (oldPixelData->BitsAllocated == 16 && oldPixelData->BitsStored <= 8) {
+		array<unsigned short>^ frameData16 = oldPixelData->GetFrameDataU16(frame);
+		frameData = gcnew array<unsigned char>(frameData16->Length);
+		
+		for (int i = 0, l = frameData->Length; i < l; i++) {
+			frameData[i] = static_cast<unsigned char>(frameData16[i]);
+		}
+	}
+	else
+		frameData = oldPixelData->GetFrameDataU8(frame);
+
 	pin_ptr<unsigned char> framePin = &frameData[0];
 	unsigned char* framePtr = framePin;
 	unsigned int frameSize = frameData->Length;
@@ -315,7 +320,7 @@ void JPEGCODEC::Encode(DcmPixelData^ oldPixelData, DcmPixelData^ newPixelData, D
 		jpeg_start_compress(&cinfo, TRUE);
 
 		JSAMPROW row_pointer[1];
-		int row_stride = oldPixelData->ImageWidth * oldPixelData->SamplesPerPixel * oldPixelData->BytesAllocated;
+		int row_stride = oldPixelData->ImageWidth * oldPixelData->SamplesPerPixel * (oldPixelData->BitsStored <= 8 ? 1 : oldPixelData->BytesAllocated);
 
 		while (cinfo.next_scanline < cinfo.image_height) {
 			row_pointer[0] = (JSAMPLE *)(&framePtr[cinfo.next_scanline * row_stride]);
@@ -443,7 +448,7 @@ void JPEGCODEC::Decode(DcmPixelData^ oldPixelData, DcmPixelData^ newPixelData, D
 	dinfo.src = (jpeg_source_mgr*)&src.pub;
 
 	if (jpeg_read_header(&dinfo, TRUE) == JPEG_SUSPENDED)
-		throw gcnew DicomCodecException(gcnew String("Unable to decompress JPEG: Suspended"));
+		throw gcnew DicomCodecException("Unable to decompress JPEG: Suspended");
 		
 	if (newPixelData->PhotometricInterpretation == "YBR_FULL_422" || newPixelData->PhotometricInterpretation == "YBR_PARTIAL_422")
 		newPixelData->PhotometricInterpretation = "YBR_FULL";
@@ -452,7 +457,7 @@ void JPEGCODEC::Decode(DcmPixelData^ oldPixelData, DcmPixelData^ newPixelData, D
 
 	if (params->ConvertColorspaceToRGB && (dinfo.out_color_space == JCS_YCbCr || dinfo.out_color_space == JCS_RGB)) { 
 		if (oldPixelData->IsSigned) 
-			throw gcnew DicomCodecException(gcnew String("JPEG codec unable to perform colorspace conversion on signed pixel data"));
+			throw gcnew DicomCodecException("JPEG codec unable to perform colorspace conversion on signed pixel data");
 		dinfo.jpeg_color_space = IJGVERS::getJpegColorSpace(oldPixelData->PhotometricInterpretation);
 		dinfo.out_color_space = JCS_RGB;
 		newPixelData->PhotometricInterpretation = "RGB";
@@ -525,7 +530,7 @@ int JPEGCODEC::ScanHeaderForPrecision(DcmPixelData^ pixelData) {
 
 	if (jpeg_read_header(&dinfo, TRUE) == JPEG_SUSPENDED) {
 		jpeg_destroy_decompress(&dinfo);
-		throw gcnew DicomCodecException(gcnew String("Unable to read JPEG header: Suspended"));
+		throw gcnew DicomCodecException("Unable to read JPEG header: Suspended");
 	}
 
 	//pixelData->Unload();

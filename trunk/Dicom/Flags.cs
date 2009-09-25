@@ -61,10 +61,14 @@ namespace Dicom {
 		DeferLoadingPixelData = 0x00000010,
 		ForcePrivateCreatorToLO = 0x00000020,
 		FileMetaInfoOnly = 0x00000040,
+		SequenceItemOnly = 0x00000080,
 		Default = DicomReadOptions.UseDictionaryForExplicitUN | 
 				  DicomReadOptions.AllowSeekingForContext | 
 				  DicomReadOptions.DeferLoadingLargeElements | 
 				  DicomReadOptions.DeferLoadingPixelData |
+				  DicomReadOptions.ForcePrivateCreatorToLO,
+		DefaultWithoutDeferredLoading = DicomReadOptions.UseDictionaryForExplicitUN |
+				  DicomReadOptions.AllowSeekingForContext |
 				  DicomReadOptions.ForcePrivateCreatorToLO
 	}
 

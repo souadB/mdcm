@@ -28,21 +28,21 @@ using Dicom.IO;
 namespace Dicom.Data {
 	public abstract class DcmItem {
 		#region Private Members
-		private DcmTag _tag;
-		private DcmVR _vr;
+		private DicomTag _tag;
+		private DicomVR _vr;
 		private long _streamPosition;
 		private Endian _endian;
 		#endregion
 
 		#region Public Constructors
-		public DcmItem(DcmTag tag, DcmVR vr) {
+		public DcmItem(DicomTag tag, DicomVR vr) {
 			_tag = tag;
 			_vr = vr;
 			_streamPosition = 0;
 			_endian = Endian.LocalMachine;
 		}
 
-		public DcmItem(DcmTag tag, DcmVR vr, long pos, Endian endian) {
+		public DcmItem(DicomTag tag, DicomVR vr, long pos, Endian endian) {
 			_tag = tag;
 			_vr = vr;
 			_streamPosition = pos;
@@ -51,7 +51,7 @@ namespace Dicom.Data {
 		#endregion
 
 		#region Public Properties
-		public DcmTag Tag {
+		public DicomTag Tag {
 			get { return _tag; }
 		}
 
@@ -59,7 +59,7 @@ namespace Dicom.Data {
 			get { return Tag.Entry.Name; }
 		}
 
-		public DcmVR VR {
+		public DicomVR VR {
 			get { return _vr; }
 		}
 
@@ -86,7 +86,7 @@ namespace Dicom.Data {
 		#endregion
 
 		#region Methods to Override
-		internal abstract uint CalculateWriteLength(DcmTS syntax, DicomWriteOptions options);
+		internal abstract uint CalculateWriteLength(DicomTransferSyntax syntax, DicomWriteOptions options);
 
 		protected abstract void ChangeEndianInternal();
 

@@ -64,7 +64,7 @@ namespace Dicom.Data {
 		public readonly bool IsPrivate;
 
 		/// <summary>Allowed VRs</summary>
-		public readonly DcmVR[] AllowedVRs;
+		public readonly DicomVR[] AllowedVRs;
 
 		/// <summary>Value multiplicity description</summary>
 		public readonly string VM;
@@ -82,7 +82,7 @@ namespace Dicom.Data {
 		public readonly bool Retired;
 
 		/// <summary>Default VR</summary>
-		public DcmVR DefaultVR {
+		public DicomVR DefaultVR {
 			get { return AllowedVRs[0]; }
 		}
 
@@ -97,7 +97,7 @@ namespace Dicom.Data {
 		/// <param name="vm">VM</param>
 		/// <param name="retired">Retired</param>
 		public DcmDictionaryEntry(string group, string element,
-			string name, string privcreator, DcmVR[] vrs, string vm, bool retired) {
+			string name, string privcreator, DicomVR[] vrs, string vm, bool retired) {
 
 			DisplayTag = group + "," + element;
 			DisplayTag = DisplayTag.ToUpper();
@@ -121,7 +121,7 @@ namespace Dicom.Data {
 			VM = vm;
 			AllowedVRs = vrs;
 
-			if (DefaultVR == DcmVR.NONE) {
+			if (DefaultVR == DicomVR.NONE) {
 				MultipleVM = 0;
 				MinimumVM = 0;
 				MaximumVM = 0;
@@ -151,7 +151,7 @@ namespace Dicom.Data {
 		/// </summary>
 		/// <param name="tag"></param>
 		/// <returns></returns>
-		public bool IsMatchForTag(DcmTag tag) {
+		public bool IsMatchForTag(DicomTag tag) {
 			if ((tag.Card & Mask) != Tag)
 				return false;
 			if (IsPrivate && !Wildcard.Match(PrivateCreator, tag.PrivateCreator))
@@ -189,8 +189,8 @@ namespace Dicom.Data {
 
 		static DcmDictionary() {
 			lock (Lock) {
-				UnknownTag = new DcmDictionaryEntry("xxxx", "xxxx", "Unknown", String.Empty, new DcmVR[] { DcmVR.UN }, "1-n", false);
-				PrivateTag = new DcmDictionaryEntry("xxxx", "xxxx", "Private Tag", String.Empty, new DcmVR[] { DcmVR.UN }, "1-n", false);
+				UnknownTag = new DcmDictionaryEntry("xxxx", "xxxx", "Unknown", String.Empty, new DicomVR[] { DicomVR.UN }, "1-n", false);
+				PrivateTag = new DcmDictionaryEntry("xxxx", "xxxx", "Private Tag", String.Empty, new DicomVR[] { DicomVR.UN }, "1-n", false);
 			}
 		}
 
@@ -211,37 +211,37 @@ namespace Dicom.Data {
 		public static void LoadInternalDictionary() {
 			lock (Lock) {
 				#region VR Tables
-				DcmVR[] AEa = new DcmVR[] { DcmVR.AE };
-				DcmVR[] ASa = new DcmVR[] { DcmVR.AS };
-				DcmVR[] ATa = new DcmVR[] { DcmVR.AT };
-				DcmVR[] CSa = new DcmVR[] { DcmVR.CS };
-				DcmVR[] DAa = new DcmVR[] { DcmVR.DA };
-				DcmVR[] DSa = new DcmVR[] { DcmVR.DS };
-				DcmVR[] DTa = new DcmVR[] { DcmVR.DT };
-				DcmVR[] FDa = new DcmVR[] { DcmVR.FD };
-				DcmVR[] FLa = new DcmVR[] { DcmVR.FL };
-				DcmVR[] ISa = new DcmVR[] { DcmVR.IS };
-				DcmVR[] LOa = new DcmVR[] { DcmVR.LO };
-				DcmVR[] LTa = new DcmVR[] { DcmVR.LT };
-				DcmVR[] OBa = new DcmVR[] { DcmVR.OB };
-				DcmVR[] OFa = new DcmVR[] { DcmVR.OF };
-				DcmVR[] OWa = new DcmVR[] { DcmVR.OW };
-				DcmVR[] PNa = new DcmVR[] { DcmVR.PN };
-				DcmVR[] SHa = new DcmVR[] { DcmVR.SH };
-				DcmVR[] SLa = new DcmVR[] { DcmVR.SL };
-				DcmVR[] SQa = new DcmVR[] { DcmVR.SQ };
-				DcmVR[] SSa = new DcmVR[] { DcmVR.SS };
-				DcmVR[] STa = new DcmVR[] { DcmVR.ST };
-				DcmVR[] TMa = new DcmVR[] { DcmVR.TM };
-				DcmVR[] UIa = new DcmVR[] { DcmVR.UI };
-				DcmVR[] ULa = new DcmVR[] { DcmVR.UL };
-				DcmVR[] UNa = new DcmVR[] { DcmVR.UN };
-				DcmVR[] USa = new DcmVR[] { DcmVR.US };
-				DcmVR[] UTa = new DcmVR[] { DcmVR.UT };
-				DcmVR[] NONEa = new DcmVR[] { DcmVR.NONE };
-				DcmVR[] USaSSa = new DcmVR[] { DcmVR.US, DcmVR.SS };
-				DcmVR[] USaSSaOWa = new DcmVR[] { DcmVR.US, DcmVR.SS, DcmVR.OW };
-				DcmVR[] OBaOWa = new DcmVR[] { DcmVR.OB, DcmVR.OW };
+				DicomVR[] AEa = new DicomVR[] { DicomVR.AE };
+				DicomVR[] ASa = new DicomVR[] { DicomVR.AS };
+				DicomVR[] ATa = new DicomVR[] { DicomVR.AT };
+				DicomVR[] CSa = new DicomVR[] { DicomVR.CS };
+				DicomVR[] DAa = new DicomVR[] { DicomVR.DA };
+				DicomVR[] DSa = new DicomVR[] { DicomVR.DS };
+				DicomVR[] DTa = new DicomVR[] { DicomVR.DT };
+				DicomVR[] FDa = new DicomVR[] { DicomVR.FD };
+				DicomVR[] FLa = new DicomVR[] { DicomVR.FL };
+				DicomVR[] ISa = new DicomVR[] { DicomVR.IS };
+				DicomVR[] LOa = new DicomVR[] { DicomVR.LO };
+				DicomVR[] LTa = new DicomVR[] { DicomVR.LT };
+				DicomVR[] OBa = new DicomVR[] { DicomVR.OB };
+				DicomVR[] OFa = new DicomVR[] { DicomVR.OF };
+				DicomVR[] OWa = new DicomVR[] { DicomVR.OW };
+				DicomVR[] PNa = new DicomVR[] { DicomVR.PN };
+				DicomVR[] SHa = new DicomVR[] { DicomVR.SH };
+				DicomVR[] SLa = new DicomVR[] { DicomVR.SL };
+				DicomVR[] SQa = new DicomVR[] { DicomVR.SQ };
+				DicomVR[] SSa = new DicomVR[] { DicomVR.SS };
+				DicomVR[] STa = new DicomVR[] { DicomVR.ST };
+				DicomVR[] TMa = new DicomVR[] { DicomVR.TM };
+				DicomVR[] UIa = new DicomVR[] { DicomVR.UI };
+				DicomVR[] ULa = new DicomVR[] { DicomVR.UL };
+				DicomVR[] UNa = new DicomVR[] { DicomVR.UN };
+				DicomVR[] USa = new DicomVR[] { DicomVR.US };
+				DicomVR[] UTa = new DicomVR[] { DicomVR.UT };
+				DicomVR[] NONEa = new DicomVR[] { DicomVR.NONE };
+				DicomVR[] USaSSa = new DicomVR[] { DicomVR.US, DicomVR.SS };
+				DicomVR[] USaSSaOWa = new DicomVR[] { DicomVR.US, DicomVR.SS, DicomVR.OW };
+				DicomVR[] OBaOWa = new DicomVR[] { DicomVR.OB, DicomVR.OW };
 				#endregion
 
 				Clear();
@@ -2961,7 +2961,7 @@ namespace Dicom.Data {
 		/// </summary>
 		/// <param name="tag">DICOM tag</param>
 		/// <returns>Dictionary entry</returns>
-		public static DcmDictionaryEntry Lookup(DcmTag tag) {
+		public static DcmDictionaryEntry Lookup(DicomTag tag) {
 			lock (Lock) {
 				if (!Initialzied)
 					LoadInternalDictionary();
@@ -3041,9 +3041,9 @@ namespace Dicom.Data {
 						string element = fields[1];
 
 						string[] parts = fields[2].Split('/');
-						DcmVR[] vrs = new DcmVR[parts.Length];
+						DicomVR[] vrs = new DicomVR[parts.Length];
 						for (int i = 0; i < vrs.Length; i++) {
-							vrs[i] = DcmVRs.Lookup(parts[i]);
+							vrs[i] = DicomVR.Lookup(parts[i]);
 						}
 
 						string vm = fields[3];
@@ -3099,13 +3099,13 @@ namespace Dicom.Data {
 						if (element.Length == 2)
 							element = "xx" + element;
 
-						DcmVR vr = DcmVRs.Lookup(fields[1]);
+						DicomVR vr = DicomVR.Lookup(fields[1]);
 
 						string name = Format.AddSpaces(fields[2]);
 
 						string vm = fields[3];
 
-						Entries.Add(new DcmDictionaryEntry(group, element, name, creator, new DcmVR[] { vr }, vm, false));
+						Entries.Add(new DcmDictionaryEntry(group, element, name, creator, new DicomVR[] { vr }, vm, false));
 					}
 					catch { }
 				}

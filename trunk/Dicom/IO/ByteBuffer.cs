@@ -139,7 +139,7 @@ namespace Dicom.IO {
 		#region Public Functions
 		public void Preload() {
 			if (_segment != null && _data == null && _ms == null) {
-				Stream.Flush();
+				ToBytes();
 			}
 		}
 
@@ -154,7 +154,9 @@ namespace Dicom.IO {
 
 		public ByteBuffer Clone() {
 			ByteBuffer clone = null;
-			if (_segment != null)
+			if (_data != null)
+				clone = new ByteBuffer((byte[])_data.Clone(), Endian);
+			else if (_segment != null)
 				clone = new ByteBuffer(_segment, Endian);
 			else
 				clone = new ByteBuffer((byte[])ToBytes().Clone(), Endian);

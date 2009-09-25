@@ -127,7 +127,7 @@ namespace Dicom.Network.Client {
 	public sealed class CMoveClient : DcmClientBase  {
 		#region Private Members
 		private string _destAe;
-		private DcmUID _moveSopClass;
+		private DicomUID _moveSopClass;
 		private Queue<CMoveQuery> _moveQueries;
 		private CMoveQuery _current;
 		#endregion
@@ -137,7 +137,7 @@ namespace Dicom.Network.Client {
 			LogID = "C-Move SCU";
 			CallingAE = "MOVE_SCU";
 			CalledAE = "MOVE_SCP";
-			_moveSopClass = DcmUIDs.StudyRootQueryRetrieveInformationModelMOVE;
+			_moveSopClass = DicomUID.StudyRootQueryRetrieveInformationModelMOVE;
 			_moveQueries = new Queue<CMoveQuery>();
 			_current = null;
 		}
@@ -151,7 +151,7 @@ namespace Dicom.Network.Client {
 			set { _destAe = value; }
 		}
 
-		public DcmUID MoveSopClassUID {
+		public DicomUID MoveSopClassUID {
 			get { return _moveSopClass; }
 			set { _moveSopClass = value; }
 		}
@@ -172,7 +172,7 @@ namespace Dicom.Network.Client {
 			DcmAssociate associate = new DcmAssociate();
 
 			byte pcid = associate.AddPresentationContext(_moveSopClass);
-			associate.AddTransferSyntax(pcid, DcmTS.ImplicitVRLittleEndian);
+			associate.AddTransferSyntax(pcid, DicomTransferSyntax.ImplicitVRLittleEndian);
 
 			associate.CalledAE = CalledAE;
 			associate.CallingAE = CallingAE;
@@ -189,26 +189,26 @@ namespace Dicom.Network.Client {
 					DcmDataset dataset = new DcmDataset(Associate.GetAcceptedTransferSyntax(pcid));
 					switch (query.QueryRetrieveLevel) {
 					case DcmQueryRetrieveLevel.Patient:
-						dataset.AddElementWithValue(DcmTags.QueryRetrieveLevel, "PATIENT");
-						dataset.AddElementWithValue(DcmTags.PatientID, query.PatientID);
+						dataset.AddElementWithValue(DicomTags.QueryRetrieveLevel, "PATIENT");
+						dataset.AddElementWithValue(DicomTags.PatientID, query.PatientID);
 						break;
 					case DcmQueryRetrieveLevel.Study:
-						dataset.AddElementWithValue(DcmTags.QueryRetrieveLevel, "STUDY");
-						dataset.AddElementWithValue(DcmTags.PatientID, query.PatientID);
-						dataset.AddElementWithValue(DcmTags.StudyInstanceUID, query.StudyInstanceUID);
+						dataset.AddElementWithValue(DicomTags.QueryRetrieveLevel, "STUDY");
+						dataset.AddElementWithValue(DicomTags.PatientID, query.PatientID);
+						dataset.AddElementWithValue(DicomTags.StudyInstanceUID, query.StudyInstanceUID);
 						break;
 					case DcmQueryRetrieveLevel.Series:
-						dataset.AddElementWithValue(DcmTags.QueryRetrieveLevel, "SERIES");
-						dataset.AddElementWithValue(DcmTags.PatientID, query.PatientID);
-						dataset.AddElementWithValue(DcmTags.StudyInstanceUID, query.StudyInstanceUID);
-						dataset.AddElementWithValue(DcmTags.SeriesInstanceUID, query.SeriesInstanceUID);
+						dataset.AddElementWithValue(DicomTags.QueryRetrieveLevel, "SERIES");
+						dataset.AddElementWithValue(DicomTags.PatientID, query.PatientID);
+						dataset.AddElementWithValue(DicomTags.StudyInstanceUID, query.StudyInstanceUID);
+						dataset.AddElementWithValue(DicomTags.SeriesInstanceUID, query.SeriesInstanceUID);
 						break;
 					case DcmQueryRetrieveLevel.Image:
-						dataset.AddElementWithValue(DcmTags.QueryRetrieveLevel, "IMAGE");
-						dataset.AddElementWithValue(DcmTags.PatientID, query.PatientID);
-						dataset.AddElementWithValue(DcmTags.StudyInstanceUID, query.StudyInstanceUID);
-						dataset.AddElementWithValue(DcmTags.SeriesInstanceUID, query.SeriesInstanceUID);
-						dataset.AddElementWithValue(DcmTags.SOPInstanceUID, query.SOPInstanceUID);
+						dataset.AddElementWithValue(DicomTags.QueryRetrieveLevel, "IMAGE");
+						dataset.AddElementWithValue(DicomTags.PatientID, query.PatientID);
+						dataset.AddElementWithValue(DicomTags.StudyInstanceUID, query.StudyInstanceUID);
+						dataset.AddElementWithValue(DicomTags.SeriesInstanceUID, query.SeriesInstanceUID);
+						dataset.AddElementWithValue(DicomTags.SOPInstanceUID, query.SOPInstanceUID);
 						break;
 					default:
 						break;

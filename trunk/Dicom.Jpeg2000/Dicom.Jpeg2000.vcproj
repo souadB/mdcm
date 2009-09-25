@@ -188,6 +188,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				Optimization="3"
 				PreprocessorDefinitions="WIN32;NDEBUG"
 				RuntimeLibrary="2"
 				WarningLevel="3"

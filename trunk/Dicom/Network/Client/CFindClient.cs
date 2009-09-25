@@ -46,10 +46,10 @@ namespace Dicom.Network.Client {
 		#endregion
 
 		#region Public Members
-		public DcmDataset ToDataset(DcmTS ts) {
+		public DcmDataset ToDataset(DicomTransferSyntax ts) {
 			DcmDataset dataset = new DcmDataset(ts);
 			if (QueryRetrieveLevel != DcmQueryRetrieveLevel.Worklist)
-				dataset.AddElementWithValue(DcmTags.QueryRetrieveLevel, QueryRetrieveLevel.ToString().ToUpper());
+				dataset.AddElementWithValue(DicomTags.QueryRetrieveLevel, QueryRetrieveLevel.ToString().ToUpper());
 			dataset.SaveDicomFields(this);
 			AdditionalMembers(dataset);
 			return dataset;
@@ -83,7 +83,7 @@ namespace Dicom.Network.Client {
 		where Tq : CFindQuery
 		where Tr : CFindResponse {
 		#region Private Members
-		private DcmUID _findSopClass;
+		private DicomUID _findSopClass;
 		private Queue<Tq> _queries;
 		private Tq _current;
 		#endregion
@@ -94,7 +94,7 @@ namespace Dicom.Network.Client {
 			CallingAE = "FIND_SCU";
 			CalledAE = "FIND_SCP";
 			_queries = new Queue<Tq>();
-			_findSopClass = DcmUIDs.StudyRootQueryRetrieveInformationModelFIND;
+			_findSopClass = DicomUID.StudyRootQueryRetrieveInformationModelFIND;
 			_current = null;
 		}
 		#endregion
@@ -106,7 +106,7 @@ namespace Dicom.Network.Client {
 		public delegate void CFindCompleteDelegate(Tq query);
 		public CFindCompleteDelegate OnCFindComplete;
 
-		public DcmUID FindSopClassUID {
+		public DicomUID FindSopClassUID {
 			get { return _findSopClass; }
 			set { _findSopClass = value; }
 		}
@@ -128,8 +128,8 @@ namespace Dicom.Network.Client {
 			DcmAssociate associate = new DcmAssociate();
 
 			byte pcid = associate.AddPresentationContext(FindSopClassUID);
-			//associate.AddTransferSyntax(pcid, DcmTS.ExplicitVRLittleEndian);
-			associate.AddTransferSyntax(pcid, DcmTS.ImplicitVRLittleEndian);
+			//associate.AddTransferSyntax(pcid, DicomTransferSyntax.ExplicitVRLittleEndian);
+			associate.AddTransferSyntax(pcid, DicomTransferSyntax.ImplicitVRLittleEndian);
 
 			associate.CalledAE = CalledAE;
 			associate.CallingAE = CallingAE;
@@ -193,13 +193,13 @@ namespace Dicom.Network.Client {
 		#endregion
 
 		#region Public Properties
-		[DicomField(DcmConstTags.PatientID, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
+		[DicomField(DicomConstTags.PatientID, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
 		public string PatientID {
 			get { return _patientId; }
 			set { _patientId = value; }
 		}
 
-		[DicomField(DcmConstTags.PatientsName, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
+		[DicomField(DicomConstTags.PatientsName, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
 		public string PatientsName {
 			get { return _patientName; }
 			set { _patientName = value; }
@@ -214,13 +214,13 @@ namespace Dicom.Network.Client {
 		#endregion
 
 		#region Public Properties
-		[DicomField(DcmConstTags.PatientID, DefaultValue = DicomFieldDefault.Default)]
+		[DicomField(DicomConstTags.PatientID, DefaultValue = DicomFieldDefault.Default)]
 		public string PatientID {
 			get { return _patientId; }
 			set { _patientId = value; }
 		}
 
-		[DicomField(DcmConstTags.PatientsName, DefaultValue = DicomFieldDefault.Default)]
+		[DicomField(DicomConstTags.PatientsName, DefaultValue = DicomFieldDefault.Default)]
 		public string PatientsName {
 			get { return _patientName; }
 			set { _patientName = value; }
@@ -257,61 +257,61 @@ namespace Dicom.Network.Client {
 		#endregion
 
 		#region Public Properties
-		[DicomField(DcmConstTags.PatientID, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
+		[DicomField(DicomConstTags.PatientID, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
 		public string PatientID {
 			get { return _patientId; }
 			set { _patientId = value; }
 		}
 
-		[DicomField(DcmConstTags.PatientsName, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
+		[DicomField(DicomConstTags.PatientsName, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
 		public string PatientsName {
 			get { return _patientName; }
 			set { _patientName = value; }
 		}
 
-		[DicomField(DcmConstTags.StudyDate, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
+		[DicomField(DicomConstTags.StudyDate, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
 		public DcmDateRange StudyDate {
 			get { return _studyDate; }
 			set { _studyDate = value; }
 		}
 
-		[DicomField(DcmConstTags.StudyTime, DefaultValue = DicomFieldDefault.MinValue, CreateEmptyElement = true)]
+		[DicomField(DicomConstTags.StudyTime, DefaultValue = DicomFieldDefault.MinValue, CreateEmptyElement = true)]
 		public DcmDateRange StudyTime {
 			get { return _studyTime; }
 			set { _studyTime = value; }
 		}
 
-		[DicomField(DcmConstTags.StudyID, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
+		[DicomField(DicomConstTags.StudyID, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
 		public string StudyID {
 			get { return _studyId; }
 			set { _studyId = value; }
 		}
 
-		[DicomField(DcmConstTags.AccessionNumber, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
+		[DicomField(DicomConstTags.AccessionNumber, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
 		public string AccessionNumber {
 			get { return _accessionNumber; }
 			set { _accessionNumber = value; }
 		}
 
-		[DicomField(DcmConstTags.StudyInstanceUID, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
+		[DicomField(DicomConstTags.StudyInstanceUID, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
 		public string StudyInstanceUID {
 			get { return _studyInstanceUid; }
 			set { _studyInstanceUid = value; }
 		}
 
-		[DicomField(DcmConstTags.ModalitiesInStudy, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
+		[DicomField(DicomConstTags.ModalitiesInStudy, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
 		public string ModalitiesInStudy {
 			get { return _modalitiesInStudy; }
 			set { _modalitiesInStudy = value; }
 		}
 
-		[DicomField(DcmConstTags.StudyDescription, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
+		[DicomField(DicomConstTags.StudyDescription, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
 		public string StudyDescription {
 			get { return _studyDescription; }
 			set { _studyDescription = value; }
 		}
 
-		[DicomField(DcmConstTags.InstitutionName, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
+		[DicomField(DicomConstTags.InstitutionName, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
 		public string InstitutionName {
 			get { return _institutionName; }
 			set { _institutionName = value; }
@@ -320,12 +320,12 @@ namespace Dicom.Network.Client {
 
 		#region Protected Members
 		protected override void AdditionalMembers(DcmDataset dataset) {
-			dataset.AddElement(DcmTags.Modality, DcmVR.CS);
-			dataset.AddElement(DcmTags.PatientsBirthDate, DcmVR.DA);
-			dataset.AddElement(DcmTags.PatientsSex, DcmVR.CS);
-			//dataset.AddElement(DcmTags.SpecificCharacterSet, DcmVR.CS);
-			dataset.AddElement(DcmTags.NumberOfStudyRelatedSeries, DcmVR.IS);
-			dataset.AddElement(DcmTags.NumberOfStudyRelatedInstances, DcmVR.IS);
+			dataset.AddElement(DicomTags.Modality, DicomVR.CS);
+			dataset.AddElement(DicomTags.PatientsBirthDate, DicomVR.DA);
+			dataset.AddElement(DicomTags.PatientsSex, DicomVR.CS);
+			//dataset.AddElement(DicomTags.SpecificCharacterSet, DicomVR.CS);
+			dataset.AddElement(DicomTags.NumberOfStudyRelatedSeries, DicomVR.IS);
+			dataset.AddElement(DicomTags.NumberOfStudyRelatedInstances, DicomVR.IS);
 		}
 		#endregion
 	}
@@ -350,91 +350,91 @@ namespace Dicom.Network.Client {
 		#endregion
 
 		#region Public Properties
-		[DicomField(DcmConstTags.PatientID, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
+		[DicomField(DicomConstTags.PatientID, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
 		public string PatientID {
 			get { return _patientId; }
 			set { _patientId = value; }
 		}
 
-		[DicomField(DcmConstTags.PatientsName, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
+		[DicomField(DicomConstTags.PatientsName, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
 		public string PatientsName {
 			get { return _patientName; }
 			set { _patientName = value; }
 		}
 
-		[DicomField(DcmConstTags.PatientsBirthDate, DefaultValue = DicomFieldDefault.MinValue, CreateEmptyElement = true)]
+		[DicomField(DicomConstTags.PatientsBirthDate, DefaultValue = DicomFieldDefault.MinValue, CreateEmptyElement = true)]
 		public DateTime PatientsBirthDate {
 			get { return _patientBirthDate; }
 			set { _patientBirthDate = value; }
 		}
 
-		[DicomField(DcmConstTags.PatientsSex, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
+		[DicomField(DicomConstTags.PatientsSex, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
 		public string PatientsSex {
 			get { return _patientSex; }
 			set { _patientSex = value; }
 		}
 
-		[DicomField(DcmConstTags.StudyDate, DefaultValue = DicomFieldDefault.MinValue, CreateEmptyElement = true)]
+		[DicomField(DicomConstTags.StudyDate, DefaultValue = DicomFieldDefault.MinValue, CreateEmptyElement = true)]
 		public DateTime StudyDate {
 			get { return _studyDate; }
 			set { _studyDate = value; }
 		}
 
-		[DicomField(DcmConstTags.StudyTime, DefaultValue = DicomFieldDefault.MinValue, CreateEmptyElement = true)]
+		[DicomField(DicomConstTags.StudyTime, DefaultValue = DicomFieldDefault.MinValue, CreateEmptyElement = true)]
 		public DateTime StudyTime {
 			get { return _studyTime; }
 			set { _studyTime = value; }
 		}
 
-		[DicomField(DcmConstTags.StudyID, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
+		[DicomField(DicomConstTags.StudyID, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
 		public string StudyID {
 			get { return _studyId; }
 			set { _studyId = value; }
 		}
 
-		[DicomField(DcmConstTags.AccessionNumber, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
+		[DicomField(DicomConstTags.AccessionNumber, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
 		public string AccessionNumber {
 			get { return _accessionNumber; }
 			set { _accessionNumber = value; }
 		}
 
-		[DicomField(DcmConstTags.StudyInstanceUID, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
+		[DicomField(DicomConstTags.StudyInstanceUID, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
 		public string StudyInstanceUID {
 			get { return _studyInstanceUid; }
 			set { _studyInstanceUid = value; }
 		}
 
-		[DicomField(DcmConstTags.Modality, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
+		[DicomField(DicomConstTags.Modality, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
 		public string Modality {
 			get { return _modality; }
 			set { _modality = value; }
 		}
 
-		[DicomField(DcmConstTags.ModalitiesInStudy, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
+		[DicomField(DicomConstTags.ModalitiesInStudy, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
 		public string ModalitiesInStudy {
 			get { return _modalitiesInStudy; }
 			set { _modalitiesInStudy = value; }
 		}
 
-		[DicomField(DcmConstTags.StudyDescription, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
+		[DicomField(DicomConstTags.StudyDescription, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
 		public string StudyDescription {
 			get { return _studyDescription; }
 			set { _studyDescription = value; }
 		}
 
-		[DicomField(DcmConstTags.InstitutionName, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
+		[DicomField(DicomConstTags.InstitutionName, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
 		public string InstitutionName {
 			get { return _institutionName; }
 			set { _institutionName = value; }
 		}
 
-		[DicomField(DcmConstTags.NumberOfStudyRelatedSeries, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
+		[DicomField(DicomConstTags.NumberOfStudyRelatedSeries, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
 		public int NumberOfStudyRelatedSeries {
 			get { return _numberOfStudyRelatedSeries; }
 			set { _numberOfStudyRelatedSeries = value; }
 		}
 
-		[DicomField(DcmConstTags.NumberOfStudyRelatedInstances, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
+		[DicomField(DicomConstTags.NumberOfStudyRelatedInstances, DefaultValue = DicomFieldDefault.Default, CreateEmptyElement = true)]
 		public int NumberOfStudyRelatedInstances {
 			get { return _numberOfStudyRelatedInstances; }
 			set { _numberOfStudyRelatedInstances = value; }
@@ -444,7 +444,7 @@ namespace Dicom.Network.Client {
 
 	public sealed class CFindStudyClient : CFindClientT<CFindStudyQuery, CFindStudyResponse> {
 		public CFindStudyClient() : base() {
-			FindSopClassUID = DcmUIDs.StudyRootQueryRetrieveInformationModelFIND;
+			FindSopClassUID = DicomUID.StudyRootQueryRetrieveInformationModelFIND;
 		}
 	}
 	#endregion
@@ -507,48 +507,48 @@ namespace Dicom.Network.Client {
 
 	#region Protected Members
 		protected override void AdditionalMembers(DcmDataset dataset) {
-			dataset.AddElement(DcmTags.PatientsBirthDate);
-			dataset.AddElement(DcmTags.PatientsSex);
-			dataset.AddElement(DcmTags.PatientsAge);
-			dataset.AddElement(DcmTags.PatientsSize);
-			dataset.AddElement(DcmTags.PatientsWeight);
-			dataset.AddElement(DcmTags.MedicalAlerts);
-			dataset.AddElement(DcmTags.PregnancyStatus);
-			dataset.AddElement(DcmTags.Allergies);//*Contrast allergies??
-			dataset.AddElement(DcmTags.PatientComments);
-			dataset.AddElement(DcmTags.SpecialNeeds);//*
-			dataset.AddElement(DcmTags.PatientState);//*
-			dataset.AddElement(DcmTags.CurrentPatientLocation);//*
-			dataset.AddElement(DcmTags.InstitutionName);
-			dataset.AddElement(DcmTags.AdmissionID);
-			dataset.AddElement(DcmTags.AccessionNumber);
-			dataset.AddElement(DcmTags.ReferringPhysiciansName);
-			dataset.AddElement(DcmTags.AdmittingDiagnosesDescription);
-			dataset.AddElement(DcmTags.RequestingPhysician);
-			dataset.AddElement(DcmTags.StudyInstanceUID);
-			dataset.AddElement(DcmTags.RequestedProcedureDescription);
-			dataset.AddElement(DcmTags.RequestedProcedureID);
-			dataset.AddElement(DcmTags.ReasonForTheRequestedProcedure);
-			dataset.AddElement(DcmTags.RequestedProcedurePriority);
+			dataset.AddElement(DicomTags.PatientsBirthDate);
+			dataset.AddElement(DicomTags.PatientsSex);
+			dataset.AddElement(DicomTags.PatientsAge);
+			dataset.AddElement(DicomTags.PatientsSize);
+			dataset.AddElement(DicomTags.PatientsWeight);
+			dataset.AddElement(DicomTags.MedicalAlerts);
+			dataset.AddElement(DicomTags.PregnancyStatus);
+			dataset.AddElement(DicomTags.Allergies);//*Contrast allergies??
+			dataset.AddElement(DicomTags.PatientComments);
+			dataset.AddElement(DicomTags.SpecialNeeds);//*
+			dataset.AddElement(DicomTags.PatientState);//*
+			dataset.AddElement(DicomTags.CurrentPatientLocation);//*
+			dataset.AddElement(DicomTags.InstitutionName);
+			dataset.AddElement(DicomTags.AdmissionID);
+			dataset.AddElement(DicomTags.AccessionNumber);
+			dataset.AddElement(DicomTags.ReferringPhysiciansName);
+			dataset.AddElement(DicomTags.AdmittingDiagnosesDescription);
+			dataset.AddElement(DicomTags.RequestingPhysician);
+			dataset.AddElement(DicomTags.StudyInstanceUID);
+			dataset.AddElement(DicomTags.RequestedProcedureDescription);
+			dataset.AddElement(DicomTags.RequestedProcedureID);
+			dataset.AddElement(DicomTags.ReasonForTheRequestedProcedure);
+			dataset.AddElement(DicomTags.RequestedProcedurePriority);
 
-			dataset.AddElement(DcmTags.StudyDate);//*
-			dataset.AddElement(DcmTags.StudyTime);//*
+			dataset.AddElement(DicomTags.StudyDate);//*
+			dataset.AddElement(DicomTags.StudyTime);//*
 
-			//DcmTags.RequestedProcedureCodeSequence
-			//DcmTags.ScheduledProtocolCodeSequence
+			//DicomTags.RequestedProcedureCodeSequence
+			//DicomTags.ScheduledProtocolCodeSequence
 
 			DcmItemSequenceItem sps = new DcmItemSequenceItem();
-			sps.Dataset.AddElement(DcmTags.ScheduledStationAETitle);
-			sps.Dataset.AddElement(DcmTags.ScheduledProcedureStepStartDate);
-			sps.Dataset.GetDA(DcmTags.ScheduledProcedureStepStartDate).SetDateTimeRange(ScheduledProcedureStepStartDate);
-			sps.Dataset.AddElement(DcmTags.ScheduledProcedureStepStartTime);
-			sps.Dataset.AddElementWithValue(DcmTags.Modality, Modality);
-			sps.Dataset.AddElement(DcmTags.ScheduledPerformingPhysiciansName);
-			sps.Dataset.AddElement(DcmTags.ScheduledProcedureStepDescription);
-			sps.Dataset.AddElement(DcmTags.ScheduledProcedureStepLocation);
-			sps.Dataset.AddElement(DcmTags.ScheduledProcedureStepID);
+			sps.Dataset.AddElement(DicomTags.ScheduledStationAETitle);
+			sps.Dataset.AddElement(DicomTags.ScheduledProcedureStepStartDate);
+			sps.Dataset.GetDA(DicomTags.ScheduledProcedureStepStartDate).SetDateTimeRange(ScheduledProcedureStepStartDate);
+			sps.Dataset.AddElement(DicomTags.ScheduledProcedureStepStartTime);
+			sps.Dataset.AddElementWithValue(DicomTags.Modality, Modality);
+			sps.Dataset.AddElement(DicomTags.ScheduledPerformingPhysiciansName);
+			sps.Dataset.AddElement(DicomTags.ScheduledProcedureStepDescription);
+			sps.Dataset.AddElement(DicomTags.ScheduledProcedureStepLocation);
+			sps.Dataset.AddElement(DicomTags.ScheduledProcedureStepID);
 
-			DcmItemSequence sq = new DcmItemSequence(DcmTags.ScheduledProcedureStepSequence);
+			DcmItemSequence sq = new DcmItemSequence(DicomTags.ScheduledProcedureStepSequence);
 			sq.AddSequenceItem(sps);
 			dataset.AddItem(sq);
 		}
@@ -658,18 +658,18 @@ namespace Dicom.Network.Client {
 			//dataset.Dump();
 			_dataset = dataset;
 			dataset.LoadDicomFields(this);
-			if (dataset.Contains(DcmTags.ScheduledProcedureStepSequence)) {
-				DcmItemSequence sq = dataset.GetSQ(DcmTags.ScheduledProcedureStepSequence);
+			if (dataset.Contains(DicomTags.ScheduledProcedureStepSequence)) {
+				DcmItemSequence sq = dataset.GetSQ(DicomTags.ScheduledProcedureStepSequence);
 				if (sq.SequenceItems.Count > 0) {
 					DcmItemSequenceItem sps = sq.SequenceItems[0];
-					Modality = sps.Dataset.GetString(DcmTags.Modality, String.Empty);
-					ScheduledStationAETitle = sps.Dataset.GetString(DcmTags.ScheduledStationAETitle, String.Empty);
-					ScheduledProcedureStartDate = sps.Dataset.GetDateTime(DcmTags.ScheduledProcedureStepStartDate, 0, DateTime.MinValue);
-					ScheduledProcedureStartTime = sps.Dataset.GetDateTime(DcmTags.ScheduledProcedureStepStartTime, 0, DateTime.MinValue);
-					ScheduledPerformingPhysicianName = sps.Dataset.GetString(DcmTags.ScheduledPerformingPhysiciansName, String.Empty);
-					ScheduledProcedureStepDescription = sps.Dataset.GetString(DcmTags.ScheduledProcedureStepDescription, String.Empty);
-					ScheduledProcedureStepID = sps.Dataset.GetString(DcmTags.ScheduledProcedureStepID, String.Empty);
-					ScheduledProcedureStepLocation = sps.Dataset.GetString(DcmTags.ScheduledProcedureStepLocation, String.Empty);
+					Modality = sps.Dataset.GetString(DicomTags.Modality, String.Empty);
+					ScheduledStationAETitle = sps.Dataset.GetString(DicomTags.ScheduledStationAETitle, String.Empty);
+					ScheduledProcedureStartDate = sps.Dataset.GetDateTime(DicomTags.ScheduledProcedureStepStartDate, 0, DateTime.MinValue);
+					ScheduledProcedureStartTime = sps.Dataset.GetDateTime(DicomTags.ScheduledProcedureStepStartTime, 0, DateTime.MinValue);
+					ScheduledPerformingPhysicianName = sps.Dataset.GetString(DicomTags.ScheduledPerformingPhysiciansName, String.Empty);
+					ScheduledProcedureStepDescription = sps.Dataset.GetString(DicomTags.ScheduledProcedureStepDescription, String.Empty);
+					ScheduledProcedureStepID = sps.Dataset.GetString(DicomTags.ScheduledProcedureStepID, String.Empty);
+					ScheduledProcedureStepLocation = sps.Dataset.GetString(DicomTags.ScheduledProcedureStepLocation, String.Empty);
 				}
 			}
 		}
@@ -678,7 +678,7 @@ namespace Dicom.Network.Client {
 
 	public sealed class CFindWorklistClient : CFindClientT<CFindWorklistQuery, CFindWorklistResponse> {
 		public CFindWorklistClient() : base() {
-			FindSopClassUID = DcmUIDs.ModalityWorklistInformationModelFIND;
+			FindSopClassUID = DicomUID.ModalityWorklistInformationModelFIND;
 		}
 	}
 	#endregion
@@ -686,7 +686,7 @@ namespace Dicom.Network.Client {
 	#region CFindClient
 	public class CFindClient : DcmClientBase {
 		#region Private Members
-		private DcmUID _findSopClass;
+		private DicomUID _findSopClass;
 		private Queue<DcmDataset> _queries;
 		private DcmDataset _current;
 		#endregion
@@ -698,7 +698,7 @@ namespace Dicom.Network.Client {
 			CallingAE = "FIND_SCU";
 			CalledAE = "FIND_SCP";
 			_queries = new Queue<DcmDataset>();
-			_findSopClass = DcmUIDs.StudyRootQueryRetrieveInformationModelFIND;
+			_findSopClass = DicomUID.StudyRootQueryRetrieveInformationModelFIND;
 			_current = null;
 		}
 		#endregion
@@ -710,7 +710,7 @@ namespace Dicom.Network.Client {
 		public delegate void CFindCompleteDelegate(DcmDataset query);
 		public CFindCompleteDelegate OnCFindComplete;
 
-		public DcmUID FindSopClassUID {
+		public DicomUID FindSopClassUID {
 			get { return _findSopClass; }
 			set { _findSopClass = value; }
 		}
@@ -732,8 +732,8 @@ namespace Dicom.Network.Client {
 			DcmAssociate associate = new DcmAssociate();
 
 			byte pcid = associate.AddPresentationContext(FindSopClassUID);
-			//associate.AddTransferSyntax(pcid, DcmTS.ExplicitVRLittleEndian);
-			associate.AddTransferSyntax(pcid, DcmTS.ImplicitVRLittleEndian);
+			//associate.AddTransferSyntax(pcid, DicomTransferSyntax.ExplicitVRLittleEndian);
+			associate.AddTransferSyntax(pcid, DicomTransferSyntax.ImplicitVRLittleEndian);
 
 			associate.CalledAE = CalledAE;
 			associate.CallingAE = CallingAE;

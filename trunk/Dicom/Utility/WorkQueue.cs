@@ -33,19 +33,15 @@ namespace Dicom.Utility {
 		private object _queueLock;
 		private Queue<T> _queue;
 
-		private bool _stop;
+		private bool _pause;
 		private int _threadCount;
-		private List<Thread> _threads;
-		private ManualResetEvent _stopEvent;
-		private Semaphore _semaphore;
 
 		private int _processed;
 		private int _active;
 		#endregion
 
 		#region Public Constructors
-		public WorkQueue(WorkItemProcessor processor)
-			: this(processor, 1) {
+		public WorkQueue(WorkItemProcessor processor) : this(processor, Environment.ProcessorCount) {
 		}
 
 		public WorkQueue(WorkItemProcessor processor, int threads) {
@@ -55,8 +51,6 @@ namespace Dicom.Utility {
 
 			_queueLock = new object();
 			_queue = new Queue<T>();
-
-			Start();
 		}
 		#endregion
 
@@ -80,76 +74,59 @@ namespace Dicom.Utility {
 		public int ThreadCount {
 			get { return _threadCount; }
 		}
+
+		public bool Pause {
+			get { return _pause; }
+			set {
+				if (_pause != value) {
+					lock (_queueLock) {
+						_pause = value;
+
+						if (!_pause && _active < _threadCount) {
+							_active++;
+							ThreadPool.QueueUserWorkItem(WorkerProc);
+						}
+					}
+				}
+			}
+		}
 		#endregion
 
 		#region Public Methods
-		public void Start() {
-			if (_threads == null) {
-				_stop = false;
-				_stopEvent = new ManualResetEvent(false);
-				_semaphore = new Semaphore(0, _threadCount);
-				_threads = new List<Thread>(_threadCount);
-				for (int i = 0; i < _threadCount; i++) {
-					Thread thread = new Thread(WorkerProc);
-					thread.IsBackground = true;
-					thread.Start();
-				}
-			}
-		}
-
-		public void Stop(bool join) {
-			if (_threads != null) {
-				_stop = true;
-				_stopEvent.Set();
-				if (join) {
-					while (_threads.Count > 0) {
-						_threads[0].Join();
-						_threads.RemoveAt(0);
-					}
-				}
-				else {
-					_threads.Clear();
-				}
-				_threads = null;
-				_stopEvent.Close();
-				_stopEvent = null;
-				_semaphore.Close();
-				_semaphore = null;
-			}
-		}
-
 		public void QueueWorkItem(T workItem) {
 			lock (_queueLock) {
 				_queue.Enqueue(workItem);
+
+				if (!_pause && _active < _threadCount) {
+					_active++;
+					ThreadPool.QueueUserWorkItem(WorkerProc);
+				}
 			}
-			_semaphore.Release();
 		}
 		#endregion
 
 		#region Private Members
-		private void WorkerProc() {
-			WaitHandle[] waitHandles = new WaitHandle[] { _stopEvent, _semaphore };
+		private void WorkerProc(object state) {
+			while (true) {
+				T item;
 
-			while (!_stop) {
-				if (WaitHandle.WaitAny(waitHandles) == 0)
-					return;
-
-				Interlocked.Increment(ref _active);
-
-				T workItem;
 				lock (_queueLock) {
-					workItem = _queue.Dequeue();
+					if (_pause || _queue.Count == 0) {
+						_active--;
+						return;
+					}
+
+					item = _queue.Dequeue();
 				}
 
 				try {
-					if (_processor != null)
-						_processor(workItem);
+					_processor(item);
 				}
 				catch {
 				}
-
-				Interlocked.Increment(ref _processed);
-				Interlocked.Decrement(ref _active);
+				finally {
+					Interlocked.Increment(ref _processed);
+				}
 			}
 		}
 		#endregion
@@ -157,9 +134,16 @@ namespace Dicom.Utility {
 		#region IDisposable Members
 
 		public void Dispose() {
-			Stop(true);
-			_queue.Clear();
-			_queue = null;
+			lock (_queueLock) {
+				_queue.Clear();
+			}
+			while (true) {
+				lock (_queueLock) {
+					if (_active == 0)
+						break;
+				}
+				Thread.Sleep(0);
+			}
 			GC.SuppressFinalize(this);
 		}
 

@@ -206,16 +206,16 @@ namespace Dicom.Data {
 		#endregion
 
 		#region Private Methods
-		private DcmTag OverlayTag(DcmTag tag) {
-			return new DcmTag(_group, tag.Element);
+		private DicomTag OverlayTag(DicomTag tag) {
+			return new DicomTag(_group, tag.Element);
 		}
 
 		private void Load(DcmDataset ds) {
-			_rows = ds.GetUInt16(OverlayTag(DcmTags.OverlayRows), 0);
-			_columns = ds.GetUInt16(OverlayTag(DcmTags.OverlayColumns), 0);
-			_type = ds.GetString(OverlayTag(DcmTags.OverlayType), "Unknown");
+			_rows = ds.GetUInt16(OverlayTag(DicomTags.OverlayRows), 0);
+			_columns = ds.GetUInt16(OverlayTag(DicomTags.OverlayColumns), 0);
+			_type = ds.GetString(OverlayTag(DicomTags.OverlayType), "Unknown");
 
-			DcmTag tag = OverlayTag(DcmTags.OverlayOrigin);
+			DicomTag tag = OverlayTag(DicomTags.OverlayOrigin);
 			if (ds.Contains(tag)) {
 				short[] xy = ds.GetSS(tag).GetValues();
 				if (xy != null && xy.Length == 2) {
@@ -224,21 +224,21 @@ namespace Dicom.Data {
 				}
 			}
 
-			_bitsAllocated = ds.GetUInt16(OverlayTag(DcmTags.OverlayBitsAllocated), 1);
-			_bitPosition = ds.GetUInt16(OverlayTag(DcmTags.OverlayBitPosition), 0);
+			_bitsAllocated = ds.GetUInt16(OverlayTag(DicomTags.OverlayBitsAllocated), 1);
+			_bitPosition = ds.GetUInt16(OverlayTag(DicomTags.OverlayBitPosition), 0);
 
-			tag = OverlayTag(DcmTags.OverlayData);
+			tag = OverlayTag(DicomTags.OverlayData);
 			if (ds.Contains(tag)) {
 				DcmElement elem = ds.GetElement(tag);
 				_data = elem.ByteBuffer.ToBytes();
 			}
 
-			_description = ds.GetString(OverlayTag(DcmTags.OverlayDescription), String.Empty);
-			_subtype = ds.GetString(OverlayTag(DcmTags.OverlaySubtype), String.Empty);
-			_label = ds.GetString(OverlayTag(DcmTags.OverlayLabel), String.Empty);
+			_description = ds.GetString(OverlayTag(DicomTags.OverlayDescription), String.Empty);
+			_subtype = ds.GetString(OverlayTag(DicomTags.OverlaySubtype), String.Empty);
+			_label = ds.GetString(OverlayTag(DicomTags.OverlayLabel), String.Empty);
 
-			_frames = ds.GetInt32(OverlayTag(DcmTags.NumberOfFramesInOverlay), 1);
-			_frameOrigin = ds.GetUInt16(OverlayTag(DcmTags.ImageFrameOrigin), 1);
+			_frames = ds.GetInt32(OverlayTag(DicomTags.NumberOfFramesInOverlay), 1);
+			_frameOrigin = ds.GetUInt16(OverlayTag(DicomTags.ImageFrameOrigin), 1);
 
 			//TODO: include ROI
 		}

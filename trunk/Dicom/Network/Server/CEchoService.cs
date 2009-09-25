@@ -35,12 +35,12 @@ namespace Dicom.Network.Server {
 			association.NegotiateAsyncOps = false;
 			LogID = association.CallingAE;
 			foreach (DcmPresContext pc in association.GetPresentationContexts()) {
-				if (pc.AbstractSyntax == DcmUIDs.VerificationSOPClass) {
-					if (pc.HasTransfer(DcmTS.ImplicitVRLittleEndian)) {
-						pc.SetResult(DcmPresContextResult.Accept, DcmTS.ImplicitVRLittleEndian);
+				if (pc.AbstractSyntax == DicomUID.VerificationSOPClass) {
+					if (pc.HasTransfer(DicomTransferSyntax.ImplicitVRLittleEndian)) {
+						pc.SetResult(DcmPresContextResult.Accept, DicomTransferSyntax.ImplicitVRLittleEndian);
 					}
-					else if (pc.HasTransfer(DcmTS.ExplicitVRLittleEndian)) {
-						pc.SetResult(DcmPresContextResult.Accept, DcmTS.ExplicitVRLittleEndian);
+					else if (pc.HasTransfer(DicomTransferSyntax.ExplicitVRLittleEndian)) {
+						pc.SetResult(DcmPresContextResult.Accept, DicomTransferSyntax.ExplicitVRLittleEndian);
 					}
 					else {
 						pc.SetResult(DcmPresContextResult.RejectTransferSyntaxesNotSupported);

@@ -51,8 +51,8 @@ namespace Dicom.Data {
 		public DicomFileFormat(DcmDataset dataset) {
 			_metainfo = new DcmFileMetaInfo();
 			_metainfo.FileMetaInformationVersion = DcmFileMetaInfo.Version;
-			_metainfo.MediaStorageSOPClassUID = dataset.GetUID(DcmTags.SOPClassUID);
-			_metainfo.MediaStorageSOPInstanceUID = dataset.GetUID(DcmTags.SOPInstanceUID);
+			_metainfo.MediaStorageSOPClassUID = dataset.GetUID(DicomTags.SOPClassUID);
+			_metainfo.MediaStorageSOPInstanceUID = dataset.GetUID(DicomTags.SOPInstanceUID);
 			_metainfo.TransferSyntax = dataset.InternalTransferSyntax;
 			_metainfo.ImplementationClassUID = Implementation.ClassUID;
 			_metainfo.ImplementationVersionName = Implementation.Version;
@@ -83,7 +83,7 @@ namespace Dicom.Data {
 		/// </summary>
 		/// <param name="ts">New transfer syntax</param>
 		/// <param name="parameters">Encode/Decode params</param>
-		public void ChangeTransferSytnax(DcmTS ts, DcmCodecParameters parameters) {
+		public void ChangeTransferSytnax(DicomTransferSyntax ts, DcmCodecParameters parameters) {
 			Dataset.ChangeTransferSyntax(ts, parameters);
 			FileMetaInfo.TransferSyntax = ts;
 		}
@@ -101,6 +101,7 @@ namespace Dicom.Data {
 				DcmFileMetaInfo metainfo = new DcmFileMetaInfo();
 				dsr.Dataset = metainfo;
 				dsr.Read(DcmFileMetaInfo.StopTag, DicomReadOptions.Default | DicomReadOptions.FileMetaInfoOnly);
+				fs.Close();
 				return metainfo;
 			}
 		}
@@ -110,8 +111,8 @@ namespace Dicom.Data {
 		/// </summary>
 		/// <param name="file">Filename</param>
 		/// <param name="options">DICOM read options</param>
-		public void Load(String file, DicomReadOptions options) {
-			Load(file, null, options);
+		public DicomReadStatus Load(String file, DicomReadOptions options) {
+			return Load(file, null, options);
 		}
 
 		/// <summary>
@@ -120,7 +121,7 @@ namespace Dicom.Data {
 		/// <param name="file">Filename</param>
 		/// <param name="stopTag">Tag to stop parsing at</param>
 		/// <param name="options">DICOM read options</param>
-		public void Load(String file, DcmTag stopTag, DicomReadOptions options) {
+		public DicomReadStatus Load(String file, DicomTag stopTag, DicomReadOptions options) {
 			using (FileStream fs = File.OpenRead(file)) {
 				fs.Seek(128, SeekOrigin.Begin);
 				CheckFileHeader(fs);
@@ -137,7 +138,11 @@ namespace Dicom.Data {
 
 				_dataset = new DcmDataset(_metainfo.TransferSyntax);
 				dsr.Dataset = _dataset;
-				dsr.Read(stopTag, options);
+				DicomReadStatus status = dsr.Read(stopTag, options);
+
+				fs.Close();
+
+				return status;
 			}
 		}
 
@@ -188,6 +193,8 @@ namespace Dicom.Data {
 				dsw.Write(_metainfo, options | DicomWriteOptions.CalculateGroupLengths);
 				if (_dataset != null)
 					dsw.Write(_dataset, options);
+
+				fs.Close();
 			}
 		}
 	}

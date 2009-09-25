@@ -27,23 +27,23 @@ using System.Text;
 
 namespace Dicom.Data {
 	public class DicomTemplateAdapter {
-		private static Dictionary<string, DcmTag> _map;
+		private static Dictionary<string, DicomTag> _map;
 
 		static DicomTemplateAdapter() {
-			_map = new Dictionary<string, DcmTag>();
-			_map.Add("StudyUID", DcmTags.StudyInstanceUID);
-			_map.Add("SeriesUID", DcmTags.SeriesInstanceUID);
-			_map.Add("ImageUID", DcmTags.SOPInstanceUID);
-			_map.Add("PatientID", DcmTags.PatientID);
-			_map.Add("PatientName", DcmTags.PatientsName);
-			_map.Add("PatientSex", DcmTags.PatientsSex);
-			_map.Add("Modality", DcmTags.Modality);
-			_map.Add("Description", DcmTags.StudyDescription);
-			_map.Add("BodyPart", DcmTags.BodyPartExamined);
-			_map.Add("StudyID", DcmTags.StudyID);
-			_map.Add("AccessionNumber", DcmTags.AccessionNumber);
-			_map.Add("StudyDate", DcmTags.StudyDate);
-			_map.Add("StudyTime", DcmTags.StudyTime);
+			_map = new Dictionary<string, DicomTag>();
+			_map.Add("StudyUID", DicomTags.StudyInstanceUID);
+			_map.Add("SeriesUID", DicomTags.SeriesInstanceUID);
+			_map.Add("ImageUID", DicomTags.SOPInstanceUID);
+			_map.Add("PatientID", DicomTags.PatientID);
+			_map.Add("PatientName", DicomTags.PatientsName);
+			_map.Add("PatientSex", DicomTags.PatientsSex);
+			_map.Add("Modality", DicomTags.Modality);
+			_map.Add("Description", DicomTags.StudyDescription);
+			_map.Add("BodyPart", DicomTags.BodyPartExamined);
+			_map.Add("StudyID", DicomTags.StudyID);
+			_map.Add("AccessionNumber", DicomTags.AccessionNumber);
+			_map.Add("StudyDate", DicomTags.StudyDate);
+			_map.Add("StudyTime", DicomTags.StudyTime);
 		}
 
 		private DcmDataset _dataset;
@@ -64,9 +64,9 @@ namespace Dicom.Data {
 				if (_dataset == null)
 					return String.Empty;
 
-				DcmTag tag = null;
+				DicomTag tag = null;
 				if (!_map.TryGetValue(index, out tag)) {
-					tag = DcmTag.Parse(index);
+					tag = DicomTag.Parse(index);
 				}
 
 				if (tag != null) {

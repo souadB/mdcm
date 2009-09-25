@@ -59,71 +59,71 @@ namespace Dicom.Network {
 
 	public class DcmCommand : DcmDataset {
 		#region Public Constructors
-		public DcmCommand() : base(DcmTS.ImplicitVRLittleEndian) {
+		public DcmCommand() : base(DicomTransferSyntax.ImplicitVRLittleEndian) {
 		}
 		#endregion
 
 		#region Public Properties
-		public DcmUID AffectedSOPClassUID {
+		public DicomUID AffectedSOPClassUID {
 			get {
-				return GetUID(DcmTags.AffectedSOPClassUID);
+				return GetUID(DicomTags.AffectedSOPClassUID);
 			}
 			set {
-				AddElementWithValue(DcmTags.AffectedSOPClassUID, value);
+				AddElementWithValue(DicomTags.AffectedSOPClassUID, value);
 			}
 		}
 
-		public DcmUID RequestedSOPClassUID {
+		public DicomUID RequestedSOPClassUID {
 			get {
-				return GetUID(DcmTags.RequestedSOPClassUID);
+				return GetUID(DicomTags.RequestedSOPClassUID);
 			}
 			set {
-				AddElementWithValue(DcmTags.RequestedSOPClassUID, value);
+				AddElementWithValue(DicomTags.RequestedSOPClassUID, value);
 			}
 		}
 
 		public DcmCommandField CommandField {
 			get {
-				return (DcmCommandField)GetUInt16(DcmTags.CommandField, 0);
+				return (DcmCommandField)GetUInt16(DicomTags.CommandField, 0);
 			}
 			set {
-				AddElementWithValue(DcmTags.CommandField, (ushort)value);
+				AddElementWithValue(DicomTags.CommandField, (ushort)value);
 			}
 		}
 
 		public ushort MessageID {
 			get {
-				return GetUInt16(DcmTags.MessageID, 0);
+				return GetUInt16(DicomTags.MessageID, 0);
 			}
 			set {
-				AddElementWithValue(DcmTags.MessageID, value);
+				AddElementWithValue(DicomTags.MessageID, value);
 			}
 		}
 
 		public ushort MessageIDBeingRespondedTo {
 			get {
-				return GetUInt16(DcmTags.MessageIDBeingRespondedTo, 0);
+				return GetUInt16(DicomTags.MessageIDBeingRespondedTo, 0);
 			}
 			set {
-				AddElementWithValue(DcmTags.MessageIDBeingRespondedTo, value);
+				AddElementWithValue(DicomTags.MessageIDBeingRespondedTo, value);
 			}
 		}
 
 		public string MoveDestinationAE {
 			get {
-				return GetString(DcmTags.MoveDestination, null);
+				return GetString(DicomTags.MoveDestination, null);
 			}
 			set {
-				AddElementWithValue(DcmTags.MoveDestination, value);
+				AddElementWithValue(DicomTags.MoveDestination, value);
 			}
 		}
 
 		public DcmPriority Priority {
 			get {
-				return (DcmPriority)GetUInt16(DcmTags.Priority, 0);
+				return (DcmPriority)GetUInt16(DicomTags.Priority, 0);
 			}
 			set {
-				AddElementWithValue(DcmTags.Priority, (ushort)value);
+				AddElementWithValue(DicomTags.Priority, (ushort)value);
 			}
 		}
 
@@ -138,79 +138,79 @@ namespace Dicom.Network {
 
 		public ushort DataSetType {
 			get {
-				return GetUInt16(DcmTags.DataSetType, (ushort)0x0101);
+				return GetUInt16(DicomTags.DataSetType, (ushort)0x0101);
 			}
 			set {
-				AddElementWithValue(DcmTags.DataSetType, value);
+				AddElementWithValue(DicomTags.DataSetType, value);
 			}
 		}
 
 		public DcmStatus Status {
 			get {
-				return DcmStatus.Lookup(GetUInt16(DcmTags.Status, 0x0211));
+				return DcmStatus.Lookup(GetUInt16(DicomTags.Status, 0x0211));
 			}
 			set {
-				AddElementWithValue(DcmTags.Status, value.Code);
+				AddElementWithValue(DicomTags.Status, value.Code);
 			}
 		}
 
-		public DcmTag OffendingElement {
+		public DicomTag OffendingElement {
 			get {
-				return GetDcmTag(DcmTags.OffendingElement);
+				return GetDcmTag(DicomTags.OffendingElement);
 			}
 			set {
-				AddElementWithValue(DcmTags.OffendingElement, value);
+				AddElementWithValue(DicomTags.OffendingElement, value);
 			}
 		}
 
 		public string ErrorComment {
 			get {
-				return GetString(DcmTags.ErrorComment, null);
+				return GetString(DicomTags.ErrorComment, null);
 			}
 			set {
-				AddElementWithValue(DcmTags.ErrorComment, value);
+				AddElementWithValue(DicomTags.ErrorComment, value);
 			}
 		}
 
 		public ushort ErrorID {
 			get {
-				return GetUInt16(DcmTags.ErrorID, 0);
+				return GetUInt16(DicomTags.ErrorID, 0);
 			}
 			set {
-				AddElementWithValue(DcmTags.ErrorID, value);
+				AddElementWithValue(DicomTags.ErrorID, value);
 			}
 		}
 
-		public DcmUID AffectedSOPInstanceUID {
+		public DicomUID AffectedSOPInstanceUID {
 			get {
-				return GetUID(DcmTags.AffectedSOPInstanceUID);
+				return GetUID(DicomTags.AffectedSOPInstanceUID);
 			}
 			set {
-				AddElementWithValue(DcmTags.AffectedSOPInstanceUID, value);
+				AddElementWithValue(DicomTags.AffectedSOPInstanceUID, value);
 			}
 		}
 
-		public DcmUID RequestedSOPInstanceUID {
+		public DicomUID RequestedSOPInstanceUID {
 			get {
-				return GetUID(DcmTags.RequestedSOPInstanceUID);
+				return GetUID(DicomTags.RequestedSOPInstanceUID);
 			}
 			set {
-				AddElementWithValue(DcmTags.RequestedSOPInstanceUID, value);
+				AddElementWithValue(DicomTags.RequestedSOPInstanceUID, value);
 			}
 		}
 
 		public ushort EventTypeID {
 			get {
-				return GetUInt16(DcmTags.EventTypeID, 0);
+				return GetUInt16(DicomTags.EventTypeID, 0);
 			}
 			set {
-				AddElementWithValue(DcmTags.EventTypeID, value);
+				AddElementWithValue(DicomTags.EventTypeID, value);
 			}
 		}
 
 		public DcmAttributeTag AttributeIdentifierList {
 			get {
-				return GetAT(DcmTags.AttributeIdentifierList);
+				return GetAT(DicomTags.AttributeIdentifierList);
 			}
 			set {
 				AddItem(value);
@@ -219,64 +219,64 @@ namespace Dicom.Network {
 
 		public ushort ActionTypeID {
 			get {
-				return GetUInt16(DcmTags.ActionTypeID, 0);
+				return GetUInt16(DicomTags.ActionTypeID, 0);
 			}
 			set {
-				AddElementWithValue(DcmTags.ActionTypeID, value);
+				AddElementWithValue(DicomTags.ActionTypeID, value);
 			}
 		}
 
 		public ushort NumberOfRemainingSuboperations {
 			get {
-				return GetUInt16(DcmTags.NumberOfRemainingSuboperations, 0);
+				return GetUInt16(DicomTags.NumberOfRemainingSuboperations, 0);
 			}
 			set {
-				AddElementWithValue(DcmTags.NumberOfRemainingSuboperations, value);
+				AddElementWithValue(DicomTags.NumberOfRemainingSuboperations, value);
 			}
 		}
 
 		public ushort NumberOfCompletedSuboperations {
 			get {
-				return GetUInt16(DcmTags.NumberOfCompletedSuboperations, 0);
+				return GetUInt16(DicomTags.NumberOfCompletedSuboperations, 0);
 			}
 			set {
-				AddElementWithValue(DcmTags.NumberOfCompletedSuboperations, value);
+				AddElementWithValue(DicomTags.NumberOfCompletedSuboperations, value);
 			}
 		}
 
 		public ushort NumberOfFailedSuboperations {
 			get {
-				return GetUInt16(DcmTags.NumberOfFailedSuboperations, 0);
+				return GetUInt16(DicomTags.NumberOfFailedSuboperations, 0);
 			}
 			set {
-				AddElementWithValue(DcmTags.NumberOfFailedSuboperations, value);
+				AddElementWithValue(DicomTags.NumberOfFailedSuboperations, value);
 			}
 		}
 
 		public ushort NumberOfWarningSuboperations {
 			get {
-				return GetUInt16(DcmTags.NumberOfWarningSuboperations, 0);
+				return GetUInt16(DicomTags.NumberOfWarningSuboperations, 0);
 			}
 			set {
-				AddElementWithValue(DcmTags.NumberOfWarningSuboperations, value);
+				AddElementWithValue(DicomTags.NumberOfWarningSuboperations, value);
 			}
 		}
 
 		public string MoveOriginatorAE {
 			get {
-				return GetString(DcmTags.MoveOriginatorApplicationEntityTitle, null);
+				return GetString(DicomTags.MoveOriginatorApplicationEntityTitle, null);
 			}
 			set {
-				AddElementWithValue(DcmTags.MoveOriginatorApplicationEntityTitle, value);
+				AddElementWithValue(DicomTags.MoveOriginatorApplicationEntityTitle, value);
 			}
 		}
 
 		public ushort MoveOriginatorMessageID {
 			get {
-				return GetUInt16(DcmTags.MoveOriginatorMessageID, 0);
+				return GetUInt16(DicomTags.MoveOriginatorMessageID, 0);
 			}
 			set {
-				AddElementWithValue(DcmTags.MoveOriginatorMessageID, value);
+				AddElementWithValue(DicomTags.MoveOriginatorMessageID, value);
 			}
 		}
 		#endregion
@@ -285,16 +285,16 @@ namespace Dicom.Network {
 		public string GetErrorString() {
 			StringBuilder sb = new StringBuilder();
 
-			if (Contains(DcmTags.ErrorComment))
+			if (Contains(DicomTags.ErrorComment))
 				sb.Append(ErrorComment);
 			else {
 				sb.Append("Unspecified");
 			}
 
-			if (Contains(DcmTags.OffendingElement)) {
-				DcmAttributeTag at = GetAT(DcmTags.OffendingElement);
+			if (Contains(DicomTags.OffendingElement)) {
+				DcmAttributeTag at = GetAT(DicomTags.OffendingElement);
 				sb.Append(" [");
-				DcmTag[] tags = at.GetValues();
+				DicomTag[] tags = at.GetValues();
 				for (int i = 0; i < tags.Length; i++) {
 					if (i > 0)
 						sb.Append("; ");

@@ -38,7 +38,7 @@ namespace Dicom.Forms {
 				else
 					lblElementName.Text = entry.Name;
 				lbValueRepresentations.Items.Clear();
-				foreach (DcmVR vr in entry.AllowedVRs) {
+				foreach (DicomVR vr in entry.AllowedVRs) {
 					lbValueRepresentations.Items.Add(vr);
 				}
 				lblValueMultiplicity.Text = entry.VM;

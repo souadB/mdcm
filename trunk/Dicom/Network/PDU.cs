@@ -407,7 +407,7 @@ namespace Dicom.Network {
 			pdu.Write("Item-Type", (byte)0x10);
 			pdu.Write("Reserved", (byte)0x00);
 			pdu.MarkLength16("Item-Length");
-			pdu.Write("Application Context Name", DcmUIDs.DICOMApplicationContextName.UID);
+			pdu.Write("Application Context Name", DicomUID.DICOMApplicationContextName.UID);
 			pdu.WriteLength16();
 
 			foreach (DcmPresContext pc in _assoc.GetPresentationContexts()) {
@@ -426,7 +426,7 @@ namespace Dicom.Network {
 				pdu.WriteLength16();
 
 				// Transfer Syntax
-				foreach (DcmTS ts in pc.GetTransfers()) {
+				foreach (DicomTransferSyntax ts in pc.GetTransfers()) {
 					pdu.Write("Item-Type", (byte)0x40);
 					pdu.Write("Reserved", (byte)0x00);
 					pdu.MarkLength16("Item-Length");
@@ -516,9 +516,9 @@ namespace Dicom.Network {
 						ushort pl = raw.ReadUInt16("Presentation Context Item-Length");
 						string sx = raw.ReadString("Presentation Context Syntax UID", pl);
 						if (pt == 0x30) {
-							_assoc.AddPresentationContext(id, DcmUIDs.Lookup(sx));
+							_assoc.AddPresentationContext(id, DicomUID.Lookup(sx));
 						} else if (pt == 0x40) {
-							_assoc.AddTransferSyntax(id, DcmTSs.Lookup(sx));
+							_assoc.AddTransferSyntax(id, DicomTransferSyntax.Lookup(sx));
 						}
 						il -= (ushort)(4 + pl);
 					}
@@ -534,7 +534,7 @@ namespace Dicom.Network {
 						if (ut == 0x51) {
 							_assoc.MaximumPduLength = raw.ReadUInt32("Max PDU Length");
 						} else if (ut == 0x52) {
-							_assoc.ImplementationClass = new DcmUID(raw.ReadString("Implementation Class UID", ul), "Implementation Class UID", UidType.Unknown);
+							_assoc.ImplementationClass = new DicomUID(raw.ReadString("Implementation Class UID", ul), "Implementation Class UID", DicomUidType.Unknown);
 						} else if (ut == 0x55) {
 							_assoc.ImplementationVersion = raw.ReadString("Implementation Version", ul);
 						} else if (ut == 0x53) {
@@ -594,7 +594,7 @@ namespace Dicom.Network {
 			pdu.Write("Item-Type", (byte)0x10);
 			pdu.Write("Reserved", (byte)0x00);
 			pdu.MarkLength16("Item-Length");
-			pdu.Write("Application Context Name", DcmUIDs.DICOMApplicationContextName.UID);
+			pdu.Write("Application Context Name", DicomUID.DICOMApplicationContextName.UID);
 			pdu.WriteLength16();
 
 			foreach (DcmPresContext pc in _assoc.GetPresentationContexts()) {
@@ -704,7 +704,7 @@ namespace Dicom.Network {
 					pl -= (ushort)(tl + 4);
 
 					_assoc.SetPresentationContextResult(id, (DcmPresContextResult)res);
-					_assoc.SetAcceptedTransferSyntax(id, DcmTSs.Lookup(tx));
+					_assoc.SetAcceptedTransferSyntax(id, DicomTransferSyntax.Lookup(tx));
 				} else
 
 				if (type == 0x50) {
@@ -720,7 +720,7 @@ namespace Dicom.Network {
 						if (ut == 0x51) {
 							_assoc.MaximumPduLength = raw.ReadUInt32("Max PDU Length");
 						} else if (ut == 0x52) {
-							_assoc.ImplementationClass = DcmUIDs.Lookup(raw.ReadString("Implementation Class UID", ul));
+							_assoc.ImplementationClass = DicomUID.Lookup(raw.ReadString("Implementation Class UID", ul));
 						} else if (ut == 0x53) {
 							_assoc.AsyncOpsInvoked = raw.ReadUInt16("Asynchronous Operations Invoked");
 							_assoc.AsyncOpsPerformed = raw.ReadUInt16("Asynchronous Operations Performed");

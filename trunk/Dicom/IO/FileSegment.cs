@@ -96,6 +96,7 @@ namespace Dicom.IO {
 			byte[] data = new byte[Length];
 			using (FileStream fs = OpenStream()) {
 				fs.Read(data, 0, (int)Length);
+				fs.Close();
 			}
 			return data;
 		}
@@ -114,6 +115,7 @@ namespace Dicom.IO {
 					s.Write(buffer, 0, size);
 					count -= size;
 				}
+				fs.Close();
 			}
 		}
 

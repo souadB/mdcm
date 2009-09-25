@@ -104,7 +104,7 @@ void DcmJpeg2000Codec::Encode(DcmDataset^ dataset, DcmPixelData^ oldPixelData, D
 		opj_set_default_encoder_parameters(&eparams);
 		eparams.cp_disto_alloc = 1;
 
-		if (newPixelData->TransferSyntax == DcmTS::JPEG2000Lossy && jparams->Irreversible)
+		if (newPixelData->TransferSyntax == DicomTransferSyntax::JPEG2000Lossy && jparams->Irreversible)
 			eparams.irreversible = 1;
 
 		int r = 0;
@@ -118,7 +118,7 @@ void DcmJpeg2000Codec::Encode(DcmDataset^ dataset, DcmPixelData^ oldPixelData, D
 		eparams.tcp_numlayers++;
 		eparams.tcp_rates[r] = (float)jparams->Rate;
 
-		if (newPixelData->TransferSyntax == DcmTS::JPEG2000Lossless && jparams->Rate > 0)
+		if (newPixelData->TransferSyntax == DicomTransferSyntax::JPEG2000Lossless && jparams->Rate > 0)
 			eparams.tcp_rates[eparams.tcp_numlayers++] = 0;
 
 		if (oldPixelData->PhotometricInterpretation == "RGB" && jparams->AllowMCT)
@@ -229,14 +229,14 @@ void DcmJpeg2000Codec::Encode(DcmDataset^ dataset, DcmPixelData^ oldPixelData, D
 
 			if (oldPixelData->PhotometricInterpretation == "RGB" && jparams->AllowMCT) {
 				if (jparams->UpdatePhotometricInterpretation) {
-					if (newPixelData->TransferSyntax == DcmTS::JPEG2000Lossy && jparams->Irreversible)
+					if (newPixelData->TransferSyntax == DicomTransferSyntax::JPEG2000Lossy && jparams->Irreversible)
 						newPixelData->PhotometricInterpretation = "YBR_ICT";
 					else
 						newPixelData->PhotometricInterpretation = "YBR_RCT";
 				}
 			}
 
-			if (newPixelData->TransferSyntax == DcmTS::JPEG2000Lossy && jparams->Irreversible) {
+			if (newPixelData->TransferSyntax == DicomTransferSyntax::JPEG2000Lossy && jparams->Irreversible) {
 				newPixelData->IsLossy = true;
 				newPixelData->LossyCompressionMethod = "ISO_15444_1";
 				
@@ -382,8 +382,8 @@ void DcmJpeg2000Codec::Decode(DcmDataset^ dataset, DcmPixelData^ oldPixelData, D
 }
 
 void DcmJpeg2000Codec::Register() {
-	DicomCodec::RegisterCodec(DcmTS::JPEG2000Lossy, DcmJpeg2000LossyCodec::typeid);
-	DicomCodec::RegisterCodec(DcmTS::JPEG2000Lossless, DcmJpeg2000LosslessCodec::typeid);
+	DicomCodec::RegisterCodec(DicomTransferSyntax::JPEG2000Lossy, DcmJpeg2000LossyCodec::typeid);
+	DicomCodec::RegisterCodec(DicomTransferSyntax::JPEG2000Lossless, DcmJpeg2000LosslessCodec::typeid);
 }
 
 } // Jpeg2000

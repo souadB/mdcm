@@ -38,26 +38,26 @@ namespace Dicom.Data {
 
 	[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
 	public sealed class DicomFieldAttribute : Attribute {
-		private DcmTag _tag;
+		private DicomTag _tag;
 		private DicomFieldDefault _default;
 		private bool _defltOnZL;
 		private bool _createEmpty;
 
 		public DicomFieldAttribute(uint tag) {
-			_tag = new DcmTag(tag);
+			_tag = new DicomTag(tag);
 			_default = DicomFieldDefault.None;
 			_defltOnZL = false;
 			_createEmpty = false;
 		}
 
 		public DicomFieldAttribute(ushort group, ushort element) {
-			_tag = new DcmTag(group, element);
+			_tag = new DicomTag(group, element);
 			_default = DicomFieldDefault.None;
 			_defltOnZL = false;
 			_createEmpty = false;
 		}
 
-		public DcmTag Tag {
+		public DicomTag Tag {
 			get { return _tag; }
 		}
 

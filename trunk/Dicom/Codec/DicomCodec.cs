@@ -29,7 +29,7 @@ namespace Dicom.Codec {
 	#region IDcmCodec
 	public interface IDcmCodec {
 		string GetName();
-		DcmTS GetTransferSyntax();
+		DicomTransferSyntax GetTransferSyntax();
 		DcmCodecParameters GetDefaultParameters();
 		void Encode(DcmDataset dataset, DcmPixelData oldPixelData, DcmPixelData newPixelData, DcmCodecParameters parameters);
 		void Decode(DcmDataset dataset, DcmPixelData oldPixelData, DcmPixelData newPixelData, DcmCodecParameters parameters);
@@ -46,27 +46,27 @@ namespace Dicom.Codec {
 
 	#region DicomCodec
 	public static class DicomCodec {
-		private static Dictionary<DcmTS, Type> _codecs;
+		private static Dictionary<DicomTransferSyntax, Type> _codecs;
 
-		public static List<DcmTS> GetRegisteredCodecs() {
+		public static List<DicomTransferSyntax> GetRegisteredCodecs() {
 			if (_codecs == null)
 				RegisterCodecs();
-			List<DcmTS> codecs = new List<DcmTS>();
+			List<DicomTransferSyntax> codecs = new List<DicomTransferSyntax>();
 			codecs.AddRange(_codecs.Keys);
 			return codecs;
 		}
 
-		public static bool HasCodec(DcmTS ts) {
-			if (ts == DcmTS.ImplicitVRLittleEndian ||
-				ts == DcmTS.ExplicitVRLittleEndian ||
-				ts == DcmTS.ExplicitVRBigEndian)
+		public static bool HasCodec(DicomTransferSyntax ts) {
+			if (ts == DicomTransferSyntax.ImplicitVRLittleEndian ||
+				ts == DicomTransferSyntax.ExplicitVRLittleEndian ||
+				ts == DicomTransferSyntax.ExplicitVRBigEndian)
 				return true;
 			if (_codecs == null)
 				return false;
 			return _codecs.ContainsKey(ts);
 		}
 
-		public static IDcmCodec GetCodec(DcmTS ts) {
+		public static IDcmCodec GetCodec(DicomTransferSyntax ts) {
 			if (_codecs == null)
 				RegisterCodecs();
 			Type cType;
@@ -76,15 +76,15 @@ namespace Dicom.Codec {
 			throw new DicomCodecException("No registered codec for transfer syntax!");
 		}
 
-		public static void RegisterCodec(DcmTS ts, Type type) {
+		public static void RegisterCodec(DicomTransferSyntax ts, Type type) {
 			if (_codecs == null)
-				_codecs = new Dictionary<DcmTS, Type>();
+				_codecs = new Dictionary<DicomTransferSyntax, Type>();
 			if (type.IsDefined(typeof(DicomCodecAttribute), false))
 				_codecs.Add(ts, type);
 		}
 
 		public static void RegisterCodecs() {
-			_codecs = new Dictionary<DcmTS, Type>();
+			_codecs = new Dictionary<DicomTransferSyntax, Type>();
 
 			Assembly main = Assembly.GetEntryAssembly();
 			AssemblyName[] referenced = main.GetReferencedAssemblies();

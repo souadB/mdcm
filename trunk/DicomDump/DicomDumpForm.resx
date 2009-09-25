@@ -149,18 +149,18 @@
   <data name="tsbDictionary.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAmhJREFUOE+N0ttT
-        EmEYBnDsvpuuuuuuf6GZ/qGa1HI4mLDQsm5AKoIkJp4GhcZBmQk1hRUMWJDDGokIkidycJBoyKSmnMKp
-        p2UdTU2zb2Zvdvb3fM/7ztaJLjj9I9mb+3tVe6XybblarVNrtbd3Lvr2r/dDtpVbQyNZpFK7sA6vwW5P
-        fqeoeQtJctcvDTnCHLeLHksKQfYjXvkLcDMbv2z27AFFxfig6LVzg87iGXcJkchXhINfwAYrmPPtwuXa
-        gdWaOaDpWO+poLN46mURAX8FHk8Zk1MlvODhuDMPu20TFksWBkMSpDZeEJqcxa6JggAnJooYc2zDZsth
-        cHANPT0ZGI2L0OleQyL2o6GRgai27cOF7QkzO8bycDq3Mfp8C8PWTQwMrKLXksFTUwrt7Qk8puOQSgK4
-        V8/ANRmFqIYd42kYjAlYR3IY6OeBOYtuUxom4zIM+iUeLqLtyRu0tsbxsPkQc4kYsrm1nyKSYuFwLoOi
-        Q9B3LUDfuYj2jgTadAnotBw0rQvQUBzUZBRyeQj1DbMC/vTjAwhiLi+SNjPYKhUwG0hCTvhAkixoOirc
-        xm8aFA+VqggIRZif+Q8Wi935u3fcELU8Gl3v6vbi/eci8uUCDKYAaE0IajUHUhWHShWFigih8b73+OYm
-        2cw7AdcOSeJKi8KnkRMM/JG0UC0Ye8uPxPI4jGbZaSyRTm8c45N/E01HbhCEJ9dlZpErbgttzH3zkMpm
-        wYaDQrBYzKyei08GKZX+BwqVD9PeFMr7JQHWniYZs3IpPgqSyeavSlu8S7WQWpuOztD6f+OTbZ71JTqV
-        6rn0v/Bve+0fgcvpB9YAAAAASUVORK5CYII=
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAmhJREFUOE+N0t1P
+        UnEcBnDsvpuuuuuuf6Gtf6iWWg7BwAMdjicg30BSEt+GQHMoW6CJIBhwQF6OEYogIUkOh0gjklq50tXT
+        4ThNTbPfdm7Ozuf5Pd/vToPggjNsytzc29231GrfVvf3GxQq1e3ti7796/2Yee3WmCmDZLIK4/g6LJbE
+        d4paNJAke/3SkCPMslXoDUkEmI945SvC6cr9MpkzBxQV5YIi184NOoudc2WEw18RCnwBE6hhwVuF3b4N
+        ozF9QNPRwVNBZ/HMyxL8vhpcrgqmZ8p4wcEpWwEW8wYMhgw0mmWQqliRb3IW2x1FHjocJUxat2A25zE6
+        ug69Pg2tNgG1+jVahT40NbshqG/7cGG7/MzWyQJsti1MPN/EuHEDIyNZDBrSeKpLoqsrjsd0DKJWP+41
+        umGfjkBQx9apFDTaOIymPEaGOTCQQb8uBZ12FZqeFQ4m0PnkDTo6YnjYdojZeBRrG9mfApJiYLWtgqKD
+        6OlbQk9vAl3dcXSq41CrWCg7lqCkWCjICKTSIBqb5nn86ccHEMRCQSBqc2OzXMS8fxlSwguSZEDTEf42
+        btOgOCiTh0G0h7iZ/2ChcK5w984cBJJHE7m+fg92PpdQqBSh0flBK4NQKFiQ8hjk8gjkRBDN9z3HN7eI
+        ne95XD8kiSuSdq9SSrjhC6f4aoHoW24khsMhtIlP41bR7LtjfPJvounwDYJw5fsGGORLW3ybgaFFiMTz
+        YEIBPlgodGfPxSeDZDLfg3a5F7OeJCp7ZR7Wnxaxe+1SfBQkFi9eFUk8K/WQepvu3mDuv/HJNs+G4r0y
+        xULqX/g3YTcfeBLW07wAAAAASUVORK5CYII=
 </value>
   </data>
   <data name="tsbViewImage.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
