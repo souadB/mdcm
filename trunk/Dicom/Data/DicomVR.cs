@@ -107,8 +107,8 @@ namespace Dicom.Data {
 			return String.Format("{0} - {1}", VR, Description);
 		}
 
-		private const byte PadSpace = (byte)' ';
-		private const byte PadZero = 0;
+		private const byte PadSpace = 0x20;
+		private const byte PadZero = 0x00;
 
 		public static DicomVR NONE = new DicomVR("NONE", "No VR", false, false, false, PadZero, 0, 0, DicomVrRestriction.NotApplicable);
 		public static DicomVR AE = new DicomVR("AE", "Application Entity", true, false, true, PadSpace, 16, 1, DicomVrRestriction.Maximum);
@@ -133,7 +133,7 @@ namespace Dicom.Data {
 		public static DicomVR SS = new DicomVR("SS", "Signed Short", false, false, true, PadZero, 2, 2, DicomVrRestriction.Fixed);
 		public static DicomVR ST = new DicomVR("ST", "Short Text", true, true, true, PadSpace, 1024, 1, DicomVrRestriction.Maximum);
 		public static DicomVR TM = new DicomVR("TM", "Time", true, false, true, PadSpace, 16, 1, DicomVrRestriction.Maximum);
-		public static DicomVR UI = new DicomVR("UI", "Unique Identifier", true, false, true, PadSpace, 64, 1, DicomVrRestriction.Maximum);
+		public static DicomVR UI = new DicomVR("UI", "Unique Identifier", true, false, true, PadZero, 64, 1, DicomVrRestriction.Maximum);
 		public static DicomVR UL = new DicomVR("UL", "Unsigned Long", false, false, true, PadZero, 4, 4, DicomVrRestriction.Fixed);
 		public static DicomVR UN = new DicomVR("UN", "Unknown", false, false, false, PadZero, 0, 1, DicomVrRestriction.Any);
 		public static DicomVR US = new DicomVR("US", "Unsigned Short", false, false, true, PadZero, 2, 2, DicomVrRestriction.Fixed);
