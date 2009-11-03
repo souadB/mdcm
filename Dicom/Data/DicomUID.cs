@@ -70,23 +70,31 @@ namespace Dicom.Data {
 			return base.GetHashCode();
 		}
 
-		private static DicomUID InstanceRootUID = CreateInstanceRootUID();
-		private static DicomUID CreateInstanceRootUID() {
-			NetworkInterface[] interfaces = NetworkInterface.GetAllNetworkInterfaces();
-			for (int i = 0; i < interfaces.Length; i++) {
-				if (NetworkInterface.LoopbackInterfaceIndex != i && interfaces[i].OperationalStatus == OperationalStatus.Up) {
-					string hex = interfaces[i].GetPhysicalAddress().ToString();
-					if (!String.IsNullOrEmpty(hex)) {
-						try {
-							long mac = long.Parse(hex, NumberStyles.HexNumber);
-							return Generate(Implementation.ClassUID, mac);
-						}
-						catch {
+		private static DicomUID _instanceRootUid = null;
+		private static DicomUID InstanceRootUID {
+			get {
+				if (_instanceRootUid == null) {
+					lock (GenerateUidLock) {
+						if (_instanceRootUid == null) {
+							NetworkInterface[] interfaces = NetworkInterface.GetAllNetworkInterfaces();
+							for (int i = 0; i < interfaces.Length; i++) {
+								if (NetworkInterface.LoopbackInterfaceIndex != i && interfaces[i].OperationalStatus == OperationalStatus.Up) {
+									string hex = interfaces[i].GetPhysicalAddress().ToString();
+									if (!String.IsNullOrEmpty(hex)) {
+										try {
+											long mac = long.Parse(hex, NumberStyles.HexNumber);
+											return Generate(Implementation.ClassUID, mac);
+										} catch {
+										}
+									}
+								}
+							}
+							_instanceRootUid = Generate(Implementation.ClassUID, Environment.TickCount);
 						}
 					}
 				}
+				return _instanceRootUid;
 			}
-			return Generate(Implementation.ClassUID, Environment.TickCount);
 		}
 
 		private static long LastTicks = 0;
